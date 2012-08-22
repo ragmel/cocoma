@@ -1,0 +1,15 @@
+Prio 1:
+
+*Make first emulation run:
+	1.Create emulation as abstract class
+	2.Implement this abstract class to create linear distribution
+	3.Create schedule dispatcher
+	4.Feed this linear distribution to scheduler with right parameters
+
+Prio 2:
+
+parse xml docs for parameters
+
+Prio 3:
+Installation and usage of maxDB
+Delete/Update/Query functionality
