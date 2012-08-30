@@ -24,6 +24,7 @@ Created on 29 Aug 2012
 @author: I046533
 '''
 from xml.dom.minidom import parseString
+import SchedulerControl 
 
 def xmlReader(filename):
     print "This is XML Parser"
@@ -70,7 +71,7 @@ def xmlReader(filename):
     print startLoad
     print (stopLoad)
     
-     
+    return startTime,stopTime, distributionGranularity,startLoad, stopLoad
 
 
 if __name__ == '__main__':
