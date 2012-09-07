@@ -1,9 +1,10 @@
 '''
 Created on 29 Aug 2012
 
-<domain type='COCOMA'>
+<<domain type='COCOMA'>
    <emulation>   
-       <emulationId>160820121238</emulationId>
+       <emulationId>autoincrement</emulationId>
+       <emulationName>mytest</emulationName>
        <emulationType>Malicious</emulationType>
        <resourceType>CPU</resourceType>
        <startTime>2012-08-30T20:03:04</startTime>
@@ -24,7 +25,7 @@ Created on 29 Aug 2012
 @author: I046533
 '''
 from xml.dom.minidom import parseString
-import SchedulerControl 
+
 
 def xmlReader(filename):
     print "This is XML Parser"
@@ -47,7 +48,8 @@ def xmlReader(filename):
     #get second deep element like
     
     #<emulation>
-    emulationId = dom.getElementsByTagName('emulation')[0].getElementsByTagName('emulationId')[0].firstChild.data
+    emulationName = dom.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
+    #AUTOINCREMENT emulationId = dom.getElementsByTagName('emulation')[0].getElementsByTagName('emulationId')[0].firstChild.data
     emulationType = dom.getElementsByTagName('emulation')[0].getElementsByTagName('emulationType')[0].firstChild.data
     resourceType = dom.getElementsByTagName('emulation')[0].getElementsByTagName('resourceType')[0].firstChild.data
     startTime = dom.getElementsByTagName('emulation')[0].getElementsByTagName('startTime')[0].firstChild.data
@@ -61,17 +63,18 @@ def xmlReader(filename):
     
     
     print "Parameters taken:"
-    print emulationId
-    print (emulationType)
+    print emulationName
+    #print emulationId
+    print emulationType
     print resourceType
     print startTime
     print stopTime
     print distributionGranularity
     print distributionType
     print startLoad
-    print (stopLoad)
+    print stopLoad
     
-    return startTime,stopTime, distributionGranularity,startLoad, stopLoad
+    return emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad
 
 
 if __name__ == '__main__':

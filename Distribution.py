@@ -13,6 +13,7 @@ returns the difference
 
 @author: i046533
 '''
+
 import math
 
 def linearCalculate(startLoad, stopLoad, distributionGranularity,runNo):
