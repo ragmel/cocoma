@@ -1,11 +1,11 @@
 <domain type='COCOMA'>
    <emulation>   
        <emulationId>autoincrement</emulationId>
-       <emulationName>EmulateMe</emulationName>
+       <emulationName>ETestRun1</emulationName>
        <emulationType>Malicious</emulationType>
        <resourceType>CPU</resourceType>
-       <startTime>2013-08-30T20:03:04</startTime>
-       <stopTime>2013-08-30T20:10:03</stopTime>
+       <startTime>2013-09-10T15:45:00</startTime>
+       <stopTime>2013-09-10T15:50:00</stopTime>
    </emulation>
    
    <distribution>

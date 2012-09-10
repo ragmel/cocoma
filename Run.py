@@ -3,7 +3,7 @@ Created on 28 Aug 2012
 This will be executed as single run from SchedulerControl
 @author: ltenru
 '''
-import os,sys,time
+import os,sys,time,thread
 
 #timer for the job, has to be set to the run interval
     
@@ -20,6 +20,7 @@ def createRun(duration, stressValue):
         print "cpu limit executed"
         #os.system("stressapptest -s "+duration)
         os.system("echo stressapptest -s "+duration)
+        
         print"stressapp test executed"
         #and second thread runs this
         #while duration >0:
