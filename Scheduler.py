@@ -1,10 +1,9 @@
+#!/usr/bin/env python
 '''
 Created on 6 Sep 2012
 
 @author: i046533
 '''
-
-#!/usr/bin/env python
 
 import sys, os, time, atexit
 from signal import SIGTERM 
@@ -13,6 +12,7 @@ from datetime import datetime
 from apscheduler.scheduler import Scheduler 
 import datetime as dt
 import Distribution,Run
+import sqlite3 as sqlite
 #from __future__ import print_function
 import Pyro4
 
@@ -29,15 +29,18 @@ class schedulerDaemon(object):
 
     def list_contents(self):
         return self.contents
-    
+       
     def stopSchedulerDaemon(self):
-        self.close()
-   
+        print "stopping Daemon"
+        sys.exit(1)   
+        sys.exit(0) 
     
     def hello(self):
-        print "hello mortals"
+        greeting = "Hello, Yes this is schedulerDaemon"
+        print greeting
+        return greeting
         
-    def schedulerControl(self,emulationName,startTime,stopTime, distributionGranularity,startLoad, stopLoad):   
+    def schedulerControl(self,emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,startLoad, stopLoad):   
             print "this is schedulerControl"
             
             
@@ -80,10 +83,29 @@ class schedulerDaemon(object):
                 stressValue= Distribution.linearCalculate(startLoad, stopLoad, distributionGranularity,qty)
                 print "This run stress Value: "
                 print stressValue
-            
+                
+                runNo =distributionGranularity_count
+                                
                 #job=sched.add_date_job(createRun, exec_date, [duration,stressValue])
-                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[duration,stressValue], name=emulationName)
+                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
                 #scheduler.add_date_job(alarm, alarm_time, name='alarm',jobstore='shelve', args=[datetime.now()])
+                
+                #RunID(AI),emulationLifetimeID(FK), RunNo,
+                try:
+                    conn = sqlite.connect('cocoma.sqlite')
+                    c = conn.cursor()
+                                           
+                    c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,runNo,duration,stressValue])
+                                                
+                    conn.commit()
+        
+                except sqlite.Error, e:
+                        print "Error %s:" % e.args[0]
+                        print e
+                        sys.exit(1)
+    
+                c.close()
+                
                 
                 
                 
@@ -138,8 +160,10 @@ def main():
     
 #we start daemon locally
 def startSchedulerDaemon():
+    print "starting Daemon"
     main()    
-    
+
+   
 
     
 

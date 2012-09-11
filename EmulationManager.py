@@ -28,7 +28,7 @@ def getEmulation(emulationName,emulationID,all,active):
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.emulationName=? and emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.distributionID = distribution.distributionID and 
+                         emulationLifetime.emulationID = emulation.emulationID and 
                          DistributionParameters.distributionID=distribution.distributionID"""
                          ,[emulationName])
             print "DB entries for emulation Name", emulationName
@@ -41,7 +41,7 @@ def getEmulation(emulationName,emulationID,all,active):
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.emulationID=? and emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.distributionID = distribution.distributionID and 
+                         emulationLifetime.emulationID = emulation.emulationID and 
                          DistributionParameters.distributionID=distribution.distributionID"""
                          ,[emulationID])
             
@@ -56,7 +56,7 @@ def getEmulation(emulationName,emulationID,all,active):
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.distributionID = distribution.distributionID and 
+                         emulationLifetime.emulationID = emulation.emulationID and 
                          DistributionParameters.distributionID=distribution.distributionID"""
                     )
             
@@ -70,7 +70,7 @@ def getEmulation(emulationName,emulationID,all,active):
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.active=? and emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.distributionID = distribution.distributionID and 
+                         emulationLifetime.emulationID = emulation.emulationID and 
                          DistributionParameters.distributionID=distribution.distributionID"""
                          ,["1"])
         
@@ -127,7 +127,7 @@ def deleteEmulation(emulationID):
         print "distro Type: ",distributionType
         
         c.execute('DELETE FROM distribution WHERE distributionID=?',[str(distributionID)])
-        c.execute('DELETE FROM emulationLifetime WHERE distributionID=?',[str(distributionID)])
+        c.execute('DELETE FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
         c.execute('DELETE FROM DistributionParameters WHERE distributionID=?',[str(distributionID)])
         c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
         
@@ -169,16 +169,17 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
     
         distributionID=c.lastrowid
         
-        # 3. We populate "emulationLifetime" table  
-        c.execute('INSERT INTO emulationLifetime (startTime,stopTime,distributionID) VALUES (?, ?, ?)', [startTime,stopTime,distributionID])
-        emulationLifetimeID = c.lastrowid
-        
-        # 4. Populate "emulation"
-        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,distributionID,emulationLifetimeID,active) VALUES (?, ?, ?, ?, ?, ?)', [emulationName,emulationType,resourceType,distributionID,emulationLifetimeID,1])
+                
+        # 3. Populate "emulation"
+        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,distributionID,active) VALUES (?, ?, ?, ?, ?)', [emulationName,emulationType,resourceType,distributionID,1])
         emulationID = c.lastrowid
         
         # 4. Adding missing distribution ID
         c.execute('UPDATE DistributionParameters SET distributionID=? WHERE distributionParametersID =?',(distributionID,distributionParametersID))
+        
+        # 5. We populate "emulationLifetime" table  
+        c.execute('INSERT INTO emulationLifetime (startTime,stopTime,emulationID) VALUES (?, ?, ?)', [startTime,stopTime,emulationID,])
+        emulationLifetimeID = c.lastrowid
         
         
         
@@ -194,7 +195,7 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         
         
         conn.commit()
-        DistributionManager.distributionManager(emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad)
+        DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad)
     except sqlite.Error, e:
         print "Error %s:" % e.args[0]
         print e

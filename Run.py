@@ -4,10 +4,11 @@ This will be executed as single run from SchedulerControl
 @author: ltenru
 '''
 import os,sys,time,thread
+import sqlite3 as sqlite
 
 #timer for the job, has to be set to the run interval
     
-def createRun(duration, stressValue):
+def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
     
         duration=str(duration)
         stressValue = str(stressValue)
@@ -22,6 +23,26 @@ def createRun(duration, stressValue):
         os.system("echo stressapptest -s "+duration)
         
         print"stressapp test executed"
+        
+        #Connect to DB and write info into runs table
+        
+        try:
+            conn = sqlite.connect('cocoma.sqlite')
+            c = conn.cursor()
+            #check if this is the last run in batch and update emulation table
+            if runNo == 0:
+                c.execute('UPDATE emulation SET executed=? , active =? WHERE emulationID =?',["1","NULL",emulationID])
+            
+            c.execute('Update runLog SET executed=? WHERE emulationLifetimeID=? and runNo=?', ["1",emulationLifetimeID,runNo])
+            conn.commit()
+        
+        except sqlite.Error, e:
+            print "Error %s:" % e.args[0]
+            print e
+            sys.exit(1)
+    
+        c.close()
+        
         #and second thread runs this
         #while duration >0:
         #    time.sleep(1)
@@ -32,6 +53,7 @@ def createRun(duration, stressValue):
     #sched.shutdown(wait=False)
     
         #sys.exit()
+
     
 if __name__ == '__main__':
     print "main"
