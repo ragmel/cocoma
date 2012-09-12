@@ -21,14 +21,14 @@ import Pyro4
 class schedulerDaemon(object):
     
     def __init__(self):
-        self.contents=["chair","bike","flashlight","laptop","couch"]
-        
+                       
         #starting scheduler 
         self.sched = Scheduler()
         self.sched.start()
 
-    def list_contents(self):
-        return self.contents
+    def listJobs(self):
+        print "sending list of jobs"
+        return self.sched.get_jobs()
        
     def stopSchedulerDaemon(self):
         print "stopping Daemon"
@@ -37,10 +37,21 @@ class schedulerDaemon(object):
     
     def hello(self):
         greeting = "Hello, Yes this is schedulerDaemon"
-        print greeting
+        print greeting 
         return greeting
+    
+    def deleteJobs(self,emulationID,emulationName):
+        print "This is deleteJobs"
         
-    def schedulerControl(self,emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,startLoad, stopLoad):   
+        for job in self.sched.get_jobs():
+            if job.name == emulationID+"-"+emulationName:
+                self.sched.unschedule_job(job)
+                print "Job: "+job.name+" emulationID+emulationName: "+emulationID+"-"+emulationName
+            
+    
+        print "Jobs deleted"
+        
+    def schedulerControl(self,emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,startLoad, stopLoad,newEmulation):   
             print "this is schedulerControl"
             
             
@@ -88,28 +99,25 @@ class schedulerDaemon(object):
                                 
                 #job=sched.add_date_job(createRun, exec_date, [duration,stressValue])
                 self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
+                
                 #scheduler.add_date_job(alarm, alarm_time, name='alarm',jobstore='shelve', args=[datetime.now()])
                 
                 #RunID(AI),emulationLifetimeID(FK), RunNo,
-                try:
-                    conn = sqlite.connect('cocoma.sqlite')
-                    c = conn.cursor()
+                if newEmulation ==1:
+                    try:
+                        conn = sqlite.connect('cocoma.sqlite')
+                        c = conn.cursor()
                                            
-                    c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,runNo,duration,stressValue])
+                        c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,runNo,duration,stressValue])
                                                 
-                    conn.commit()
+                        conn.commit()
         
-                except sqlite.Error, e:
+                    except sqlite.Error, e:
                         print "Error %s:" % e.args[0]
                         print e
                         sys.exit(1)
     
-                c.close()
-                
-                
-                
-                
-                #self.sched.add_cron_job(func=Run.createRun, name=emulationName,start_date=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[duration,stressValue])
+                    c.close()
                 
                 #increasing to next run            
                 qty=int(qty)+1
@@ -123,6 +131,7 @@ class schedulerDaemon(object):
             print "list of jobs:"
             self.sched.print_jobs()
             
+            return ("Job: "+str(emulationID)+"-"+emulationName+" start date "+str(startTime)+" end date "+str(stopTime)+" created!")
                 #we can return single values, seconds and proper python date            
     def timeConv(self,dbtimestamp):
         print "this is timeConv!!!"
@@ -159,8 +168,8 @@ def main():
             port = 51889, ns=False)
     
 #we start daemon locally
-def startSchedulerDaemon():
-    print "starting Daemon"
+def recoverySchedulerDaemon():
+    print "Recovering list of emulations"
     main()    
 
    

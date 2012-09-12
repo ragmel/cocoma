@@ -6,20 +6,21 @@ Created on 6 Sep 2012
 '''
 
 
-import sys, time, Pyro4, Scheduler,os,thread
+import Pyro4
 
 def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad):
     print "Hello this is distributionManager"
     #starting manualy daemon
     #Scheduler.startSchedulerDaemon()
-    uri ="PYRO:scheduler.daemon@localhost:51889"
     #daemon=Pyro4.config.HOST="localhost"
+    uri ="PYRO:scheduler.daemon@localhost:51889"
+
     daemon=Pyro4.Proxy(uri)
     
     try:
-        
+        newEmulation=1
         print daemon.hello()
-        daemon.schedulerControl(emulationID,emulationLifetimeID,emulationName,startTime, stopTime, distributionGranularity, startLoad, stopLoad) #schedulerControl(startTime,stopTime, distributionGranularity, startLoad, stopLoad)
+        print daemon.schedulerControl(emulationID,emulationLifetimeID,emulationName,startTime, stopTime, distributionGranularity, startLoad, stopLoad,newEmulation) #schedulerControl(startTime,stopTime, distributionGranularity, startLoad, stopLoad)
     
     except  Pyro4.errors.CommunicationError, e:
         

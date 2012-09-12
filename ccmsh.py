@@ -6,12 +6,15 @@ Created on 4 Sep 2012
 '''
 
 
-import optparse,sys
+import optparse,sys,Pyro4
 #import argparse - new version of optparse
 import EmulationManager,XmlParser
 
 def main():
-    
+    #define daemon
+    uri ="PYRO:scheduler.daemon@localhost:51889"
+    daemon=Pyro4.Proxy(uri)
+
     #Trying to group things
     parser = optparse.OptionParser()
     
@@ -19,6 +22,7 @@ def main():
     listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='[emulationID] [all]  List of emulations by ID or all')
     listEmu.add_option('--list-name', action='store_true', default=False,dest='listName', help='[emulationName] List of emulations by name')
     listEmu.add_option('--list-active', action='store_true', default=False,dest='listActive', help='List of active emulations')
+    listEmu.add_option('--list-jobs', action='store_true', default=False,dest='listJobs', help='List of active Jobs running on Scheduler daemon')
         
     
     createEmu = optparse.OptionGroup(parser, 'Create new emulations')
@@ -41,6 +45,14 @@ def main():
     if len(arguments) !=1 and options.listAll:
         EmulationManager.getEmulation("NULL","NULL",1,0)
         sys.exit(1)
+    
+    if len(arguments) !=1 and options.listJobs:
+               
+        for job in daemon.listJobs():
+            print job
+        
+        
+        sys.exit(1)
         
     if len(arguments) !=1 and options.listActive:
         EmulationManager.getEmulation("NULL","NULL",0,1)
@@ -57,6 +69,20 @@ def main():
                     EmulationManager.getEmulation("NULL","NULL",1,0)
                 else:
                     EmulationManager.getEmulation("NULL",listAll,0,0)
+                    
+        if options.listJobs:
+            for listJobs in values:
+                print listJobs
+                if listJobs=="all":
+                    for job in daemon.listJobs():
+                        print job
+                    
+                else:
+                    for job in daemon.listJobs():
+                        if job.name==listJobs:
+                            print job
+                        
+                    
         
         if options.listName:
             for listName in values:

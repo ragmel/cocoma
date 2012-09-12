@@ -7,7 +7,7 @@ Created on 3 Sep 2012
 import sqlite3 as sqlite
 import sys
 import DistributionManager
-
+import Pyro4
 
 
 def getEmulation(emulationName,emulationID,all,active):
@@ -104,13 +104,16 @@ def deleteEmulation(emulationID):
     try:
         conn = sqlite.connect('cocoma.sqlite')
         c = conn.cursor()
-        c.execute('SELECT distributionID FROM emulation WHERE emulationID=?',[str(emulationID)])
+        c.execute('SELECT distributionID, emulationName FROM emulation WHERE emulationID=?',[str(emulationID)])
                 
         distributionIDfetch = c.fetchall()
         
         if distributionIDfetch:
             for row in distributionIDfetch:
+                print row
                 distributionID= row[0]
+                emulationName = row[1]
+                
         else:
             print "Emulation ID: "+str(emulationID)+" does not exists" 
             sys.exit(1)
@@ -126,8 +129,20 @@ def deleteEmulation(emulationID):
                 distributionType= row[0]
         print "distro Type: ",distributionType
         
+        
+        c.execute('SELECT emulationLifetimeID FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
+                
+        emulationLifetimeIDfetch = c.fetchall()
+        
+        if emulationLifetimeIDfetch:
+            for row in emulationLifetimeIDfetch:
+                emulationLifetimeID= row[0]
+        
+        
+        
         c.execute('DELETE FROM distribution WHERE distributionID=?',[str(distributionID)])
         c.execute('DELETE FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
+        c.execute('DELETE FROM runLog WHERE emulationLifetimeID=?',[str(emulationLifetimeID)])
         c.execute('DELETE FROM DistributionParameters WHERE distributionID=?',[str(distributionID)])
         c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
         
@@ -142,6 +157,9 @@ def deleteEmulation(emulationID):
     print "Emulation ID: ", emulationID," was deleted"
     
     #Now here we need to remove the emulation from the scheduler
+    uri ="PYRO:scheduler.daemon@localhost:51889"
+    daemon=Pyro4.Proxy(uri)
+    daemon.deleteJobs(emulationID, emulationName)
     
     
 def updateEmulation():
@@ -224,14 +242,5 @@ if __name__ == '__main__':
     distributionType = "linear"
     startLoad = 20
     stopLoad = 100
-    #createEmulation(emulationName,emulationType,resourceType,startTime,stopTime,distributionGranularity, distributionType, startLoad,stopLoad)
-    
-    #getEmulation(emulationName,emulationID,all,active)
-    
-    #getEmulation("mytest","NULL",0,0)
-    #getEmulation("NULL","5",0,0)
-    #getEmulation("NULL","NULL",1,0)
-    #getEmulation("NULL","NULL",0,1)
-    #getEmulation("mytest","5",1,1)
-    
+       
     pass

@@ -9,5 +9,6 @@
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">python</pydev_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
 <path>/home/ltenru/workspace/python/COCOMA/APScheduler-2.0.3/apscheduler</path>
+<path>/home/ltenru/workspace/python/COCOMA/Pyro4-4.14/src/Pyro4</path>
 </pydev_pathproperty>
 </pydev_project>
