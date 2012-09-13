@@ -25,6 +25,7 @@ class schedulerDaemon(object):
         #starting scheduler 
         self.sched = Scheduler()
         self.sched.start()
+        self.recoverySchedulerDaemon()
 
     def listJobs(self):
         print "sending list of jobs"
@@ -95,7 +96,7 @@ class schedulerDaemon(object):
                 print "This run stress Value: "
                 print stressValue
                 
-                runNo =distributionGranularity_count
+                runNo =qty
                                 
                 #job=sched.add_date_job(createRun, exec_date, [duration,stressValue])
                 self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
@@ -151,14 +152,82 @@ class schedulerDaemon(object):
         return pytime
         
     
-                #convert date to seconds
+    #convert date to seconds
     def timestamp(self,date):
         print"This is timestamp"
         print date
         gmtTime = time.mktime(date.timetuple())+3600
         return gmtTime
 
+    def recoverySchedulerDaemon(self):
+        print "Recovering list of emulations"
+    
+        '''
+        1. Get current timestamp
+        2. Compare it with all emulationLifetime start dates 2013-09-10T15:30:00
+        3. Use createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo): to re-create runs
+    
+        '''
+    
+        try:
+            conn = sqlite.connect('cocoma.sqlite')
+            c = conn.cursor()
+            ca = conn.cursor() 
+            c.execute('SELECT startTime,emulationID,emulationLifetimeID FROM emulationLifetime')
+            
+                
+            emulationLifetimeFetch = c.fetchall()
+        
+            if emulationLifetimeFetch:
+                for row in emulationLifetimeFetch:
+                    print row
+                    startTime= row[0]
+                    emulationID = row[1]
+                    emulationLifetimeID = row[2]
+                    #Compare starting times and re-launch 
+                    #TO-DO: We can recover some individual runs if the emulation lifetime end date is still in future
+                    if self.timestamp(self.timeConv(startTime))>self.timestamp(dt.datetime.now()):
+                        print "DB Start time in seconds"
+                        print self.timestamp(self.timeConv(startTime))
+                        print "Current time in seconds"
+                        print self.timestamp(dt.datetime.now())
+                        
+                        ca.execute('SELECT runLog.duration,runLog.stressValue,runLog.runNo,emulation.emulationName FROM runLog,emulation WHERE emulation.emulationLifetimeID =? and runLog.emulationLifetimeID=?',[str(emulationLifetimeID),str(emulationLifetimeID)])
+                        runLogFetch = ca.fetchall()
+        
+                        if runLogFetch:
+                            for row in runLogFetch:
+                                print row
+                                duration = row[0]
+                                stressValue = row[1]
+                                runNo = row[2]
+                                emulationName =row[3]
+                        
+                                startTime= self.timeConv(startTime)
+                                runStartTime=self.timestamp(startTime)+(duration*runNo)
+                                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
+                    else:
+                            print "else"
+                
+            else:
+                print "No runs were found to recover" 
+                
+    
+        except sqlite.Error, e:
+            print "Could retrieve SQL for startTime,emulationID FROM emulationLifetime "
+            print "Error %s:" % e.args[0]
+            print e
+            sys.exit(1)    
+    
+        c.close()
+        ca.close()
+    
+    
+    #datetime.now()
+
+
 def main():
+    
     daemon=schedulerDaemon()
     Pyro4.config.HOST="localhost"
     Pyro4.Daemon.serveSimple(
@@ -167,14 +236,19 @@ def main():
             },
             port = 51889, ns=False)
     
-#we start daemon locally
-def recoverySchedulerDaemon():
-    print "Recovering list of emulations"
-    main()    
+    #we start daemon locally
+    
+    
+    
+    
+    
+        
 
    
 
     
 
 if __name__=="__main__":
-    main()                   
+    main()
+    
+                       
