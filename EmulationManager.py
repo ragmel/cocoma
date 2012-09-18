@@ -103,6 +103,8 @@ def getEmulation(emulationName,emulationID,all,active):
         
     c.close()
     return returnList
+
+
 def deleteEmulation(emulationID):
     print "Hello this is deleteEmulation"
      
@@ -223,6 +225,7 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         
         conn.commit()
         DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad)
+        
     except sqlite.Error, e:
         print "Error %s:" % e.args[0]
         print e

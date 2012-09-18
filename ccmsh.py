@@ -11,6 +11,9 @@ import optparse,sys,Pyro4
 import EmulationManager,XmlParser
 
 def main():
+    #checking for daemon
+    if daemonCheck()==0:
+        sys.exit(0)
     #define daemon
     uri ="PYRO:scheduler.daemon@localhost:51889"
     daemon=Pyro4.Proxy(uri)
@@ -113,6 +116,28 @@ def main():
     else:
         parser.print_help()
         
+def daemonCheck():
+    '''
+    Checking if Scheduler Daemon is started
+    '''
+    uri ="PYRO:scheduler.daemon@localhost:51889"
+
+    daemon=Pyro4.Proxy(uri)
+    
+    try:
+        
+        print daemon.hello()
+        return(1)
+    
+    except  Pyro4.errors.CommunicationError, e:
+        
+        
+        print e
+        print "\n---Check if Scheduler Daemon is started. Connection error---"
+        
+        return (0)
+        
+    
     
 
 if __name__ == '__main__':

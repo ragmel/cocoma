@@ -28,9 +28,9 @@ we will try to return JSON object
 
 
 from bottle import route, run,response,request
-import optparse,sys,Pyro4
+import optparse,sys,Pyro4,itertools
 #import argparse - new version of optparse
-import EmulationManager,XmlParser
+import EmulationManager,XmlParser,ccmsh
 from json import dumps
 
 @route('/hello/:id')
@@ -38,46 +38,96 @@ def hello(id):
     #return "Hello World!"
     return "MyID: "+id
 
-@route('/emulation/:listAll')
-def get_emulation(listAll):
-    
-    if listAll=="all":
+@route('/ccmsh/list')
+def get_emulation():
+    emulationID = request.query.get('emulationID')
+    if emulationID=="all":
         emulationSelect=EmulationManager.getEmulation("NULL","NULL",1,0)
     else:
-        emulationSelect=EmulationManager.getEmulation("NULL",listAll,0,0)
+        emulationSelect=EmulationManager.getEmulation("NULL",emulationID,0,0)
     
     
     
     if emulationSelect:
             
-                #response.content_type = 'application/json'
+                
                 response.content_type = 'application/json'
                 return dumps(emulationSelect)
 
             
     else:
-        return "myrows2"
-        #return "emulation ID: \"",listAll,"\" does not exists"
+        
+        return "emulation ID: \"",emulationID,"\" does not exists"
     
-@route('/api/status')
+@route('/ccmsh/hello')
 def api_status():
-    return {'status':'online', 'servertime':'noon'}
+    return "Yes, Hello this is ccmshAPI."
 
-    
 
-    #return "your ID: "+id
-#http://10.55.164.240:8050/forum?filters=2
-#getall
-
-@route('/forum')
+@route('/ccmsh/create')
 def display_forum():
-    terms = unicode (request.query.get('filters','','aa',''), "utf-8")
-    print terms
-
-
-    forum_id = request.query.id
-    page = request.query.page or '1'
-    return 'Forum ID: %s (page %s)' % (terms, page)
+        '''
+        #start alternative stuff
+        paramList =[]
+        
+        paramList.append('emulationName')
+        paramList.append(request.query.get('emulationName'))
+        paramList.append('distributionType')
+        paramList.append(request.query.get('distributionType'))
+        paramList.append('resourceType')
+        paramList.append(request.query.get('resourceType'))
+        paramList.append('emulationType')
+        paramList.append(request.query.get('emulationType'))
+        paramList.append('startTime')
+        paramList.append(request.query.get('startTime'))
+        paramList.append('stopTime')
+        paramList.append(request.query.get('stopTime'))
+        paramList.append('distributionGranularity')
+        paramList.append(request.query.get('distributionGranularity'))
+        paramList.append('startLoad')
+        paramList.append(request.query.get('startLoad'))
+        paramList.append('stopLoad')
+        paramList.append(request.query.get('stopLoad'))
+                         
+        
+        d = dict(itertools.izip_longest(*[iter(paramList)] * 2, fillvalue=""))
+        #stopalternative stuff
+        '''
+        
+        #checking for daemon
+        if ccmsh.daemonCheck()==0:
+            return "Daemon is not running or cannot be located. Please check Scheduler configuration"
+        else:
+            d={}
+            
+                         
+            emulationName = request.query.get('emulationName')
+            distributionType = request.query.get('distributionType')
+            resourceType = request.query.get('resourceType')
+            emulationType = request.query.get('emulationType')
+            startTime = request.query.get('startTime')
+            stopTime = request.query.get('stopTime')
+            distributionGranularity = request.query.get('distributionGranularity')
+            startLoad = request.query.get('startLoad')
+            stopLoad = request.query.get('stopLoad')
+        
+            EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,startLoad, stopLoad)        
+            d= {'emulationName':emulationName, 'distributionType':distributionType, 'resourceType':resourceType, 'emulationType':emulationType, 'startTime':startTime, 'stopTime':stopTime, 'distributionGranularity':distributionGranularity,'startLoad':startLoad, 'stopLoad':stopLoad}
+        
+            print d
+            
+            return d 
+        
+        
+@route('/ccmsh/delete')
+def emulationDelete():
+    #checking for daemon
+        if ccmsh.daemonCheck()==0:
+            return "Daemon is not running or cannot be located. Please check Scheduler configuration"
+        else:
+            emulationID = request.query.get('emulationID')
+            EmulationManager.deleteEmulation(emulationID)
+            return "EmulationID: "+emulationID+" was deleted"
 
 def startAPI():
     run(host='10.55.164.240', port=8050)
