@@ -12,6 +12,9 @@ import Pyro4
 
 def getEmulation(emulationName,emulationID,all,active):
     print "Hello this is getEmulation"
+    #creating Dictionary to return for JSON
+    returnDict={}
+    returnList=[]
     
         
     try:
@@ -23,7 +26,7 @@ def getEmulation(emulationName,emulationID,all,active):
             #c.execute("SELECT * FROM emulation WHERE emulationName='"+str(emulationName)+"'")
             print "DB entries for emulation Name", emulationName
             
-            c.execute("""SELECT emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
+            c.execute("""SELECT emulation.emulationID, emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
                          distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
@@ -36,7 +39,7 @@ def getEmulation(emulationName,emulationID,all,active):
         if emulationID !="NULL":
             #c.execute("SELECT * FROM emulation WHERE emulationID='"+str(emulationID)+"'")
             print "DB entries for emulation ID", emulationID
-            c.execute("""SELECT emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
+            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
                          distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
@@ -51,7 +54,7 @@ def getEmulation(emulationName,emulationID,all,active):
             #c.execute("SELECT * FROM emulation")
             print "DB entries for all emulations"
             
-            c.execute("""SELECT emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
+            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
                          distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
@@ -65,7 +68,7 @@ def getEmulation(emulationName,emulationID,all,active):
             #c.execute('SELECT * FROM emulation WHERE active=?',("1"))
             print "DB entries for all active emulations"
             
-            c.execute("""SELECT emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
+            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
                          distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
@@ -84,19 +87,22 @@ def getEmulation(emulationName,emulationID,all,active):
         
             for row in emulationTable:
                 
-                print "emulationID:",row[0],"emulationName:", row[1],"emulationType:", row[2],"resourceType:", row[3], "distributionID:",row[4],"emulationLifetimeID:",row[5] ,"active:",row[6]
+                print "------->\nemulation.emulationID",row[0],"\nemulation.emulationName",row[1], "\nemulation.emulationType",row[2], "\nemulation.resourceType",row[3],"\nemulation.active",row[4],"\ndistribution.distributionGranularity",row[5],"\ndistribution.distributionType",row[6],"\nDistributionParameters.startLoad",row[7],"\nDistributionParameters.stopLoad",row[8], "\nemulationLifetime.startTime",row[9],"\nemulationLifetime.stopTime",row[10]
+                returnDict={"emulationID":row[0],"emulationName":row[1],"emulationType":row[2], "resourceType":row[3],"active":row[4],"distributionGranularity":row[5],"distributionType":row[6],"startLoad":row[7],"stopLoad":row[8], "startTime":row[9],"stopTime":row[10]}
+                
+                returnList.append(returnDict)
         else:
             print "emulation ID: \"",emulationID,"\" does not exists"
         
         
         
     except sqlite.Error, e:
-        print "Error %s:" % e.args[0]
+        print "Error getting emulation list %s:" % e.args[0]
         print e
         sys.exit(1)
         
     c.close()
-
+    return returnList
 def deleteEmulation(emulationID):
     print "Hello this is deleteEmulation"
      
@@ -199,6 +205,9 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         c.execute('INSERT INTO emulationLifetime (startTime,stopTime,emulationID) VALUES (?, ?, ?)', [startTime,stopTime,emulationID,])
         emulationLifetimeID = c.lastrowid
         
+        #6. Update emulation with LifetimeID
+        
+        c.execute('UPDATE emulation SET emulationLifetimeID=? WHERE emulationID =?',(emulationLifetimeID,emulationID))
         
         
                 

@@ -73,7 +73,7 @@ class schedulerDaemon(object):
         
         
             duration = (self.timestamp(stopTime) - self.timestamp(startTime))/distributionGranularity
-        
+            duration = int(duration)
             print "Duration is seconds:"
             print duration
   
@@ -175,6 +175,8 @@ class schedulerDaemon(object):
             ca = conn.cursor() 
             c.execute('SELECT startTime,emulationID,emulationLifetimeID FROM emulationLifetime')
             
+            
+            
                 
             emulationLifetimeFetch = c.fetchall()
         
@@ -203,14 +205,15 @@ class schedulerDaemon(object):
                                 runNo = row[2]
                                 emulationName =row[3]
                         
-                                startTime= self.timeConv(startTime)
-                                runStartTime=self.timestamp(startTime)+(duration*runNo)
+                                startTimeSec= self.timeConv(startTime)
+                                
+                                runStartTime=self.timestamp(startTimeSec)+(int(duration)*int(runNo))
                                 self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
                     else:
-                            print "else"
+                            print "No Active EmulationLifetime Runs were found to recover(1)"
                 
             else:
-                print "No runs were found to recover" 
+                print "No Emulations were found to recover(2)" 
                 
     
         except sqlite.Error, e:
@@ -223,7 +226,7 @@ class schedulerDaemon(object):
         ca.close()
     
     
-    #datetime.now()
+    
 
 
 def main():
