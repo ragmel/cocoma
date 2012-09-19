@@ -31,15 +31,32 @@ def main():
     createEmu = optparse.OptionGroup(parser, 'Create new emulations')
     createEmu.add_option('-x', '--xml', action='store_true', dest='xml',default=False, help='[file.xml] enter name XML document')
     
+    updateEmu = optparse.OptionGroup(parser, 'Update emulations')
+    updateEmu.add_option('-u', '--update', action='store_true', dest='updateID',default=False, help='Update already created emulationl')
+    
+    
     deleteEmu = optparse.OptionGroup(parser, 'Delete emulations')
     deleteEmu.add_option('-d', '--delete', action='store_true',default=False, dest='deleteID', help='[emulationID] Deletes full emulation')
     
-    argsEmu = optparse.OptionGroup(parser, 'Arguments we can use with above Options')
-    argsEmu.add_option('-n', '--name', action='store_true', dest='name',default=False, help='enter name of emulation')
     
+    
+    argsEmu = optparse.OptionGroup(parser, 'Arguments we can use with above Options')
+    argsEmu.add_option('-n', '--emulationName', action='store_true', dest='argName',default=False, help='Enter name of emulation')
+    argsEmu.add_option('-i', '--distributionType', action='store_true', dest='argDistributionType',default=False, help='Enter type of Distribution')
+    argsEmu.add_option('-r', '--resourceType', action='store_true', dest='argResourceType',default=False, help='Enter type of Resource')
+    argsEmu.add_option('-e', '--emulationType', action='store_true', dest='argEmulationType',default=False, help='Enter type of Emulation')
+    argsEmu.add_option('-s', '--startTime', action='store_true', dest='argStartTime',default=False, help='[YYYY-MM-DDTHH:MM:SS] Enter Start Time of Emulation')
+    argsEmu.add_option('-t', '--stopTime', action='store_true', dest='argStopTime',default=False, help='[YYYY-MM-DDTHH:MM:SS] Enter End Time of Emulation')
+    argsEmu.add_option('-g', '--granularity', action='store_true', dest='argDistributionGranularity',default=False, help='Enter granularity of Distribution')
+    argsEmu.add_option('-a', '--startLoad', action='store_true', dest='argStartLoad',default=False, help='Enter start load for Linear Distribution')
+    argsEmu.add_option('-o', '--stopLoad', action='store_true', dest='argStopLoad',default=False, help='Enter stop load for Linear Distribution')
+    
+        
     parser.add_option_group(listEmu)
     parser.add_option_group(createEmu)
     parser.add_option_group(deleteEmu)
+    parser.add_option_group(updateEmu)
+    parser.add_option_group(argsEmu)
     
 
     options, arguments = parser.parse_args()

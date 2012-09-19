@@ -105,6 +105,7 @@ def getEmulation(emulationName,emulationID,all,active):
     return returnList
 
 
+
 def deleteEmulation(emulationID):
     print "Hello this is deleteEmulation"
      
@@ -169,9 +170,83 @@ def deleteEmulation(emulationID):
     daemon=Pyro4.Proxy(uri)
     daemon.deleteJobs(emulationID, emulationName)
     
-    
-def updateEmulation():
+#TO-DO: logic needs to be updated 
+def updateEmulation(emulationID,newEmulationName,newDistributionType,newResourceType,newEmulationType,newStartTime,newStopTime, newDistributionGranularity,newStartLoad, newStopLoad):
     print "Hello this is updateEmulation"
+    
+    
+    #1. Get all the values from the existing table
+    try:
+        conn = sqlite.connect('cocoma.sqlite')
+        c = conn.cursor()
+        
+        if emulationID !="NULL":
+            #c.execute("SELECT * FROM emulation WHERE emulationID='"+str(emulationID)+"'")
+            print "DB entries for emulation ID", emulationID
+            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
+                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
+                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
+                         FROM emulation, distribution,emulationLifetime,DistributionParameters
+                         WHERE emulation.emulationID=? and emulation.distributionID = distribution.distributionID and
+                         emulationLifetime.emulationID = emulation.emulationID and 
+                         DistributionParameters.distributionID=distribution.distributionID"""
+                         ,[emulationID])
+            
+            emulationTable = c.fetchall()
+        
+        if emulationTable:
+                      
+        
+            for row in emulationTable:
+                
+                print "------->\nemulation.emulationID",row[0],"\nemulation.emulationName",row[1], "\nemulation.emulationType",row[2], "\nemulation.resourceType",row[3],"\nemulation.active",row[4],"\ndistribution.distributionGranularity",row[5],"\ndistribution.distributionType",row[6],"\nDistributionParameters.startLoad",row[7],"\nDistributionParameters.stopLoad",row[8], "\nemulationLifetime.startTime",row[9],"\nemulationLifetime.stopTime",row[10]
+                
+                emulationID=row[0]
+                emulationName=row[1]
+                emulationType=row[2]
+                resourceType=row[3]
+                active=row[4]
+                distributionGranularity=row[5]
+                distributionType=row[6]
+                startLoad=row[7]
+                stopLoad=row[8]
+                startTime=row[9]
+                stopTime=row[10]
+                emulationLifetimeID =row[11]
+                
+                
+                
+                #2. Check and assign which changes were made
+                if newEmulationName != "NULL":
+                    emulationName = newEmulationName
+                    c.execute('UPDATE emulation SET emulationName=? WHERE emulationID =?',(emulationName,emulationID))
+                
+                
+                
+                c.execute('UPDATE DistributionParameters SET distributionID=? WHERE distributionParametersID =?',(distributionID,distributionParametersID))
+                
+                #3. Deleting existing runLog
+                c.execute('DELETE FROM runLog WHERE emulationLifetimeID=?',[str(emulationLifetimeID)])
+                #4. Create new runLog
+                
+                
+                
+                
+        else:
+            print "emulation ID: \"",emulationID,"\" does not exists"
+        
+        
+        
+    except sqlite.Error, e:
+        print "Error getting emulation list %s:" % e.args[0]
+        print e
+        sys.exit(1)
+        
+    c.close()
+    
+
+    
+    
 
 def createEmulation(emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad):
                     
