@@ -174,6 +174,8 @@ def deleteEmulation(emulationID):
 def updateEmulation(emulationID,newEmulationName,newDistributionType,newResourceType,newEmulationType,newStartTime,newStopTime, newDistributionGranularity,newStartLoad, newStopLoad):
     print "Hello this is updateEmulation"
     
+    uri ="PYRO:scheduler.daemon@localhost:51889"
+    daemon=Pyro4.Proxy(uri)
     
     #1. Get all the values from the existing table
     try:
@@ -185,7 +187,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
             print "DB entries for emulation ID", emulationID
             c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
                          distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
-                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
+                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID,distribution.distributionID 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.emulationID=? and emulation.distributionID = distribution.distributionID and
                          emulationLifetime.emulationID = emulation.emulationID and 
@@ -213,22 +215,65 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
                 startTime=row[9]
                 stopTime=row[10]
                 emulationLifetimeID =row[11]
+                distributionID= row[12]
                 
-                
+                #Deleting existing jobs at scheduler
+                daemon.deleteJobs(emulationID, emulationName)
                 
                 #2. Check and assign which changes were made
                 if newEmulationName != "NULL":
+                    
+                
                     emulationName = newEmulationName
                     c.execute('UPDATE emulation SET emulationName=? WHERE emulationID =?',(emulationName,emulationID))
+                    conn.commit()
+                    
+                if newEmulationType != "NULL":
+                    emulationType = newEmulationType
+                    c.execute('UPDATE emulation SET emulationType=? WHERE emulationID =?',(emulationType,emulationID))
+                    conn.commit()
+                    
+                if newResourceType != "NULL":
+                    resourceType = newResourceType
+                    c.execute('UPDATE emulation SET resourceType=? WHERE emulationID =?',(resourceType,emulationID))
+                    conn.commit()
+                    
+                if newDistributionType != "NULL":
+                    distributionType = newDistributionType
+                    c.execute('UPDATE distribution SET distributionType=? WHERE distributionID =?',(distributionType,distributionID))
+                    conn.commit()
+                    
+                if newStartTime != "NULL":
+                    startTime = newStartTime
+                    c.execute('UPDATE emulationLifetime SET startTime=? WHERE emulationLifetimeID =?',(startTime,emulationLifetimeID))
+                    conn.commit()
+                    
+                if newStopTime != "NULL":
+                    stopTime = newStopTime
+                    c.execute('UPDATE emulationLifetime SET stopTime=? WHERE emulationLifetimeID =?',(stopTime,emulationLifetimeID))
                 
-                
-                
-                c.execute('UPDATE DistributionParameters SET distributionID=? WHERE distributionParametersID =?',(distributionID,distributionParametersID))
-                
+                if newDistributionGranularity != "NULL":
+                    distributionGranularity = newDistributionGranularity
+                    c.execute('UPDATE distribution SET distributionGranularity=? WHERE distributionID =?',(distributionGranularity,distributionID))
+                    conn.commit()
+                    
+                if newStartLoad != "NULL":
+                    startLoad = newStartLoad
+                    c.execute('UPDATE DistributionParameters SET startLoad=? WHERE distributionID =?',(startLoad,distributionID))
+                    conn.commit()
+                    
+                if newStopLoad != "NULL":
+                    stopLoad = newStopLoad
+                    c.execute('UPDATE DistributionParameters SET stopLoad=? WHERE distributionID =?',(stopLoad,distributionID))
+            
+            
                 #3. Deleting existing runLog
                 c.execute('DELETE FROM runLog WHERE emulationLifetimeID=?',[str(emulationLifetimeID)])
+                conn.commit()
+                                                
                 #4. Create new runLog
-                
+                newEmulation =1
+                daemon.schedulerControl(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,startLoad, stopLoad,newEmulation)   
                 
                 
                 
@@ -236,7 +281,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
             print "emulation ID: \"",emulationID,"\" does not exists"
         
         
-        
+        conn.commit()
     except sqlite.Error, e:
         print "Error getting emulation list %s:" % e.args[0]
         print e

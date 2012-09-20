@@ -43,6 +43,10 @@ class schedulerDaemon(object):
     
     def deleteJobs(self,emulationID,emulationName):
         print "This is deleteJobs"
+        #stringify
+        emulationID =str(emulationID)
+        emulationName=str(emulationName)
+        
         
         for job in self.sched.get_jobs():
             if job.name == emulationID+"-"+emulationName:

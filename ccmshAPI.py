@@ -65,7 +65,7 @@ def api_status():
 
 
 @route('/ccmsh/create')
-def display_forum():
+def create_emulation():
         '''
         #start alternative stuff
         paramList =[]
@@ -118,6 +118,75 @@ def display_forum():
             
             return d 
         
+
+@route('/ccmsh/update')
+def update_emulation():
+        
+        
+        #checking for daemon
+        if ccmsh.daemonCheck()==0:
+            return "Daemon is not running or cannot be located. Please check Scheduler configuration"
+        else:
+            #setting all values to NULL
+            
+            emulationID = 'NULL'
+            emulationName = 'NULL'
+            distributionType = 'NULL'
+            resourceType = 'NULL'
+            emulationType = 'NULL'
+            startTime = 'NULL'
+            stopTime = 'NULL'
+            distributionGranularity = 'NULL'
+            startLoad = 'NULL'
+            stopLoad = 'NULL'
+            
+            d={}
+            
+            
+            
+            if request.query.get('emulationID'):
+                emulationID = request.query.get('emulationID')
+                
+                if request.query.get('emulationName'):
+                    emulationName = request.query.get('emulationName')
+                                
+                if request.query.get('distributionType'):
+                    distributionType = request.query.get('distributionType')
+                
+                if request.query.get('resourceType'):
+                    resourceType = request.query.get('resourceType')
+                
+                if request.query.get('emulationType'):
+                    emulationType = request.query.get('emulationType')
+                    
+                if request.query.get('startTime'):
+                    startTime = request.query.get('startTime')
+                
+                if request.query.get('stopTime'):
+                    stopTime = request.query.get('stopTime')
+                    
+                if request.query.get('distributionGranularity'):
+                    distributionGranularity = request.query.get('distributionGranularity')
+                    
+                if request.query.get('startLoad'):
+                    startLoad = request.query.get('startLoad')
+                
+                if request.query.get('stopLoad'):
+                    stopLoad = request.query.get('stopLoad')
+        
+                EmulationManager.updateEmulation(emulationID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad)        
+                d= {'emulationName':emulationName, 'distributionType':distributionType, 'resourceType':resourceType, 'emulationType':emulationType, 'startTime':startTime, 'stopTime':stopTime, 'distributionGranularity':distributionGranularity,'startLoad':startLoad, 'stopLoad':stopLoad}
+                
+                return d
+            
+            else:
+                
+                print "No emulation ID specified"
+            
+                return "Error: Provide Emulation ID" 
+        
+
+
         
 @route('/ccmsh/delete')
 def emulationDelete():
