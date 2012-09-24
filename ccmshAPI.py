@@ -50,11 +50,9 @@ def get_emulation():
     
     if emulationSelect:
             
-                
                 response.content_type = 'application/json'
                 return dumps(emulationSelect)
 
-            
     else:
         
         return "emulation ID: \"",emulationID,"\" does not exists"
@@ -66,33 +64,6 @@ def api_status():
 
 @route('/ccmsh/create')
 def create_emulation():
-        '''
-        #start alternative stuff
-        paramList =[]
-        
-        paramList.append('emulationName')
-        paramList.append(request.query.get('emulationName'))
-        paramList.append('distributionType')
-        paramList.append(request.query.get('distributionType'))
-        paramList.append('resourceType')
-        paramList.append(request.query.get('resourceType'))
-        paramList.append('emulationType')
-        paramList.append(request.query.get('emulationType'))
-        paramList.append('startTime')
-        paramList.append(request.query.get('startTime'))
-        paramList.append('stopTime')
-        paramList.append(request.query.get('stopTime'))
-        paramList.append('distributionGranularity')
-        paramList.append(request.query.get('distributionGranularity'))
-        paramList.append('startLoad')
-        paramList.append(request.query.get('startLoad'))
-        paramList.append('stopLoad')
-        paramList.append(request.query.get('stopLoad'))
-                         
-        
-        d = dict(itertools.izip_longest(*[iter(paramList)] * 2, fillvalue=""))
-        #stopalternative stuff
-        '''
         
         #checking for daemon
         if ccmsh.daemonCheck()==0:
@@ -186,8 +157,6 @@ def update_emulation():
                 return "Error: Provide Emulation ID" 
         
 
-
-        
 @route('/ccmsh/delete')
 def emulationDelete():
     #checking for daemon

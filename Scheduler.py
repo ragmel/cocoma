@@ -29,7 +29,10 @@ class schedulerDaemon(object):
 
     def listJobs(self):
         print "sending list of jobs"
-        return self.sched.get_jobs()
+        if self.sched.get_jobs():
+            return self.sched.get_jobs()
+        else:
+            return "No jobs are scheduled"
        
     def stopSchedulerDaemon(self):
         print "stopping Daemon"
@@ -52,9 +55,15 @@ class schedulerDaemon(object):
             if job.name == emulationID+"-"+emulationName:
                 self.sched.unschedule_job(job)
                 print "Job: "+job.name+" emulationID+emulationName: "+emulationID+"-"+emulationName
-            
+                print "Jobs deleted"
+            else:
+                print "Job "+job.name+" not found"
     
-        print "Jobs deleted"
+    def purgeAllJobs(self):
+        print "This is purgeAllJobs daemon"
+        self.sched.shutdown(False, True, True)
+        
+        
         
     def schedulerControl(self,emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,startLoad, stopLoad,newEmulation):   
             print "this is schedulerControl"
@@ -149,11 +158,17 @@ class schedulerDaemon(object):
 
        #convert date from DB to python date
         
+        try:
+            pytime=dt.datetime(Year,Month,Day,Hour,Min,Sec)
+            return pytime
         
-        pytime=dt.datetime(Year,Month,Day,Hour,Min,Sec)
+        except ValueError:
+            print "Date incorrect use YYYY-MM-DDTHH:MM:SS format"
+            sys.exit(0) 
+
 
         
-        return pytime
+            
         
     
     #convert date to seconds

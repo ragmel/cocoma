@@ -5,7 +5,7 @@ Created on 3 Sep 2012
 '''
 
 import sqlite3 as sqlite
-import sys
+import sys,re
 import DistributionManager
 import Pyro4
 
@@ -170,6 +170,42 @@ def deleteEmulation(emulationID):
     daemon=Pyro4.Proxy(uri)
     daemon.deleteJobs(emulationID, emulationName)
     
+def purgeAll():
+    print "Hello this is purgeAll"
+     
+    
+    try:
+        conn = sqlite.connect('cocoma.sqlite')
+        c = conn.cursor()
+        c.execute('DELETE FROM distribution')
+        c.execute('DELETE FROM emulationLifetime ')
+        c.execute('DELETE FROM runLog')
+        c.execute('DELETE FROM DistributionParameters')
+        c.execute('DELETE FROM emulation')
+        #reset the counter
+        c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="DistributionParameters"')
+        c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="distribution"')
+        c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="emulation"')
+        c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="emulationLifetime"')
+        c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="runLog"')
+        
+        
+        
+        conn.commit()
+    except sqlite.Error, e:
+        print "Could not delete everything "
+        print "Error %s:" % e.args[0]
+        print e
+        sys.exit(1)
+        
+    c.close()
+    print "Everything was deleted in DBl"
+    
+    #Now here we need to remove the emulation from the scheduler
+    #uri ="PYRO:scheduler.daemon@localhost:51889"
+    #daemon=Pyro4.Proxy(uri)
+    # we need to remove jobs somehow too
+    
 #TO-DO: logic needs to be updated 
 def updateEmulation(emulationID,newEmulationName,newDistributionType,newResourceType,newEmulationType,newStartTime,newStopTime, newDistributionGranularity,newStartLoad, newStopLoad):
     print "Hello this is updateEmulation"
@@ -269,6 +305,8 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
             
                 #3. Deleting existing runLog
                 c.execute('DELETE FROM runLog WHERE emulationLifetimeID=?',[str(emulationLifetimeID)])
+                
+                dataCheck(startTime,stopTime)
                 conn.commit()
                                                 
                 #4. Create new runLog
@@ -342,8 +380,9 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         for row in emulationEntry: 
             print "emulationID:",row[0],"emulationName:", row[1],"emulationType:", row[2],"resourceType:", row[3], "distributionID:",row[4],"emulationLifetimeID:",row[5] ,"active:",row[6]
         
-        
+        dataCheck(startTime,stopTime)
         conn.commit()
+        
         DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad)
         
     except sqlite.Error, e:
@@ -357,10 +396,22 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
 
 
 
-def dateCheck(startTime,stopTime):
-    print "Hello this is dateCheck"
+def dataCheck(startTime,stopTime):
+    print "Hello this is dataCheck"
+    time_re = re.compile('\d{4}[-]\d{2}[-]\d{2}[T]\d{2}[:]\d{2}[:]\d{2}')
+    granularity_re=re.compile('/d')
     
-        
+    if time_re.match(startTime) and time_re.match(stopTime) :
+        print "date is correct"
+    else:
+        print "Date incorrect use YYYY-MM-DDTHH:MM:SS format "
+        sys.exit(0)
+    '''    
+    if granularity_re(distributionGranularity) and granularity_re(startLoad):
+        print "Granularity is correct"
+    else:
+        print "Granularity format is wrong"
+    '''    
 
 if __name__ == '__main__':
     
@@ -369,6 +420,7 @@ if __name__ == '__main__':
     emulationType = "Malicious"
     resourceType = "CPU"
     startTime = "2012-10-30T20:03:04"
+    
     stopTime= "2012-10-30T20:10:03"
     distributionGranularity = 10
     distributionType = "linear"

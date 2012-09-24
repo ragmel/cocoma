@@ -37,6 +37,8 @@ def main():
     
     deleteEmu = optparse.OptionGroup(parser, 'Delete emulations')
     deleteEmu.add_option('-d', '--delete', action='store_true',default=False, dest='deleteID', help='[emulationID] Deletes full emulation')
+    deleteEmu.add_option('--purge', action='store_true',default=False, dest='purge_all', help='[all] clears everything. !!USE WITH CAUTION!!')
+    
     
         
     parser.add_option_group(listEmu)
@@ -103,8 +105,15 @@ def main():
             #TO-DO: List inactive values with 0 param
             print "Deleting ID: ",arguments[0]
             EmulationManager.deleteEmulation(arguments[0])
-            
+        
+        if options.purge_all:
+            print "this is purge all ccmsh"
+            if arguments[0]=="all":
+                EmulationManager.purgeAll()
+                
+              
         if options.xml:  
+                EmulationManager.dataCheck(startTime,stopTime)
                 (emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity, startLoad, stopLoad) = XmlParser.xmlReader(arguments[0])
                 EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,startLoad, stopLoad)
         
