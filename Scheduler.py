@@ -5,7 +5,7 @@ Created on 6 Sep 2012
 @author: i046533
 '''
 
-import sys, os, time, atexit
+import sys, os, time,imp
 from signal import SIGTERM 
 
 from datetime import datetime
@@ -64,10 +64,18 @@ class schedulerDaemon(object):
     def purgeAllJobs(self):
         print "This is purgeAllJobs daemon"
         self.sched.shutdown(False, True, True)
+    
+    def registerDistribution(self,distributionType):
+        expected_class = 'MyClass'
+        py_mod = imp.load_source("./dist_"+distributionType+".py")
+        if hasattr(py_mod, expected_class):
+            class_inst = py_mod.MyClass() 
+            class_inst.helo()
+
         
         
         
-    def schedulerControl(self,emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,startLoad, stopLoad,newEmulation):   
+    def schedulerControl(self,emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,startLoad, stopLoad,newEmulation):   
             print "this is schedulerControl"
             
             
@@ -83,7 +91,7 @@ class schedulerDaemon(object):
             
             
                 
-            qty=int(0)
+            runNo=int(0)
         
         
         
@@ -95,23 +103,59 @@ class schedulerDaemon(object):
             while(distributionGranularity_count>=0):
             
                 print "Run No: "
-                print qty
+                print runNo
             
             
                 #This needs to be changed
             
-                runStartTime=self.timestamp(startTime)+(duration*qty)
+                runStartTime=self.timestamp(startTime)+(duration*runNo)
                 print "This run start time: "
                 print runStartTime
                 print "This is time passed to scheduler:"
                 print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
             
+                '''
+                1. Check 
+                '''
+                #number of arguments
+                #dist_"distributionType".hello()
+                #print "DistArgs"
+                #distArgs=os.system("python dist_"+distributionType+".py")
+                #print distArgs
                 
-                stressValue= Distribution.linearCalculate(startLoad, stopLoad, distributionGranularity,qty)
+                modfile = 'dist_linear.py'
+                modname = 'dist_linear'
+                modhandle = imp.load_source(modname, modfile)
+                print modhandle
+                
+                fp, pathname, description = imp.find_module(modname)
+                print fp, pathname, description
+                try:
+                    modhandle = imp.load_module(modname, fp, pathname, description)
+                finally:
+                    # Since we may exit via an exception, close fp explicitly.
+                    if fp:
+                        fp.close()
+                
+                modhandle.dist_linear(10,100,10,9)
+
+                
+                #modhandle.hello()
+
+                #if hasattr(py_mod, expected_class):
+                #    class_inst = py_mod.MyClass() 
+                #class_inst.hello()
+                
+                
+                
+                stressValue= Distribution.linearCalculate(startLoad, stopLoad, distributionGranularity,runNo)
+                
+                
+                stressValue= Distribution.linearCalculate(startLoad, stopLoad, distributionGranularity,runNo)
                 print "This run stress Value: "
                 print stressValue
                 
-                runNo =qty
+                
                                 
                 #job=sched.add_date_job(createRun, exec_date, [duration,stressValue])
                 self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
@@ -136,7 +180,7 @@ class schedulerDaemon(object):
                     c.close()
                 
                 #increasing to next run            
-                qty=int(qty)+1
+                runNo=int(runNo)+1
                 
             
                 print "distributionGranularity_count:"
