@@ -52,12 +52,14 @@ class schedulerDaemon(object):
         
         
         for job in self.sched.get_jobs():
-            if job.name == emulationID+"-"+emulationName:
+            
+            if job.name == emulationID+"-"+emulationName :
                 self.sched.unschedule_job(job)
                 print "Job: "+job.name+" emulationID+emulationName: "+emulationID+"-"+emulationName
-                print "Jobs deleted"
+                print "Deleted"
+            
             else:
-                print "Job "+job.name+" not found"
+                print "These jobs remains: "+job.name
     
     def purgeAllJobs(self):
         print "This is purgeAllJobs daemon"
