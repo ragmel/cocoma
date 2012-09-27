@@ -331,7 +331,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
     
     
 
-def createEmulation(emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad):
+def createEmulation(emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,arg):
                     
     print "Hello this is createEmulation"
     
@@ -344,7 +344,7 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         c = conn.cursor()
     
         # 1. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
-        c.execute('INSERT INTO DistributionParameters (startLoad,stopLoad) VALUES (?, ?)', [startLoad,stopLoad])
+        c.execute('INSERT INTO DistributionParameters (arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [arg[0],arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9]])
 
         distributionParametersID=c.lastrowid
                 
@@ -362,7 +362,7 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         c.execute('UPDATE DistributionParameters SET distributionID=? WHERE distributionParametersID =?',(distributionID,distributionParametersID))
         
         # 5. We populate "emulationLifetime" table  
-        c.execute('INSERT INTO emulationLifetime (startTime,stopTime,emulationID) VALUES (?, ?, ?)', [startTime,stopTime,emulationID,])
+        c.execute('INSERT INTO emulationLifetime (startTime,stopTime,emulationID) VALUES (?, ?, ?)', [startTime,stopTime,emulationID])
         emulationLifetimeID = c.lastrowid
         
         #6. Update emulation with LifetimeID
@@ -382,11 +382,11 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         
         dataCheck(startTime,stopTime)
         conn.commit()
-        newEmulation=1
-        DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,startLoad,stopLoad,newEmulation)
+        
+        DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,arg)
         
     except sqlite.Error, e:
-        print "Error %s:" % e.args[0]
+        print "SQL Error %s:" % e.args[0]
         print e
         sys.exit(1)
     

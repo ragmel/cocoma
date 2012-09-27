@@ -12,15 +12,17 @@ import datetime as dt
 class distributionMod(object):
     
     
-    def __init__(self,arg1, arg2,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity):
+    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg):
         
-        self.startLoad = arg1
-        self.stopLoad = arg2
+        self.startLoad = arg[0]
+        self.stopLoad = arg[1]
         self.distributionGranularity = distributionGranularity
         self.distributionGranularity_count=distributionGranularity
         self.startTimesec = startTimesec
         self.duration = duration
         self.runNo=int(0)
+        
+        print "Hello this is dist_linear"
         
                           
         while(self.distributionGranularity_count>=0):

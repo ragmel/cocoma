@@ -12,7 +12,7 @@ import datetime as dt
 
     
 
-def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,startLoad, stopLoad,newEmulation):   
+def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,arg):   
             print "this is schedulerControl"
                         
             startTime= timeConv(startTime)
@@ -21,10 +21,6 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,
         
             #make sure it is integer
             distributionGranularity = int(distributionGranularity)
-        
-            #make copy for counting(qty can also be used)
-            distributionGranularity_count = distributionGranularity
-            
             
                 
             duration = (timestamp(stopTime) - timestamp(startTime))/distributionGranularity
@@ -39,7 +35,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,
             #1. Get required module loaded
             modhandleMy=loadDistribution(distributionType)
             #2. Use this module for calculation and run creation   
-            newCreateRuns=modhandleMy(startLoad, stopLoad,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity)
+            newCreateRuns=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg)
   
            
                                     

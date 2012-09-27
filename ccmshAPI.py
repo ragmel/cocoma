@@ -79,11 +79,25 @@ def create_emulation():
             startTime = request.query.get('startTime')
             stopTime = request.query.get('stopTime')
             distributionGranularity = request.query.get('distributionGranularity')
-            startLoad = request.query.get('startLoad')
-            stopLoad = request.query.get('stopLoad')
-        
-            EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,startLoad, stopLoad)        
-            d= {'emulationName':emulationName, 'distributionType':distributionType, 'resourceType':resourceType, 'emulationType':emulationType, 'startTime':startTime, 'stopTime':stopTime, 'distributionGranularity':distributionGranularity,'startLoad':startLoad, 'stopLoad':stopLoad}
+            
+            #taking up to 10 custom arguments for distribution and adding them to array
+            #if is empty we get array: 
+            #[None, None, None, None, None, None, None, None, None, None]
+            arg=[]
+            arg.append(request.query.get('arg0'))
+            arg.append(request.query.get('arg1'))
+            arg.append(request.query.get('arg2'))
+            arg.append(request.query.get('arg3'))
+            arg.append(request.query.get('arg4'))
+            arg.append(request.query.get('arg5'))
+            arg.append(request.query.get('arg6'))
+            arg.append(request.query.get('arg7'))
+            arg.append(request.query.get('arg8'))
+            arg.append(request.query.get('arg9'))
+                        
+            print arg           
+            EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg)        
+            d= {'emulationName':emulationName, 'distributionType':distributionType, 'resourceType':resourceType, 'emulationType':emulationType, 'startTime':startTime, 'stopTime':stopTime, 'distributionGranularity':distributionGranularity,'arg1':arg[0], 'arg2':arg[1]}
         
             print d
             

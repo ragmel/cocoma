@@ -58,8 +58,17 @@ def xmlReader(filename):
     #<distibution>
     distributionGranularity = dom.getElementsByTagName('distribution')[0].getElementsByTagName('distributionGranularity')[0].firstChild.data
     distributionType = dom.getElementsByTagName('distribution')[0].getElementsByTagName('distributionType')[0].firstChild.data
-    startLoad = dom.getElementsByTagName('distribution')[0].getElementsByTagName('startLoad')[0].firstChild.data
-    stopLoad = dom.getElementsByTagName('distribution')[0].getElementsByTagName('stopLoad')[0].firstChild.data
+    arg=[]
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg0')[0].firstChild.data)
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg1')[0].firstChild.data)
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg2')[0].firstChild.data)
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg3')[0].firstChild.data)
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg4')[0].firstChild.data)
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg5')[0].firstChild.data)
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg6')[0].firstChild.data)
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg7')[0].firstChild.data)
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg8')[0].firstChild.data)
+    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg9')[0].firstChild.data)
     
     
     print "Parameters taken:"
@@ -71,10 +80,10 @@ def xmlReader(filename):
     print stopTime
     print distributionGranularity
     print distributionType
-    print startLoad
-    print stopLoad
+    print arg
     
-    return emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad
+    
+    return emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,arg
 
 
 if __name__ == '__main__':
