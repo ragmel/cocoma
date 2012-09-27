@@ -382,8 +382,8 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         
         dataCheck(startTime,stopTime)
         conn.commit()
-        
-        DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad)
+        newEmulation=1
+        DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,startLoad,stopLoad,newEmulation)
         
     except sqlite.Error, e:
         print "Error %s:" % e.args[0]

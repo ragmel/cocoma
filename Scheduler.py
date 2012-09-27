@@ -61,124 +61,26 @@ class schedulerDaemon(object):
             else:
                 print "These jobs remains: "+job.name
     
-    def purgeAllJobs(self):
-        print "This is purgeAllJobs daemon"
-        self.sched.shutdown(False, True, True)
+    #def purgeAllJobs(self):
+    #    print "This is purgeAllJobs daemon"
+    #    self.sched.shutdown(False, True, True)
     
-    def loadDistribution(self,modName):
-        '''
-        We are Loading module by file name. File name will be determined by distribution type (i.e. linear)
-        '''
-        modfile = "dist_"+modName+".py"
-        modname = "dist_"+modName
-        modhandle = imp.load_source(modname, modfile)
-        print modhandle
+    def createJob(self,emulationID,emulationName,emulationLifetimeID,duration,stressValue,runStartTime,runNo):
+        print "Hello this is Scheduler createJob()"
         
-        fp, pathname, description = imp.find_module(modname)
         
-        print fp, pathname, description
         try:
-            modhandle = imp.load_module(modname, fp, pathname, description)
-        finally:
-            # Since we may exit via an exception, close fp explicitly.
-            if fp:
-                fp.close()
-            
-        return modhandle.distributionMod   
+            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
+        
+            valBack=str(("Job: "+str(emulationID)+"-"+emulationName+" with run No: "+runNo+" start date "+str(runStartTime)+" created"))
+            print valBack
+        except :    
+            print "Scheduler createJob(): error creating Job "
 
         
         
         
-    def schedulerControl(self,emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,startLoad, stopLoad,newEmulation):   
-            print "this is schedulerControl"
-            
-            
-            startTime= self.timeConv(startTime)
-            stopTime = self.timeConv(stopTime)
-        
-            #make sure it is integer
-            distributionGranularity = int(distributionGranularity)
-        
-            #make copy for counting(qty can also be used)
-            distributionGranularity_count = distributionGranularity
-            
-            
-            
-                
-            runNo=int(0)
-        
-        
-        
-            duration = (self.timestamp(stopTime) - self.timestamp(startTime))/distributionGranularity
-            duration = int(duration)
-            print "Duration is seconds:"
-            print duration
-  
-            while(distributionGranularity_count>=0):
-            
-                print "Run No: "
-                print runNo
-            
-            
-                #This needs to be changed
-            
-                runStartTime=self.timestamp(startTime)+(duration*runNo)
-                print "This run start time: "
-                print runStartTime
-                print "This is time passed to scheduler:"
-                print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
-            
-                '''
-                1. Load the module according to Distribution Type 
-                '''
-                                
-                #1. Get required module loaded
-                modhandleMy=self.loadDistribution(distributionType)
-                #2. Use this module for calculation accessing one of its variables   
-                stressValue=modhandleMy(startLoad, stopLoad, distributionGranularity,runNo).linearStress
-                
-                #stressValue= Distribution.linearCalculate(startLoad, stopLoad, distributionGranularity,runNo)
-                print "This run stress Value: "
-                print stressValue
-                
-                
-                                
-                #job=sched.add_date_job(createRun, exec_date, [duration,stressValue])
-                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
-                
-                #scheduler.add_date_job(alarm, alarm_time, name='alarm',jobstore='shelve', args=[datetime.now()])
-                
-                #RunID(AI),emulationLifetimeID(FK), RunNo,
-                if newEmulation ==1:
-                    try:
-                        conn = sqlite.connect('cocoma.sqlite')
-                        c = conn.cursor()
-                                           
-                        c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,runNo,duration,stressValue])
-                                                
-                        conn.commit()
-        
-                    except sqlite.Error, e:
-                        print "Error %s:" % e.args[0]
-                        print e
-                        sys.exit(1)
     
-                    c.close()
-                
-                #increasing to next run            
-                runNo=int(runNo)+1
-                
-            
-                print "distributionGranularity_count:"
-                distributionGranularity_count= int(distributionGranularity_count)-1
-                print distributionGranularity_count
-                                    
-            
-            print "list of jobs:"
-            self.sched.print_jobs()
-            
-            return ("Job: "+str(emulationID)+"-"+emulationName+" start date "+str(startTime)+" end date "+str(stopTime)+" created!")
-                #we can return single values, seconds and proper python date            
     def timeConv(self,dbtimestamp):
         print "this is timeConv!!!"
         Year = int(dbtimestamp[0:4])
@@ -188,7 +90,7 @@ class schedulerDaemon(object):
         Min =int(dbtimestamp[14:16])
         Sec =int(dbtimestamp[17:19])
 
-       #convert date from DB to python date
+        #convert date from DB to python date
         
         try:
             pytime=dt.datetime(Year,Month,Day,Hour,Min,Sec)
@@ -199,10 +101,6 @@ class schedulerDaemon(object):
             sys.exit(0) 
 
 
-        
-            
-        
-    
     #convert date to seconds
     def timestamp(self,date):
         print"This is timestamp"

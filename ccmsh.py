@@ -114,7 +114,7 @@ def main():
               
         if options.xml:  
                 (emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity, startLoad, stopLoad) = XmlParser.xmlReader(arguments[0])
-		EmulationManager.dataCheck(startTime,stopTime)
+                EmulationManager.dataCheck(startTime,stopTime)
                 EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,startLoad, stopLoad)
         
     else:
