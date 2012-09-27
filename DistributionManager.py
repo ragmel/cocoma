@@ -17,7 +17,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
     try:
         newEmulation=1
         print daemon.hello()
-        print daemon.schedulerControl(emulationID,emulationLifetimeID,emulationName,startTime, stopTime, distributionGranularity, startLoad, stopLoad,newEmulation) #schedulerControl(startTime,stopTime, distributionGranularity, startLoad, stopLoad)
+        print daemon.schedulerControl(emulationID,emulationLifetimeID,emulationName,startTime, stopTime, distributionGranularity,distributionType, startLoad, stopLoad,newEmulation) #schedulerControl(startTime,stopTime, distributionGranularity, startLoad, stopLoad)
     
     except  Pyro4.errors.CommunicationError, e:
                 

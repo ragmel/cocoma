@@ -1,5 +1,8 @@
 '''
-Created on 25 Sep 2012
+Created on 26 Sep 2012
+
+Parabola equasion:
+y= ax^2 +bx +c
 
 @author: i046533
 '''

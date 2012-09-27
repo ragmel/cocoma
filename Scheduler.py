@@ -65,12 +65,26 @@ class schedulerDaemon(object):
         print "This is purgeAllJobs daemon"
         self.sched.shutdown(False, True, True)
     
-    def registerDistribution(self,distributionType):
-        expected_class = 'MyClass'
-        py_mod = imp.load_source("./dist_"+distributionType+".py")
-        if hasattr(py_mod, expected_class):
-            class_inst = py_mod.MyClass() 
-            class_inst.helo()
+    def loadDistribution(self,modName):
+        '''
+        We are Loading module by file name. File name will be determined by distribution type (i.e. linear)
+        '''
+        modfile = "dist_"+modName+".py"
+        modname = "dist_"+modName
+        modhandle = imp.load_source(modname, modfile)
+        print modhandle
+        
+        fp, pathname, description = imp.find_module(modname)
+        
+        print fp, pathname, description
+        try:
+            modhandle = imp.load_module(modname, fp, pathname, description)
+        finally:
+            # Since we may exit via an exception, close fp explicitly.
+            if fp:
+                fp.close()
+            
+        return modhandle.distributionMod   
 
         
         
@@ -115,43 +129,15 @@ class schedulerDaemon(object):
                 print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
             
                 '''
-                1. Check 
+                1. Load the module according to Distribution Type 
                 '''
-                #number of arguments
-                #dist_"distributionType".hello()
-                #print "DistArgs"
-                #distArgs=os.system("python dist_"+distributionType+".py")
-                #print distArgs
+                                
+                #1. Get required module loaded
+                modhandleMy=self.loadDistribution(distributionType)
+                #2. Use this module for calculation accessing one of its variables   
+                stressValue=modhandleMy(startLoad, stopLoad, distributionGranularity,runNo).linearStress
                 
-                modfile = 'dist_linear.py'
-                modname = 'dist_linear'
-                modhandle = imp.load_source(modname, modfile)
-                print modhandle
-                
-                fp, pathname, description = imp.find_module(modname)
-                print fp, pathname, description
-                try:
-                    modhandle = imp.load_module(modname, fp, pathname, description)
-                finally:
-                    # Since we may exit via an exception, close fp explicitly.
-                    if fp:
-                        fp.close()
-                
-                modhandle.dist_linear(10,100,10,9)
-
-                
-                #modhandle.hello()
-
-                #if hasattr(py_mod, expected_class):
-                #    class_inst = py_mod.MyClass() 
-                #class_inst.hello()
-                
-                
-                
-                stressValue= Distribution.linearCalculate(startLoad, stopLoad, distributionGranularity,runNo)
-                
-                
-                stressValue= Distribution.linearCalculate(startLoad, stopLoad, distributionGranularity,runNo)
+                #stressValue= Distribution.linearCalculate(startLoad, stopLoad, distributionGranularity,runNo)
                 print "This run stress Value: "
                 print stressValue
                 
