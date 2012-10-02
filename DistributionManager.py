@@ -1,12 +1,25 @@
 #!/usr/bin/env python
-'''
-Created on 6 Sep 2012
+#Copyright 2012 SAP Ltd
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+# This is part of the COCOMA framework
+#
+# COCOMA is a framework for COntrolled COntentious and MAlicious patterns
+#
 
-@author: i046533
-'''
 
-
-import Pyro4,imp,time,sys
+import Pyro4,imp,time,sys,os
 import sqlite3 as sqlite
 import datetime as dt
 
@@ -73,7 +86,50 @@ def loadDistribution(modName):
                 if fp:
                     fp.close()
                 
-            return modhandle.distributionMod   
+            return modhandle.distributionMod
+
+def loadDistributionHelp(modName):
+            '''
+            We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
+            '''
+            modfile = "dist_"+modName+".py"
+            modname = "dist_"+modName
+            modhandle = imp.load_source(modname, modfile)
+            print modhandle
+            
+            fp, pathname, description = imp.find_module(modname)
+            
+            print fp, pathname, description
+            try:
+                modhandle = imp.load_module(modname, fp, pathname, description)
+            finally:
+                # Since we may exit via an exception, close fp explicitly.
+                if fp:
+                    fp.close()
+                
+            return modhandle.distHelp   
+
+
+   
+
+
+def listDistributions(name):
+    distroList=[]
+    print "this is listDistro"
+    if name=="all":
+        path="./"  # root folder of project
+        dirList=os.listdir(path)
+        for fname in dirList:
+            if fname.startswith("dist_") and fname.endswith(".py"):
+                distName = str(fname[5:-3])
+                distroList.append(distName)
+        
+        return distroList  
+
+
+
+
+
 
 def timeConv(dbtimestamp):
         print "this is timeConv!!!"

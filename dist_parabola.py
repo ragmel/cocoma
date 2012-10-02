@@ -1,5 +1,24 @@
+#Copyright 2012 SAP Ltd
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+# This is part of the COCOMA framework
+#
+# COCOMA is a framework for COntrolled COntentious and MAlicious patterns
+#
+
 '''
-Created on 26 Sep 2012
+
 
 Parabola equasion:
 y= ax^2 +bx +c
@@ -8,9 +27,6 @@ where x= time and y=stressl
 
 http://montessorimuddle.org/category/programming-2/
 
-
-
-@author: i046533
 '''
 import math
 import Pyro4,imp,time,sys
@@ -75,7 +91,7 @@ class distributionMod(object):
             try:
                 
                 print daemon.hello()
-                daemon.createJob(emulationID,emulationName,emulationLifetimeID,duration,stressValue,runStartTime,str(self.runNo))
+                print daemon.createJob(emulationID,emulationName,emulationLifetimeID,duration,stressValue,runStartTime,str(self.runNo))
                 
             except  Pyro4.errors.CommunicationError, e:
                 print e
@@ -108,6 +124,11 @@ class distributionMod(object):
             self.distributionGranularity_count= int(self.distributionGranularity_count)-1
             print self.distributionGranularity_count
     
+def distHelp():
+    print "Parabola Distribution How-To:"
+    print "Enter arg0 for first point and arg1 for 2nd point"
+    
+    print "Have fun"
 
 
     

@@ -1,13 +1,29 @@
-'''
-Created on 3 Sep 2012
+#Copyright 2012 SAP Ltd
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+# This is part of the COCOMA framework
+#
+# COCOMA is a framework for COntrolled COntentious and MAlicious patterns
+#
 
-@author: i046533
-'''
 
 import sqlite3 as sqlite
 import sys,re
 import DistributionManager
 import Pyro4
+from datetime import datetime as dt
+
 
 
 def getEmulation(emulationName,emulationID,all,active):
@@ -27,7 +43,9 @@ def getEmulation(emulationName,emulationID,all,active):
             print "DB entries for emulation Name", emulationName
             
             c.execute("""SELECT emulation.emulationID, emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
+                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
+                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
+                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.emulationName=? and emulation.distributionID = distribution.distributionID and
@@ -40,7 +58,9 @@ def getEmulation(emulationName,emulationID,all,active):
             #c.execute("SELECT * FROM emulation WHERE emulationID='"+str(emulationID)+"'")
             print "DB entries for emulation ID", emulationID
             c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
+                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
+                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
+                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.emulationID=? and emulation.distributionID = distribution.distributionID and
@@ -55,7 +75,9 @@ def getEmulation(emulationName,emulationID,all,active):
             print "DB entries for all emulations"
             
             c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
+                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
+                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
+                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.distributionID = distribution.distributionID and
@@ -69,7 +91,9 @@ def getEmulation(emulationName,emulationID,all,active):
             print "DB entries for all active emulations"
             
             c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
+                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
+                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
+                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
                          emulationLifetime.startTime,emulationLifetime.stopTime 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.active=? and emulation.distributionID = distribution.distributionID and
@@ -87,7 +111,10 @@ def getEmulation(emulationName,emulationID,all,active):
         
             for row in emulationTable:
                 
-                print "------->\nemulation.emulationID",row[0],"\nemulation.emulationName",row[1], "\nemulation.emulationType",row[2], "\nemulation.resourceType",row[3],"\nemulation.active",row[4],"\ndistribution.distributionGranularity",row[5],"\ndistribution.distributionType",row[6],"\nDistributionParameters.startLoad",row[7],"\nDistributionParameters.stopLoad",row[8], "\nemulationLifetime.startTime",row[9],"\nemulationLifetime.stopTime",row[10]
+                print "------->\nemulation.emulationID",row[0],"\nemulation.emulationName",row[1], "\nemulation.emulationType",row[2], "\nemulation.resourceType",row[3],"\nemulation.active",row[4],"\ndistribution.distributionGranularity",row[5],"\ndistribution.distributionType",row[6],"\nDistributionParameters.arg0",row[7],"\nDistributionParameters.arg1",row[8]
+                print "DistributionParameters.arg2",row[9],"\nDistributionParameters.arg3",row[10],"\nDistributionParameters.arg4",row[11],"\nDistributionParameters.arg5",row[12]
+                print "DistributionParameters.arg6",row[13],"\nDistributionParameters.arg7",row[14],"\nDistributionParameters.arg8",row[15],"\nDistributionParameters.arg9",row[16]
+                print "emulationLifetime.startTime",row[17],"\nemulationLifetime.stopTime",row[18]
                 returnDict={"emulationID":row[0],"emulationName":row[1],"emulationType":row[2], "resourceType":row[3],"active":row[4],"distributionGranularity":row[5],"distributionType":row[6],"startLoad":row[7],"stopLoad":row[8], "startTime":row[9],"stopTime":row[10]}
                 
                 returnList.append(returnDict)
@@ -199,7 +226,7 @@ def purgeAll():
         sys.exit(1)
         
     c.close()
-    print "Everything was deleted in DBl"
+    print "Everything was deleted in DB"
     
     #Now here we need to remove the emulation from the scheduler
     #uri ="PYRO:scheduler.daemon@localhost:51889"
@@ -381,6 +408,7 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
             print "emulationID:",row[0],"emulationName:", row[1],"emulationType:", row[2],"resourceType:", row[3], "distributionID:",row[4],"emulationLifetimeID:",row[5] ,"active:",row[6]
         
         dataCheck(startTime,stopTime)
+        distributionTypeCheck(distributionType)
         conn.commit()
         
         DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,arg)
@@ -394,24 +422,103 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
 
 
 
-
+def distributionTypeCheck(distributionType):
+    #check if distribution type available in the framework
+    distroList=DistributionManager.listDistributions("all")
+    n=0
+    for distName in distroList:
+        if distributionType==distName:
+            n=1
+            print "Match: ",distName
+    if n==0:
+            print "Distribution ",distributionType," does not exist"
+            sys.exit(0)
+    
 
 def dataCheck(startTime,stopTime):
     print "Hello this is dataCheck"
+   
+ 
+    
     time_re = re.compile('\d{4}[-]\d{2}[-]\d{2}[T]\d{2}[:]\d{2}[:]\d{2}')
-    granularity_re=re.compile('/d')
+    
     
     if time_re.match(startTime) and time_re.match(stopTime) :
         print "date is correct"
     else:
         print "Date incorrect use YYYY-MM-DDTHH:MM:SS format "
         sys.exit(0)
-    '''    
-    if granularity_re(distributionGranularity) and granularity_re(startLoad):
-        print "Granularity is correct"
-    else:
-        print "Granularity format is wrong"
-    '''    
+    
+    #checking the date overlap
+    dateOverlapCheck(startTime, stopTime)
+    
+
+   
+def dateOverlapCheck(startTime, stopTime):
+    print "Hello this is dateOverlapCheck" 
+    startTimeSec = DistributionManager.timestamp(DistributionManager.timeConv(startTime))
+    stopTimeSec = DistributionManager.timestamp(DistributionManager.timeConv(stopTime))
+    print startTimeSec
+    print stopTimeSec
+    
+    dtNowSec = DistributionManager.timestamp(dt.now())
+    print "dt.now():",dt.now()
+    print "dtNow:",dtNowSec
+    
+    if startTimeSec <= dtNowSec or stopTimeSec <= dtNowSec:
+        print "Error: Dates cannot be in the past"
+        return "Error: Dates cannot be in the past"
+        sys.exit(1)
+
+    if startTimeSec >= stopTimeSec:
+        print "Start Date cannot be the same or later than stop time"
+        return 
+        sys.exit(1)
+     
+    
+    try:
+        conn = sqlite.connect('cocoma.sqlite')
+        c = conn.cursor()
+    
+        c.execute('SELECT startTime, stopTime FROM emulationLifetime')
+                
+        emulationLifetimeFetch = c.fetchall()
+        
+        if emulationLifetimeFetch:
+            for row in emulationLifetimeFetch:
+                print row
+                startTimeDBsec= DistributionManager.timestamp(DistributionManager.timeConv(row[0]))
+                stopTimeDBsec = DistributionManager.timestamp(DistributionManager.timeConv(row[1]))
+                
+                if startTimeSec >= startTimeDBsec and startTimeSec <= stopTimeDBsec:
+                    print "Emulation already exist for this date change the date(1)"
+                    return "Emulation already exist for this date change the date(1)",sys.exit(1)
+                    
+                if stopTimeSec >= startTimeDBsec and stopTimeSec <= stopTimeDBsec:
+                    print "Emulation already exist for this date change the date(2)"
+                    return "Emulation already exist for this date change the date(2)",sys.exit(1)
+                    
+                
+                if startTimeSec <= startTimeDBsec and stopTimeSec >= stopTimeDBsec:
+                    print "Emulation already exist for this date change the date(3)"
+                    return "Emulation already exist for this date change the date(3)",sys.exit(1)
+                    
+                
+        else:
+            print "db is empty any date is OK" 
+        
+        conn.commit()
+        
+        
+        
+    except sqlite.Error, e:
+        print "dateOverlapCheck() SQL Error %s:" % e.args[0]
+        print e
+        sys.exit(1)
+    
+    c.close()
+
+
 
 if __name__ == '__main__':
     
@@ -419,9 +526,10 @@ if __name__ == '__main__':
     emulationName = "mytest"
     emulationType = "Malicious"
     resourceType = "CPU"
-    startTime = "2012-10-30T20:03:04"
+    startTime = "2012-09-10T15:30:00"
     
-    stopTime= "2012-10-30T20:10:03"
+    stopTime= "2013-09-10T19:59:00"
+    dateOverlapCheck(startTime, stopTime)
     distributionGranularity = 10
     distributionType = "linear"
     startLoad = 20
