@@ -24,7 +24,8 @@ import DistributionManager
 import Pyro4
 from datetime import datetime as dt
 
-
+#perhaps needs to be set somewhere else
+Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 def getEmulation(emulationName,emulationID,all,active):
     print "Hello this is getEmulation"
@@ -36,6 +37,7 @@ def getEmulation(emulationName,emulationID,all,active):
     try:
         conn = sqlite.connect('cocoma.sqlite')
         c = conn.cursor()
+        cRun=conn.cursor()
         
         # 1. By name
         if emulationName !="NULL":
@@ -46,7 +48,7 @@ def getEmulation(emulationName,emulationID,all,active):
                          distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
                          DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
                          DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
-                         emulationLifetime.startTime,emulationLifetime.stopTime 
+                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.emulationName=? and emulation.distributionID = distribution.distributionID and
                          emulationLifetime.emulationID = emulation.emulationID and 
@@ -61,7 +63,7 @@ def getEmulation(emulationName,emulationID,all,active):
                          distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
                          DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
                          DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
-                         emulationLifetime.startTime,emulationLifetime.stopTime 
+                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.emulationID=? and emulation.distributionID = distribution.distributionID and
                          emulationLifetime.emulationID = emulation.emulationID and 
@@ -78,7 +80,7 @@ def getEmulation(emulationName,emulationID,all,active):
                          distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
                          DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
                          DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
-                         emulationLifetime.startTime,emulationLifetime.stopTime 
+                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.distributionID = distribution.distributionID and
                          emulationLifetime.emulationID = emulation.emulationID and 
@@ -94,12 +96,28 @@ def getEmulation(emulationName,emulationID,all,active):
                          distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
                          DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
                          DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
-                         emulationLifetime.startTime,emulationLifetime.stopTime 
+                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.active=? and emulation.distributionID = distribution.distributionID and
                          emulationLifetime.emulationID = emulation.emulationID and 
                          DistributionParameters.distributionID=distribution.distributionID"""
                          ,["1"])
+
+        if active ==0 and all == 1:
+            #c.execute('SELECT * FROM emulation WHERE active=?',("1"))
+            print "DB entries for all inactive emulations"
+            
+            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
+                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
+                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
+                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
+                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
+                         FROM emulation, distribution,emulationLifetime,DistributionParameters
+                         WHERE emulation.active=? and emulation.distributionID = distribution.distributionID and
+                         emulationLifetime.emulationID = emulation.emulationID and 
+                         DistributionParameters.distributionID=distribution.distributionID"""
+                         ,["0"])
+            
         
             
         
@@ -107,19 +125,31 @@ def getEmulation(emulationName,emulationID,all,active):
         emulationTable = c.fetchall()
         
         if emulationTable:
-                      
+            
         
             for row in emulationTable:
+                runCounter=0
+                runNoList=[]
+                
+                cRun.execute("""SELECT runLog.executed,runLog.runNo FROM runLog WHERE runLog.emulationLifetimeID=?""",[row[19]])
+                runLogTable = cRun.fetchall()
+                for rowRun in runLogTable:
+                    
+                    if rowRun[0] =="1":
+                        runNoList.append(rowRun[1])
+                        runCounter += 1
+                        
+                    
                 
                 print "------->\nemulation.emulationID",row[0],"\nemulation.emulationName",row[1], "\nemulation.emulationType",row[2], "\nemulation.resourceType",row[3],"\nemulation.active",row[4],"\ndistribution.distributionGranularity",row[5],"\ndistribution.distributionType",row[6],"\nDistributionParameters.arg0",row[7],"\nDistributionParameters.arg1",row[8]
                 print "DistributionParameters.arg2",row[9],"\nDistributionParameters.arg3",row[10],"\nDistributionParameters.arg4",row[11],"\nDistributionParameters.arg5",row[12]
                 print "DistributionParameters.arg6",row[13],"\nDistributionParameters.arg7",row[14],"\nDistributionParameters.arg8",row[15],"\nDistributionParameters.arg9",row[16]
-                print "emulationLifetime.startTime",row[17],"\nemulationLifetime.stopTime",row[18]
+                print "emulationLifetime.startTime",row[17],"\nemulationLifetime.stopTime",row[18], "\nRuns executed ",runCounter," out of ",row[5], "\nExecuted run numbers list ",runNoList
                 returnDict={"emulationID":row[0],"emulationName":row[1],"emulationType":row[2], "resourceType":row[3],"active":row[4],"distributionGranularity":row[5],"distributionType":row[6],"startLoad":row[7],"stopLoad":row[8], "startTime":row[9],"stopTime":row[10]}
                 
                 returnList.append(returnDict)
         else:
-            print "emulation ID: \"",emulationID,"\" does not exists"
+            print "No results found in DB"
         
         
         

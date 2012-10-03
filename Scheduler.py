@@ -30,7 +30,8 @@ import sqlite3 as sqlite
 #from __future__ import print_function
 import Pyro4
 
-
+#perhaps needs to be set somewhere else
+Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 class schedulerDaemon(object):
     
@@ -198,6 +199,7 @@ def main():
     
     daemon=schedulerDaemon()
     Pyro4.config.HOST="localhost"
+    
     Pyro4.Daemon.serveSimple(
             {
                 daemon: "scheduler.daemon"

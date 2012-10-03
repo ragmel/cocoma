@@ -24,6 +24,8 @@ import optparse,sys,Pyro4,os
 #import argparse - new version of optparse
 import EmulationManager,XmlParser,DistributionManager
 
+Pyro4.config.HMAC_KEY='pRivAt3Key'
+
 def main():
     #checking for daemon
     if daemonCheck()==0:
@@ -39,6 +41,7 @@ def main():
     listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='[emulationID] [all]  List of emulations by ID or all')
     listEmu.add_option('--list-name', action='store_true', default=False,dest='listName', help='[emulationName] List of emulations by name')
     listEmu.add_option('--list-active', action='store_true', default=False,dest='listActive', help='List of active emulations')
+    listEmu.add_option('--list-inactive', action='store_true', default=False,dest='listInactive', help='List of inactive emulations')
     listEmu.add_option('--list-jobs', action='store_true', default=False,dest='listJobs', help='List of active Jobs running on Scheduler daemon')
         
     
@@ -94,8 +97,12 @@ def main():
         if options.listActive:
             EmulationManager.getEmulation("NULL","NULL",0,1)
             sys.exit(1)
+         
+        if options.listInactive:
+            EmulationManager.getEmulation("NULL","NULL",1,0)
+            sys.exit(1)
         
-        
+       
         if options.listAll:
             if arguments[0]=="all":
                 EmulationManager.getEmulation("NULL","NULL",1,0)
@@ -168,7 +175,8 @@ def daemonCheck():
     Checking if Scheduler Daemon is started
     '''
     uri ="PYRO:scheduler.daemon@localhost:51889"
-
+    #perhaps needs to be setup somewhere else
+    
     daemon=Pyro4.Proxy(uri)
     
     try:

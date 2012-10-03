@@ -33,6 +33,8 @@ import Pyro4,imp,time,sys
 import sqlite3 as sqlite
 import datetime as dt
 
+#perhaps needs to be set somewhere else
+Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 class distributionMod(object):
     

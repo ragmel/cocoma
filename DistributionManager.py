@@ -23,6 +23,8 @@ import Pyro4,imp,time,sys,os
 import sqlite3 as sqlite
 import datetime as dt
 
+#perhaps needs to be set somewhere else
+Pyro4.config.HMAC_KEY='pRivAt3Key'
     
 
 def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,arg):   
