@@ -12,15 +12,8 @@
        <distributionGranularity>10</distributionGranularity>
        <distributionType>linear</distributionType>
        <arg0>10</arg0>
-       <arg1>50</arg1>
-       <arg2>NULL</arg2>
-       <arg3>NULL</arg3>
-       <arg4>NULL</arg4>
-       <arg5>NULL</arg5>
-       <arg6>NULL</arg6>
-       <arg7>NULL</arg7>
-       <arg8>NULL</arg8>
-       <arg9>NULL</arg9>
+       
+       
    </distribution>
     
 </domain>

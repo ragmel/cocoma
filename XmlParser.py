@@ -75,16 +75,57 @@ def xmlReader(filename):
     distributionGranularity = dom.getElementsByTagName('distribution')[0].getElementsByTagName('distributionGranularity')[0].firstChild.data
     distributionType = dom.getElementsByTagName('distribution')[0].getElementsByTagName('distributionType')[0].firstChild.data
     arg=[]
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg0')[0].firstChild.data)
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg1')[0].firstChild.data)
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg2')[0].firstChild.data)
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg3')[0].firstChild.data)
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg4')[0].firstChild.data)
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg5')[0].firstChild.data)
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg6')[0].firstChild.data)
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg7')[0].firstChild.data)
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg8')[0].firstChild.data)
-    arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg9')[0].firstChild.data)
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg0')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg1')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg2')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+        
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg3')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg4')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg5')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg6')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg7')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg8')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+
+    try:
+        arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg9')[0].firstChild.data)
+    except:
+        arg.append("NULL")
+        
+        
+    
     
     
     print "Parameters taken:"

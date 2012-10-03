@@ -464,6 +464,20 @@ def distributionTypeCheck(distributionType):
             print "Distribution ",distributionType," does not exist"
             sys.exit(0)
     
+def DistributionArgCheck(distributionType,arg):
+    
+    distrMod = DistributionManager.loadDistributionArgQty(distributionType)
+    distrArgQty=distrMod()
+    ncount=0
+    for param in arg:
+        if param != "NULL":
+            ncount +=1
+    if ncount < distrArgQty:
+        print "Error: Arguments given: ",ncount,"\n",distributionType," distribution instnace require ",distrArgQty," arguments." 
+        sys.exit(0)
+    
+    
+    
 
 def dataCheck(startTime,stopTime):
     print "Hello this is dataCheck"

@@ -110,6 +110,27 @@ def loadDistributionHelp(modName):
                     fp.close()
                 
             return modhandle.distHelp   
+        
+def loadDistributionArgQty(modName):
+            '''
+            We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
+            '''
+            modfile = "dist_"+modName+".py"
+            modname = "dist_"+modName
+            modhandle = imp.load_source(modname, modfile)
+            print modhandle
+            
+            fp, pathname, description = imp.find_module(modname)
+            
+            print fp, pathname, description
+            try:
+                modhandle = imp.load_module(modname, fp, pathname, description)
+            finally:
+                # Since we may exit via an exception, close fp explicitly.
+                if fp:
+                    fp.close()
+                
+            return modhandle.argQty  
 
 
    

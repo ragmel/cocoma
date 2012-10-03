@@ -111,9 +111,12 @@ def main():
                     
         if options.listJobs:
             if arguments[0]=="all":
-                for job in daemon.listJobs():
+                try:
+                    for job in daemon.listJobs():
                     
-                    print job
+                        print job
+                except :
+                    print "\nNo jobs are scheduled\n"
                     
             else:
                 
@@ -165,6 +168,7 @@ def main():
                 (emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
                 EmulationManager.dataCheck(startTime,stopTime)
                 EmulationManager.distributionTypeCheck(distributionType)
+                EmulationManager.DistributionArgCheck(distributionType,arg)
                 EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg)
         
     else:

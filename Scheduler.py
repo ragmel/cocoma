@@ -46,8 +46,7 @@ class schedulerDaemon(object):
         print "sending list of jobs"
         if self.sched.get_jobs():
             return self.sched.get_jobs()
-        else:
-            return "No jobs are scheduled"
+       
        
     def stopSchedulerDaemon(self):
         print "stopping Daemon"
