@@ -96,7 +96,10 @@ def create_emulation():
             except:
                 return "Error: Cannot create emulation please check parameters and conflicts with already created emulations" 
         
-
+'''
+Update emulation is not in the documentation and is currently not working.
+Later we have to decide how to do it correctly
+'''
 @route('/ccmsh/update')
 def update_emulation():
         
@@ -199,14 +202,22 @@ def update_emulation():
 def emulationDelete():
     #checking for daemon
         if ccmsh.daemonCheck()==0:
-            return "Daemon is not running or cannot be located. Please check Scheduler configuration"
+            return "{'error':'Daemon is not running or cannot be located. Please check Scheduler configuration'}"
         else:
-            emulationID = request.query.get('emulationID')
-            EmulationManager.deleteEmulation(emulationID)
-            return "EmulationID: "+emulationID+" was deleted"
+            try:
+                emulationID = request.query.get('emulationID')
+                EmulationManager.deleteEmulation(emulationID)
+                return "EmulationID: "+emulationID+" was deleted"
+            except:
+                return "{error:Was not able to delete emulation, check parameters}"
+
+
+
 
 def startAPI():
-    run(host='10.55.164.160', port=8050)
+    if ccmsh.daemonCheck() ==0:
+        sys.exit(0)
+    run(host='10.55.164.111', port=8050)
     
 if __name__ == '__main__':
     startAPI()
