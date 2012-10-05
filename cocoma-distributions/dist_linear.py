@@ -90,7 +90,7 @@ class distributionMod(object):
                         
             '''
             try:
-                conn = sqlite.connect('cocoma.sqlite')
+                conn = sqlite.connect('./data/cocoma.sqlite')
                 c = conn.cursor()
                                    
                 c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])

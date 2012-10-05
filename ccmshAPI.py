@@ -20,9 +20,9 @@
 
 
 from bottle import route, run,response,request
-import optparse,sys,Pyro4,itertools
+import sys
 
-import EmulationManager,XmlParser,ccmsh
+import EmulationManager,ccmsh
 from json import dumps
 
 

@@ -135,7 +135,7 @@ class schedulerDaemon(object):
         '''
     
         try:
-            conn = sqlite.connect('cocoma.sqlite')
+            conn = sqlite.connect('./data/cocoma.sqlite')
             c = conn.cursor()
             ca = conn.cursor() 
             c.execute('SELECT startTime,emulationID,emulationLifetimeID FROM emulationLifetime')

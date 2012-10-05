@@ -20,7 +20,6 @@
 
 
 import Pyro4,imp,time,sys,os
-import sqlite3 as sqlite
 import datetime as dt
 
 #perhaps needs to be set somewhere else
@@ -73,8 +72,8 @@ def loadDistribution(modName):
             '''
             We are Loading module by file name. File name will be determined by distribution type (i.e. linear)
             '''
-            modfile = "dist_"+modName+".py"
-            modname = "dist_"+modName
+            modfile = "./cocoma-distributions/dist_"+modName+".py"
+            modname = "./cocoma-distributions/dist_"+modName
             modhandle = imp.load_source(modname, modfile)
             print modhandle
             
@@ -94,8 +93,8 @@ def loadDistributionHelp(modName):
             '''
             We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
             '''
-            modfile = "dist_"+modName+".py"
-            modname = "dist_"+modName
+            modfile = "./cocoma-distributions/dist_"+modName+".py"
+            modname = "./cocoma-distributions/dist_"+modName
             modhandle = imp.load_source(modname, modfile)
             print modhandle
             
@@ -115,8 +114,8 @@ def loadDistributionArgQty(modName):
             '''
             We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
             '''
-            modfile = "dist_"+modName+".py"
-            modname = "dist_"+modName
+            modfile = "./cocoma-distributions/dist_"+modName+".py"
+            modname = "./cocoma-distributions/dist_"+modName
             modhandle = imp.load_source(modname, modfile)
             print modhandle
             
@@ -140,7 +139,7 @@ def listDistributions(name):
     distroList=[]
     print "this is listDistro"
     if name=="all":
-        path="./"  # root folder of project
+        path="./cocoma-distributions/"  # root folder of project
         dirList=os.listdir(path)
         for fname in dirList:
             if fname.startswith("dist_") and fname.endswith(".py"):

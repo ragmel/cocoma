@@ -41,7 +41,7 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
         #Connect to DB and write info into runs table
         
         try:
-            conn = sqlite.connect('cocoma.sqlite')
+            conn = sqlite.connect('./data/cocoma.sqlite')
             c = conn.cursor()
             #check if this is the last run in batch and update emulation table
             if runNo == 0:
