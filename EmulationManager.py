@@ -264,7 +264,7 @@ def purgeAll():
     # we need to remove jobs somehow too
     
 #TO-DO: logic needs to be updated 
-def updateEmulation(emulationID,newEmulationName,newDistributionType,newResourceType,newEmulationType,newStartTime,newStopTime, newDistributionGranularity,newStartLoad, newStopLoad):
+def updateEmulation(emulationID,newEmulationName,newDistributionType,newResourceType,newEmulationType,newStartTime,newStopTime, newDistributionGranularity,arg):
     print "Hello this is updateEmulation"
     
     uri ="PYRO:scheduler.daemon@localhost:51889"
@@ -279,7 +279,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
             #c.execute("SELECT * FROM emulation WHERE emulationID='"+str(emulationID)+"'")
             print "DB entries for emulation ID", emulationID
             c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.startLoad,DistributionParameters.stopLoad,
+                         distribution.distributionGranularity,distribution.distributionType,
                          emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID,distribution.distributionID 
                          FROM emulation, distribution,emulationLifetime,DistributionParameters
                          WHERE emulation.emulationID=? and emulation.distributionID = distribution.distributionID and
@@ -303,12 +303,10 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
                 active=row[4]
                 distributionGranularity=row[5]
                 distributionType=row[6]
-                startLoad=row[7]
-                stopLoad=row[8]
-                startTime=row[9]
-                stopTime=row[10]
-                emulationLifetimeID =row[11]
-                distributionID= row[12]
+                startTime=row[7]
+                stopTime=row[8]
+                emulationLifetimeID =row[10]
+                distributionID= row[11]
                 
                 #Deleting existing jobs at scheduler
                 daemon.deleteJobs(emulationID, emulationName)
@@ -349,15 +347,12 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
                     distributionGranularity = newDistributionGranularity
                     c.execute('UPDATE distribution SET distributionGranularity=? WHERE distributionID =?',(distributionGranularity,distributionID))
                     conn.commit()
-                    
-                if newStartLoad != "NULL":
-                    startLoad = newStartLoad
-                    c.execute('UPDATE DistributionParameters SET startLoad=? WHERE distributionID =?',(startLoad,distributionID))
+                ncount=0
+                for arguments in arg:
+                    c.execute('UPDATE DistributionParameters SET arg'+str(ncount)+'=? WHERE distributionID =?',(arguments,distributionID))
                     conn.commit()
                     
-                if newStopLoad != "NULL":
-                    stopLoad = newStopLoad
-                    c.execute('UPDATE DistributionParameters SET stopLoad=? WHERE distributionID =?',(stopLoad,distributionID))
+         
             
             
                 #3. Deleting existing runLog
@@ -367,8 +362,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
                 conn.commit()
                                                 
                 #4. Create new runLog
-                newEmulation =1
-                daemon.schedulerControl(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,startLoad, stopLoad,newEmulation)   
+                DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,arg)   
                 
                 
                 
@@ -450,7 +444,7 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
     
     c.close()
 
-
+    return emulationID
 
 def distributionTypeCheck(distributionType):
     #check if distribution type available in the framework

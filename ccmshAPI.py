@@ -21,22 +21,19 @@
 
 from bottle import route, run,response,request
 import optparse,sys,Pyro4,itertools
-#import argparse - new version of optparse
+
 import EmulationManager,XmlParser,ccmsh
 from json import dumps
 
-@route('/hello/:id')
-def hello(id):
-    #return "Hello World!"
-    return "MyID: "+id
 
 @route('/ccmsh/list')
 def get_emulation():
     emulationID = request.query.get('emulationID')
     if emulationID=="all":
-        emulationSelect=EmulationManager.getEmulation("NULL","NULL",1,0)
+        emulationSelect=EmulationManager.getEmulation("NULL","NULL",1,"NULL")
+        
     else:
-        emulationSelect=EmulationManager.getEmulation("NULL",emulationID,0,0)
+        emulationSelect=EmulationManager.getEmulation("NULL",emulationID,0,"NULL")
     
     
     
@@ -87,13 +84,17 @@ def create_emulation():
             arg.append(request.query.get('arg8'))
             arg.append(request.query.get('arg9'))
                         
-            print arg           
-            EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg)        
-            d= {'emulationName':emulationName, 'distributionType':distributionType, 'resourceType':resourceType, 'emulationType':emulationType, 'startTime':startTime, 'stopTime':stopTime, 'distributionGranularity':distributionGranularity,'arg1':arg[0], 'arg2':arg[1]}
+            print arg
+            try:           
+                emulationID=EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg)        
+                d= {'emulationID':emulationID}
         
-            print d
+                print d
             
-            return d 
+                return d
+            
+            except:
+                return "Error: Cannot create emulation please check parameters and conflicts with already created emulations" 
         
 
 @route('/ccmsh/update')
@@ -114,10 +115,11 @@ def update_emulation():
             startTime = 'NULL'
             stopTime = 'NULL'
             distributionGranularity = 'NULL'
-            startLoad = 'NULL'
-            stopLoad = 'NULL'
+            
+            
             
             d={}
+            arg=[]
             
             
             
@@ -145,22 +147,52 @@ def update_emulation():
                 if request.query.get('distributionGranularity'):
                     distributionGranularity = request.query.get('distributionGranularity')
                     
-                if request.query.get('startLoad'):
-                    startLoad = request.query.get('startLoad')
+                if request.query.get('arg0'):
+                    arg.append(request.query.get('arg0'))
+                    
+                if request.query.get('arg1'):
+                    arg.append(request.query.get('arg1'))
                 
-                if request.query.get('stopLoad'):
-                    stopLoad = request.query.get('stopLoad')
-        
-                EmulationManager.updateEmulation(emulationID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad)        
-                d= {'emulationName':emulationName, 'distributionType':distributionType, 'resourceType':resourceType, 'emulationType':emulationType, 'startTime':startTime, 'stopTime':stopTime, 'distributionGranularity':distributionGranularity,'startLoad':startLoad, 'stopLoad':stopLoad}
+                if request.query.get('arg2'):
+                    arg.append(request.query.get('arg2'))
                 
-                return d
+                if request.query.get('arg3'):
+                    arg.append(request.query.get('arg3'))
+                
+                if request.query.get('arg4'):
+                    arg.append(request.query.get('arg4'))
+                
+                if request.query.get('arg5'):
+                    arg.append(request.query.get('arg5'))
+                
+                if request.query.get('arg6'):
+                    arg.append(request.query.get('arg6'))
+                
+                if request.query.get('arg7'):
+                    arg.append(request.query.get('arg7'))
+                
+                if request.query.get('arg8'):
+                    arg.append(request.query.get('arg8'))
+                
+                if request.query.get('arg9'):
+                    arg.append(request.query.get('arg9'))
+                    
+                
+                
+                try:
+                    EmulationManager.updateEmulation(emulationID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,arg)        
+                    d= {'emulationName':emulationName, 'distributionType':distributionType, 'resourceType':resourceType, 'emulationType':emulationType, 'startTime':startTime, 'stopTime':stopTime, 'distributionGranularity':distributionGranularity,'arguments':arg}
+                
+                    return d
+                except:
+                    
+                    return {'error':'Update could not be done, check your data'}
             
             else:
                 
                 print "No emulation ID specified"
             
-                return "Error: Provide Emulation ID" 
+                return {'error':'Update could not be done, Provide Emulation ID'} 
         
 
 @route('/ccmsh/delete')
@@ -174,7 +206,7 @@ def emulationDelete():
             return "EmulationID: "+emulationID+" was deleted"
 
 def startAPI():
-    run(host='10.55.164.240', port=8050)
+    run(host='10.55.164.160', port=8050)
     
 if __name__ == '__main__':
     startAPI()

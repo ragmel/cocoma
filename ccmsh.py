@@ -93,9 +93,9 @@ def main():
         if options.updateID and len(arguments) !=10:
             parser.print_help()
             
-               
+        #(emulationName,emulationID,all,active)               
         if options.listActive:
-            EmulationManager.getEmulation("NULL","NULL",0,1)
+            EmulationManager.getEmulation("NULL","NULL",1,1)
             sys.exit(1)
          
         if options.listInactive:
@@ -105,9 +105,9 @@ def main():
        
         if options.listAll:
             if arguments[0]=="all":
-                EmulationManager.getEmulation("NULL","NULL",1,0)
+                EmulationManager.getEmulation("NULL","NULL",1,"NULL")
             else:
-                EmulationManager.getEmulation("NULL",arguments[0],0,0)
+                EmulationManager.getEmulation("NULL",arguments[0],0,"NULL")
                     
         if options.listJobs:
             if arguments[0]=="all":
@@ -125,7 +125,7 @@ def main():
                         print job
         
         if options.listName:
-            EmulationManager.getEmulation(arguments[0],"NULL",0,0)
+            EmulationManager.getEmulation(arguments[0],"NULL",0,"NULL")
                 
         if options.listActive:
             if arguments[0]=="all":
