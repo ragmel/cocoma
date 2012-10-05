@@ -176,6 +176,11 @@ class schedulerDaemon(object):
                                 self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
                     else:
                             print "No Active EmulationLifetime Runs were found to recover(1)"
+                            # setting the emulation as inactive if the start date is in the past
+                            c.execute('UPDATE emulation SET active=0 WHERE emulationID=?',[emulationID])
+                            conn.commit()
+                             
+                            
                 
             else:
                 print "No Emulations were found to recover(2)" 

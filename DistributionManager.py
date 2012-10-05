@@ -94,7 +94,7 @@ def loadDistributionHelp(modName):
             We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
             '''
             modfile = "./cocoma-distributions/dist_"+modName+".py"
-            modname = "./cocoma-distributions/dist_"+modName
+            modname = "./cocoma-distributions/ldist_"+modName
             modhandle = imp.load_source(modname, modfile)
             print modhandle
             
