@@ -4,8 +4,8 @@
        <emulationName>myLinearEmu</emulationName>
        <emulationType>Malicious</emulationType>
        <resourceType>CPU</resourceType>
-       <startTime>2013-09-10T15:30:00</startTime>
-       <stopTime>2013-09-10T16:00:00</stopTime>
+       <startTime>2012-11-05T15:23:00</startTime>
+       <stopTime>2012-11-05T15:30:00</stopTime>
    </emulation>
    
    <distribution>

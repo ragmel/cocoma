@@ -45,9 +45,8 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
             c = conn.cursor()
             #check if this is the last run in batch and update emulation table
             if runNo == 0:
-                c.execute('UPDATE emulation SET executed=? , active =? WHERE emulationID =?',["1","NULL",emulationID])
-            
-            c.execute('Update runLog SET executed=? WHERE emulationLifetimeID=? and runNo=?', ["1",emulationLifetimeID,runNo])
+                c.execute('UPDATE emulation SET executed=? , active =? WHERE emulationID =?',["1","0",emulationID])
+                c.execute('Update runLog SET executed=? WHERE emulationLifetimeID=? and runNo=?', ["1",emulationLifetimeID,runNo])
             conn.commit()
         
         except sqlite.Error, e:
