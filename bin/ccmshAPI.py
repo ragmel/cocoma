@@ -20,10 +20,15 @@
 
 
 from bottle import route, run,response,request
-import sys
+import sys,os
 
 import EmulationManager,ccmsh
 from json import dumps
+
+try:
+    HOMEPATH= os.environ['COCOMA']
+except:
+    print "no $COCOMA environmental variable set"
 
 
 @route('/ccmsh/list')

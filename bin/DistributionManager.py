@@ -76,20 +76,26 @@ def loadDistribution(modName):
             We are Loading module by file name. File name will be determined by distribution type (i.e. linear)
             '''
             if HOMEPATH:
+                modfile = HOMEPATH+"/cocoma-distributions/dist_"+modName+".py"
+                modname = "dist_"+modName
+            else:
                 modfile = "./cocoma-distributions/dist_"+modName+".py"
-            modname = "./cocoma-distributions/dist_"+modName
+                modname = "./cocoma-distributions/dist_"+modName
+                
+            #modhandle = imp.load_source(modname, modfile)
+            #print modhandle
+            
+            #fp, pathname, description = imp.find_module(modname)
+            
+            
+            #print fp, pathname, description
+            #try:
+                #modhandle = imp.load_module(modname, fp, pathname, description)
             modhandle = imp.load_source(modname, modfile)
-            print modhandle
-            
-            fp, pathname, description = imp.find_module(modname)
-            
-            print fp, pathname, description
-            try:
-                modhandle = imp.load_module(modname, fp, pathname, description)
-            finally:
+            #finally:
                 # Since we may exit via an exception, close fp explicitly.
-                if fp:
-                    fp.close()
+              #  if fp:
+              #      fp.close()
                 
             return modhandle.distributionMod
 
@@ -97,8 +103,13 @@ def loadDistributionHelp(modName):
             '''
             We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
             '''
-            modfile = "./cocoma-distributions/dist_"+modName+".py"
-            modname = "./cocoma-distributions/ldist_"+modName
+            if HOMEPATH:
+                modfile = HOMEPATH+"/cocoma-distributions/dist_"+modName+".py"
+                modname = HOMEPATH+"/cocoma-distributions/dist_"+modName
+            else:
+                modfile = "./cocoma-distributions/dist_"+modName+".py"
+                modname = "./cocoma-distributions/dist_"+modName
+                
             modhandle = imp.load_source(modname, modfile)
             print modhandle
             
@@ -118,8 +129,13 @@ def loadDistributionArgQty(modName):
             '''
             We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
             '''
-            modfile = "./cocoma-distributions/dist_"+modName+".py"
-            modname = "./cocoma-distributions/dist_"+modName
+            if HOMEPATH:
+                modfile = HOMEPATH+"/cocoma-distributions/dist_"+modName+".py"
+                modname = HOMEPATH+"/cocoma-distributions/dist_"+modName
+            else:
+                modfile = "./cocoma-distributions/dist_"+modName+".py"
+                modname = "./cocoma-distributions/dist_"+modName
+                
             modhandle = imp.load_source(modname, modfile)
             print modhandle
             
@@ -143,7 +159,11 @@ def listDistributions(name):
     distroList=[]
     print "this is listDistro"
     if name=="all":
-        path="./cocoma-distributions/"  # root folder of project
+        if HOMEPATH:
+            path=HOMEPATH+"/cocoma-distributions/"  # root folder of project
+        else:
+            path="./cocoma-distributions/"  # root folder of project
+            
         dirList=os.listdir(path)
         for fname in dirList:
             if fname.startswith("dist_") and fname.endswith(".py"):

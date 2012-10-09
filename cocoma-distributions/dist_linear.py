@@ -23,10 +23,7 @@ import sqlite3 as sqlite
 import datetime as dt
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
-try:
-    HOMEPATH= os.environ['COCOMA']
-except:
-    print "no $COCOMA environmental variable set"
+
 
 class distributionMod(object):
     
@@ -93,24 +90,34 @@ class distributionMod(object):
             3. Updating Run log in DB. 
                         
             '''
+            
+            
+            
             try:
-                if HOMEPATH:
+                HOMEPATH= os.environ['COCOMA']
+                try:
                     conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                else:
-                    conn = sqlite.connect('./data/cocoma.sqlite')
-                
-                c = conn.cursor()
+                    c = conn.cursor()
                                    
-                c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])
+                    c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])
                                         
-                conn.commit()
+                    conn.commit()
+                    c.close()
+                except sqlite.Error, e:
+                    print "Error %s:" % e.args[0]
+                    print e
+                    sys.exit(1)
+                         
+            except:
+                print "no $COCOMA environmental variable set(distro)"
+            
+              
+                
+                
 
-            except sqlite.Error, e:
-                print "Error %s:" % e.args[0]
-                print e
-                sys.exit(1)
+            
 
-            c.close()
+            
             
             #increasing to next run            
             self.runNo=int(self.runNo)+1
