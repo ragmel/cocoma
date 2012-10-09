@@ -1,0 +1,23 @@
+#!/bin/sh
+
+echo "Modifing ccmsh permissions ..."
+chmod +x /usr/share/pyshared/cocoma/bin/ccmsh.py
+
+echo "Modifing scheduler permissions ..."
+chmod +x /usr/share/pyshared/cocoma/bin/Scheduler.py
+
+echo "Modifing ccmshAPI permissions ..."
+chmod +x /usr/share/pyshared/cocoma/bin/ccmshAPI.py
+
+echo "Installing python apscheduler and pyro4 ..."
+pip install apscheduler pyro4
+
+echo "Checking COCOMA env variable ..."
+
+if ! grep -q "export COCOMA=\"/usr/share/pyshared/cocoma\"" /etc/profile ; then
+	echo "Adding COCOMA env variable ..."
+	echo "export COCOMA=\"/usr/share/pyshared/cocoma\"" >> /etc/profile
+fi
+
+. /etc/profile
+

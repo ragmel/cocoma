@@ -1,0 +1,16 @@
+Source: cocoma
+Maintainer: Carmelo Ragusa <carmelo.ragusa@sap.com>
+Section: python
+Priority: optional
+Build-Depends: python(>=2.6), python-setuptools (>= 0.6b3), debhelper (>= 7), python-support (>= 0.8.4)
+XS-Python-Version: >= 2.6
+Standards-Version: 3.9.3
+
+Package: cocoma
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-bottle, python-pip
+#XB-Python-Version: ${python:Versions}
+#Provides: ${python:Provides}
+Description: This is the COCOMA README file. Long description will be in 
+ This is the NEWS file for COCOMA. NEWS will be added here later on
+ .
