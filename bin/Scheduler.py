@@ -88,6 +88,13 @@ class schedulerDaemon(object):
         
         
         try:
+            print "Job added with:\n StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
+            
+            print "emulationID ",emulationID
+            print "emulationLifetimeID",emulationLifetimeID
+            print "stressValue",stressValue
+            print "duration",duration
+            print "runNo",runNo
             self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
         
             valBack=str(("Job: "+str(emulationID)+"-"+emulationName+" with run No: "+runNo+" start date "+str(runStartTime)+" created"))
@@ -170,8 +177,10 @@ class schedulerDaemon(object):
                         
                         ca.execute('SELECT runLog.duration,runLog.stressValue,runLog.runNo,emulation.emulationName FROM runLog,emulation WHERE emulation.emulationLifetimeID =? and runLog.emulationLifetimeID=?',[str(emulationLifetimeID),str(emulationLifetimeID)])
                         runLogFetch = ca.fetchall()
+                        print runLogFetch
         
                         if runLogFetch:
+                            print "run log haz values"
                             for row in runLogFetch:
                                 print row
                                 duration = row[0]
@@ -182,7 +191,31 @@ class schedulerDaemon(object):
                                 startTimeSec= self.timeConv(startTime)
                                 
                                 runStartTime=self.timestamp(startTimeSec)+(int(duration)*int(runNo))
-                                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
+                                print "Job added with:\n StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
+            
+                                print "emulationID ",emulationID
+                                print "emulationLifetimeID",emulationLifetimeID
+                                print "stressValue",stressValue
+                                print "duration",duration
+                                print "runNo",runNo
+                                
+                                
+                                
+                                Run.createRun(emulationID,emulationLifetimeID,duration,stressValue,str(runNo))                                       
+                                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,str(runNo)], name=str(emulationID)+"-"+emulationName)
+                                
+                                try:
+                                    self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
+        
+                                    valBack=str(("Job: "+str(emulationID)+"-"+emulationName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
+                                    print valBack
+                                    return valBack          
+                                except :    
+                                    print "Scheduler createJob(): error creating Job "
+                                    return "Scheduler createJob(): error creating Job check dates "
+                                
+                                
+                                
                     else:
                             print "No Active EmulationLifetime Runs were found to recover(1)"
                             # setting the emulation as inactive if the start date is in the past

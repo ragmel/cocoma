@@ -27,12 +27,7 @@ import EmulationManager,XmlParser,DistributionManager
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 def main():
-    #checking for daemon
-    if daemonCheck()==0:
-        sys.exit(0)
-    #define daemon
-    uri ="PYRO:scheduler.daemon@localhost:51889"
-    daemon=Pyro4.Proxy(uri)
+    
 
     #Trying to group things
     parser = optparse.OptionParser()
@@ -60,6 +55,8 @@ def main():
     listDistro.add_option('-i', '--dist', action='store_true', default=False,dest='listAllDistro',help='[all]  List of all available distributions')
     listDistro.add_option('--dist-help', action='store_true', default=False,dest='listDistroOptions',help='[name]  List of all available distribution arguments')
     
+    serviceStart = optparse.OptionGroup(parser, 'Start Services')
+    serviceStart.add_option('--start', action='store_true', default=False,dest='startScheduler',help='[scheduler] start scheduler')
     
     
     
@@ -69,6 +66,7 @@ def main():
     parser.add_option_group(createEmu)
     parser.add_option_group(deleteEmu)
     parser.add_option_group(updateEmu)
+    parser.add_option_group(serviceStart)
        
 
     options, arguments = parser.parse_args()
@@ -92,6 +90,15 @@ def main():
         
         if options.updateID and len(arguments) !=10:
             parser.print_help()
+        
+        if options.startScheduler:
+            print "Starting ",arguments[0]
+            try:
+                HOMEPATH= os.environ['COCOMA']
+                os.system(HOMEPATH+"/bin/Scheduler.py&")
+            except:
+                print "no $COCOMA environmental variable set"   
+                    
             
         #(emulationName,emulationID,all,active)               
         if options.listActive:

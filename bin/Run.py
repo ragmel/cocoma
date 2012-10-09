@@ -26,7 +26,7 @@ except:
     print "no $COCOMA environmental variable set"
     
 def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
-    
+               
         duration=str(duration)
         stressValue = str(stressValue)
         print duration
