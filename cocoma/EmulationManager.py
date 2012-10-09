@@ -19,13 +19,17 @@
 
 
 import sqlite3 as sqlite
-import sys,re
+import sys,re,os
 import DistributionManager
 import Pyro4
 from datetime import datetime as dt
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
+try:
+    HOMEPATH= os.environ['COCOMA']
+except:
+    print "no $COCOMA environmental variable set"
 
 def getEmulation(emulationName,emulationID,all,active):
     print "Hello this is getEmulation"
@@ -35,7 +39,10 @@ def getEmulation(emulationName,emulationID,all,active):
     
         
     try:
-        conn = sqlite.connect('./data/cocoma.sqlite')
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
         c = conn.cursor()
         cRun=conn.cursor()
         
@@ -168,7 +175,10 @@ def deleteEmulation(emulationID):
      
     
     try:
-        conn = sqlite.connect('./data/cocoma.sqlite')
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
         c = conn.cursor()
         c.execute('SELECT distributionID, emulationName FROM emulation WHERE emulationID=?',[str(emulationID)])
                 
@@ -232,7 +242,11 @@ def purgeAll():
      
     
     try:
-        conn = sqlite.connect('./data/cocoma.sqlite')
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+            
         c = conn.cursor()
         c.execute('DELETE FROM distribution')
         c.execute('DELETE FROM emulationLifetime ')
@@ -272,7 +286,11 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
     
     #1. Get all the values from the existing table
     try:
-        conn = sqlite.connect('./data/cocoma.sqlite')
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+            
         c = conn.cursor()
         
         if emulationID !="NULL":
@@ -391,7 +409,11 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
 
     #connecting to the DB and storing parameters
     try:
-        conn = sqlite.connect('./data/cocoma.sqlite')
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+            
         c = conn.cursor()
     
         # 1. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
@@ -515,7 +537,11 @@ def dateOverlapCheck(startTime, stopTime):
      
     
     try:
-        conn = sqlite.connect('./data/cocoma.sqlite')
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+            
         c = conn.cursor()
     
         c.execute('SELECT startTime, stopTime FROM emulationLifetime')

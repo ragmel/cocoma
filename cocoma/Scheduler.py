@@ -32,6 +32,10 @@ import Pyro4
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
+try:
+    HOMEPATH= os.environ['COCOMA']
+except:
+    print "no $COCOMA environmental variable set"
 
 class schedulerDaemon(object):
     
@@ -135,7 +139,12 @@ class schedulerDaemon(object):
         '''
     
         try:
-            conn = sqlite.connect('./data/cocoma.sqlite')
+            if HOMEPATH:
+                print "DB location path:", HOMEPATH+'/data/cocoma.sqlite'
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+            else:
+                conn = sqlite.connect('./data/cocoma.sqlite')
+                
             c = conn.cursor()
             ca = conn.cursor() 
             c.execute('SELECT startTime,emulationID,emulationLifetimeID FROM emulationLifetime')
@@ -211,17 +220,7 @@ def main():
             port = 51889, ns=False)
     
     #we start daemon locally
-    
-    
-    
-    
-    
-        
-
-   
-
-    
-
+ 
 if __name__=="__main__":
     main()
     

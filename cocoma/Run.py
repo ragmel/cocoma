@@ -20,7 +20,10 @@
 import os,sys
 import sqlite3 as sqlite
 
-#timer for the job, has to be set to the run interval
+try:
+    HOMEPATH= os.environ['COCOMA']
+except:
+    print "no $COCOMA environmental variable set"
     
 def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
     
@@ -41,7 +44,11 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
         #Connect to DB and write info into runs table
         
         try:
-            conn = sqlite.connect('./data/cocoma.sqlite')
+            if HOMEPATH:
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+            else:
+                conn = sqlite.connect('./data/cocoma.sqlite')
+                
             c = conn.cursor()
             #check if this is the last run in batch and update emulation table
             if runNo == 0:

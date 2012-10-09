@@ -24,7 +24,10 @@ import datetime as dt
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
-    
+try:
+    HOMEPATH= os.environ['COCOMA']
+except:
+    print "no $COCOMA environmental variable set"    
 
 def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,arg):   
             print "this is schedulerControl"
@@ -72,7 +75,8 @@ def loadDistribution(modName):
             '''
             We are Loading module by file name. File name will be determined by distribution type (i.e. linear)
             '''
-            modfile = "./cocoma-distributions/dist_"+modName+".py"
+            if HOMEPATH:
+                modfile = "./cocoma-distributions/dist_"+modName+".py"
             modname = "./cocoma-distributions/dist_"+modName
             modhandle = imp.load_source(modname, modfile)
             print modhandle
