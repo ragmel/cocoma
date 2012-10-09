@@ -28,7 +28,7 @@ Pyro4.config.HMAC_KEY='pRivAt3Key'
 class distributionMod(object):
     
     
-    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg):
+    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH):
         
         self.startLoad = arg[0]
         self.stopLoad = arg[1]
@@ -93,23 +93,24 @@ class distributionMod(object):
             
             
             
+            
+                
             try:
-                HOMEPATH= os.environ['COCOMA']
-                try:
-                    conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                    c = conn.cursor()
-                                   
-                    c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])
-                                        
-                    conn.commit()
-                    c.close()
-                except sqlite.Error, e:
-                    print "Error %s:" % e.args[0]
-                    print e
-                    sys.exit(1)
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+                c = conn.cursor()
+                print "Path:",HOMEPATH+'/data/cocoma.sqlite'
+                print "insert to runlog"               
+                c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])
+                                    
+                conn.commit()
+                c.close()
+            except sqlite.Error, e:
+                print "Error %s:" % e.args[0]
+                print e
+                sys.exit(1)
                          
-            except:
-                print "no $COCOMA environmental variable set(distro)"
+            
+            
             
               
                 

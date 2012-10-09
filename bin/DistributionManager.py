@@ -52,7 +52,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,
             #1. Get required module loaded
             modhandleMy=loadDistribution(distributionType)
             #2. Use this module for calculation and run creation   
-            newCreateRuns=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg)
+            newCreateRuns=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH)
   
            
                                     
@@ -80,7 +80,7 @@ def loadDistribution(modName):
                 modname = "dist_"+modName
             else:
                 modfile = "./cocoma-distributions/dist_"+modName+".py"
-                modname = "./cocoma-distributions/dist_"+modName
+                modname = "dist_"+modName
                 
             #modhandle = imp.load_source(modname, modfile)
             #print modhandle
@@ -105,23 +105,14 @@ def loadDistributionHelp(modName):
             '''
             if HOMEPATH:
                 modfile = HOMEPATH+"/cocoma-distributions/dist_"+modName+".py"
-                modname = HOMEPATH+"/cocoma-distributions/dist_"+modName
+                modname = "dist_"+modName
             else:
                 modfile = "./cocoma-distributions/dist_"+modName+".py"
-                modname = "./cocoma-distributions/dist_"+modName
+                modname = "dist_"+modName
                 
             modhandle = imp.load_source(modname, modfile)
             print modhandle
-            
-            fp, pathname, description = imp.find_module(modname)
-            
-            print fp, pathname, description
-            try:
-                modhandle = imp.load_module(modname, fp, pathname, description)
-            finally:
-                # Since we may exit via an exception, close fp explicitly.
-                if fp:
-                    fp.close()
+                      
                 
             return modhandle.distHelp   
         
@@ -131,23 +122,14 @@ def loadDistributionArgQty(modName):
             '''
             if HOMEPATH:
                 modfile = HOMEPATH+"/cocoma-distributions/dist_"+modName+".py"
-                modname = HOMEPATH+"/cocoma-distributions/dist_"+modName
+                modname = "dist_"+modName
             else:
                 modfile = "./cocoma-distributions/dist_"+modName+".py"
-                modname = "./cocoma-distributions/dist_"+modName
+                modname = "dist_"+modName
                 
             modhandle = imp.load_source(modname, modfile)
             print modhandle
-            
-            fp, pathname, description = imp.find_module(modname)
-            
-            print fp, pathname, description
-            try:
-                modhandle = imp.load_module(modname, fp, pathname, description)
-            finally:
-                # Since we may exit via an exception, close fp explicitly.
-                if fp:
-                    fp.close()
+                        
                 
             return modhandle.argQty  
 

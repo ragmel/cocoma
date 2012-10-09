@@ -25,7 +25,7 @@ from signal import SIGTERM
 from datetime import datetime
 from apscheduler.scheduler import Scheduler 
 import datetime as dt
-import Distribution,Run
+import Run
 import sqlite3 as sqlite
 #from __future__ import print_function
 import Pyro4
