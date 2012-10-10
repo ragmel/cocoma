@@ -28,6 +28,10 @@ Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 def main():
     
+    uri ="PYRO:scheduler.daemon@localhost:51889"
+    #perhaps needs to be setup somewhere else
+    
+    daemon=Pyro4.Proxy(uri)    
 
     #Trying to group things
     parser = optparse.OptionParser()
@@ -117,6 +121,10 @@ def main():
                 EmulationManager.getEmulation("NULL",arguments[0],0,"NULL")
                     
         if options.listJobs:
+            connectionCheck=daemonCheck()
+            if  connectionCheck !=1:
+                sys.exit(1) 
+                
             if arguments[0]=="all":
                 try:
                     for job in daemon.listJobs():

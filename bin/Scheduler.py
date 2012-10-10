@@ -84,6 +84,8 @@ class schedulerDaemon(object):
     #    self.sched.shutdown(False, True, True)
     
     def createJob(self,emulationID,emulationName,emulationLifetimeID,duration,stressValue,runStartTime,runNo):
+        
+        
         print "Hello this is Scheduler createJob()"
         
         
@@ -97,7 +99,7 @@ class schedulerDaemon(object):
             print "runNo",runNo
             self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
         
-            valBack=str(("Job: "+str(emulationID)+"-"+emulationName+" with run No: "+runNo+" start date "+str(runStartTime)+" created"))
+            valBack=str(("Job: "+str(emulationID)+"-"+emulationName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             print valBack
             return valBack
         except :    
@@ -199,20 +201,7 @@ class schedulerDaemon(object):
                                 print "duration",duration
                                 print "runNo",runNo
                                 
-                                
-                                
-                                Run.createRun(emulationID,emulationLifetimeID,duration,stressValue,str(runNo))                                       
-                                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,str(runNo)], name=str(emulationID)+"-"+emulationName)
-                                
-                                try:
-                                    self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
-        
-                                    valBack=str(("Job: "+str(emulationID)+"-"+emulationName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
-                                    print valBack
-                                    return valBack          
-                                except :    
-                                    print "Scheduler createJob(): error creating Job "
-                                    return "Scheduler createJob(): error creating Job check dates "
+                                self.createJob(emulationID,emulationName,emulationLifetimeID,duration,stressValue,runStartTime,runNo)
                                 
                                 
                                 
