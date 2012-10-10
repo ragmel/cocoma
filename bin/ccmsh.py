@@ -20,9 +20,10 @@
 
 
 
-import optparse,sys,Pyro4,os
+import optparse,sys,Pyro4,os,ConfigParser
+import sqlite3 as sqlite
 #import argparse - new version of optparse
-import EmulationManager,XmlParser,DistributionManager
+import EmulationManager,XmlParser,DistributionManager,subprocess
 
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 
@@ -59,8 +60,9 @@ def main():
     listDistro.add_option('-i', '--dist', action='store_true', default=False,dest='listAllDistro',help='[all]  List of all available distributions')
     listDistro.add_option('--dist-help', action='store_true', default=False,dest='listDistroOptions',help='[name]  List of all available distribution arguments')
     
-    serviceStart = optparse.OptionGroup(parser, 'Start Services')
-    serviceStart.add_option('--start', action='store_true', default=False,dest='startScheduler',help='[scheduler] start scheduler')
+    serviceControl = optparse.OptionGroup(parser, 'Services Control')
+    serviceControl.add_option('--start', action='store_true', default=False,dest='startServices',help='[scheduler][api] start services')
+    serviceControl.add_option('--stop', action='store_true', default=False,dest='stopServices',help='[scheduler][api] stop services')
     
     
     
@@ -70,12 +72,19 @@ def main():
     parser.add_option_group(createEmu)
     parser.add_option_group(deleteEmu)
     parser.add_option_group(updateEmu)
-    parser.add_option_group(serviceStart)
+    parser.add_option_group(serviceControl)
        
 
     options, arguments = parser.parse_args()
     #catch empty arguments
     if len(arguments)>0:
+        
+        '''
+        ################################
+        updateEmu
+        ###############################
+        '''
+        
         if options.updateID and len(arguments) ==10:
               
             emulationID=arguments[0]
@@ -95,16 +104,101 @@ def main():
         if options.updateID and len(arguments) !=10:
             parser.print_help()
         
-        if options.startScheduler:
-            print "Starting ",arguments[0]
-            try:
-                HOMEPATH= os.environ['COCOMA']
-                os.system(HOMEPATH+"/bin/Scheduler.py&")
-            except:
-                print "no $COCOMA environmental variable set"   
+        '''
+        ################################
+        serviceControl
+        ###############################
+        '''
+        
+        if options.startServices:
+            if arguments[0] == "scheduler":
+                print "Starting ",arguments[0]
+                apiPidNo=1
+                schedPidNo=1
+                try:
+                    HOMEPATH= os.environ['COCOMA']
+                    procSched = subprocess.Popen(HOMEPATH+"/bin/Scheduler.py")
+                    schedPidNo =procSched.pid
+                    print "Started API on PID No: ",procSched.pid
                     
+                    #os.system("kill "+str(procSched.pid))
+                    
+                except:
+                    print "no $COCOMA environmental variable set(sheduler)"
+                    
+                if os.getpid(schedPidNo):               
+                    try:
+                        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+                        c = conn.cursor()
+                        c.execute('UPDATE pid SET schedulerPID=? WHERE ID=1 ',[schedPidNo])                         
+                        conn.commit()
+                        c.close()
+                    except sqlite.Error, e:
+                        c.close()
+                        print "insert PID SQL Error %s:" % e.args[0]
+                        print e
+                        sys.exit(1)
+                
+                    
+                
+    
+                        
+                
             
-        #(emulationName,emulationID,all,active)               
+               
+            if arguments[0] == "api":
+                print "Starting ",arguments[0]
+                try:
+                    HOMEPATH= os.environ['COCOMA']
+                    procAPI = subprocess.Popen(HOMEPATH+"/bin/ccmshAPI.py")
+                    apiPidNo =procAPI.pid
+                    
+                except e:
+                    print "$COCOMA environmental variable set(ccmshAPI) : ",e
+                    sys.exit(1)
+
+                
+                if os.getpid(apiPidNo):
+                    try:    
+                        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+                        c = conn.cursor()
+                        c.execute('UPDATE pid SET apiPID=? WHERE ID=1',[apiPidNo])                         
+                        conn.commit()
+        
+                    except sqlite.Error, e:
+                        print "insert PID SQL Error %s:" % e.args[0]
+                        print e
+                        sys.exit(1)
+                    
+                    c.close()                   
+
+
+
+
+ 
+                    
+        if options.stopServices:
+            if arguments[0] == "scheduler":
+                #1.check config file for PID
+                #2.check if pid is running
+                #3.execute os.system("kill "+str(procSched.pid))
+                Config = ConfigParser.ConfigParser()
+                print "killing scheduler process here..."
+            
+            if arguments[0] == "api":
+                #1.check config file for PID
+                #2.check if pid is running
+                #3.execute os.system("kill "+str(procAPI.pid))
+                print "killing api process here..."
+
+
+                    
+        '''
+        ################################
+        listEmu
+        ###############################
+        '''
+                  
         if options.listActive:
             EmulationManager.getEmulation("NULL","NULL",1,1)
             sys.exit(1)
@@ -147,6 +241,16 @@ def main():
                 #TO-DO: List inactive values with 0 param
                 print "Listing all active values"
                 EmulationManager.getEmulation("NULL","NULL",0,1)
+
+
+
+        '''
+        ################################
+        deleteEmu
+        ###############################
+        '''
+
+
                   
         if options.deleteID:
             #TO-DO: List inactive values with 0 param
@@ -159,7 +263,17 @@ def main():
             if arguments[0]=="all":
                 EmulationManager.purgeAll()
         
-        #Listing Distributions
+
+
+        '''
+        ################################
+        listDistro
+        ###############################
+        '''
+
+
+
+
         if options.listAllDistro:
             distroList=DistributionManager.listDistributions("all")
             print "\nThese are available distributions:"
@@ -177,6 +291,14 @@ def main():
             distroModHelp()
             print "\n"
             
+
+
+        '''
+        ################################
+        createEmu
+        ###############################
+        '''
+
         
               
         if options.xml:  
