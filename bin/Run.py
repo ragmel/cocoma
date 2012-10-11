@@ -34,10 +34,10 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
                 
         #for testing reasons commands are commented  and replaced with echo
         #os.system("cpulimit -e stressapptest -l "+stressValue+"&")
-        os.system("echo cpulimit -e stressapptest -l "+stressValue+"&")
+        os.system("cpulimit -e stressapptest -l "+stressValue+"&")
         print "cpu limit executed"
         #os.system("stressapptest -s "+duration)
-        os.system("echo stressapptest -s "+duration)
+        os.system("stressapptest -s "+duration)
         
         print"stressapp test executed"
         
