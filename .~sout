@@ -1,0 +1,171 @@
+Recovering list of emulations
+DB location path: /home/ltenru/workspace/python/COCOMA/data/cocoma.sqlite
+(u'2012-11-05T15:23:00', 1, 1)
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+This is timestamp
+2012-10-11 15:24:09.964300
+DB Start time in seconds
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+1352132580.0
+Current time in seconds
+This is timestamp
+2012-10-11 15:24:09.964335
+1349969049.0
+[(u'42', u'10', 0, u'myLinearEmu'), (u'42', u'18', 1, u'myLinearEmu'), (u'42', u'26', 2, u'myLinearEmu'), (u'42', u'34', 3, u'myLinearEmu'), (u'42', u'42', 4, u'myLinearEmu'), (u'42', u'50', 5, u'myLinearEmu'), (u'42', u'58', 6, u'myLinearEmu'), (u'42', u'66', 7, u'myLinearEmu'), (u'42', u'74', 8, u'myLinearEmu'), (u'42', u'82', 9, u'myLinearEmu'), (u'42', u'90', 10, u'myLinearEmu')]
+run log haz values
+(u'42', u'10', 0, u'myLinearEmu')
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+Job added with:
+ StartTime: 2012-11-05 16:23:00
+emulationID  1
+emulationLifetimeID 1
+stressValue 10
+duration 42
+runNo 0
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-05 16:23:00
+emulationID  1
+emulationLifetimeID 1
+stressValue 10
+duration 42
+runNo 0
+Job: 1-myLinearEmu with run No: 0 start date 1352132580.0 created
+(u'42', u'18', 1, u'myLinearEmu')
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+Job added with:
+ StartTime: 2012-11-05 16:23:42
+emulationID  1
+emulationLifetimeID 1
+stressValue 18
+duration 42
+runNo 1
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-05 16:23:42
+emulationID  1
+emulationLifetimeID 1
+stressValue 18
+duration 42
+runNo 1
+Job: 1-myLinearEmu with run No: 1 start date 1352132622.0 created
+(u'42', u'26', 2, u'myLinearEmu')
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+Job added with:
+ StartTime: 2012-11-05 16:24:24
+emulationID  1
+emulationLifetimeID 1
+stressValue 26
+duration 42
+runNo 2
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-05 16:24:24
+emulationID  1
+emulationLifetimeID 1
+stressValue 26
+duration 42
+runNo 2
+Job: 1-myLinearEmu with run No: 2 start date 1352132664.0 created
+(u'42', u'34', 3, u'myLinearEmu')
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+Job added with:
+ StartTime: 2012-11-05 16:25:06
+emulationID  1
+emulationLifetimeID 1
+stressValue 34
+duration 42
+runNo 3
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-05 16:25:06
+emulationID  1
+emulationLifetimeID 1
+stressValue 34
+duration 42
+runNo 3
+Job: 1-myLinearEmu with run No: 3 start date 1352132706.0 created
+(u'42', u'42', 4, u'myLinearEmu')
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+Job added with:
+ StartTime: 2012-11-05 16:25:48
+emulationID  1
+emulationLifetimeID 1
+stressValue 42
+duration 42
+runNo 4
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-05 16:25:48
+emulationID  1
+emulationLifetimeID 1
+stressValue 42
+duration 42
+runNo 4
+Job: 1-myLinearEmu with run No: 4 start date 1352132748.0 created
+(u'42', u'50', 5, u'myLinearEmu')
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+Job added with:
+ StartTime: 2012-11-05 16:26:30
+emulationID  1
+emulationLifetimeID 1
+stressValue 50
+duration 42
+runNo 5
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-05 16:26:30
+emulationID  1
+emulationLifetimeID 1
+stressValue 50
+duration 42
+runNo 5
+Job: 1-myLinearEmu with run No: 5 start date 1352132790.0 created
+(u'42', u'58', 6, u'myLinearEmu')
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+Job added with:
+ StartTime: 2012-11-05 16:27:12
+emulationID  1
+emulationLifetimeID 1
+stressValue 58
+duration 42
+runNo 6
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-05 16:27:12
+emulationID  1
+emulationLifetimeID 1
+stressValue 58
+duration 42
+runNo 6
+Job: 1-myLinearEmu with run No: 6 start date 1352132832.0 created
+(u'42', u'66', 7, u'myLinearEmu')
+this is timeConv!!!
+This is timestamp
+2012-11-05 15:23:00
+Job added with:
+ StartTime: 2012-11-05 16:27:54
+emulationID  1
+emulationLifetimeID 1
+stressValue 66
+duration 42
+runNo 7
+Hello this is Scheduler 
