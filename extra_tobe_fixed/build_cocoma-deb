@@ -1,0 +1,10 @@
+#!/bin/bash
+
+python setup.py sdist
+cd dist/
+
+py2dsc -m 'Carmelo Ragusa <carmelo.ragusa@sap.com>' cocoma-0.1.tar.gz 
+
+cd deb_dist/cocoma-0.1/
+cp ../../../cocoma/extra_tobe_fixed/deb-files/* debian/
+debuild -us -uc
