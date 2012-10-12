@@ -9,8 +9,8 @@ chmod +x /usr/share/pyshared/cocoma/bin/Scheduler.py
 echo "Modifing ccmshAPI permissions ..."
 chmod +x /usr/share/pyshared/cocoma/bin/ccmshAPI.py
 
-echo "Installing python apscheduler and pyro4 ..."
-pip install apscheduler pyro4
+echo "Installing python apscheduler, bottle and pyro4 ..."
+pip  install --upgrade apscheduler pyro4 bottle
 
 echo "Checking COCOMA env variable ..."
 
