@@ -5,7 +5,7 @@ this is timeConv!!!
 This is timestamp
 2012-11-05 15:23:00
 This is timestamp
-2012-10-11 15:24:09.964300
+2012-10-12 15:57:36.501282
 DB Start time in seconds
 this is timeConv!!!
 This is timestamp
@@ -13,8 +13,8 @@ This is timestamp
 1352132580.0
 Current time in seconds
 This is timestamp
-2012-10-11 15:24:09.964335
-1349969049.0
+2012-10-12 15:57:36.501318
+1350057456.0
 [(u'42', u'10', 0, u'myLinearEmu'), (u'42', u'18', 1, u'myLinearEmu'), (u'42', u'26', 2, u'myLinearEmu'), (u'42', u'34', 3, u'myLinearEmu'), (u'42', u'42', 4, u'myLinearEmu'), (u'42', u'50', 5, u'myLinearEmu'), (u'42', u'58', 6, u'myLinearEmu'), (u'42', u'66', 7, u'myLinearEmu'), (u'42', u'74', 8, u'myLinearEmu'), (u'42', u'82', 9, u'myLinearEmu'), (u'42', u'90', 10, u'myLinearEmu')]
 run log haz values
 (u'42', u'10', 0, u'myLinearEmu')
