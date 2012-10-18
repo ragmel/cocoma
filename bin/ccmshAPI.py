@@ -217,13 +217,16 @@ def emulationDelete():
             except:
                 return "{error:Was not able to delete emulation, check parameters}"
 
-
+def getifip(ifn):
+    import socket, fcntl, struct
+    sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(sck.fileno(),0x8915,struct.pack('256s', ifn[:15]))[20:24])
 
 
 def startAPI():
     if ccmsh.daemonCheck() ==0:
         sys.exit(0)
-    run(host='10.55.164.111', port=8050)
+    run(host=getifip('eth0'), port=8050)
     
 if __name__ == '__main__':
     startAPI()
