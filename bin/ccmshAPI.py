@@ -223,10 +223,19 @@ def getifip(ifn):
     return socket.inet_ntoa(fcntl.ioctl(sck.fileno(),0x8915,struct.pack('256s', ifn[:15]))[20:24])
 
 
-def startAPI():
+def startAPI(iface):
     if ccmsh.daemonCheck() ==0:
         sys.exit(0)
-    run(host=getifip('eth0'), port=8050)
+    print "Interface: ",iface
+    
+    run(host=getifip(iface), port=8050)
     
 if __name__ == '__main__':
-    startAPI()
+    try: 
+        if sys.argv[1] == "-h":
+            print "Use ccmshAPI <name of network interface> . Default network interface is eth0."
+        else:
+            startAPI(sys.argv[1])
+    except:
+        startAPI("eth0")
+    

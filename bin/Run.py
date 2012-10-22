@@ -17,34 +17,50 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-import os,sys
+import os,sys,subprocess
 import sqlite3 as sqlite
+import threading
+from threading import Thread
 
-try:
-    HOMEPATH= os.environ['COCOMA']
-except:
-    print "no $COCOMA environmental variable set"
+
     
 def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
+    
+        try:
+            HOMEPATH= os.environ['COCOMA']
+        except:
+            print "no $COCOMA environmental variable set"
                
         duration=str(duration)
         stressValue = str(stressValue)
         print duration
         print stressValue
                 
-        #for testing reasons commands are commented  and replaced with echo
-        #os.system("cpulimit -e stressapptest -l "+stressValue+"&")
-        print "cpulimit stressValue: ",stressValue
-        os.system("cpulimit -e stressapptest -l "+stressValue+"&")
-        print "cpu limit executed"
-        #os.system("stressapptest -s "+duration)
-        print "Stressaptes with duration: ",duartion
-        os.system("stressapptest -s "+duration)
         
-        print"stressapp test executed"
+        def stressFunc():
+            print "stressapptest -H 10 -M 10 -s "+duration
+            procStress=subprocess.Popen("stressapptest -H 10 -M 10 -s "+duration, shell=True)
+            procStressPid=procStress.pid
+            print "Stress executed on PID: ",procStressPid
+            
+        
+        
+        def cpulimitFunc():
+            print "cpulimit -e stress -l "+stressValue+"-z"
+            procLimit=subprocess.Popen("cpulimit -e stressapptest -l "+stressValue+" -z", shell=True)
+            procLimitPid= procLimit.pid
+            print "cpu limit executed on PID: ",procLimitPid
+        
+        
+        
+        threading.Thread(target = stressFunc).start()
+        threading.Thread(target = cpulimitFunc).start()
+        
+         
+        sys.exit(0)
         
         #Connect to DB and write info into runs table
-        
+        '''
         try:
             if HOMEPATH:
                 conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
@@ -62,13 +78,17 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
             print "Error %s:" % e.args[0]
             print e
             sys.exit(1)
-    
-        c.close()
         
+        c.close()
+        '''
            
 if __name__ == '__main__':
     print "main"
     
-    duration = 10
+    duration = 20
     stressValue = 50
-    createRun(duration,stressValue)
+    runNo=1
+    emulationID = 1
+    emulationLifetimeID =1
+    createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo)
+    
