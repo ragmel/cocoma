@@ -117,26 +117,29 @@ def main():
         if options.startServices:
             if arguments[0] == "scheduler":
                 print "Starting ",arguments[0]
-                EmulationManager.services_control("scheduler","start")
+                EmulationManager.services_control("scheduler","start"," ")
      
             if arguments[0] == "api":
                 print "Starting ",arguments[0]
-                EmulationManager.services_control("api","start")
+                try:
+                    EmulationManager.services_control("api","start",arguments[1])
+                except:
+                    EmulationManager.services_control("api","start","eth0")
  
                     
         if options.stopServices:
             if arguments[0] == "scheduler":
-                EmulationManager.services_control("scheduler","stop")
+                EmulationManager.services_control("scheduler","stop"," ")
             
             if arguments[0] == "api":
-                EmulationManager.services_control("api","stop")
+                EmulationManager.services_control("api","stop"," ")
                 
         if options.showServices:
             if arguments[0] == "scheduler":
-                EmulationManager.services_control("scheduler","show")
+                EmulationManager.services_control("scheduler","show"," ")
             
             if arguments[0] == "api":
-                EmulationManager.services_control("api","show")
+                EmulationManager.services_control("api","show"," ")
                   
                 
                     

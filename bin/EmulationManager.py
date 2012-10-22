@@ -20,7 +20,7 @@
 
 import sqlite3 as sqlite
 import sys,re,os,subprocess
-import DistributionManager
+import DistributionManager,ccmsh
 import Pyro4
 from datetime import datetime as dt
 
@@ -592,7 +592,7 @@ def checkPid(pid):
         print "checkPid(pid) says pid is running"
         return True
     
-def services_control(service,action):
+def services_control(service,action,args):
     if action == "start":
             if service == "scheduler":
                 print "Starting ",service
@@ -680,7 +680,6 @@ def services_control(service,action):
                     try:
                         HOMEPATH= os.environ['COCOMA']
                         aout=open(HOMEPATH+"/.~aout","wb")
-                        
                         ccmshAPI = subprocess.Popen(HOMEPATH+"/bin/ccmshAPI.py",stdout=aout,stderr=aout)
                         apiPidNo =ccmshAPI.pid
                         print "Started API on PID No: ",apiPidNo
