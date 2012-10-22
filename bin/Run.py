@@ -43,10 +43,15 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
             procStressPid=procStress.pid
             print "Stress executed on PID: ",procStressPid
             
+            print "cpulimit -e stress -l "+stressValue+" -z"
+            procLimit=subprocess.Popen("cpulimit -e stressapptest -l "+stressValue+" -z", shell=True)
+            procLimitPid= procLimit.pid
+            print "cpu limit executed on PID: ",procLimitPid
+            
         
         
         def cpulimitFunc():
-            print "cpulimit -e stress -l "+stressValue+"-z"
+            print "cpulimit -e stress -l "+stressValue+" -z"
             procLimit=subprocess.Popen("cpulimit -e stressapptest -l "+stressValue+" -z", shell=True)
             procLimitPid= procLimit.pid
             print "cpu limit executed on PID: ",procLimitPid
@@ -54,7 +59,7 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
         
         
         threading.Thread(target = stressFunc).start()
-        threading.Thread(target = cpulimitFunc).start()
+        #threading.Thread(target = cpulimitFunc).start()
         
          
         sys.exit(0)

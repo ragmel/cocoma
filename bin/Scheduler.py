@@ -98,7 +98,7 @@ class schedulerDaemon(object):
             print "duration",duration
             print "runNo",runNo
             self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
-        
+            print sys.stdout
             valBack=str(("Job: "+str(emulationID)+"-"+emulationName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             print valBack
             return valBack
