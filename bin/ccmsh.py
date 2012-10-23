@@ -49,6 +49,7 @@ def main():
     
     createEmu = optparse.OptionGroup(parser, 'Create new emulations')
     createEmu.add_option('-x', '--xml', action='store_true', dest='xml',default=False, help='[file.xml] enter name XML document')
+    createEmu.add_option('-n', '--now', action='store_true', dest='emuNow',default=False, help='[-x filename -n minutes] enter duration only and emulation starts immediately')
     
     updateEmu = optparse.OptionGroup(parser, 'Update emulations')
     updateEmu.add_option('-u', '--update', action='store_true', dest='updateID',default=False, help='Update already created emulation. Usage: -u [emulationID] [emulationName] [distributionType] [resourceType] [emulationType] [startTime] [stopTime] [distributionGranularity] [startLoad] [stopLoad] . If no value needs to be changed enter NULL')
@@ -257,15 +258,23 @@ def main():
 
         
               
-        if options.xml:  
+        if options.xml and not options.emuNow:  
                 (emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
                 EmulationManager.dataCheck(startTime,stopTime)
                 EmulationManager.distributionTypeCheck(distributionType)
                 EmulationManager.DistributionArgCheck(distributionType,arg)
                 EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg)
         
+        if options.emuNow and options.xml:
+            
+            (startTime, stopTime) = EmulationManager.emulationNow(arguments[1])
+            (emulationName, distributionType, resourceType, emulationType, startTime0, stopTime0, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
+            EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg)
+            
+        
     else:
         parser.print_help()
+
         
 def daemonCheck():
     '''

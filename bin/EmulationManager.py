@@ -22,6 +22,7 @@ import sqlite3 as sqlite
 import sys,re,os,subprocess
 import DistributionManager,ccmsh
 import Pyro4
+import datetime
 from datetime import datetime as dt
 
 #perhaps needs to be set somewhere else
@@ -859,6 +860,34 @@ def services_control(service,action,args):
             else:
                 print "API is not running"
                     
+def emulationNow(duration):
+    print "EmulationManager.emulation.Now"
+    #we are adding 5 seconds to compensate for incert
+       
+    timeNow = dt.now()
+    pyStartTimeIn5 = timeNow + datetime.timedelta(seconds=5)
+    pyStopTime=pyStartTimeIn5+ datetime.timedelta(minutes=int(duration))
+    
+    print "timeNow: ",timeNow
+    print "startTimeIn5: ",pyStartTimeIn5
+    print "stopTime: ",pyStopTime
+    
+    #converting "2012-10-23 11:40:20.866356" to "2012-10-23T11:40:20"
+    def timeFix(pydate):
+        print "this is timeConv!!!"
+        Date = str(pydate)
+        dateNorm =Date[0:10]+"T"+Date[11:19]
+        print "dateNorm: ", dateNorm
+        return dateNorm 
+    
+    startTimeIn5 = timeFix(pyStartTimeIn5)
+    stopTime = timeFix(pyStopTime)
+    print "startTimeIn5: ",startTimeIn5
+    print "stopTime: ",stopTime
+    
+    return startTimeIn5,stopTime
+   
+    
 
 if __name__ == '__main__':
     

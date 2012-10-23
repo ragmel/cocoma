@@ -19,7 +19,7 @@
 
 import os,sys,subprocess
 import sqlite3 as sqlite
-import threading
+import threading,psutil
 from threading import Thread
 
 
@@ -36,7 +36,7 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
         print duration
         print stressValue
                 
-        
+        '''
         def stressFunc():
             print "stressapptest -H 10 -M 10 -s "+duration
             procStress=subprocess.Popen("stressapptest -H 10 -M 10 -s "+duration, shell=True)
@@ -47,19 +47,53 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
             procLimit=subprocess.Popen("cpulimit -e stressapptest -l "+stressValue+" -z", shell=True)
             procLimitPid= procLimit.pid
             print "cpu limit executed on PID: ",procLimitPid
-            
+        '''    
         
         
         def cpulimitFunc():
-            print "cpulimit -e stress -l "+stressValue+" -z"
-            procLimit=subprocess.Popen("cpulimit -e stressapptest -l "+stressValue+" -z", shell=True)
-            procLimitPid= procLimit.pid
-            print "cpu limit executed on PID: ",procLimitPid
+            #print "cpulimit -e stress -l "+stressValue+" -z"
+            #procLimit=subprocess.Popen("cpulimit -e stressapptest -l "+stressValue+" \"`jobs -p`\"&", shell=True)
+            #procLimitPid= procLimit.pid
+            #print "cpu limit executed on PID: ",procLimitPid
+            
+            #procStress=subprocess.Popen("stressapptest -H 10 -M 10 -s "+duration, shell=True)
+            
+            #cpulimit -l $LIMIT -e stressapptest "`jobs -p`"&
+
+            #stressapptest -H $H -M $MEM -s $DURATION
+
+            os.system("killall cpulimit")
+            os.system("killall stressapptest")
+            print "cpulimit -e stressapptest -l "+stressValue
+            os.system("cpulimit -b -e stressapptest -l "+stressValue )
+            
+            PROCNAME = "cpulimit"
+            
+            def pidFinder(PROCNAME):
+                for proc in psutil.process_iter():
+                    if proc.name == PROCNAME:
+                        p = proc.pid
+                        print "cpulimit found on PID: ",p
+                        return p
+                    
+            p =pidFinder("cpulimit")
+            print "this is our p:", p
+                      
+            
+            print "stressapptest -H 10 -M 10 -s "+duration
+            os.system("stressapptest -H 10 -M 10 -s "+duration)
+            print "kill -9 "+str(p)
+            os.system("kill -9 "+str(p))
+            
+            #find and destroy process
+            
+
+             
         
         
         
-        threading.Thread(target = stressFunc).start()
-        #threading.Thread(target = cpulimitFunc).start()
+        #threading.Thread(target = stressFunc).start()
+        threading.Thread(target = cpulimitFunc).start()
         
          
         sys.exit(0)
@@ -90,7 +124,7 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
 if __name__ == '__main__':
     print "main"
     
-    duration = 20
+    duration = 2
     stressValue = 50
     runNo=1
     emulationID = 1
