@@ -12,7 +12,7 @@
        <distributionGranularity>5</distributionGranularity>
        <distributionType>linear</distributionType>
        <arg0>10</arg0>
-       <arg1>90</arg1>
+       <arg1>60</arg1>
        
        
    </distribution>

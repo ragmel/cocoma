@@ -68,7 +68,6 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
             os.system("cpulimit -b -e stressapptest -l "+stressValue )
             
             PROCNAME = "cpulimit"
-            
             def pidFinder(PROCNAME):
                 for proc in psutil.process_iter():
                     if proc.name == PROCNAME:

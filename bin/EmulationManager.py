@@ -19,11 +19,12 @@
 
 
 import sqlite3 as sqlite
-import sys,re,os,subprocess
+import sys,re,os,subprocess,psutil
 import DistributionManager,ccmsh
 import Pyro4
 import datetime
 from datetime import datetime as dt
+from subprocess import *
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
@@ -583,42 +584,33 @@ def dateOverlapCheck(startTime, stopTime):
     
     c.close()
 
-def checkPid(pid):        
-    try:
-        os.kill(int(pid), 0)
-    except OSError:
-        print "checkPid(pid) says pid is not running"
-        return False
+
+def checkPid(PROCNAME):        
+    #ps ax | grep -v grep | grep Scheduler.py
+    #print "ps ax | grep -v grep | grep "+str(PROCNAME)
+    procTrace = subprocess.Popen("ps ax | grep -v grep | grep "+str(PROCNAME),shell=True,stdout=PIPE).communicate()[0]
+    #print "procTrace: ",procTrace
+    if procTrace:
+        pid = procTrace[0:5]
+        #print "procTracePID: ",pid
+        #program running
+        return pid
     else:
-        print "checkPid(pid) says pid is running"
-        return True
+        #program not running
+        return False
     
 def services_control(service,action,args):
     if action == "start":
+            HOMEPATH= os.environ['COCOMA']
             if service == "scheduler":
+                #converting to our format
+                service = "Scheduler.py"
                 print "Starting ",service
-                
-                #get pid ID from DB
-                try:
-                    HOMEPATH= os.environ['COCOMA']
-                    conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                    c = conn.cursor()
-                    c.execute("SELECT schedulerPID FROM pid WHERE ID=1")
-                    schedPidNo = c.fetchone()
-                    print "sched DB PID:", schedPidNo[0]
-                    conn.commit()
-                    c.close()
-                    
-                except sqlite.Error, e:
-                    c.close()
-                    print "Select PID SQL Error %s:" % e.args[0]
-                    print e
-                    sys.exit(1)
-                
                 #check if pid running
-                if checkPid(schedPidNo[0]):
-                    print "ERROR: Scheduler must be already running check \"ps -AF\" for PID ", schedPidNo[0]
-                    os.system("ps -Crp "+str(schedPidNo[0]))
+                
+                if checkPid(service):
+                    print "ERROR: Scheduler must be already running:"
+                    os.system("ps ax | grep -v grep | grep "+str(service))
                     sys.exit(1)
                 else:
                     try:
@@ -632,51 +624,23 @@ def services_control(service,action,args):
                     
                     except subprocess.CalledProcessError, e:
                         print "Error in launching scheduler: ",e
-                    
-                #write new pid to db               
-                    try:
-                        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                        c = conn.cursor()
-                        c.execute('UPDATE pid SET schedulerPID=? WHERE ID=1 ',[schedPidNo])                         
-                        conn.commit()
-                        c.close()
-                    except sqlite.Error, e:
-                        c.close()
-                        print "insert PID SQL Error %s:" % e.args[0]
-                        print e
-                        sys.exit(1)        
-    
-
-
-
-
+                
 
             if service == "api":
+                service="ccmshAPI.py"
+                
                 print "Starting ",service
                 
-                #get pid ID from DB
-                try:
-                    HOMEPATH= os.environ['COCOMA']
-                    conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                    c = conn.cursor()
-                    c.execute("SELECT apiPID FROM pid WHERE ID=1")
-                    apiPidNo = c.fetchone()
-                    print "api DB PID:", apiPidNo[0]
-                    conn.commit()
-                    c.close()
-                    
-                except sqlite.Error, e:
-                    c.close()
-                    print "Select PID SQL Error %s:" % e.args[0]
-                    print e
+                if checkPid("Scheduler.py")==False:
+                    print "ERROR: Scheduler must be started first!"
                     sys.exit(1)
                 
-                #check if pid running
-                if checkPid(apiPidNo[0]):
-                    print "ERROR:ccmsAPI must be already running check \"ps -AF\" for PID ", apiPidNo[0]
-                    os.system("ps -Crp "+str(apiPidNo[0]))
-                    
+                #get pid ID from DB
+                if checkPid(service):
+                    print "ERROR: API must be already running:"
+                    os.system("ps ax | grep -v grep | grep "+str(service))
                     sys.exit(1)
+ 
                 else:
                     try:
                         HOMEPATH= os.environ['COCOMA']
@@ -687,178 +651,60 @@ def services_control(service,action,args):
                         os.system("ps -Crp "+str(apiPidNo))
                     except subprocess.CalledProcessError, e:
                         print "Error in launching ccmshAPI: ",e
-                    
-                #write new pid to db               
-                    try:
-                        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                        c = conn.cursor()
-                        c.execute('UPDATE pid SET apiPID=? WHERE ID=1 ',[apiPidNo])                         
-                        conn.commit()
-                        c.close()
-                    except sqlite.Error, e:
-                        c.close()
-                        print "insert apiPID SQL Error %s:" % e.args[0]
-                        print e
-                        sys.exit(1)
+
 
     if action == "stop":
         
         if service == "scheduler":
-                
-                #get pid ID from DB
-                try:
-                    HOMEPATH= os.environ['COCOMA']
-                    conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                    c = conn.cursor()
-                    c.execute("SELECT schedulerPID FROM pid WHERE ID=1")
-                    schedPidNo = c.fetchone()
-                    print "sched DB PID:", schedPidNo[0]
-                    conn.commit()
-                    c.close()
-                    
-                except sqlite.Error, e:
-                    c.close()
-                    print "Select PID SQL Error %s:" % e.args[0]
-                    print e
-                    sys.exit(1)
+                service ="Scheduler.py"
+                runner = checkPid(service)
  
                 
-                if checkPid(schedPidNo[0])!=False:
-                    print "Killing Scheduler on PID: ", schedPidNo[0]
-                    try:
-                        os.kill(int(schedPidNo[0]), 9)
-                        
-                        #update table once we killed process
+                if runner!=False:
+                    print "Killing Scheduler on PID: ", runner
                     
-                        try:
-                            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                            c = conn.cursor()
-                            c.execute('UPDATE pid SET schedulerPID=? WHERE ID=1 ',[99999999])                         
-                            conn.commit()
-                            c.close()
-                        except sqlite.Error, e:
-                            c.close()
-                            print "insert schedulerPID SQL Error %s:" % e.args[0]
-                            print e
-                        
-                        
-                        
-                    except os.error, e:
-                        print "kill error: ",e
-                    
-                    
+                    os.kill(int(runner), 9)
+ 
                     sys.exit(1)
                 else:
-                    print "ERROR: Scheduler is not running on PID ",schedPidNo[0]," start it first"
+                    print "ERROR: Scheduler is not running start it first"
                     sys.exit(1)                
                 
                 
             
         if service == "api":
-                
-                #get pid ID from DB
-                try:
-                    HOMEPATH= os.environ['COCOMA']
-                    conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                    c = conn.cursor()
-                    c.execute("SELECT apiPID FROM pid WHERE ID=1")
-                    apiPidNo = c.fetchone()
-                    conn.commit()
-                    print "api DB PID:", apiPidNo[0]
-                    
-                    c.close()
-                    
-                except sqlite.Error, e:
-                    c.close()
-                    print "Select PID SQL Error %s:" % e.args[0]
-                    print e
-                    sys.exit(1)
-                
-                #check if pid running
-                
-                if checkPid(apiPidNo[0])!=False:
-                    
-                    try:
-                        os.kill(int(apiPidNo[0]), 9)
-                        print "Killing API on PID: ", apiPidNo[0]
-                        #update table once we killed process
-                        try:
-                            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                            c = conn.cursor()
-                            c.execute('UPDATE pid SET apiPID=? WHERE ID=1 ',[99999999])                         
-                            conn.commit()
-                            c.close()
-                        except sqlite.Error, e:
-                            c.close()
-                            print "insert apiPID SQL Error %s:" % e.args[0]
-                            print e
-                        
-                        
-                    except os.error, e:
-                        print "ERROR killing api: ",e
-                        
-                    
-                    sys.exit(1)
-                
-                else:
-                    print "ERROR: API is not running on PID ",apiPidNo[0]," start it first"
-                    
-                    sys.exit(1)
+            service ="ccmshAPI.py"
+            runner = checkPid(service)
+            if runner!=False:
+                print "Killing API on PID: ", runner
+               
+                os.kill(int(runner), 9)
+
+                sys.exit(1)
+            else:
+                print "ERROR: API is not running start it first"
+                sys.exit(1)                
 
     if action == "show":
         if service == "scheduler":
-            
-        #get pid ID from DB
-            try:
-                HOMEPATH= os.environ['COCOMA']
-                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                c = conn.cursor()
-                c.execute("SELECT schedulerPID FROM pid WHERE ID=1")
-                schedulerPidNo = c.fetchone()
-                conn.commit()
-                print "scheduler DB PID:", schedulerPidNo[0]
+            service = "Scheduler.py"
+            #get pid ID from DB
+            if checkPid(service):
                 
-                c.close()
-                
-            except sqlite.Error, e:
-                c.close()
-                print "Select PID SQL Error %s:" % e.args[0]
-                print e
+                os.system("ps ax | grep -v grep | grep "+str(service))
                 sys.exit(1)
-            
-            #check if pid running
-            
-            if checkPid(schedulerPidNo[0])!=False:
-                print "Scheduler running on PID No: ",schedulerPidNo[0]
             else:
                 print "Scheduler is not running"
 
         if service == "api":
-            
-        #get pid ID from DB
-            try:
-                HOMEPATH= os.environ['COCOMA']
-                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                c = conn.cursor()
-                c.execute("SELECT apiPID FROM pid WHERE ID=1")
-                apiPidNo = c.fetchone()
-                conn.commit()
-                print "API DB PID:", apiPidNo[0]
+            service = "ccmshAPI.py"
+            #get pid ID from DB
+            if checkPid(service):
                 
-                c.close()
-                
-            except sqlite.Error, e:
-                c.close()
-                print "Select PID SQL Error %s:" % e.args[0]
-                print e
+                os.system("ps ax | grep -v grep | grep "+str(service))
                 sys.exit(1)
-            
-            #check if pid running
-            
-            if checkPid(apiPidNo[0])!=False:
-                print "API running on PID No: ",apiPidNo[0]
             else:
-                print "API is not running"
+                print "API is not running" 
                     
 def emulationNow(duration):
     print "EmulationManager.emulation.Now"
