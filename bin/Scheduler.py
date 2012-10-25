@@ -182,7 +182,7 @@ class schedulerDaemon(object):
                         print runLogFetch
         
                         if runLogFetch:
-                            print "run log haz values"
+                            print "run log has values"
                             for row in runLogFetch:
                                 print row
                                 duration = row[0]

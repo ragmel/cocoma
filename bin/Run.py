@@ -17,7 +17,7 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-import os,sys,subprocess
+import os,sys,subprocess,imp
 import sqlite3 as sqlite
 import threading,psutil
 from threading import Thread
@@ -36,18 +36,34 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
         print duration
         print stressValue
                 
+        
+        
         '''
-        def stressFunc():
-            print "stressapptest -H 10 -M 10 -s "+duration
-            procStress=subprocess.Popen("stressapptest -H 10 -M 10 -s "+duration, shell=True)
-            procStressPid=procStress.pid
-            print "Stress executed on PID: ",procStressPid
+        ###############################
+        Emulator module load
+        ##############################
+        '''
+        def loadEmulator(modName):
+            '''
+            We are Loading module by file name. File name will be determined by emulator type (i.e. stressapptest)
+            '''
+            if HOMEPATH:
+                modfile = HOMEPATH+"/emulators/run_"+modName+".py"
+                modname = "run_"+modName
+            else:
+                modfile = "./emulators/dist_"+modName+".py"
+                modname = "run_"+modName
             
-            print "cpulimit -e stress -l "+stressValue+" -z"
-            procLimit=subprocess.Popen("cpulimit -e stressapptest -l "+stressValue+" -z", shell=True)
-            procLimitPid= procLimit.pid
-            print "cpu limit executed on PID: ",procLimitPid
-        '''    
+            modhandle = imp.load_source(modname, modfile)
+                
+            return modhandle.emulatorMod
+
+        #1. Get required module loaded
+        modhandleMy=loadEmulator("stressapptest")
+        #2. Use this module for executing the stress   
+        newEmulatorSelect=modhandleMy(emulationID,emulationLifetimeID,duration, stressValue,runNo)
+           
+            
         
         
         def cpulimitFunc():
@@ -92,7 +108,7 @@ def createRun(emulationID,emulationLifetimeID,duration, stressValue,runNo):
         
         
         #threading.Thread(target = stressFunc).start()
-        threading.Thread(target = cpulimitFunc).start()
+        #threading.Thread(target = cpulimitFunc).start()
         
          
         sys.exit(0)

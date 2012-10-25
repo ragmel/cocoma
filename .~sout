@@ -5,338 +5,144 @@ this is timeConv!!!
 This is timestamp
 2012-10-23 17:07:02
 This is timestamp
-2012-10-24 14:52:38.427533
+2012-10-25 14:36:39.653718
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T17:16:40', 2, 2)
 this is timeConv!!!
 This is timestamp
 2012-10-23 17:16:40
 This is timestamp
-2012-10-24 14:52:38.513733
+2012-10-25 14:36:39.688313
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T17:19:52', 3, 3)
 this is timeConv!!!
 This is timestamp
 2012-10-23 17:19:52
 This is timestamp
-2012-10-24 14:52:38.535201
+2012-10-25 14:36:39.711005
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T17:51:52', 4, 4)
 this is timeConv!!!
 This is timestamp
 2012-10-23 17:51:52
 This is timestamp
-2012-10-24 14:52:38.556411
+2012-10-25 14:36:39.733416
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T17:58:57', 5, 5)
 this is timeConv!!!
 This is timestamp
 2012-10-23 17:58:57
 This is timestamp
-2012-10-24 14:52:38.578853
+2012-10-25 14:36:39.758544
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:01:30', 6, 6)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:01:30
 This is timestamp
-2012-10-24 14:52:38.602352
+2012-10-25 14:36:39.784129
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:04:46', 7, 7)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:04:46
 This is timestamp
-2012-10-24 14:52:38.625567
+2012-10-25 14:36:39.811141
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:09:44', 8, 8)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:09:44
 This is timestamp
-2012-10-24 14:52:38.646852
+2012-10-25 14:36:39.835344
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:14:56', 9, 9)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:14:56
 This is timestamp
-2012-10-24 14:52:38.668779
+2012-10-25 14:36:39.867429
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:16:51', 10, 10)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:16:51
 This is timestamp
-2012-10-24 14:52:38.693304
+2012-10-25 14:36:39.889635
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:18:07', 11, 11)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:18:07
 This is timestamp
-2012-10-24 14:52:38.716609
+2012-10-25 14:36:39.913380
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:20:10', 12, 12)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:20:10
 This is timestamp
-2012-10-24 14:52:38.741299
+2012-10-25 14:36:39.937199
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:21:15', 13, 13)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:21:15
 This is timestamp
-2012-10-24 14:52:38.764853
+2012-10-25 14:36:39.961699
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:24:31', 14, 14)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:24:31
 This is timestamp
-2012-10-24 14:52:38.787258
+2012-10-25 14:36:39.987208
 No Active EmulationLifetime Runs were found to recover(1)
-Object <__main__.schedulerDaemon object at 0x95ad8ac>:
-    uri = PYRO:scheduler.daemon@localhost:51889
-Pyro daemon running.
-Hello, Yes this is schedulerDaemon
-Hello, Yes this is schedulerDaemon
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-10-24 14:54:36
-emulationID  15
-emulationLifetimeID 15
-stressValue 0
-duration 24
-runNo 0
-<open file '<stdout>', mode 'w' at 0xb72a3078>
-Job: 15-myLinearEmu with run No: 0 start date 1351090476.0 created
-Hello, Yes this is schedulerDaemon
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-10-24 14:55:00
-emulationID  15
-emulationLifetimeID 15
-stressValue 16
-duration 24
-runNo 1
-<open file '<stdout>', mode 'w' at 0xb72a3078>
-Job: 15-myLinearEmu with run No: 1 start date 1351090500.0 created
-Hello, Yes this is schedulerDaemon
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-10-24 14:55:24
-emulationID  15
-emulationLifetimeID 15
-stressValue 32
-duration 24
-runNo 2
-<open file '<stdout>', mode 'w' at 0xb72a3078>
-Job: 15-myLinearEmu with run No: 2 start date 1351090524.0 created
-Hello, Yes this is schedulerDaemon
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-10-24 14:55:48
-emulationID  15
-emulationLifetimeID 15
-stressValue 48
-duration 24
-runNo 3
-<open file '<stdout>',No handlers could be found for logger "apscheduler.scheduler"
-cpulimit: no process found
-stressapptest: no process found
-Error: limit must be greater than 0
-Usage: cpulimit TARGET [OPTIONS...]
-   TARGET must be exactly one of these:
-      -p, --pid=N        pid of the process
-      -e, --exe=FILE     name of the executable program file
-      -P, --path=PATH    absolute path name of the executable program file
-   OPTIONS
-      -b  --background   run in background
-      -l, --limit=N      percentage of cpu allowed from 0 to 100 (mandatory)
-      -v, --verbose      show control statistics
-      -z, --lazy         exit if there is no suitable target process, or if it dies
-      -h, --help         display this help and exit
-Log: Commandline - stressapptest -H 10 -M 10 -s 24
-Stats: SAT revision 1.0.3_autoconf, 32 bit binary
-Log: buildd @ vernadsky on Wed Jan 11 16:47:37 UTC 2012 from open source release
-Log: 1 nodes, 1 cpus.
-Log: Defaulting to 1 copy threads
-Log: Flooring memory allocation to multiple of 4: 8MB
-Log: Prefer plain malloc memory allocation.
-Log: Using memaligned allocation at 0xb63f0000.
-Stats: Starting SAT, 8M, 24 seconds
-Log: Region mask: 0x1
-Log: Seconds remaining: 14
-Log: Seconds remaining: 4
-cpulimit: no process found
-Log: Commandline - stressapptest -H 10 -M 10 -s 24
-Stats: SAT revision 1.0.3_autoconf, 32 bit binary
-Log: buildd @ vernadsky on Wed Jan 11 16:47:37 UTC 2012 from open source release
-Log: 1 nodes, 1 cpus.
-Log: Defaulting to 1 copy threads
-Log: Flooring memory allocation to multiple of 4: 8MB
-Log: Prefer plain malloc memory allocation.
-Log: Using memaligned allocation at 0xb645d000.
-Stats: Starting SAT, 8M, 24 seconds
-Log: Region mask: 0x1
-Stats: Found 0 hardware incidents
-Stats: Completed: 53442.00M in 24.01s 2225.82MB/s, with 0 hardware incidents, 0 errors
-Stats: Memory Copy: 53442.00M at 2237.74MB/s
-Stats: File Copy: 0.00M at 0.00MB/s
-Stats: Net Copy: 0.00M at 0.00MB/s
-Stats: Data Check: 0.00M at 0.00MB/s
-Stats: Invert Data: 0.00M at 0.00MB/s
-Stats: Disk: 0.00M at 0.00MB/s
-
-Status: PASS - please verify no corrected errors
-
-sh: 1: kill: Illegal number: None
-Process 5790 dead!
-Log: Seconds remaining: 14
-Log: Seconds remaining: 4
-Warning: cannot renice.
-To work better you should run this program as root, or adjust RLIMIT_NICE.
-For example in /etc/security/limits.conf add a line with: * - nice -10
-
-Process 5790 detected
-Process 5814 detected
-Exiting...
-Log: Commandline - stressapptest -H 10 -M 10 -s 24
-Stats: SAT revision 1.0.3_autoconf, 32 bit binary
-Log: buildd @ vernadsky on Wed Jan 11 16:47:37 UTC 2012 from open source release
-Log: 1 nodes, 1 cpus.
-Log: Defaulting to 1 copy threads
-Log: Flooring memory allocation to multiple of 4: 8MB
-Log: Prefer plain malloc memory allocation.
-Log: Using memaligned allocation at 0xb643b000.
-Stats: Starting SAT, 8M, 24 seconds
-Log: Region mask: 0x1
-Stats: Found 0 hardware incidents
-Stats: Completed: 7548.00M in 24.26s 311.13MB/s, with 0 hardware incidents, 0 errors
-Stats: Memory Copy: 7548.00M at 315.32MB/s
-Stats: File Copy: 0.00M at 0.00MB/s
-Stats: Net Copy: 0.00M at 0.00MB/s
-Stats: Data Check: 0.00M at 0.00MB/s
-Stats: Invert Data: 0.00M at 0.00MB/s
-Stats: Disk: 0.00M at 0.00MB/s
-
-Status: PASS - please verify no corrected errors
-
-sh: 1: kill: No such process
-
-Process 5814 dead!
-Log: Seconds remaining: 14
-Log: Seconds remaining: 4
-Warning: cannot renice.
-To work better you should run this program as root, or adjust RLIMIT_NICE.
-For example in /etc/security/limits.conf add a line with: * - nice -10
-
-Process 5814 detected
-Process 5903 detected
-Exiting...
-Log: Commandline - stressapptest -H 10 -M 10 -s 24
-Stats: SAT revision 1.0.3_autoconf, 32 bit binary
-Log: buildd @ vernadsky on Wed Jan 11 16:47:37 UTC 2012 from open source release
-Log: 1 nodes, 1 cpus.
-Log: Defaulting to 1 copy threads
-Log: Flooring memory allocation to multiple of 4: 8MB
-Log: Prefer plain malloc memory allocation.
-Log: Using memaligned allocation at 0xb643b000.
-Stats: Starting SAT, 8M, 24 seconds
-Log: Region mask: 0x1
-Stats: Found 0 hardware incidents
-Stats: Completed: 15528.00M in 24.17s 642.50MB/s, with 0 hardware incidents, 0 errors
-Stats: Memory Copy: 15528.00M at 647.89MB/s
-Stats: File Copy: 0.00M at 0.00MB/s
-Stats: Net Copy: 0.00M at 0.00MB/s
-Stats: Data Check: 0.00M at 0.00MB/s
-Stats: Invert Data: 0.00M at 0.00MB/s
-Stats: Disk: 0.00M at 0.00MB/s
-
-Status: PASS - please verify no corrected errors
-
-sh: 1: kill: No such process
-
-Process 5903 dead!
-Log: Seconds remaining: 14
-Log: Seconds remaining: 4
-Warning: cannot renice.
-To work better you should run this program as root, or adjust RLIMIT_NICE.
-For example in /etc/security/limits.conf add a line with: * - nice -10
-
-Process 5903 detected
-Process 5937 detected
-Exiting...
-Log: Commandline - stressapptest -H 10 -M 10 -s 24
-Stats: SAT revision 1.0.3_autoconf, 32 bit binary
-Log: buildd @ vernadsky on Wed Jan 11 16:47:37 UTC 2012 from open source release
-Log: 1 nodes, 1 cpus.
-Log: Defaulting to 1 copy threads
-Log: Flooring memory allocation to multiple of 4: 8MB
-Log: Prefer plain malloc memory allocation.
-Log: Using memaligned allocation at 0xb6458000.
-Stats: Starting SAT, 8M, 24 seconds
-Log: Region mask: 0x1
-Stats: Found 0 hardware incidents
-Stats: Completed: 25914.00M in 24.15s 1072.93MB/s, with 0 hardware incidents, 0 errors
-Stats: Memory Copy: 25914.00M at 1081.62MB/s
-Stats: File Copy: 0.00M at 0.00MB/s
-Stats: Net Copy: 0.00M at 0.00MB/s
-Stats: Data Check: 0.00M at 0.00MB/s
-Stats: Invert Data: 0.00M at 0.00MB/s
-Stats: Disk: 0.00M at 0.00MB/s
-
-Status: PASS - please verify no corrected errors
-
-Process 5937 dead!
-sh: 1: kill: No such process
-
-Log: Seconds remaining: 14
-Log: Seconds remaining: 4
-Warning: cannot renice.
-To work better you should run this program as root, or adjust RLIMIT_NICE.
-For example in /etc/security/limits.conf add a line with: * - nice -10
-
-Process 5937 detected
-Process 5970 detected
-Exiting...
-Log: Commandline - stressapptest -H 10 -M 10 -s 24
-Stats: SAT revision 1.0.3_autoconf, 32 bit binary
-Log: buildd @ vernadsky on Wed Jan 11 16:47:37 UTC 2012 from open source release
-Log: 1 nodes, 1 cpus.
-Log: Defaulting to 1 copy threads
-Log: Flooring memory allocation to multiple of 4: 8MB
-Log: Prefer plain malloc memory allocation.
-Log: Using memaligned allocation at 0xb63e3000.
-Stats: Starting SAT, 8M, 24 seconds
-Log: Region mask: 0x1
-Stats: Found 0 hardware incidents
-Stats: Completed: 37910.00M in 24.17s 1568.25MB/s, with 0 hardware incidents, 0 errors
-Stats: Memory Copy: 37910.00M at 1581.68MB/s
-Stats: File Copy: 0.00M at 0.00MB/s
-Stats: Net Copy: 0.00M at 0.00MB/s
-Stats: Data Check: 0.00M at 0.00MB/s
-Stats: Invert Data: 0.00M at 0.00MB/s
-Stats: Disk: 0.00M at 0.00MB/s
-
-Status: PASS - please verify no corrected errors
-
-sh: 1: kill: No such process
-
-Process 5970 dead!
-Log: Seconds remaining: 14
-Log: Seconds remaining: 4
-Stats: Found 0 hardware incidents
-Stats: Completed: 50692.00M in 25.17s 2013.62MB/s, with 0 hardware incidents, 0 errors
-Stats: Memory Copy: 50692.00M at 2024.97MB/s
-Stats: File Copy: 0.00M at 0.00MB/s
-Stats: Net Copy: 0.00M at 0.00MB/s
-Stats: Data Check: 0.00M at 0.00MB/s
-Stats: Invert Data: 0.00M at 0.00MB/s
-Stats: Disk: 0.00M at 0.00MB/s
-
-Status: PASS - please verify no corrected errors
-
+(u'2012-10-24T14:54:36', 15, 15)
+this is timeConv!!!
+This is timestamp
+2012-10-24 14:54:36
+This is timestamp
+2012-10-25 14:36:40.018456
+No Active EmulationLifetime Runs were found to recover(1)
+(u'2012-10-25T12:40:25', 16, 16)
+this is timeConv!!!
+This is timestamp
+2012-10-25 12:40:25
+This is timestamp
+2012-10-25 14:36:40.044307
+No Active EmulationLifetime Runs were found to recover(1)
+(u'2012-10-25T12:48:55', 17, 17)
+this is timeConv!!!
+This is timestamp
+2012-10-25 12:48:55
+This is timestamp
+2012-10-25 14:36:40.076826
+No Active EmulationLifetime Runs were found to recover(1)
+(u'2012-10-25T12:50:59', 18, 18)
+this is timeConv!!!
+This is timestamp
+2012-10-25 12:50:59
+This is timestamp
+2012-10-25 14:36:40.099664
+No Active EmulationLifetime Runs were found to recover(1)
+(u'2012-10-25T12:53:03', 19, 19)
+this is timeConv!!!
+This is timestamp
+2012-10-25 12:53:03
+This is timestamp
+2012-10-25 14:36:40.124117
+No Active EmulationLifetime Runs were found to recover(1)
+(u'2012-10-25T12:54:10', 20, 20)
+this is timeConv!!!
+This is timestamp
+2012-10-25 12:54:10
+This is timestamp
+2012-10-25 14:36:40.148152
+No Active EmulationLifetime Runs were found to recover(1)
+(u'2012-10-25T14:32:27', 21, 21)
+this is timeConv!!!
+This is timestamp
+2012-10-25 14:32:27
+This is timestamp
+2012-10-25 14:36:40.1

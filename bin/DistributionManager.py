@@ -69,8 +69,14 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,
                 print e
                 print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
                 print "list of jobs:"
-           
 
+
+
+'''
+###############################
+Handling Distribution module load
+##############################
+'''
 def loadDistribution(modName):
             '''
             We are Loading module by file name. File name will be determined by distribution type (i.e. linear)
