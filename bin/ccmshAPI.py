@@ -32,25 +32,36 @@ except:
     print "no $COCOMA environmental variable set"
 
 
+@route('/ccmsh')
+def xml():
+    response.status = 404
+    response.headers['status'] = response.status#str(response.status_code())
+    response.content_type = "application/vnd.bonfire+xml"
+    
+    
+    xml_content_whatever = '''<?xml version="1.0" encoding="utf-8"?>
+    <root xmlns="http://111" href="/">
+        <version>195</version>
+        <timestamp>1234</timestamp>
+        <link rel="emulations" href="/emulations" type="application/vnd.bonfire+xml"/>
+    </root>
+    '''
+    return xml_content_whatever
+
 @route('/ccmsh/list')
 def get_emulation():
-    emulationID = request.query.get('emulationID')
-    if emulationID=="all":
-        emulationSelect=EmulationManager.getEmulation("NULL","NULL",1,"NULL")
-        
-    else:
-        emulationSelect=EmulationManager.getEmulation("NULL",emulationID,0,"NULL")
-    
-    
+    emulationSelect=EmulationManager.getEmulation("NULL","NULL",1,"NULL")
     
     if emulationSelect:
             
                 response.content_type = 'application/json'
-                return dumps(emulationSelect)
+                #return dumps(emulationSelect)
+                return { "success" : True, "list" : dumps(emulationSelect) }
 
     else:
         
-        return "emulation ID: \"",emulationID,"\" does not exists"
+        #return "emulation ID: \"",emulationID,"\" does not exists"
+        return {"success":False, "error": "No emulations found"}
     
 @route('/ccmsh/hello')
 def api_status():
