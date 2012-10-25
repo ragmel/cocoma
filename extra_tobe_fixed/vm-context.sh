@@ -65,10 +65,10 @@ do_start () {
 	. /etc/profile
 	
 	if [ `ps -fe | grep Scheduler.py | grep -v -c grep` == 0 ]; then	
-		ccmsh --start scheduler >> /root/ccmsh.log 2>&1
+		ccmsh --start scheduler >> /var/log/ccmsh.log 2>&1
 	fi
 	if [ `ps -fe | grep ccmshAPI.py | grep -v -c grep` == 0 ]; then
-		ccmsh --start api >> /root/ccmsh.log 2>&1
+		ccmsh --start api >> /var/log/ccmsh.log 2>&1
 	fi
 
 	exit 0
@@ -82,8 +82,8 @@ case "$1" in
 	#sed -i "s:ZOOKEEPER.*::g" /etc/default/bonfire
 	. /etc/profile	
 
-	ccmsh --stop scheduler >> /root/ccmsh.log 2>&1
-	ccmsh --stop api >> /root/ccmsh.log 2>&1
+	ccmsh --stop scheduler >> /var/log/ccmsh.log 2>&1
+	ccmsh --stop api >> /var/log/ccmsh.log 2>&1
 	kill $(ps ax  | awk '/vm-context.sh/ {print $1}')
 	exit 3
 	;;
