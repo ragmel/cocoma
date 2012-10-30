@@ -402,7 +402,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
     
     
 
-def createEmulation(emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,arg):
+def createEmulation(emulationName,distributionType,resourceType,emulationType,startTime,stopTime,emulator, distributionGranularity,arg):
                     
     print "Hello this is createEmulation"
     
@@ -430,7 +430,7 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         
                 
         # 3. Populate "emulation"
-        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,distributionID,active) VALUES (?, ?, ?, ?, ?)', [emulationName,emulationType,resourceType,distributionID,1])
+        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,distributionID,emulator,active) VALUES (?, ?, ?, ?, ?, ?)', [emulationName,emulationType,resourceType,distributionID,emulator,1])
         emulationID = c.lastrowid
         
         # 4. Adding missing distribution ID
@@ -453,13 +453,13 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         
         emulationEntry= c.fetchall()
         for row in emulationEntry: 
-            print "emulationID:",row[0],"emulationName:", row[1],"emulationType:", row[2],"resourceType:", row[3], "distributionID:",row[4],"emulationLifetimeID:",row[5] ,"active:",row[6]
+            print "emulationID:",row[0],"emulationName:", row[1],"emulationType:", row[2],"resourceType:", row[3],"emulator:",row[4], "distributionID:",row[5],"emulationLifetimeID:",row[6] ,"active:",row[7]
         
         dataCheck(startTime,stopTime)
         distributionTypeCheck(distributionType)
         conn.commit()
         
-        DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,arg)
+        DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg)
         
     except sqlite.Error, e:
         print "SQL Error %s:" % e.args[0]

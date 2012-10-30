@@ -29,7 +29,7 @@ try:
 except:
     print "no $COCOMA environmental variable set"    
 
-def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,arg):   
+def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg):   
             print "this is schedulerControl"
                         
             startTime= timeConv(startTime)
@@ -52,7 +52,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,
             #1. Get required module loaded
             modhandleMy=loadDistribution(distributionType)
             #2. Use this module for calculation and run creation   
-            newCreateRuns=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH)
+            newCreateRuns=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,emulator,arg,HOMEPATH)
   
            
                                     
@@ -187,7 +187,7 @@ def timeConv(dbtimestamp):
 def timestamp(date):
     print"This is timestamp"
     print date
-    gmtTime = time.mktime(date.timetuple())+3600
+    gmtTime = time.mktime(date.timetuple())#+3600
     return gmtTime
 
 if __name__ == "__main__":

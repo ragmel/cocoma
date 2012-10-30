@@ -70,6 +70,7 @@ def xmlReader(filename):
     resourceType = dom.getElementsByTagName('emulation')[0].getElementsByTagName('resourceType')[0].firstChild.data
     startTime = dom.getElementsByTagName('emulation')[0].getElementsByTagName('startTime')[0].firstChild.data
     stopTime = dom.getElementsByTagName('emulation')[0].getElementsByTagName('stopTime')[0].firstChild.data
+    emulator = dom.getElementsByTagName('emulation')[0].getElementsByTagName('emulator')[0].firstChild.data
     
     #<distibution>
     distributionGranularity = dom.getElementsByTagName('distribution')[0].getElementsByTagName('distributionGranularity')[0].firstChild.data
@@ -140,7 +141,7 @@ def xmlReader(filename):
     print arg
     
     
-    return emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,arg
+    return emulationName,distributionType,resourceType,emulationType,startTime,stopTime,emulator, distributionGranularity,arg
 
 
 if __name__ == '__main__':

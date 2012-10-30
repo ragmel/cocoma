@@ -17,42 +17,31 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-'''
-
-
-Parabola equasion:
-y= ax^2 +bx +c
-
-where x= time and y=stressl
-
-http://montessorimuddle.org/category/programming-2/
-
-'''
 import math
 import Pyro4,imp,time,sys
 import sqlite3 as sqlite
 import datetime as dt
-
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
+
 
 class distributionMod(object):
     
     
-    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg):
+    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,emulator,arg,HOMEPATH):
         
         self.startLoad = arg[0]
         self.stopLoad = arg[1]
-        self.c = arg[2]
         self.distributionGranularity = distributionGranularity
         self.distributionGranularity_count=distributionGranularity
         self.startTimesec = startTimesec
         self.duration = duration
+        self.emulator = emulator
         self.runNo=int(0)
         
         print "Hello this is dist_parabola"
-        print arg[3]
-                                  
+        
+                          
         while(self.distributionGranularity_count>=0):
     
             print "Run No: "
@@ -64,7 +53,7 @@ class distributionMod(object):
             print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
         
             '''
-            1. Distribution formula goes here
+            1. Distribution formula goes here(linear used)
             '''
                             
             self.linearStep=((int(self.startLoad)-int(self.stopLoad))/int(self.distributionGranularity))
@@ -72,7 +61,6 @@ class distributionMod(object):
             print "LINEAR STEP SHOULD BE THE SAME"
             print self.linearStep
             self.linearStress= ((self.linearStep*int(self.runNo)))+int(self.startLoad)
-            
             #make sure we return integer
             self.linearStress=int(self.linearStress)
             print "LINEAR STRESS SHOULD CHANGE"
@@ -93,7 +81,7 @@ class distributionMod(object):
             try:
                 
                 print daemon.hello()
-                print daemon.createJob(emulationID,emulationName,emulationLifetimeID,duration,stressValue,runStartTime,str(self.runNo))
+                print daemon.createJob(emulationID,emulationName,emulationLifetimeID,duration,emulator,stressValue,runStartTime,str(self.runNo))
                 
             except  Pyro4.errors.CommunicationError, e:
                 print e
@@ -103,24 +91,26 @@ class distributionMod(object):
             3. Updating Run log in DB. 
                         
             '''
-            try:
-                HOMEPATH= os.environ['COCOMA']
-                try:
-                    conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                    c = conn.cursor()
-                                   
-                    c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])
-                                        
-                    conn.commit()
-                    c.close()
-                except sqlite.Error, e:
-                    print "Error %s:" % e.args[0]
-                    print e
-                    sys.exit(1)
-                         
-            except:
-                print "no $COCOMA environmental variable set(distro)"
             
+            
+            
+            
+                
+            try:
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+                c = conn.cursor()
+                print "Path:",HOMEPATH+'/data/cocoma.sqlite'
+                print "insert to runlog"               
+                c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])
+                                    
+                conn.commit()
+                c.close()
+            except sqlite.Error, e:
+                print "Error %s:" % e.args[0]
+                print e
+                sys.exit(1)
+                         
+ 
             #increasing to next run            
             self.runNo=int(self.runNo)+1
             
@@ -128,18 +118,16 @@ class distributionMod(object):
             print "distributionGranularity_count:"
             self.distributionGranularity_count= int(self.distributionGranularity_count)-1
             print self.distributionGranularity_count
-    
+        
 def distHelp():
     print "Parabola Distribution How-To:"
-    print "Enter arg0 for first point and arg1 for 2nd point"
+    print "Enter arg0 for first point and arg1 for 2nd point arg2 for 3rd point"
     
     print "Have fun"
     
-
 '''
 here we specify how many arguments distribution instance require to run properly
 '''
 def argQty():
     return 3
-    
 

@@ -259,17 +259,17 @@ def main():
         
               
         if options.xml and not options.emuNow:  
-                (emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
+                (emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
                 EmulationManager.dataCheck(startTime,stopTime)
                 EmulationManager.distributionTypeCheck(distributionType)
                 EmulationManager.DistributionArgCheck(distributionType,arg)
-                EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg)
+                EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
         
         if options.emuNow and options.xml:
             
             (startTime, stopTime) = EmulationManager.emulationNow(arguments[1])
-            (emulationName, distributionType, resourceType, emulationType, startTime0, stopTime0, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
-            EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg)
+            (emulationName, distributionType, resourceType, emulationType, startTime0, stopTime0,emulator, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
+            EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
             
         
     else:

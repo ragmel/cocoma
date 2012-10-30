@@ -4,6 +4,7 @@
        <emulationName>myParabolaEmu</emulationName>
        <emulationType>Malicious</emulationType>
        <resourceType>CPU</resourceType>
+       <emulator>stressapptest</emulator>
        <startTime>2013-09-10T17:30:00</startTime>
        <stopTime>2013-09-10T17:59:00</stopTime>
    </emulation>

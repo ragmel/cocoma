@@ -4,6 +4,7 @@
        <emulationName>myLinearEmu</emulationName>
        <emulationType>Malicious</emulationType>
        <resourceType>CPU</resourceType>
+       <emulator>stressapptest</emulator>
        <startTime>2012-10-23T10:30:00</startTime>
        <stopTime>2012-10-23T10:31:00</stopTime>
    </emulation>

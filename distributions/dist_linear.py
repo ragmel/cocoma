@@ -28,7 +28,7 @@ Pyro4.config.HMAC_KEY='pRivAt3Key'
 class distributionMod(object):
     
     
-    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH):
+    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,emulator,arg,HOMEPATH):
         
         self.startLoad = arg[0]
         self.stopLoad = arg[1]
@@ -36,6 +36,7 @@ class distributionMod(object):
         self.distributionGranularity_count=distributionGranularity
         self.startTimesec = startTimesec
         self.duration = duration
+        self.emulator = emulator
         self.runNo=int(0)
         
         print "Hello this is dist_linear"
@@ -80,7 +81,7 @@ class distributionMod(object):
             try:
                 
                 print daemon.hello()
-                print daemon.createJob(emulationID,emulationName,emulationLifetimeID,duration,stressValue,runStartTime,str(self.runNo))
+                print daemon.createJob(emulationID,emulationName,emulationLifetimeID,duration,emulator,stressValue,runStartTime,str(self.runNo))
                 
             except  Pyro4.errors.CommunicationError, e:
                 print e
