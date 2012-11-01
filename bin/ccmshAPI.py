@@ -70,27 +70,12 @@ def get_emulations():
     DUMMY
     ##############
     '''
-    #curl -k -i http://10.55.164.211:8050/emulations/
-    xml_content_emulations=''' <?xml version="1.0" encoding="UTF-8"?>
+    #curl -k -i http://10.55.164.211:8050/emulations
+    xml_content_emulations='''<?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulations">
-  <items offset="0" total="1">
-<emulation href="/emulations/1">
-  <id>1</id>
-  <emulationName>myLinearEmu</emulationName>
-  <emulationType>Contentious</emulationType>
-  <resourceType>CPU</resourceType>
-  <startTime>2012-10-23T10:30:00</startTime>
-  <stopTime>2012-10-23T10:31:00</stopTime>
-  <emulators>
-    <emulator href="/emulations/1/stressapptest" name="stressapptest"/>
-  </emulators>
-  <distributions>
-    <distribution href="/emulations/1/linear" name="linear"/>
-  </distributions>
-  <link rel="parent" href="/"/>
-  <link rel="emulators" href="/emulations/1/emulators"/>
-  <link rel="distributions" href="/emulations/1/distributions"/>
-</emulation>
+  <items offset="0" total="2">
+    <emulator href="/emulations/1" name="Emu1"/>
+    <emulator href="/emulations/2" name="Emu2"/>
   </items>
   <link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
 </collection>
@@ -124,23 +109,68 @@ def get_emulation(ID=""):
     xml_content_emulationsID= '''<?xml version="1.0" encoding="UTF-8"?>
 <emulation xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulations/1">
   <id>'''+ID+'''</id>
-  <emulationName>myLinearEmu</emulationName>
-  <emulationType>Contentious</emulationType>
-  <resourceType>CPU</resourceType>
-  <startTime>2012-10-23T10:30:00</startTime>
-  <stopTime>2012-10-23T10:31:00</stopTime>
-  <emulators>
-    <emulator href="/emulations/1/stressapptest" name="stressapptest"/>
-  </emulators>
-  <distributions>
-    <distribution href="/emulations/1/linear" name="linear"/>
+  <emulationName>myMixEmu</emulationName>
+  <emulationType>Mix</emulationType>
+  <resourceType>Mix</resourceType>
+  <startTime>now</startTime>
+  <!--duration in seconds -->
+  <stopTime>now+180</stopTime>
+  <distributions name=" myMixEmu-dis-1">
+     <startTime>0</startTime>
+     <!--duration in seconds -->
+     <duration>60</duration>
+     <distribution href="/distributions/linear" name="linear" />
+      <startLoad>10</startLoad>
+      <stopLoad>90</stopLoad>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator-params>
+        <!--more parameters will be added -->
+        <resourceType>CPU</resourceType>
+      </emulator-params>
+  </distributions>
+  <distributions name=" myMixEmu-dis-2">
+     <startTime>60</startTime>
+     <!--duration in seconds -->
+     <duration>60</duration>
+     <distribution href="/distributions/poisson" name="poisson" />
+      <emulator href="/emulators/stress" name="stress" />
+      <emulator-params>
+        <resourceType>CPU</resourceType>
+      </emulator-params>
+  </distributions>
+  <distributions name=" myMixEmu-dis-3">
+     <startTime>now+60</startTime>
+     <!--duration in seconds -->
+     <duration>60</duration>
+     <distribution href="/distributions/linear" name="linear" />
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator-params>
+        <resourceType>NET</resourceType>
+      </emulator-params>
+  </distributions>
+  <distributions name=" myMixEmu-dis-4">
+     <startTime>120</startTime>
+     <!--duration in seconds -->
+     <duration>60</duration>
+     <distribution href="/distributions/poisson" name="poisson" />
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator-params>
+        <resourceType>CPU</resourceType>
+      </emulator-params>
+  </distributions>
+  <distributions name=" myMixEmu-dis-5">
+     <startTime>120</startTime>
+     <!--duration in seconds -->
+     <duration>60</duration>
+     <distribution href="/distributions/geometric" name="geometric" />
+      <emulator href="/emulators/wireshark" name="wireshark" />
+      <emulator-params>
+        <resourceType>net</resourceType>
+      </emulator-params>
   </distributions>
   <link rel="parent" href="/"/>
-  <link rel="emulators" href="/emulations/1/emulators"/>
-  <link rel="distributions" href="/emulations/1/distributions"/>
-  <link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
-</emulation>
-    '''
+  <link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
+</emulation>'''
     return xml_content_emulationsID
     
     
@@ -155,16 +185,17 @@ def get_emulation(ID=""):
     '''
 
 
-@route('/emulations/<ID>/emulators', method='GET')
+@route('/emulators', method='GET')
 def get_emulators(ID=""):
     response.content_type = CONTENT
     #curl -k -i http://10.55.164.211:8050/emulations/1/emulators
     xml_content_emulators ='''<?xml version="1.0" encoding="UTF-8"?>
-<collection xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulations/1/emulators">
-  <items offset="0" total="1">
-<emulator href="/emulations/1/emulators/stressapptest" name="stressapptest"/>
+<collection xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulators">
+  <items offset="0" total="2">
+    <emulator href="/emulators/stressapptest" name="stressapptest"/>
+    <emulator href="/emulators/stress" name="stress"/>
   </items>
-  <link href="/emulations/stressaptest" rel="parent" type="application/vnd.cocoma+xml"/>
+  <link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
 </collection>
     '''
     return xml_content_emulators
@@ -172,53 +203,96 @@ def get_emulators(ID=""):
 
 
 
-@route('/emulations/<ID>/emulators/<name>', method='GET')
-def get_emulator(ID="",name=""):
+@route('/emulators/<name>', method='GET')
+def get_emulator(name=""):
     response.content_type = CONTENT
     #curl -k -i http://10.55.164.211:8050/emulations/1/emulators/stressapptest
     xml_content_emulatorName = '''<?xml version="1.0" encoding="UTF-8"?>
-<emulator xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulations/1/emulators/stressapptest">
-<name>'''+name+'''</name>
+<emulator xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulators/stressapptest">
+   <name>'''+name+'''</name>
    <info>
         Stats: SAT revision 1.0.3_autoconf, 32 bit binary
         Log: buildd @ biber on Thu Jul 29 21:47:10 UTC 2010 from open source release
         Usage: ./sat(32|64) [options]
-        ...
+         -M mbytes        megabytes of ram to test
+         -H mbytes        minimum megabytes of hugepages to require
+         -s seconds       number of seconds to run
+         -m threads       number of memory copy threads to run
+         -i threads       number of memory invert threads to run
+         -C threads       number of memory CPU stress threads to run
+         --findfiles      find locations to do disk IO automatically
+         -d device        add a direct write disk thread with block device (or file) 'device'
+         -f filename      add a disk thread with tempfile 'filename'
+         -l logfile       log output to file 'logfile'
+         --max_errors n   exit early after finding 'n' errors
+         -v level         verbosity (0-20), default is 8
+         -W               Use more CPU-stressful memory copy
+         -A               run in degraded mode on incompatible systems
+         -p pagesize      size in bytes of memory chunks
+         --filesize size  size of disk IO tempfiles
+         -n ipaddr        add a network thread connecting to system at 'ipaddr'
+         --listen         run a thread to listen for and respond to network threads.
+         --no_errors      run without checking for ECC or other errors
+         --force_errors   inject false errors to test error handling
+         --force_errors_like_crazy   inject a lot of false errors to test error handling
+         -F               don't result check each transaction
+         --stop_on_errors  Stop after finding the first error.
+         --read-block-size     size of block for reading (-d)
+         --write-block-size    size of block for writing (-d). If not defined, the size of block for writing will be defined as the size of block for reading
+         --segment-size   size of segments to split disk into (-d)
+         --cache-size     size of disk cache (-d)
+         --blocks-per-segment  number of blocks to read/write per segment per iteration (-d)
+         --read-threshold      maximum time (in us) a block read should take (-d)
+         --write-threshold     maximum time (in us) a block write should take (-d)
+         --random-threads      number of random threads for each disk write thread (-d)
+         --destructive    write/wipe disk partition (-d)
+         --monitor_mode   only do ECC error polling, no stress load.
+         --cc_test        do the cache coherency testing
+         --cc_inc_count   number of times to increment the cacheline's member
+         --cc_line_count  number of cache line sized datastructures to allocate for the cache coherency threads to operate
+         --paddr_base     allocate memory starting from this address
+         --pause_delay    delay (in seconds) between power spikes
+         --pause_duration duration (in seconds) of each pause
+         --local_numa : choose memory regions associated with each CPU to be tested by that CPU
+         --remote_numa : choose memory regions not associated with each CPU to be tested by that CPU
    </info>
 </emulator>
     '''
     
     return xml_content_emulatorName
 
-@route('/emulations/<ID>/distributions', method='GET')
+@route('/distributions', method='GET')
 def get_distributions(ID=""):
     response.content_type = CONTENT
     #curl -k -i http://10.55.164.211:8050/emulations/1/distributions
     xml_content_distributions ='''<?xml version="1.0" encoding="UTF-8"?>
-<collection xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulations/1/emulators">
-  <items offset="0" total="1">
-<emulator href="/emulations/1/distributions/linear" name="linear"/>
+<collection xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/distributions">
+  <items offset="0" total="2">
+    <distribution href="/distributions/linear" name="linear"/>
+    <distribution href="/distributions/poisson" name="poisson"/>
   </items>
-  <link href="/distributions/linear" rel="parent" type="application/vnd.cocoma+xml"/>
+  <link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
 </collection>
     '''
     return xml_content_distributions
 
 
-@route('/emulations/<ID>/distributions/<name>', method='GET')
-def get_distribution(ID="", name=""):
+@route('/distributions/<dtype>', method='GET')
+def get_distribution(dtype=""):
     response.content_type = CONTENT
     #curl -k -i http://10.55.164.211:8050/emulations/1/distributions/linear
     xml_content_distributionName = '''<?xml version="1.0" encoding="UTF-8"?>
-<distribution xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulations/1/distributions/linear">
-<name>'''+name+'''</name>
+<distribution xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/distributions/linear">
+   <distributionType>'''+dtype+'''</distributionType>
    <info>
-        Stats: SAT revision 1.0.3_autoconf, 32 bit binary
-        Log: buildd @ biber on Thu Jul 29 21:47:10 UTC 2010 from open source release
-        Usage: ./sat(32|64) [options]
+        --g        granularity
+        --st    startTime
+        --d        duration
+        --sl    startLoad
+        --stl    stopLoad
         ...
    </info>
-</emulator>
+</distribution>
     '''
     return xml_content_distributionName
 

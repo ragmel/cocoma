@@ -2,5 +2,9 @@ Bottle server starting up (using WSGIRefServer())...
 Listening on http://10.55.164.211:8050/
 Hit Ctrl-C to quit.
 
-ltenru.dhcp.bfsl.sap.corp - - [25/Oct/2012 18:23:36] "GET /ccmsh HTTP/1.1" 404 248
-BFSN60207995A.dhcp.bfsl.sap.corp - - [25/Oct/2012 18:23:52] "GET /ccmsh HTTP/1.1" 404 248
+ltenru.dhcp.bfsl.sap.corp - - [01/Nov/2012 11:34:54] "GET /emulations/1 HTTP/1.1" 200 2467
+ltenru.dhcp.bfsl.sap.corp - - [01/Nov/2012 11:35:15] "GET /emulators HTTP/1.1" 200 377
+ltenru.dhcp.bfsl.sap.corp - - [01/Nov/2012 11:35:30] "GET /emulators/stressapptest HTTP/1.1" 200 3381
+ltenru.dhcp.bfsl.sap.corp - - [01/Nov/2012 11:35:55] "GET /distributions HTTP/1.1" 200 385
+ltenru.dhcp.bfsl.sap.corp - - [01/Nov/2012 11:36:03] "GET /distributions/linear HTTP/1.1" 200 377
+ltenru.dhcp.bfsl.sap.corp - - [01/Nov/2012 11:36:09] "GET /distributions/fgd HTTP/1.1" 200 374

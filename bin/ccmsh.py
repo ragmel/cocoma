@@ -68,12 +68,16 @@ def main():
     serviceControl.add_option('--stop', action='store_true', default=False,dest='stopServices',help='[scheduler][api] stop services')
     serviceControl.add_option('--show', action='store_true', default=False,dest='showServices',help='[scheduler][api] show services')
     
+    listEmulator = optparse.OptionGroup(parser, 'List available emulators')  
+    listEmulator.add_option('-e', '--emu', action='store_true', default=False,dest='listAllEmulators',help='[all]  List of all available emulators')
+    listEmulator.add_option('--emu-help', action='store_true', default=False,dest='listEmulatorOptions',help='[name]  List of all available emulator arguments')
     
     
     
         
     parser.add_option_group(listEmu)
     parser.add_option_group(listDistro)
+    parser.add_option_group(listEmulator)
     parser.add_option_group(createEmu)
     parser.add_option_group(deleteEmu)
     parser.add_option_group(updateEmu)
