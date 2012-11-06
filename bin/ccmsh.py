@@ -125,10 +125,12 @@ def main():
                 EmulationManager.services_control("scheduler","start"," ")
      
             if arguments[0] == "api":
-                print "Starting ",arguments[0]
+                
                 try:
+                    print "Starting ",arguments[0],"on interface ",arguments[1]
                     EmulationManager.services_control("api","start",arguments[1])
                 except:
+                    print "Starting ",arguments[0],"on interface eth0"
                     EmulationManager.services_control("api","start","eth0")
  
                     

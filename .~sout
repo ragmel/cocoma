@@ -1,148 +1,148 @@
 Recovering list of emulations
-DB location path: /home/ltenru/workspace/python/COCOMA/data/cocoma.sqlite
+DB location path: /home/bfsusr/workspace/python/COCOMA//data/cocoma.sqlite
 (u'2012-10-23T17:07:02', 1, 1)
 this is timeConv!!!
 This is timestamp
 2012-10-23 17:07:02
 This is timestamp
-2012-11-01 11:21:03.423470
+2012-11-05 11:14:09.569819
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T17:16:40', 2, 2)
 this is timeConv!!!
 This is timestamp
 2012-10-23 17:16:40
 This is timestamp
-2012-11-01 11:21:03.470062
+2012-11-05 11:14:09.756790
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T17:19:52', 3, 3)
 this is timeConv!!!
 This is timestamp
 2012-10-23 17:19:52
 This is timestamp
-2012-11-01 11:21:03.496944
+2012-11-05 11:14:09.907405
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T17:51:52', 4, 4)
 this is timeConv!!!
 This is timestamp
 2012-10-23 17:51:52
 This is timestamp
-2012-11-01 11:21:03.525870
+2012-11-05 11:14:10.034216
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T17:58:57', 5, 5)
 this is timeConv!!!
 This is timestamp
 2012-10-23 17:58:57
 This is timestamp
-2012-11-01 11:21:03.551924
+2012-11-05 11:14:10.159831
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:01:30', 6, 6)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:01:30
 This is timestamp
-2012-11-01 11:21:03.575812
+2012-11-05 11:14:10.293773
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:04:46', 7, 7)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:04:46
 This is timestamp
-2012-11-01 11:21:03.605276
+2012-11-05 11:14:10.427804
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:09:44', 8, 8)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:09:44
 This is timestamp
-2012-11-01 11:21:03.632224
+2012-11-05 11:14:10.578702
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:14:56', 9, 9)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:14:56
 This is timestamp
-2012-11-01 11:21:03.658527
+2012-11-05 11:14:10.720827
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:16:51', 10, 10)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:16:51
 This is timestamp
-2012-11-01 11:21:03.689563
+2012-11-05 11:14:10.871444
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:18:07', 11, 11)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:18:07
 This is timestamp
-2012-11-01 11:21:03.713591
+2012-11-05 11:14:11.022418
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:20:10', 12, 12)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:20:10
 This is timestamp
-2012-11-01 11:21:03.737554
+2012-11-05 11:14:11.173028
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:21:15', 13, 13)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:21:15
 This is timestamp
-2012-11-01 11:21:03.764000
+2012-11-05 11:14:11.324001
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-23T18:24:31', 14, 14)
 this is timeConv!!!
 This is timestamp
 2012-10-23 18:24:31
 This is timestamp
-2012-11-01 11:21:03.787899
+2012-11-05 11:14:11.449676
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-24T14:54:36', 15, 15)
 this is timeConv!!!
 This is timestamp
 2012-10-24 14:54:36
 This is timestamp
-2012-11-01 11:21:03.813579
+2012-11-05 11:14:11.600336
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-25T12:40:25', 16, 16)
 this is timeConv!!!
 This is timestamp
 2012-10-25 12:40:25
 This is timestamp
-2012-11-01 11:21:03.844707
+2012-11-05 11:14:11.735649
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-25T12:48:55', 17, 17)
 this is timeConv!!!
 This is timestamp
 2012-10-25 12:48:55
 This is timestamp
-2012-11-01 11:21:03.870067
+2012-11-05 11:14:11.878099
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-25T12:50:59', 18, 18)
 this is timeConv!!!
 This is timestamp
 2012-10-25 12:50:59
 This is timestamp
-2012-11-01 11:21:03.896246
+2012-11-05 11:14:12.028942
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-25T12:53:03', 19, 19)
 this is timeConv!!!
 This is timestamp
 2012-10-25 12:53:03
 This is timestamp
-2012-11-01 11:21:03.919607
+2012-11-05 11:14:12.179474
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-25T12:54:10', 20, 20)
 this is timeConv!!!
 This is timestamp
 2012-10-25 12:54:10
 This is timestamp
-2012-11-01 11:21:03.945807
+2012-11-05 11:14:12.321748
 No Active EmulationLifetime Runs were found to recover(1)
 (u'2012-10-25T14:32:27', 21, 21)
 this is timeConv!!!
 This is timestamp
 2012-10-25 14:32:27
 This is timestamp
-2012-11-01 11:21:03.9
+2012-11-05 11:14:12.

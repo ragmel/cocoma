@@ -402,7 +402,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
     
     
 
-def createEmulation(emulationName,distributionType,resourceType,emulationType,startTime,stopTime,emulator, distributionGranularity,arg):
+def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList):
                     
     print "Hello this is createEmulation"
     
@@ -417,28 +417,19 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
             conn = sqlite.connect('./data/cocoma.sqlite')
             
         c = conn.cursor()
-    
-        # 1. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
-        c.execute('INSERT INTO DistributionParameters (arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [arg[0],arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9]])
-
-        distributionParametersID=c.lastrowid
-                
-        # 2. We populate "distribution" table  
-        c.execute('INSERT INTO distribution (distributionGranularity, distributionType, distributionParametersID) VALUES (?, ?, ?)', [distributionGranularity, distributionType, distributionParametersID])
-    
-        distributionID=c.lastrowid
-        
                 
         # 3. Populate "emulation"
-        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,distributionID,emulator,active) VALUES (?, ?, ?, ?, ?, ?)', [emulationName,emulationType,resourceType,distributionID,emulator,1])
+        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active) VALUES (?, ?, ?, ?)', [emulationName,emulationType,resourceTypeEmulation,1])
         emulationID = c.lastrowid
+        
+        # 5. We populate "emulationLifetime" table  
+        c.execute('INSERT INTO emulationLifetime (startTime,emulationID) VALUES (?, ?)', [startTimeEmu,emulationID])
+        emulationLifetimeID = c.lastrowid
         
         # 4. Adding missing distribution ID
         c.execute('UPDATE DistributionParameters SET distributionID=? WHERE distributionParametersID =?',(distributionID,distributionParametersID))
         
-        # 5. We populate "emulationLifetime" table  
-        c.execute('INSERT INTO emulationLifetime (startTime,stopTime,emulationID) VALUES (?, ?, ?)', [startTime,stopTime,emulationID])
-        emulationLifetimeID = c.lastrowid
+
         
         #6. Update emulation with LifetimeID
         
@@ -460,6 +451,7 @@ def createEmulation(emulationName,distributionType,resourceType,emulationType,st
         conn.commit()
         
         DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg)
+        emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg
         
     except sqlite.Error, e:
         print "SQL Error %s:" % e.args[0]

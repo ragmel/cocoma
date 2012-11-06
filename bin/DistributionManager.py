@@ -29,8 +29,24 @@ try:
 except:
     print "no $COCOMA environmental variable set"    
 
-def distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg):   
-            print "this is schedulerControl"
+def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg):   
+        print "this is distributionManager"
+            
+        # 1. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
+        c.execute('INSERT INTO DistributionParameters (arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [arg[0],arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9]])
+
+        distributionParametersID=c.lastrowid
+                
+        # 2. We populate "distribution" table  
+        c.execute('INSERT INTO distribution (distributionGranularity, distributionType, distributionParametersID) VALUES (?, ?, ?)', [distributionGranularity, distributionType, distributionParametersID])
+    
+        distributionID=c.lastrowid
+            
+            
+            
+            
+            
+            
                         
             startTime= timeConv(startTime)
             stopTime = timeConv(stopTime)

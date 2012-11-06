@@ -40,7 +40,28 @@ COCOMA ROOT
 '''
 @route('/', method ="GET")
 def get_root():
-    response.content_type = CONTENT
+    #response.content_type = CONTENT
+    #response.headers['Content-Type'] = 'application/vnd.cocoma+xml'
+    '''
+    ######################
+    HEADER
+    ######################
+    '''
+    
+    
+    
+    
+    response.set_header('Allow', 'GET,OPTIONS,HEAD')
+    response.set_header('Cache-Control', 'public,max-age=120')
+    response.content_type = 'application/vnd.bonfire+xml; charset=utf-8'
+    # have no idea if we need these
+    #response.set_header('ETag', '1039483f4e6f724fa5cc5d0e8019b404')
+    #response.set_header('X-UA-Compatible', 'IE=Edge,chrome=1')
+    #response.set_header('X-Runtime', '0.004356')
+    #response.set_header('Vary', 'Authorization,Accept')
+    response.set_header('Connection', 'close')
+    response.set_header('Transfer-Encoding', 'chunked')
+    
     #curl -k -i http://10.55.164.211:8050/
     xml_content_root = '''<?xml version="1.0" encoding="UTF-8"?>
 <root xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/">
