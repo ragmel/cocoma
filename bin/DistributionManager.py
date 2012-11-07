@@ -32,15 +32,15 @@ except:
 def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg):   
         print "this is distributionManager"
             
-        # 1. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
-        c.execute('INSERT INTO DistributionParameters (arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [arg[0],arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9]])
-
-        distributionParametersID=c.lastrowid
-                
-        # 2. We populate "distribution" table  
-        c.execute('INSERT INTO distribution (distributionGranularity, distributionType, distributionParametersID) VALUES (?, ?, ?)', [distributionGranularity, distributionType, distributionParametersID])
+            # 1. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
+            #c.execute('INSERT INTO DistributionParameters (arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [arg[0],arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9]])
     
-        distributionID=c.lastrowid
+            #distributionParametersID=c.lastrowid
+            #        
+            # 2. We populate "distribution" table  
+            #c.execute('INSERT INTO distribution (distributionGranularity, distributionType, distributionParametersID) VALUES (?, ?, ?)', [distributionGranularity, distributionType, distributionParametersID])
+        
+            #distributionID=c.lastrowid
             
             
             
@@ -48,43 +48,43 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             
             
                         
-            startTime= timeConv(startTime)
-            stopTime = timeConv(stopTime)
-            startTimesec=timestamp(startTime)
-        
-            #make sure it is integer
-            distributionGranularity = int(distributionGranularity)
-            
-                
-            duration = (timestamp(stopTime) - timestamp(startTime))/distributionGranularity
-            duration = int(duration)
-            print "Duration is seconds:"
-            print duration
-            
-            '''
-            1. Load the module according to Distribution Type to create runs
-             '''
-                                
-            #1. Get required module loaded
-            modhandleMy=loadDistribution(distributionType)
-            #2. Use this module for calculation and run creation   
-            newCreateRuns=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,emulator,arg,HOMEPATH)
-  
-           
-                                    
-            uri ="PYRO:scheduler.daemon@localhost:51889"
+        startTime= timeConv(startTime)
+        stopTime = timeConv(stopTime)
+        startTimesec=timestamp(startTime)
+      
+        #make sure it is integer
+        distributionGranularity = int(distributionGranularity)
+          
+              
+        duration = (timestamp(stopTime) - timestamp(startTime))/distributionGranularity
+        duration = int(duration)
+        print "Duration is seconds:"
+        print duration
+          
+        '''
+        1. Load the module according to Distribution Type to create runs
+        '''
+                              
+        #1. Get required module loaded
+        modhandleMy=loadDistribution(distributionType)
+        #2. Use this module for calculation and run creation   
+        newCreateRuns=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,emulator,arg,HOMEPATH)
 
-            daemon=Pyro4.Proxy(uri)
-            try:
-            
-                print daemon.hello()
-                for job in daemon.listJobs():
-                    print job
+         
+                                  
+        uri ="PYRO:scheduler.daemon@localhost:51889"
 
-            except  Pyro4.errors.CommunicationError, e:
-                print e
-                print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
-                print "list of jobs:"
+        daemon=Pyro4.Proxy(uri)
+        try:
+          
+            print daemon.hello()
+            for job in daemon.listJobs():
+                print job
+
+        except  Pyro4.errors.CommunicationError, e:
+            print e
+            print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
+            print "list of jobs:"
 
 
 

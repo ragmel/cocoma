@@ -88,13 +88,18 @@ def xmlReader(filename):
     #close file because we dont need it anymore:
     file.close()
     #parse the xml you got from the file
-    xmlParser(data)
+    (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList)=xmlParser(data)
+    return emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList
 
 def xmlParser(xmlData):
     
     ##new##
     dom2 = parseString(xmlData)
     distroList = []
+    emulationName=""
+    emulationType=""
+    resourceTypeEmulation=""
+    startTimeEmu=""
 
 
     distributionsXml=dom2.getElementsByTagName('distributions')
@@ -114,7 +119,8 @@ def xmlParser(xmlData):
     n=0
     for node in distributionsXml:
         #get things inside "distributions"
-        startTimeDistro = dom2.getElementsByTagName('startTime')[n].firstChild.data
+                            
+        startTimeDistro = dom2.getElementsByTagName('distributions')[0].getElementsByTagName('startTime')[0].firstChild.data
         durationDistro = dom2.getElementsByTagName('duration')[n].firstChild.data
         granularity= dom2.getElementsByTagName('granularity')[n].firstChild.data
          
@@ -175,17 +181,14 @@ def xmlParser(xmlData):
         print "resource type: ", resourceTypeEmu
         #atr = dom2.documentElement.getAttributeNode('name').nodeValue
         # print atr
-
-
-        
-        
         #emulator = dom2.getElementsByTagName('emulator')[n].firstChild.data
         distroList.append(distroDict)
         n=n+1
         # print "Distro ",n
         #print durationDistro,  startTimeDistro, distribution,emulator 
-    print distroList
-    return emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList
+        
+
+    return (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList)
     
 
 
@@ -206,7 +209,7 @@ if __name__ == '__main__':
   <distributions name=" myMixEmu-dis-1">
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>1</duration>
+     <duration>120</duration>
      <granularity>10</granularity>
      <distribution href="/distributions/linear" name="linear" />
       <startLoad>10</startLoad>
@@ -221,7 +224,7 @@ if __name__ == '__main__':
   <distributions name=" myMixEmu-dis-2">
      <startTime>60</startTime>
      <!--duration in seconds -->
-     <duration>2</duration>
+     <duration>200</duration>
      <granularity>10</granularity>
      <distribution href="/distributions/poisson" name="poisson" />
       <emulator href="/emulators/stress" name="stress" />
@@ -231,7 +234,7 @@ if __name__ == '__main__':
   </distributions>
 
   <distributions name=" myMixEmu-dis-3">
-     <startTime>now+60</startTime>
+     <startTime>50</startTime>
      <!--duration in seconds -->
      <duration>3</duration>
      <granularity>10</granularity>

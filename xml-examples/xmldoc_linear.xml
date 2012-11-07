@@ -1,21 +1,74 @@
-<domain type='COCOMA'>
-   <emulation>   
-       <emulationId>autoincrement</emulationId>
-       <emulationName>myLinearEmu</emulationName>
-       <emulationType>Malicious</emulationType>
-       <resourceType>CPU</resourceType>
-       <emulator>stressapptest</emulator>
-       <startTime>2012-10-23T10:30:00</startTime>
-       <stopTime>2012-10-23T10:31:00</stopTime>
-   </emulation>
-   
-   <distribution>
-       <distributionGranularity>5</distributionGranularity>
-       <distributionType>linear</distributionType>
-       <arg0>10</arg0>
-       <arg1>60</arg1>
-       
-       
-   </distribution>
-    
-</domain>
+<emulation>
+  <emulationName>myMixEmu</emulationName>
+  <emulationType>Mix</emulationType>
+  <resourceType>Mix</resourceType>
+  <startTime>2013-09-10T17:30:00</startTime>
+  <!--duration in seconds -->
+  <stopTime>now+180</stopTime>
+  
+  <distributions name=" myMixEmu-dis-1">
+     <startTime>0</startTime>
+     <!--duration in seconds -->
+     <duration>120</duration>
+     <granularity>10</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+      <startLoad>10</startLoad>
+      <stopLoad>90</stopLoad>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator-params>
+        <!--more parameters will be added -->
+        <resourceType>CPU</resourceType>
+      </emulator-params>
+  </distributions>
+  
+  <distributions name=" myMixEmu-dis-2">
+     <startTime>60</startTime>
+     <!--duration in seconds -->
+     <duration>200</duration>
+     <granularity>10</granularity>
+     <distribution href="/distributions/poisson" name="poisson" />
+      <emulator href="/emulators/stress" name="stress" />
+      <emulator-params>
+        <resourceType>CPU</resourceType>
+      </emulator-params>
+  </distributions>
+
+  <distributions name=" myMixEmu-dis-3">
+     <startTime>50</startTime>
+     <!--duration in seconds -->
+     <duration>3</duration>
+     <granularity>10</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator-params>
+        <resourceType>NET</resourceType>
+      </emulator-params>
+  </distributions>
+
+  <distributions name=" myMixEmu-dis-4">
+     <startTime>120</startTime>
+     <!--duration in seconds -->
+     <duration>4</duration>
+     <granularity>10</granularity>
+     <distribution href="/distributions/poisson" name="poisson" />
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator-params>
+        <resourceType>CPU</resourceType>
+      </emulator-params>
+  </distributions>
+
+  <distributions name=" myMixEmu-dis-5">
+     <startTime>120</startTime>
+     <!--duration in seconds -->
+     <duration>5</duration>
+     <granularity>10</granularity>
+     <distribution href="/distributions/geometric" name="geometric" />
+      <emulator href="/emulators/wireshark" name="wireshark" />
+      <emulator-params>
+        <resourceType>net</resourceType>
+      </emulator-params>
+  </distributions>
+
+  <link rel="parent" href="/"/>
+  <link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
+</emulation>

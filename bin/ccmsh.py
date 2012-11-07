@@ -265,17 +265,21 @@ def main():
         
               
         if options.xml and not options.emuNow:  
-                (emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
-                EmulationManager.dataCheck(startTime,stopTime)
-                EmulationManager.distributionTypeCheck(distributionType)
-                EmulationManager.DistributionArgCheck(distributionType,arg)
-                EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
+                #(emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
+                #print "CCMSH:",emulationName, emulationType, distroList
+                (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
+                #print "CCMSH:",emulationType, resourceTypeEmulation, startTimeEmu, distroList
+                EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList)
+                #EmulationManager.dataCheck(startTime,stopTime)
+                #EmulationManager.distributionTypeCheck(distributionType)
+                #EmulationManager.DistributionArgCheck(distributionType,arg)
+                #EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
         
         if options.emuNow and options.xml:
-            
-            (startTime, stopTime) = EmulationManager.emulationNow(arguments[1])
-            (emulationName, distributionType, resourceType, emulationType, startTime0, stopTime0,emulator, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
-            EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
+            print "aa"
+            #(startTime, stopTime) = EmulationManager.emulationNow(arguments[1])
+            #(emulationName, distributionType, resourceType, emulationType, startTime0, stopTime0,emulator, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
+            #EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
             
         
     else:

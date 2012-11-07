@@ -418,40 +418,51 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
             
         c = conn.cursor()
                 
-        # 3. Populate "emulation"
+        # 1. Populate "emulation"
         c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active) VALUES (?, ?, ?, ?)', [emulationName,emulationType,resourceTypeEmulation,1])
         emulationID = c.lastrowid
         
-        # 5. We populate "emulationLifetime" table  
+        # 2. We populate "emulationLifetime" table  
         c.execute('INSERT INTO emulationLifetime (startTime,emulationID) VALUES (?, ?)', [startTimeEmu,emulationID])
         emulationLifetimeID = c.lastrowid
         
+        # 3. We add end to emulationLifetime date by the longest distribution
+        emulationLifetimeEndTime =0
+        for n in distroList:
+            compareEndTime = int(n["startTimeDistro"])+int(n["durationDistro"]) 
+            if compareEndTime > emulationLifetimeEndTime:
+                emulationLifetimeEndTime = compareEndTime
+        
+        print "longest time: ",emulationLifetimeEndTime
+        
+        c.execute('UPDATE emulationLifetime SET stopTime=? WHERE emulationLifetimeID =?',(emulationLifetimeEndTime,emulationLifetimeID))    
+        
         # 4. Adding missing distribution ID
-        c.execute('UPDATE DistributionParameters SET distributionID=? WHERE distributionParametersID =?',(distributionID,distributionParametersID))
+        #c.execute('UPDATE DistributionParameters SET distributionID=? WHERE distributionParametersID =?',(distributionID,distributionParametersID))
         
 
         
         #6. Update emulation with LifetimeID
         
-        c.execute('UPDATE emulation SET emulationLifetimeID=? WHERE emulationID =?',(emulationLifetimeID,emulationID))
+        #c.execute('UPDATE emulation SET emulationLifetimeID=? WHERE emulationID =?',(emulationLifetimeID,emulationID))
         
         
                 
         
         
-        c.execute("SELECT * FROM emulation WHERE emulationID='"+str(emulationID)+"'")
+        #c.execute("SELECT * FROM emulation WHERE emulationID='"+str(emulationID)+"'")
         print "Entry created with emulation ID", emulationID
         
-        emulationEntry= c.fetchall()
-        for row in emulationEntry: 
-            print "emulationID:",row[0],"emulationName:", row[1],"emulationType:", row[2],"resourceType:", row[3],"emulator:",row[4], "distributionID:",row[5],"emulationLifetimeID:",row[6] ,"active:",row[7]
+       # emulationEntry= c.fetchall()
+       # for row in emulationEntry: 
+        #    print "emulationID:",row[0],"emulationName:", row[1],"emulationType:", row[2],"resourceType:", row[3],"emulator:",row[4], "distributionID:",row[5],"emulationLifetimeID:",row[6] ,"active:",row[7]
         
-        dataCheck(startTime,stopTime)
-        distributionTypeCheck(distributionType)
+        #dataCheck(startTime,stopTime)
+        #distributionTypeCheck(distributionType)
         conn.commit()
         
-        DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg)
-        emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg
+        #DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg)
+        #emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg
         
     except sqlite.Error, e:
         print "SQL Error %s:" % e.args[0]
