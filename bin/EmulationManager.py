@@ -435,12 +435,13 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
         
         print "longest time: ",emulationLifetimeEndTime
         
-        c.execute('UPDATE emulationLifetime SET stopTime=? WHERE emulationLifetimeID =?',(emulationLifetimeEndTime,emulationLifetimeID))    
+        c.execute('UPDATE emulationLifetime SET stopTime=? WHERE emulationLifetimeID =?',(emulationLifetimeEndTime,emulationLifetimeID))
+        c.execute('UPDATE emulation SET emulationLifetimeID=? WHERE emulationID=?',(emulationLifetimeID,emulationID))    
         
         # 4. Adding missing distribution ID
         #c.execute('UPDATE DistributionParameters SET distributionID=? WHERE distributionParametersID =?',(distributionID,distributionParametersID))
         
-
+        
         
         #6. Update emulation with LifetimeID
         
@@ -460,8 +461,24 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
         #dataCheck(startTime,stopTime)
         #distributionTypeCheck(distributionType)
         conn.commit()
+        '''
+        {'emulatorName': u'stressapptest', 'distrType': u'linear', 'distrinutionsName': u' myMixEmu-dis-1',
+         'durationDistro': u'120', 'resourceTypeEmu': u'CPU', 'startTimeDistro': u'0', 'granularity': u'10', 'arg': [u'10', u'90']}'''
         
-        #DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg)
+        
+        for n in distroList:
+            emulator=n["emulatorName"]
+            duration = n["durationDistro"]
+            distributionName = n["distributionsName"]
+            
+            startTime = startTimeEmu
+            distributionGranularity = n["granularity"]
+            distributionType = n["distrType"]
+            arg= n["arg"]
+            #print "sending to DM these: ",emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg
+            DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg)
+            
+            
         #emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg
         
     except sqlite.Error, e:

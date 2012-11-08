@@ -74,6 +74,7 @@
 </emulation>
 '''
 from xml.dom.minidom import parseString, Node
+import DistributionManager,sys
 
 
 def xmlReader(filename):
@@ -96,6 +97,7 @@ def xmlParser(xmlData):
     ##new##
     dom2 = parseString(xmlData)
     distroList = []
+    
     emulationName=""
     emulationType=""
     resourceTypeEmulation=""
@@ -118,67 +120,87 @@ def xmlParser(xmlData):
     
     n=0
     for node in distributionsXml:
+        print "n: ",n
+        #Loading distribution type by module (linear, parabola, etc.)
+        distribution = dom2.getElementsByTagName('distribution')[n]
+        distrType = distribution.attributes["name"].value        
+        try:
+            moduleMethod=DistributionManager.loadDistributionArgNames(distrType)
+            moduleArgs=moduleMethod()
+            print "moduleArgs:",moduleArgs
+        except IOError, e:
+            print "Unable to load module name \"",distrType,"\" error:"
+            print e
+            sys.exit(0) 
+        
+        
+        
         #get things inside "distributions"
-                            
-        startTimeDistro = dom2.getElementsByTagName('distributions')[0].getElementsByTagName('startTime')[0].firstChild.data
+        startTimeDistro = dom2.getElementsByTagName('distributions')[n].getElementsByTagName('startTime')[0].firstChild.data
         durationDistro = dom2.getElementsByTagName('duration')[n].firstChild.data
         granularity= dom2.getElementsByTagName('granularity')[n].firstChild.data
          
+        arg=[]
+        a=0
+        #for things in moduleArgs:
+            
+        while a<10:
+            try:
+                
+                #arg0 = dom2.getElementsByTagName(moduleArgs[a])[n].firstChild.data
+                arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(moduleArgs[a])[0].firstChild.data
+                print "Arg",a," arg Name: ", moduleArgs[a]," arg Value: ",arg0
+                arg.append(arg0)
+                a= a+1
+                #print a, moduleArgs[a]
+            except IndexError,e:
+                    #print e, "setting value to NULL"
+                    #arg0="NULL"
+                    #print arg0
+                    #arg.append(arg0)
+                
+                
+                
+                arg0="NULL"
+                arg.append(arg0)
+                a= a+1
+                    #a=a+1
         
-        try:
-        #arg.append(dom.getElementsByTagName('distribution')[0].getElementsByTagName('arg9')[0].firstChild.data)
-            arg0 = dom2.getElementsByTagName('startLoad')[n].firstChild.data
-        except:
-        #arg.append("NULL")
-            arg0="NULL"
-        
-    
-        try:
-       
-            arg1 = dom2.getElementsByTagName('stopLoad')[n].firstChild.data
-        except:
-       
-            arg1="NULL"
-       
-        #arg2
-        #arg3
-        #arg4
-        #arg5
-        #arg6
-        #arg7
-        #arg8
-        #arg9
-        
-        resourceTypeEmu = dom2.getElementsByTagName('emulator-params')[0].getElementsByTagName('resourceType')[0].firstChild.data 
+        resourceTypeEmu = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourceType')[0].firstChild.data 
         #dom2.getElementsByTagName('resourceType')[n].firstChild.data
         ##############
         
         #get attributes
-        distribution = dom2.getElementsByTagName('distribution')[n]
-        distrType = distribution.attributes["name"].value
-        
+
         distributions= dom2.getElementsByTagName('distributions')[n]
-        distrinutionsName = distributions.attributes["name"].value
+        distributionsName = distributions.attributes["name"].value
         
         emulator = dom2.getElementsByTagName('emulator')[n]
-        emuName = emulator.attributes["name"].value
+        emulatorName = emulator.attributes["name"].value
+        
         ##############
         
         
         #add every emulation in the dictionary
-        distroDict={"distrinutionsName":distrinutionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,"distrType":distrType,"arg0":arg0,"arg1":arg1,"emuName":emuName,"resourceTypeEmu":resourceTypeEmu}
+        distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,"distrType":distrType,"arg":arg,"emulatorName":emulatorName,"resourceTypeEmu":resourceTypeEmu}
         
        
         
-        print "---->",distrinutionsName
+        print "---->",distributionsName
         print "start time: ",startTimeDistro
         print "duration: ",durationDistro
         print "granularity: ", granularity
         print "distribution type: ",distrType
-        print "startLoad: ",arg0
-        print "stopLoad: ",arg1
-        print "emulator:", emuName
+        
+        #listing all available distribution parameters
+        m=0
+        for names in moduleArgs:
+            print moduleArgs[m],arg[m]
+            m=m+1
+            
+        print "emulator:", emulatorName
         print "resource type: ", resourceTypeEmu
+        
         #atr = dom2.documentElement.getAttributeNode('name').nodeValue
         # print atr
         #emulator = dom2.getElementsByTagName('emulator')[n].firstChild.data
@@ -187,7 +209,7 @@ def xmlParser(xmlData):
         # print "Distro ",n
         #print durationDistro,  startTimeDistro, distribution,emulator 
         
-
+    print emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList
     return (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList)
     
 
@@ -212,8 +234,8 @@ if __name__ == '__main__':
      <duration>120</duration>
      <granularity>10</granularity>
      <distribution href="/distributions/linear" name="linear" />
-      <startLoad>10</startLoad>
-      <stopLoad>90</stopLoad>
+      <startLoad>11</startLoad>
+      <stopLoad>91</stopLoad>
       <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
         <!--more parameters will be added -->
@@ -226,7 +248,9 @@ if __name__ == '__main__':
      <!--duration in seconds -->
      <duration>200</duration>
      <granularity>10</granularity>
-     <distribution href="/distributions/poisson" name="poisson" />
+     <distribution href="/distributions/poisson" name="linear" />
+    <startLoad>12</startLoad>
+      <stopLoad>92</stopLoad>  
       <emulator href="/emulators/stress" name="stress" />
       <emulator-params>
         <resourceType>CPU</resourceType>
@@ -239,6 +263,8 @@ if __name__ == '__main__':
      <duration>3</duration>
      <granularity>10</granularity>
      <distribution href="/distributions/linear" name="linear" />
+    <startLoad>13</startLoad>
+      <stopLoad>93</stopLoad>  
       <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
         <resourceType>NET</resourceType>
@@ -250,7 +276,10 @@ if __name__ == '__main__':
      <!--duration in seconds -->
      <duration>4</duration>
      <granularity>10</granularity>
-     <distribution href="/distributions/poisson" name="poisson" />
+     <distribution href="/distributions/poisson" name="parabola" />
+      <curve>14</curve>
+      <sphere>34</sphere>
+      <bend>94</bend>     
       <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
         <resourceType>CPU</resourceType>
@@ -262,7 +291,9 @@ if __name__ == '__main__':
      <!--duration in seconds -->
      <duration>5</duration>
      <granularity>10</granularity>
-     <distribution href="/distributions/geometric" name="geometric" />
+     <distribution href="/distributions/geometric" name="linear" />
+      <startLoad>15</startLoad>
+      <stopLoad>95</stopLoad>     
       <emulator href="/emulators/wireshark" name="wireshark" />
       <emulator-params>
         <resourceType>net</resourceType>

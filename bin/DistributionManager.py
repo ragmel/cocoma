@@ -21,6 +21,7 @@
 
 import Pyro4,imp,time,sys,os
 import datetime as dt
+import sqlite3 as sqlite
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
@@ -29,18 +30,34 @@ try:
 except:
     print "no $COCOMA environmental variable set"    
 
-def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg):   
+def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg):   
         print "this is distributionManager"
             
-            # 1. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
-            #c.execute('INSERT INTO DistributionParameters (arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [arg[0],arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9]])
-    
-            #distributionParametersID=c.lastrowid
-            #        
-            # 2. We populate "distribution" table  
-            #c.execute('INSERT INTO distribution (distributionGranularity, distributionType, distributionParametersID) VALUES (?, ?, ?)', [distributionGranularity, distributionType, distributionParametersID])
+        try:
+            if HOMEPATH:
+                print
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+            else:
+                conn = sqlite.connect('./data/cocoma.sqlite')
+            
+            c = conn.cursor()
+                
+            # 1. We populate "distribution" table  
+            c.execute('INSERT INTO distribution (distributionGranularity, distributionType,emulator,emulationID) VALUES (?, ?, ?, ?)', [distributionGranularity, distributionType, emulator,emulationID])
         
-            #distributionID=c.lastrowid
+            distributionID=c.lastrowid
+            print arg
+            #2. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
+            c.execute('INSERT INTO DistributionParameters (arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,distributionID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [arg[0],arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9],distributionID])
+    
+            distributionParametersID=c.lastrowid
+            conn.commit()
+            c.close()
+        except sqlite.Error, e:
+            print "Error %s:" % e.args[0]
+            print e
+            sys.exit(1)                        
+ 
             
             
             
@@ -49,15 +66,14 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             
                         
         startTime= timeConv(startTime)
-        stopTime = timeConv(stopTime)
         startTimesec=timestamp(startTime)
-      
+        print "startTime:",startTime
+        
         #make sure it is integer
         distributionGranularity = int(distributionGranularity)
-          
-              
-        duration = (timestamp(stopTime) - timestamp(startTime))/distributionGranularity
-        duration = int(duration)
+         
+        
+        runDuration = int(duration)/distributionGranularity
         print "Duration is seconds:"
         print duration
           
@@ -68,7 +84,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         #1. Get required module loaded
         modhandleMy=loadDistribution(distributionType)
         #2. Use this module for calculation and run creation   
-        newCreateRuns=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,emulator,arg,HOMEPATH)
+        newCreateRuns=modhandleMy(emulationID,distributionName,emulationLifetimeID,startTimesec,runDuration, distributionGranularity,emulator,arg,HOMEPATH)
 
          
                                   
@@ -138,7 +154,7 @@ def loadDistributionHelp(modName):
                 
             return modhandle.distHelp   
         
-def loadDistributionArgQty(modName):
+def loadDistributionArgNames(modName):
             '''
             We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
             '''
@@ -153,7 +169,7 @@ def loadDistributionArgQty(modName):
             print modhandle
                         
                 
-            return modhandle.argQty  
+            return modhandle.argNames  
 
 
    

@@ -88,7 +88,8 @@ class distributionMod(object):
                 print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
             
             '''
-            3. Updating Run log in DB. 
+            WE DO NOT NEED THIS IN DB!!!
+            #3. Updating Run log in DB. 
                         
             '''
             
@@ -96,28 +97,19 @@ class distributionMod(object):
             
             
                 
-            try:
-                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                c = conn.cursor()
-                print "Path:",HOMEPATH+'/data/cocoma.sqlite'
-                print "insert to runlog"               
-                c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])
+            #try:
+             #   conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+              #  c = conn.cursor()
+               # print "Path:",HOMEPATH+'/data/cocoma.sqlite'
+                #print "insert to runlog"               
+               # c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])
                                     
-                conn.commit()
-                c.close()
-            except sqlite.Error, e:
-                print "Error %s:" % e.args[0]
-                print e
-                sys.exit(1)
-                         
-            
-            
-            
-              
-                
-                
-
-            
+                #conn.commit()
+                #c.close()
+            #except sqlite.Error, e:
+                #print "Error %s:" % e.args[0]
+                #print e
+                #sys.exit(1)
 
             
             
@@ -138,6 +130,9 @@ def distHelp():
 '''
 here we specify how many arguments distribution instance require to run properly
 '''
-def argQty():
-    return 2
+def argNames():
+    
+    argNames=["startLoad","stopLoad"]
+    print "Use Arg's: ",argNames
+    return argNames
 

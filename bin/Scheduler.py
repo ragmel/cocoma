@@ -44,7 +44,7 @@ class schedulerDaemon(object):
         #starting scheduler 
         self.sched = Scheduler()
         self.sched.start()
-        self.recoverySchedulerDaemon()
+        #self.recoverySchedulerDaemon()
 
     def listJobs(self):
         print "sending list of jobs"

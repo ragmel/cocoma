@@ -53,7 +53,7 @@ class distributionMod(object):
             print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
         
             '''
-            1. Distribution formula goes here(linear used)
+            1. Distribution formula goes here
             '''
                             
             self.linearStep=((int(self.startLoad)-int(self.stopLoad))/int(self.distributionGranularity))
@@ -110,7 +110,17 @@ class distributionMod(object):
                 print e
                 sys.exit(1)
                          
- 
+            
+            
+            
+              
+                
+                
+
+            
+
+            
+            
             #increasing to next run            
             self.runNo=int(self.runNo)+1
             
@@ -121,13 +131,16 @@ class distributionMod(object):
         
 def distHelp():
     print "Parabola Distribution How-To:"
-    print "Enter arg0 for first point and arg1 for 2nd point arg2 for 3rd point"
+    print "Enter arg0 for first point and arg1 for 2nd point"
     
     print "Have fun"
     
 '''
 here we specify how many arguments distribution instance require to run properly
 '''
-def argQty():
-    return 3
+def argNames():
+    
+    argNames=["curve","bend","sphere"]
+    print "Use Arg's: ",argNames
+    return argNames
 
