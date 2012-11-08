@@ -2,15 +2,15 @@
   <emulationName>myMixEmu</emulationName>
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
-  <startTime>2013-09-10T17:30:00</startTime>
+  <startTime>noW</startTime>
   <!--duration in seconds -->
   <stopTime>now+180</stopTime>
   
   <distributions name=" myMixEmu-dis-1">
-     <startTime>0</startTime>
+     <startTime>10</startTime>
      <!--duration in seconds -->
-     <duration>120</duration>
-     <granularity>10</granularity>
+     <duration>3600</duration>
+     <granularity>6</granularity>
      <distribution href="/distributions/linear" name="linear" />
       <startLoad>10</startLoad>
       <stopLoad>90</stopLoad>
@@ -22,50 +22,62 @@
   </distributions>
   
   <distributions name=" myMixEmu-dis-2">
-     <startTime>60</startTime>
+     <startTime>10</startTime>
      <!--duration in seconds -->
-     <duration>200</duration>
+     <duration>750</duration>
      <granularity>10</granularity>
-     <distribution href="/distributions/poisson" name="poisson" />
-      <emulator href="/emulators/stress" name="stress" />
+     <distribution href="/distributions/linear" name="linear" />
+      <startLoad>10</startLoad>
+      <stopLoad>90</stopLoad>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
+        <!--more parameters will be added -->
         <resourceType>CPU</resourceType>
       </emulator-params>
   </distributions>
 
   <distributions name=" myMixEmu-dis-3">
-     <startTime>50</startTime>
+     <startTime>10</startTime>
      <!--duration in seconds -->
-     <duration>3</duration>
+     <duration>1000</duration>
      <granularity>10</granularity>
      <distribution href="/distributions/linear" name="linear" />
+      <startLoad>10</startLoad>
+      <stopLoad>90</stopLoad>
       <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
-        <resourceType>NET</resourceType>
+        <!--more parameters will be added -->
+        <resourceType>CPU</resourceType>
       </emulator-params>
   </distributions>
 
   <distributions name=" myMixEmu-dis-4">
-     <startTime>120</startTime>
+     <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>4</duration>
+     <duration>800</duration>
      <granularity>10</granularity>
-     <distribution href="/distributions/poisson" name="poisson" />
+     <distribution href="/distributions/linear" name="linear" />
+      <startLoad>10</startLoad>
+      <stopLoad>90</stopLoad>
       <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
+        <!--more parameters will be added -->
         <resourceType>CPU</resourceType>
       </emulator-params>
   </distributions>
 
   <distributions name=" myMixEmu-dis-5">
-     <startTime>120</startTime>
+     <startTime>10</startTime>
      <!--duration in seconds -->
-     <duration>5</duration>
+     <duration>600</duration>
      <granularity>10</granularity>
-     <distribution href="/distributions/geometric" name="geometric" />
-      <emulator href="/emulators/wireshark" name="wireshark" />
+     <distribution href="/distributions/linear" name="linear" />
+      <startLoad>10</startLoad>
+      <stopLoad>90</stopLoad>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
-        <resourceType>net</resourceType>
+        <!--more parameters will be added -->
+        <resourceType>CPU</resourceType>
       </emulator-params>
   </distributions>
 
