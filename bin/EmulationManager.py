@@ -636,6 +636,7 @@ def services_control(service,action,args):
                     try:
                         HOMEPATH= os.environ['COCOMA']
                         sout=open(HOMEPATH+"/.~sout","wb")
+                        
                         procSched = subprocess.Popen(HOMEPATH+"/bin/Scheduler.py",stdout=sout,stderr=sout)
                         procSched.stdout
                         schedPidNo =procSched.pid
