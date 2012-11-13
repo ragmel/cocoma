@@ -28,25 +28,45 @@ Pyro4.config.HMAC_KEY='pRivAt3Key'
 class distributionMod(object):
     
     
-    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,emulator,arg,HOMEPATH):
+    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
         
-        self.startLoad = arg[0]
-        self.stopLoad = arg[1]
-        self.distributionGranularity = distributionGranularity
-        self.distributionGranularity_count=distributionGranularity
-        self.startTimesec = startTimesec
-        self.duration = duration
-        self.emulator = emulator
-        self.runNo=int(0)
+        self.startLoad = distributionArg["startLoad"]
+        self.stopLoad = distributionArg["stopLoad"]
+        
+        distributionGranularity_count=distributionGranularity
+        #startTimesec = startTimesec
+        duration = float(duration)
+        
+        runNo=int(0)
         
         print "Hello this is dist_linear"
+        print "emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH",emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH
         
-                          
-        while(self.distributionGranularity_count>=0):
+
+def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
+    
+    startLoad = distributionArg["startLoad"]
+    stopLoad = distributionArg["stopLoad"]
+    
+    distributionGranularity_count=distributionGranularity
+    #startTimesec = startTimesec
+    duration = float(duration)
+    
+    runNo=int(0)
+    
+    
+    stressValues = []        
+    runStartTimeList=[]      
+                
+    while(distributionGranularity_count>=0):
     
             print "Run No: "
-            print self.runNo
-            runStartTime=self.startTimesec+(duration*self.runNo)
+            print runNo
+            print "self.startTimesec",startTimesec
+            runStartTime=startTimesec+(duration*runNo)
+            
+            
+            runStartTimeList.append(runStartTime)
             print "This run start time: "
             print runStartTime
             print "This is time passed to scheduler:"
@@ -56,72 +76,38 @@ class distributionMod(object):
             1. Distribution formula goes here
             '''
                             
-            self.linearStep=((int(self.startLoad)-int(self.stopLoad))/int(self.distributionGranularity))
-            self.linearStep=math.fabs((int(self.linearStep)))
+            linearStep=((int(startLoad)-int(stopLoad))/int(distributionGranularity))
+            linearStep=math.fabs((int(linearStep)))
             print "LINEAR STEP SHOULD BE THE SAME"
-            print self.linearStep
-            self.linearStress= ((self.linearStep*int(self.runNo)))+int(self.startLoad)
+            print linearStep
+            linearStress= ((linearStep*int(runNo)))+int(startLoad)
             #make sure we return integer
-            self.linearStress=int(self.linearStress)
+            linearStress=int(linearStress)
             print "LINEAR STRESS SHOULD CHANGE"
-            print self.linearStress
+            print linearStress
             
-            stressValue = self.linearStress
+            
+            
+            
+            stressValues.append(linearStress)
             print "This run stress Value: "
-            print stressValue
+            print stressValues
             
-            '''
-            2. Formula ends and we start feeding runs to Scheduler
-            '''
-            
-            
-            uri ="PYRO:scheduler.daemon@localhost:51889"
-    
-            daemon=Pyro4.Proxy(uri)
-            try:
-                
-                print daemon.hello()
-                print daemon.createJob(emulationID,emulationName,emulationLifetimeID,duration,emulator,stressValue,runStartTime,str(self.runNo))
-                
-            except  Pyro4.errors.CommunicationError, e:
-                print e
-                print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
-            
-            '''
-            WE DO NOT NEED THIS IN DB!!!
-            #3. Updating Run log in DB. 
-                        
-            '''
-            
-            
-            
-            
-                
-            #try:
-             #   conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-              #  c = conn.cursor()
-               # print "Path:",HOMEPATH+'/data/cocoma.sqlite'
-                #print "insert to runlog"               
-               # c.execute('INSERT INTO runLog (emulationLifetimeID,runNo,duration,stressValue) VALUES (?, ?, ?, ?)', [emulationLifetimeID,self.runNo,duration,stressValue])
-                                    
-                #conn.commit()
-                #c.close()
-            #except sqlite.Error, e:
-                #print "Error %s:" % e.args[0]
-                #print e
-                #sys.exit(1)
-
-            
-            
+            print "runStartTimeList",runStartTimeList
+             
             #increasing to next run            
-            self.runNo=int(self.runNo)+1
+            runNo=int(runNo)+1
             
         
             print "distributionGranularity_count:"
-            self.distributionGranularity_count= int(self.distributionGranularity_count)-1
-            print self.distributionGranularity_count
+            distributionGranularity_count= int(distributionGranularity_count)-1
+            print distributionGranularity_count
         
+    return stressValues, runStartTimeList
+    
+    
 def distHelp():
+    
     print "Linear Distribution How-To:"
     print "Enter arg0 for first point and arg1 for 2nd point"
     

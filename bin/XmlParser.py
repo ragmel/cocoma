@@ -132,7 +132,25 @@ def xmlParser(xmlData):
             print "Unable to load module name \"",distrType,"\" error:"
             print e
             sys.exit(0) 
+        '''
+        loading emulator args
+        '''
+        #emulator = dom2.getElementsByTagName('emulator')[n]
+        #emulatorName = emulator.attributes["name"].value
+    
+        emulator = dom2.getElementsByTagName('emulator')[n]
+        emulatorType = emulator.attributes["name"].value
         
+        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourceType')[0].firstChild.data
+        print "emulatorType,resourceTypeDist:",emulatorType,resourceTypeDist        
+        try:
+            EmulatorModuleMethod=DistributionManager.loadEmulatorArgNames(emulatorType)
+            emulatorArgs=EmulatorModuleMethod(resourceTypeDist)
+            print "emulatorArgs:",emulatorArgs
+        except IOError, e:
+            print "Unable to load module name \"",emulatorType,"\" error:"
+            print e
+            sys.exit(0)    
         
         
         #get things inside "distributions"
@@ -140,17 +158,20 @@ def xmlParser(xmlData):
         durationDistro = dom2.getElementsByTagName('duration')[n].firstChild.data
         granularity= dom2.getElementsByTagName('granularity')[n].firstChild.data
          
-        arg=[]
+        distroArgs={}
         a=0
         #for things in moduleArgs:
-            
-        while a<10:
+        '''
+        Getting all the arguments for distribution
+        '''    
+        for args in moduleArgs:
             try:
-                
+               
                 #arg0 = dom2.getElementsByTagName(moduleArgs[a])[n].firstChild.data
                 arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(moduleArgs[a])[0].firstChild.data
-                print "Arg",a," arg Name: ", moduleArgs[a]," arg Value: ",arg0
-                arg.append(arg0)
+                print "Distro Arg",a," arg Name: ", moduleArgs[a]," arg Value: ",arg0
+                
+                distroArgs.update({moduleArgs[a]:arg0})
                 a= a+1
                 #print a, moduleArgs[a]
             except IndexError,e:
@@ -162,11 +183,42 @@ def xmlParser(xmlData):
                 
                 
                 arg0="NULL"
-                arg.append(arg0)
+                #arg.append(arg0)
                 a= a+1
+        '''
+        getting all the arguments for emulator
+        '''
+        emulatorArg={}
+        a=0
+        #for things in moduleArgs:
+        
+        for args in emulatorArgs:
+            try:
+                
+                #arg0 = dom2.getElementsByTagName(moduleArgs[a])[n].firstChild.data
+                arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(emulatorArgs[a])[0].firstChild.data
+                print "Emulator Arg",a," arg Name: ", emulatorArgs[a]," arg Value: ",arg0
+                emulatorArgDict={emulatorArgs[a]:arg0}
+                emulatorArg.update({emulatorArgs[a]:arg0})
+                #append(emulatorArgs[a]:arg0)
+                a= a+1
+                #print a, moduleArgs[a]
+            except IndexError,e:
+                    #print e, "setting value to NULL"
+                    #arg0="NULL"
+                    #print arg0
+                    #arg.append(arg0)
+                
+                
+                
+                arg0="NULL"
+                emulatorArg.append(arg0)
+                a= a+1
+        
+        print "emulatorArg:",emulatorArg
                     #a=a+1
         
-        resourceTypeEmu = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourceType')[0].firstChild.data 
+        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourceType')[0].firstChild.data 
         #dom2.getElementsByTagName('resourceType')[n].firstChild.data
         ##############
         
@@ -182,7 +234,7 @@ def xmlParser(xmlData):
         
         
         #add every emulation in the dictionary
-        distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,"distrType":distrType,"arg":arg,"emulatorName":emulatorName,"resourceTypeEmu":resourceTypeEmu}
+        distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,"distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist}
         
        
         
@@ -193,13 +245,11 @@ def xmlParser(xmlData):
         print "distribution type: ",distrType
         
         #listing all available distribution parameters
-        m=0
-        for names in moduleArgs:
-            print moduleArgs[m],arg[m]
-            m=m+1
-            
+        
+        print distroArgs
+                    
         print "emulator:", emulatorName
-        print "resource type: ", resourceTypeEmu
+        print "resource type: ", resourceTypeDist
         
         #atr = dom2.documentElement.getAttributeNode('name').nodeValue
         # print atr
@@ -209,7 +259,8 @@ def xmlParser(xmlData):
         # print "Distro ",n
         #print durationDistro,  startTimeDistro, distribution,emulator 
         
-    print emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList
+    print emulationName,emulationType, resourceTypeEmulation, startTimeEmu,distroList
+    print "distroList[0]:",distroList[0]
     return (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList)
     
 
@@ -236,10 +287,12 @@ if __name__ == '__main__':
      <distribution href="/distributions/linear" name="linear" />
       <startLoad>11</startLoad>
       <stopLoad>91</stopLoad>
-      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
         <!--more parameters will be added -->
         <resourceType>CPU</resourceType>
+        <!--Number of CPUs to keep busy (default: autodetected)-->
+        <ncpus>0</ncpus>
       </emulator-params>
   </distributions>
   
@@ -251,9 +304,10 @@ if __name__ == '__main__':
      <distribution href="/distributions/poisson" name="linear" />
     <startLoad>12</startLoad>
       <stopLoad>92</stopLoad>  
-      <emulator href="/emulators/stress" name="stress" />
+      <emulator href="/emulators/stress" name="lookbusy" />
       <emulator-params>
         <resourceType>CPU</resourceType>
+        <ncpus>3</ncpus>
       </emulator-params>
   </distributions>
 
@@ -265,9 +319,11 @@ if __name__ == '__main__':
      <distribution href="/distributions/linear" name="linear" />
     <startLoad>13</startLoad>
       <stopLoad>93</stopLoad>  
-      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
-        <resourceType>NET</resourceType>
+        <resourceType>MEM</resourceType>
+        <memUtil>10GB</memUtil>
+        <memSleep>100</memSleep>
       </emulator-params>
   </distributions>
 
@@ -280,9 +336,10 @@ if __name__ == '__main__':
       <curve>14</curve>
       <sphere>34</sphere>
       <bend>94</bend>     
-      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
         <resourceType>CPU</resourceType>
+        <ncpus>3</ncpus>
       </emulator-params>
   </distributions>
 
@@ -294,9 +351,12 @@ if __name__ == '__main__':
      <distribution href="/distributions/geometric" name="linear" />
       <startLoad>15</startLoad>
       <stopLoad>95</stopLoad>     
-      <emulator href="/emulators/wireshark" name="wireshark" />
+      <emulator href="/emulators/wireshark" name="lookbusy" />
       <emulator-params>
-        <resourceType>net</resourceType>
+        <resourceType>IO</resourceType>
+        <ioUtil>10</ioUtil>
+        <ioBlockSize>20</ioBlockSize>
+        <ioSleep>30</ioSleep>
       </emulator-params>
   </distributions>
 

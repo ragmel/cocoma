@@ -83,7 +83,7 @@ class schedulerDaemon(object):
     #    print "This is purgeAllJobs daemon"
     #    self.sched.shutdown(False, True, True)
     
-    def createJob(self,emulationID,emulationName,emulationLifetimeID,duration,emulator,stressValue,runStartTime,runNo):
+    def createJob(self,emulationID,emulationName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
         
         
         print "Hello this is Scheduler createJob()"
@@ -97,7 +97,7 @@ class schedulerDaemon(object):
             print "stressValue",stressValue
             print "duration",duration
             print "runNo",runNo
-            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,emulator,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
+            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo], name=str(emulationID)+"-"+emulationName)
             print sys.stdout
             valBack=str(("Job: "+str(emulationID)+"-"+emulationName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             print valBack

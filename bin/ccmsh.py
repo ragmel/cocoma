@@ -270,9 +270,9 @@ def main():
                 (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
                 if startTimeEmu.lower() =="now":
                     (startTimeEmu1, stopTime) = EmulationManager.emulationNow(1)
-                    EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu1, distroList)
+                    EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu1,distroList)
                 else:
-                    EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList)
+                    EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu,distroList)
                 
                 
                 #EmulationManager.dataCheck(startTime,stopTime)
@@ -285,7 +285,7 @@ def main():
             #just giving random value at the moment
             arguments[1] = 1
             
-            (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
+            (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,distroList) = XmlParser.xmlReader(arguments[0])
             (startTimeEmu, stopTime) = EmulationManager.emulationNow(arguments[1])
             EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList)
             #(emulationName, distributionType, resourceType, emulationType, startTime0, stopTime0,emulator, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])

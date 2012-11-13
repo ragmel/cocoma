@@ -28,10 +28,10 @@ Pyro4.config.HMAC_KEY='pRivAt3Key'
 class distributionMod(object):
     
     
-    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,emulator,arg,HOMEPATH):
+    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,emulator,distributionArg,HOMEPATH):
         
-        self.startLoad = arg[0]
-        self.stopLoad = arg[1]
+        self.startLoad = distributionArg["startLoad"]
+        self.stopLoad = distributionArg["stopLoad"]
         self.distributionGranularity = distributionGranularity
         self.distributionGranularity_count=distributionGranularity
         self.startTimesec = startTimesec
@@ -91,10 +91,7 @@ class distributionMod(object):
             3. Updating Run log in DB. 
                         
             '''
-            
-            
-            
-            
+
                 
             try:
                 conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
@@ -109,18 +106,7 @@ class distributionMod(object):
                 print "Error %s:" % e.args[0]
                 print e
                 sys.exit(1)
-                         
-            
-            
-            
-              
-                
-                
 
-            
-
-            
-            
             #increasing to next run            
             self.runNo=int(self.runNo)+1
             

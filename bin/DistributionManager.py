@@ -30,7 +30,7 @@ try:
 except:
     print "no $COCOMA environmental variable set"    
 
-def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg):   
+def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg):   
         print "this is distributionManager"
             
         try:
@@ -46,9 +46,20 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             c.execute('INSERT INTO distribution (distributionGranularity, distributionType,emulator,emulationID) VALUES (?, ?, ?, ?)', [distributionGranularity, distributionType, emulator,emulationID])
         
             distributionID=c.lastrowid
-            print arg
+            '''
+            {'startLoad': u'10', 'stopLoad': u'90'}
+            '''
+            print distributionArg
+            print emulatorArg
+            
             #2. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
-            c.execute('INSERT INTO DistributionParameters (arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,distributionID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [arg[0],arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9],distributionID])
+            #a={"aa":"AA","bb":"BB"}
+            
+            #for d in a:
+             #   print "name:",d
+              #  print "value",a[d]
+            for d in distributionArg :
+                c.execute('INSERT INTO DistributionParameters (paramName,value,distributionID) VALUES (?, ?, ?)',[d,distributionArg[d],distributionID])
     
             distributionParametersID=c.lastrowid
             conn.commit()
@@ -84,7 +95,29 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         #1. Get required module loaded
         modhandleMy=loadDistribution(distributionType)
         #2. Use this module for calculation and run creation   
-        newCreateRuns=modhandleMy(emulationID,distributionName,emulationLifetimeID,startTimesec,runDuration, distributionGranularity,emulator,arg,HOMEPATH)
+        #newCreateRuns=modhandleMy(emulationID,distributionName,emulationLifetimeID,startTimesec,runDuration, distributionGranularity,emulator,arg,HOMEPATH)
+        
+        (stressValues,runStartTime)=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,runDuration, distributionGranularity,distributionArg,HOMEPATH)
+        
+        uri ="PYRO:scheduler.daemon@localhost:51889"
+    
+        daemon=Pyro4.Proxy(uri)
+        n=0
+        for vals in stressValues:
+            print vals
+            try:
+                
+                print daemon.hello()
+                print daemon.createJob(emulationID,emulationName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n))
+                                   #lf,emulationID,emulationName,emulationLifetimeID,duration,emulator,resourceType,stressValue,runStartTime,runNo
+                n= n+1
+                
+            except  Pyro4.errors.CommunicationError, e:
+                print e
+                print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
+        
+        
+        
 
          
                                   
@@ -135,7 +168,7 @@ def loadDistribution(modName):
               #  if fp:
               #      fp.close()
                 
-            return modhandle.distributionMod
+            return modhandle.functionCount
 
 def loadDistributionHelp(modName):
             '''
@@ -191,6 +224,26 @@ def listDistributions(name):
                 distroList.append(distName)
         
         return distroList  
+
+'''
+###############################
+Emulator ARG module load
+##############################
+'''
+def loadEmulatorArgNames(modName):
+    '''
+    We are Loading module by file name. File name will be determined by emulator type (i.e. stressapptest)
+    '''
+    if HOMEPATH:
+        modfile = HOMEPATH+"/emulators/run_"+modName+".py"
+        modname = "run_"+modName
+    else:
+        modfile = "./emulators/run_"+modName+".py"
+        modname = "run_"+modName
+    
+    modhandle = imp.load_source(modname, modfile)
+        
+    return modhandle.emulatorArgNames
 
 
 

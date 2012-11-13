@@ -470,13 +470,16 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
             emulator=n["emulatorName"]
             duration = n["durationDistro"]
             distributionName = n["distributionsName"]
+            resourceTypeDist = n["resourceTypeDist"]
             
             startTime = startTimeEmu
             distributionGranularity = n["granularity"]
             distributionType = n["distrType"]
-            arg= n["arg"]
+            distributionArg= n["distroArgs"]
+            emulatorArg=n["emulatorArg"]
+            
             #print "sending to DM these: ",emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg
-            DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg)
+            DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg)
             
             
         #emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg
