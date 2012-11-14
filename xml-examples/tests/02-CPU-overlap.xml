@@ -6,11 +6,11 @@
   <!--duration in seconds -->
   <stopTime>now+180</stopTime>
   
-  <distributions name="CPU-dis-1">
-     <startTime>10</startTime>
+  <distributions name="CPU-overlap-1">
+     <startTime>5</startTime>
      <!--duration in seconds -->
-     <duration>60</duration>
-     <granularity>6</granularity>
+     <duration>30</duration>
+     <granularity>3</granularity>
      <distribution href="/distributions/linear" name="linear" />
 	<!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
@@ -25,20 +25,22 @@
       </emulator-params>
   </distributions>
   
-  <distributions name="MEM-dis-1">
+   <distributions name="CPU-overlap-2">
      <startTime>10</startTime>
      <!--duration in seconds -->
-     <duration>60</duration>
-     <granularity>6</granularity>
+     <duration>30</duration>
+     <granularity>3</granularity>
      <distribution href="/distributions/linear" name="linear" />
-     <!--Megabytes for memory -->
+	<!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
-      <stopLoad>100</stopLoad>
+      <stopLoad>90</stopLoad>
       <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
-        <resourceType>MEM</resourceType>
-	<!--time between iterations in msec (default 1000)-->
-	<memSleep>100</memSleep>
+        <!--more parameters will be added -->
+        <resourceType>CPU</resourceType>
+	<!--Number of CPUs to keep busy (default: autodetected)-->
+	<ncpus>0</ncpus>
+
       </emulator-params>
   </distributions>
 

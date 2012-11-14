@@ -1,0 +1,27 @@
+<emulation>
+  <emulationName>myMixEmu</emulationName>
+  <emulationType>Mix</emulationType>
+  <resourceType>Mix</resourceType>
+  <startTime>2012-11-12T18:30:00</startTime>
+  <!--duration in seconds -->
+  <stopTime>now+180</stopTime>
+  
+ 
+  <distributions name="MEM-reverse-1">
+     <startTime>5</startTime>
+     <!--duration in seconds -->
+     <duration>30</duration>
+     <granularity>3</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+     <!--Megabytes for memory -->
+      <startLoad>100</startLoad>
+      <stopLoad>10</stopLoad>
+      <emulator href="/emulators/stressapptest" name="lookbusy" />
+      <emulator-params>
+        <resourceType>MEM</resourceType>
+	<!--time between iterations in usec (default 1000)-->
+	<memSleep>0</memSleep>
+      </emulator-params>
+  </distributions>
+
+</emulation>
