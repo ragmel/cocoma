@@ -108,7 +108,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             try:
                 
                 print daemon.hello()
-                print daemon.createJob(emulationID,emulationName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n))
+                print daemon.createJob(emulationID,emulationName,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n))
                                    #lf,emulationID,emulationName,emulationLifetimeID,duration,emulator,resourceType,stressValue,runStartTime,runNo
                 n= n+1
                 

@@ -100,8 +100,10 @@ class emulatorMod(object):
         
         if resourceTypeDist.lower() == "io":
             print "I/O load selected"
+            print "vals"
+            print stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration
 
-            ioMulti = multiprocessing.Process(target = cpuLoad, args=(stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration))
+            ioMulti = multiprocessing.Process(target = ioLoad, args=(stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration))
             ioMulti.start()
             print(ioMulti.is_alive())
             ioMulti.join()
@@ -112,15 +114,15 @@ class emulatorMod(object):
         
         
 def memLoad(memUtil,memSleep,duration):
-            print "this is mem load:memUtil,memSleep,duration",memUtil,memSleep,duration
+            print "\n\nthis is mem load:memUtil,memSleep,duration",memUtil,memSleep,duration,"\n\n"
             
             if memSleep ==0 :
-                Echo = subprocess.Popen(["echo","-c","0", "-m",memUtil])
-                runLookbusy = subprocess.Popen(["lookbusy","-c","0", "-m",memUtil+"GB","&"])
+                
+                runLookbusy = subprocess.Popen(["lookbusy","-c","0", "-m",memUtil+"MB","&"])
             
                 runLookbusyPidNo =runLookbusy.pid
             else:
-                runLookbusy = subprocess.Popen(["lookbusy", "-c","0","-m",memUtil+"GB","-M",memSleep,"&"])
+                runLookbusy = subprocess.Popen(["lookbusy", "-c","0","-m",memUtil+"MB","-M",memSleep,"&"])
                 runLookbusyPidNo =runLookbusy.pid
         
     
@@ -128,16 +130,16 @@ def memLoad(memUtil,memSleep,duration):
             print "sleep:", duration
             time.sleep(duration)
             runLookbusy.terminate()
-        
+#stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration        
 def ioLoad(ioUtil,ioBlockSize,ioSleep,duration):
             print "this is io load"
 
-            if ioSleep ==0 :
-                runLookbusy = subprocess.Popen(["lookbusy", "-d",ioUtil,"-b",ioBlockSize,"&"])
-                Echo = subprocess.Popen(["echo", "-d",ioUtil,"-b",ioBlockSize])
+            if ioSleep ==0 or ioSleep =="0":
+                runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","&"])
+                
                 runLookbusyPidNo =runLookbusy.pid
             else:
-                runLookbusy = subprocess.Popen(["lookbusy", "-d",ioUtil,"-b",ioBlockSize,"-D",ioSleep,"&"])
+                runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","-D",ioSleep,"&"])
                 runLookbusyPidNo =runLookbusy.pid
         
     
@@ -147,42 +149,25 @@ def ioLoad(ioUtil,ioBlockSize,ioSleep,duration):
 
 def cpuLoad(cpuUtil,ncpus,duration):
     
-    print "cpuUtil,ncpus,duration",cpuUtil,ncpus,duration
+    print "\n\ncpuUtil,ncpus,duration",cpuUtil,ncpus,duration,"\n\n"
+
+    if ncpus =="0" :
+        print "run_lookbusy executing this ncpus=", ncpus
+        runLookbusy = subprocess.Popen(["lookbusy", "-c",cpuUtil,"&"])
+        runLookbusy.stdout
     
-    if ncpus ==0 :
-           
-        try:
-            #HOMEPATH= os.environ['COCOMA']
-            #sout2=open(HOMEPATH+"/.~lookbusyOut","wb")
-            runLookbusy = subprocess.Popen(["lookbusy", "-c",cpuUtil,"&"])                
-            #runLookbusy = subprocess.Popen("lookbusy",stdout=sout2,stderr=sout2)
-            runLookbusy.stdout
-            lookBusyPidNo =runLookbusy.pid
-            print "Started lookbusy on PID No: ",lookBusyPidNo
-            print "sleep:", duration
-            time.sleep(float(duration))
-            runLookbusy.terminate()
-            print "terminated"
-            
-                        
-        except subprocess.CalledProcessError, e:
-                print "Error in launching lookbusy: ",e
-    
+        runLookbusyPidNo =runLookbusy.pid
     else:
-        try:
-            runLookbusy = subprocess.Popen(["lookbusy", "-c",cpuUtil,"-n",ncpus,"&"])                
-            runLookbusy.stdout
-            lookBusyPidNo =runLookbusy.pid
-            print "Started lookbusy on PID No: ",lookBusyPidNo
-            print "sleep:", duration
-            time.sleep(float(duration))
-            runLookbusy.terminate()
-            print "terminated"
-            
-                        
-        except subprocess.CalledProcessError, e:
-                print "Error in launching lookbusy: ",e
-    
+        print "run_lookbusy executing this ncpus=", ncpus
+        runLookbusy = subprocess.Popen(["lookbusy", "-c",cpuUtil,"-n",ncpus,"&"])
+        runLookbusy.stdout
+        runLookbusyPidNo =runLookbusy.pid
+
+
+    print "Started lookbusy on PID No: ",runLookbusyPidNo
+    print "sleep:", duration
+    time.sleep(duration)
+    runLookbusy.terminate()
     
 
 def checkPid(PROCNAME):
@@ -221,12 +206,12 @@ def emulatorArgNames(type):
         return argNames
     
     if type.lower() == "mem":
-        argNames=["memUtil","memSleep"]
+        argNames=["memSleep"]
         print "Use Arg's: ",argNames
         return argNames
     
     if type.lower() == "io":
-        argNames=["ioUtil","ioBlockSize","ioSleep"]
+        argNames=["ioBlockSize","ioSleep"]
         print "Use Arg's: ",argNames
         return argNames
 
