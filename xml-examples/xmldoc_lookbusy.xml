@@ -26,7 +26,7 @@
   </distributions>
   
   <distributions name="MEM-dis-1">
-     <startTime>10</startTime>
+     <startTime>20</startTime>
      <!--duration in seconds -->
      <duration>60</duration>
      <granularity>6</granularity>

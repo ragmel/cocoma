@@ -30,7 +30,7 @@ try:
 except:
     print "no $COCOMA environmental variable set"    
 
-def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg):   
+def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg):   
         print "this is distributionManager"
             
         try:
@@ -42,8 +42,8 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             
             c = conn.cursor()
                 
-            # 1. We populate "distribution" table  
-            c.execute('INSERT INTO distribution (distributionGranularity, distributionType,emulator,emulationID) VALUES (?, ?, ?, ?)', [distributionGranularity, distributionType, emulator,emulationID])
+            # 1. We populate "distribution" table      
+            c.execute('INSERT INTO distribution (distributionGranularity, distributionType,emulator,distributionName,startTime,duration,emulationID) VALUES (?, ?, ?, ?,?, ?,?)', [distributionGranularity, distributionType, emulator,distributionName,startTimeDistro,duration,emulationID])
         
             distributionID=c.lastrowid
             '''
@@ -60,8 +60,16 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
               #  print "value",a[d]
             for d in distributionArg :
                 c.execute('INSERT INTO DistributionParameters (paramName,value,distributionID) VALUES (?, ?, ?)',[d,distributionArg[d],distributionID])
-    
             distributionParametersID=c.lastrowid
+            
+            
+            c.execute('UPDATE distribution SET distributionParametersID=? WHERE distributionID =?',(distributionParametersID,distributionID))
+            
+            
+            for emu in emulatorArg :
+                c.execute('INSERT INTO EmulatorParameters (paramName,value,resourceType,distributionID) VALUES (?, ?, ?,?)',[emu,emulatorArg[emu],resourceTypeDist,distributionID])
+            distributionParametersID=c.lastrowid
+            
             conn.commit()
             c.close()
         except sqlite.Error, e:

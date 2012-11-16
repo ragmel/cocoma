@@ -260,7 +260,7 @@ def xmlParser(xmlData):
         #print durationDistro,  startTimeDistro, distribution,emulator 
         
     print emulationName,emulationType, resourceTypeEmulation, startTimeEmu,distroList
-    print "distroList[0]:",distroList[0]
+    
     return (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList)
     
 

@@ -29,6 +29,9 @@ from xml.etree import ElementTree
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
 
+CONTENT_TYPE_HEADER='Content-Type', 'application/vnd.bonfire+xml'
+
+
 def prettify(elem):
     """Return a pretty-printed XML string for the Element.
     """
@@ -53,7 +56,7 @@ COCOMA ROOT
 @route('/', method ="GET")
 def get_root():
     #curl -k -i http://10.55.164.232:8050/
-    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header(CONTENT_TYPE_HEADER)
     ET.register_namespace("test", "http://127.0.0.1/occi")
     
     root = ET.Element('root', { 'href':'/'})
@@ -76,6 +79,9 @@ GET emulation
 
 @route('/emulations', method ='GET')
 def get_emulations():
+    
+    emuList=EmulationManager.getEmulationList()
+    
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     #dont know what is that yet
     ET.register_namespace("test", "http://127.0.0.1/occi")
@@ -83,11 +89,13 @@ def get_emulations():
     #building the XML we will return
     emulations = ET.Element('collection', { 'xmlns':'file:///home/melo/cocoma','href':'/emulations'})
     #<items offset="0" total="2">
-    items =ET.SubElement(emulations,'items', { 'offset':'0','total':'2'})
+    items =ET.SubElement(emulations,'items', { 'offset':'0','total':str(len(emuList))})
     
     #<emulator href="/emulations/1" name="Emu1"/>
-    emulator = ET.SubElement(items,'emulator', { 'href':'/emulations/1','name':'Emu1'})
-    emulator = ET.SubElement(items,'emulator', { 'href':'/emulations/2','name':'Emu2'})
+    
+    for elem in emuList :
+        emulator = ET.SubElement(items,'emulator', { 'href':'/emulations/'+str(elem[0]),'name':'Emu'+str(elem[1])})
+        
     
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
     lk = ET.SubElement(emulations, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
@@ -136,10 +144,14 @@ def get_emulations():
     '''
 
 
-@route('/emulations/<ID>', method='GET')
+@route('/emulations/<ID:int>', method='GET')
 def get_emulation(ID=""):
-    response.content_type = CONTENT
-    #curl -k -i http://10.55.164.211:8050/emulations/1
+    
+    #curl -k -i http:///10.55.164.232:8050/emulations/1
+    response.set_header(CONTENT_TYPE_HEADER)
+    ET.register_namespace("test", "http://127.0.0.1/occi")   
+    
+    
 
     xml_content_emulationsID= '''<?xml version="1.0" encoding="UTF-8"?>
 <emulation xmlns="file:///home/melo/cocoma" href="/emulations/1">

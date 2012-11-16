@@ -33,11 +33,54 @@ try:
 except:
     print "no $COCOMA environmental variable set"
 
-def getEmulation(emulationName,emulationID,all,active):
-    print "Hello this is getEmulation"
-    #creating Dictionary to return for JSON
-    returnDict={}
-    returnList=[]
+def getEmulationList():
+    emulationList=[]
+    try:
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+        c = conn.cursor()
+        
+        c.execute('SELECT emulationID, emulationName FROM emulation')
+        
+        emulationList = c.fetchall()
+       
+        c.close()
+    except sqlite.Error, e:
+        print "Error getting emulations list %s:" % e.args[0]
+        print e
+        sys.exit(1)
+
+    return emulationList
+    
+    #if emulationList:
+        #for row in emulationList:
+            #print row[0],row[1] 
+        #return emulationList
+    #else:
+        #return emulationList
+    
+    
+
+def getEmulation(emulationID):
+    print "Hello this is getEmulation by ID"
+    
+    distroList=[]
+    """
+    distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,
+    "distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist}
+    
+    """
+    distroArgs={}
+    emulatorArg={}
+    
+    """
+    #name,emutype,resourcetype,starttime
+    myMixEmu Mix Mix now [{'distroArgs': {'startLoad': u'11', 'stopLoad': u'91'}, 'emulatorName': u'lookbusy',
+    'distrType': u'linear', 'resourceTypeDist': u'CPU', 'startTimeDistro': u'0', 'distributionsName': u' myMixEmu-dis-1',
+     'durationDistro': u'120', 'emulatorArg': {'ncpus': u'0'}, 'granularity': u'10'}]
+    """
     
         
     try:
@@ -46,132 +89,123 @@ def getEmulation(emulationName,emulationID,all,active):
         else:
             conn = sqlite.connect('./data/cocoma.sqlite')
         c = conn.cursor()
-        cRun=conn.cursor()
         
-        # 1. By name
-        if emulationName !="NULL":
-            #c.execute("SELECT * FROM emulation WHERE emulationName='"+str(emulationName)+"'")
-            print "DB entries for emulation Name", emulationName
-            
-            c.execute("""SELECT emulation.emulationID, emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
-                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
-                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
-                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
-                         FROM emulation, distribution,emulationLifetime,DistributionParameters
-                         WHERE emulation.emulationName=? and emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.emulationID = emulation.emulationID and 
-                         DistributionParameters.distributionID=distribution.distributionID"""
-                         ,[emulationName])
-            print "DB entries for emulation Name", emulationName
         
-        if emulationID !="NULL":
-            #c.execute("SELECT * FROM emulation WHERE emulationID='"+str(emulationID)+"'")
-            print "DB entries for emulation ID", emulationID
-            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
-                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
-                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
-                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
-                         FROM emulation, distribution,emulationLifetime,DistributionParameters
-                         WHERE emulation.emulationID=? and emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.emulationID = emulation.emulationID and 
-                         DistributionParameters.distributionID=distribution.distributionID"""
-                         ,[emulationID])
-            
-          
-            
-        if all==1:
-            #c.execute("SELECT * FROM emulation")
-            print "DB entries for all emulations"
-            
-            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
-                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
-                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
-                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
-                         FROM emulation, distribution,emulationLifetime,DistributionParameters
-                         WHERE emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.emulationID = emulation.emulationID and 
-                         DistributionParameters.distributionID=distribution.distributionID"""
-                    )
-            
-            
-        if active ==1:
-            #c.execute('SELECT * FROM emulation WHERE active=?',("1"))
-            print "DB entries for all active emulations"
-            
-            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
-                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
-                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
-                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
-                         FROM emulation, distribution,emulationLifetime,DistributionParameters
-                         WHERE emulation.active=? and emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.emulationID = emulation.emulationID and 
-                         DistributionParameters.distributionID=distribution.distributionID"""
-                         ,["1"])
 
-        if active ==0 and all == 1:
-            #c.execute('SELECT * FROM emulation WHERE active=?',("1"))
-            print "DB entries for all inactive emulations"
-            
-            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,DistributionParameters.arg0,DistributionParameters.arg1,
-                         DistributionParameters.arg2,DistributionParameters.arg3,DistributionParameters.arg4,DistributionParameters.arg5,
-                         DistributionParameters.arg6,DistributionParameters.arg7,DistributionParameters.arg8,DistributionParameters.arg9,
-                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID 
-                         FROM emulation, distribution,emulationLifetime,DistributionParameters
-                         WHERE emulation.active=? and emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.emulationID = emulation.emulationID and 
-                         DistributionParameters.distributionID=distribution.distributionID"""
-                         ,["0"])
-            
+       
         
-            
-        
-        
+        #EMULATION & EMULATION LIFETIME
+        c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType,emulationLifetime.startTime,emulationLifetime.stopTime
+         FROM emulation,emulationLifetime 
+         WHERE emulation.emulationID=? and emulationLifetime.emulationID = emulation.emulationID""",[emulationID])
+         
         emulationTable = c.fetchall()
-        
         if emulationTable:
-            
-        
             for row in emulationTable:
-                runCounter=0
-                runNoList=[]
+        
+        
+                emulationID=row[0]
+                emulationName=row[1]
+                emulationType=row[2]
+                resourceTypeEmulation=row[3]
+                startTimeEmu=row[4]
+                stopTimeEmu=row[5]
+        
+                  
+        #DISTRIBUTION
+        c.execute("""SELECT 
+        distribution.distributionID,
+        distribution.distributionName,
+        distribution.startTime,
+        distribution.duration,
+        distribution.distributionGranularity,
+        distribution.distributionType,
+        distribution.emulator
+        
+        FROM distribution
+        WHERE emulationID = ? """
+        ,[emulationID])
+        
+        distributionTable = c.fetchall()
+        
+        
+        for distributions in distributionTable:
+            
+            #single distribution level
                 
-                cRun.execute("""SELECT runLog.executed,runLog.runNo FROM runLog WHERE runLog.emulationLifetimeID=?""",[row[19]])
-                runLogTable = cRun.fetchall()
-                for rowRun in runLogTable:
+                #GET DISTRIBUTION PARAMETERS
+                c.execute("""SELECT 
+                DistributionParameters.paramName, 
+                DistributionParameters.Value
+                FROM DistributionParameters
+                WHERE distributionID=?""",[distributions[0]])    
+                
+                distroParamsTable = c.fetchall()
+                
+                
+                for distributionParams in distroParamsTable:
                     
-                    if rowRun[0] =="1":
-                        runNoList.append(rowRun[1])
-                        runCounter += 1
-                        
+                    distroArgs.update({distributionParams[0]:distributionParams[1]})
+            
+                
+                #GET EMULATOR PARAMETERS
+                c.execute("""SELECT 
+                EmulatorParameters.resourceType,
+                EmulatorParameters.paramName,
+                EmulatorParameters.value
+                
+                FROM EmulatorParameters
+                WHERE distributionID=?""",[distributions[0]]) 
+                
+                emuParamsTable = c.fetchall()                
+                emulatorArg={}
+                for emuParams in emuParamsTable:
+                    print "emuParams"
+                    print emuParams
                     
+                    resourceTypeDist =emuParams[0]
+                    
+                    emulatorArg.update({emuParams[1]:emuParams[2]})
+                    print"emulatorArg"
+                    print emulatorArg
+                    
+        #saving single distribution elements to dictionary
+                distroDict={"distributionsID":distributions[0], "distributionsName":distributions[1],"startTimeDistro":distributions[2],"durationDistro":distributions[3],"granularity":distributions[4],"distrType":distributions[5],"emulatorName":distributions[6],"resourceTypeDist":resourceTypeDist,"emulatorArg":emulatorArg,"distroArgs":distroArgs}
                 
-                print "------->\nemulation.emulationID",row[0],"\nemulation.emulationName",row[1], "\nemulation.emulationType",row[2], "\nemulation.resourceType",row[3],"\nemulation.active",row[4],"\ndistribution.distributionGranularity",row[5],"\ndistribution.distributionType",row[6],"\nDistributionParameters.arg0",row[7],"\nDistributionParameters.arg1",row[8]
-                print "DistributionParameters.arg2",row[9],"\nDistributionParameters.arg3",row[10],"\nDistributionParameters.arg4",row[11],"\nDistributionParameters.arg5",row[12]
-                print "DistributionParameters.arg6",row[13],"\nDistributionParameters.arg7",row[14],"\nDistributionParameters.arg8",row[15],"\nDistributionParameters.arg9",row[16]
-                print "emulationLifetime.startTime",row[17],"\nemulationLifetime.stopTime",row[18], "\nRuns executed ",runCounter," out of ",row[5], "\nExecuted run numbers list ",runNoList
-                returnDict={"emulationID":row[0],"emulationName":row[1],"emulationType":row[2], "resourceType":row[3],"active":row[4],"distributionGranularity":row[5],"distributionType":row[6],"startLoad":row[7],"stopLoad":row[8], "startTime":row[9],"stopTime":row[10]}
-                
-                returnList.append(returnDict)
-        else:
-            print "No results found in DB"
+                    
+                distroList.append(distroDict)
+        '''
+        print"distroDict:"
+        print distroDict
+        print "distroList:"
+        print distroList
         
         
         
+        print "emulationTable:"
+        print emulationTable
+        
+        print "distributionTable:"
+        print distributionTable
+        
+        print "distroParamsTable:"
+        print distroParamsTable
+        
+        print "emuParamsTable:"
+        print emuParamsTable
+        '''
+
+        
+        c.close()
     except sqlite.Error, e:
         print "Error getting emulation list %s:" % e.args[0]
         print e
         sys.exit(1)
         
-    c.close()
-    return returnList
+    print emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
+    return (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
 
-
-
+        
 def deleteEmulation(emulationID):
     print "Hello this is deleteEmulation"
      
@@ -255,12 +289,14 @@ def purgeAll():
         c.execute('DELETE FROM runLog')
         c.execute('DELETE FROM DistributionParameters')
         c.execute('DELETE FROM emulation')
+        c.execute('DELETE FROM EmulatorParameters')
         #reset the counter
         c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="DistributionParameters"')
         c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="distribution"')
         c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="emulation"')
         c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="emulationLifetime"')
         c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="runLog"')
+        c.execute('UPDATE sqlite_sequence SET seq=0 WHERE name="EmulatorParameters"')
         
         
         
@@ -473,13 +509,14 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
             resourceTypeDist = n["resourceTypeDist"]
             
             startTime = startTimeEmu
+            startTimeDistro = n["startTimeDistro"]
             distributionGranularity = n["granularity"]
             distributionType = n["distrType"]
             distributionArg= n["distroArgs"]
             emulatorArg=n["emulatorArg"]
             
             #print "sending to DM these: ",emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg
-            DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg)
+            DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg)
             
             
         #emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg
@@ -762,16 +799,18 @@ def emulationNow(duration):
 if __name__ == '__main__':
     
     
-    emulationName = "mytest"
-    emulationType = "Malicious"
-    resourceType = "CPU"
-    startTime = "2012-09-10T15:30:00"
+    #emulationName = "mytest"
+    #emulationType = "Malicious"
+    #resourceType = "CPU"
+    #startTime = "2012-09-10T15:30:00"
     
-    stopTime= "2013-09-10T19:59:00"
-    dateOverlapCheck(startTime, stopTime)
-    distributionGranularity = 10
-    distributionType = "linear"
-    startLoad = 20
-    stopLoad = 100
+    #stopTime= "2013-09-10T19:59:00"
+    #dateOverlapCheck(startTime, stopTime)
+    #distributionGranularity = 10
+    #distributionType = "linear"
+    #startLoad = 20
+    #stopLoad = 100
+    #print getEmulationList()
+    getEmulation(2)
        
     pass
