@@ -60,7 +60,7 @@ COCOMA ROOT
 def get_root():
     #curl -k -i http://10.55.164.232:8050/
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
-    ET.register_namespace("test", "http://127.0.0.1/occi")
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
     
     root = ET.Element('root', { 'href':'/'})
     ver = ET.SubElement(root, 'version')
@@ -91,10 +91,10 @@ def get_emulations():
     XML namespaces are used for providing uniquely named elements and attributes in an XML document.
     '''
     
-    ET.register_namespace("test", "http://127.0.0.1/occi")
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
     
     #building the XML we will return
-    emulations = ET.Element('collection', { 'xmlns':'file:///home/melo/cocoma','href':'/emulations'})
+    emulations = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations'})
     #<items offset="0" total="2">
     items =ET.SubElement(emulations,'items', { 'offset':'0','total':str(len(emuList))})
     
@@ -163,10 +163,10 @@ def get_emulation(ID=""):
     except:
         return "<error>Wrong ID</error>"
 
-    ET.register_namespace("test", "http://127.0.0.1/occi")
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
     
     #building the XML we will return
-    emulation = ET.Element('emulation', { 'xmlns':'file:///home/melo/cocoma','href':'/emulations/'+str(ID)})
+    emulation = ET.Element('emulation', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations/'+str(ID)})
     #<id>1</id>
     idXml =ET.SubElement(emulation,'id')
     idXml.text = str(emulationID)
