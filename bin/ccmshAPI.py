@@ -67,9 +67,9 @@ def get_root():
     ver.text = '1.9.5'
     ts = ET.SubElement(root, 'timestamp')
     ts.text = str(time.time())
-    lk = ET.SubElement(root, 'link', {'rel':'experiments', 'href':'/experiments', 'type':'application/vnd.bonfire+xml'})
-    lk2 = ET.SubElement(root, 'link', {'rel':'locations', 'href':'/locations', 'type':'application/vnd.bonfire+xml'})
-    lk3 = ET.SubElement(root, 'link', {'rel':'users', 'href':'/users', 'type':'application/vnd.bonfire+xml'})
+    lk = ET.SubElement(root, 'link', {'rel':'emulations', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
+    
+    
 
     return prettify(root)
     
@@ -79,7 +79,7 @@ def get_root():
 GET emulation
 #######
 '''
-
+@route('/emulations/', method ='GET')
 @route('/emulations', method ='GET')
 def get_emulations():
     
@@ -150,7 +150,7 @@ def get_emulations():
         return {"success":False, "error": "No emulations found"}
     '''
 
-
+@route('/emulations/<ID>/', method='GET')
 @route('/emulations/<ID>', method='GET')
 def get_emulation(ID=""):
     
