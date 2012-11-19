@@ -21,16 +21,34 @@
 
 
 from bottle import route, run,response,request
-import sys,os
+import sys,os, time
 from datetime import datetime as dt
 import EmulationManager,ccmsh,DistributionManager
 from json import dumps
+from xml.etree import ElementTree
+from xml.dom import minidom
+import xml.etree.ElementTree as ET
+
+
+
+
+def prettify(elem):
+    """Return a pretty-printed XML string for the Element.
+    """
+    
+    
+    rough_string = ET.tostring(elem, encoding="utf-8", method='xml')
+    
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ")
+
+
 
 try:
     HOMEPATH= os.environ['COCOMA']
 except:
     print "no $COCOMA environmental variable set"
-CONTENT = "application/vnd.cocoma+xml"
+CONTENT = "application/vnd.bonfire+xml"
 
 
 '''
@@ -40,41 +58,20 @@ COCOMA ROOT
 '''
 @route('/', method ="GET")
 def get_root():
-    #response.content_type = CONTENT
-    #response.headers['Content-Type'] = 'application/vnd.cocoma+xml'
-    '''
-    ######################
-    HEADER
-    ######################
-    '''
+    #curl -k -i http://10.55.164.232:8050/
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    ET.register_namespace("test", "http://127.0.0.1/occi")
     
-    
-    
-    
-    response.set_header('Allow', 'GET,OPTIONS,HEAD')
-    response.set_header('Cache-Control', 'public,max-age=120')
-    response.content_type = 'application/vnd.bonfire+xml; charset=utf-8'
-    # have no idea if we need these
-    #response.set_header('ETag', '1039483f4e6f724fa5cc5d0e8019b404')
-    #response.set_header('X-UA-Compatible', 'IE=Edge,chrome=1')
-    #response.set_header('X-Runtime', '0.004356')
-    #response.set_header('Vary', 'Authorization,Accept')
-    response.set_header('Connection', 'close')
-    response.set_header('Transfer-Encoding', 'chunked')
-    
-    #curl -k -i http://10.55.164.211:8050/
-    xml_content_root = '''<?xml version="1.0" encoding="UTF-8"?>
-<root xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/">
-  <version>0.3</version>
-  <timestamp>'''+str(DistributionManager.timestamp(dt.now()))[0:-2]+'''</timestamp>
-  <link rel="emulations" href="/emulations" type="application/vnd.cocoma+xml"/>
-  <link rel="emulators" href="/emulators" type="application/vnd.cocoma+xml"/>
-  <link rel="distributions" href="/distributions" type="application/vnd.cocoma+xml"/>
-</root>
-    '''
+    root = ET.Element('root', { 'href':'/'})
+    ver = ET.SubElement(root, 'version')
+    ver.text = '1.9.5'
+    ts = ET.SubElement(root, 'timestamp')
+    ts.text = str(time.time())
+    lk = ET.SubElement(root, 'link', {'rel':'experiments', 'href':'/experiments', 'type':'application/vnd.bonfire+xml'})
+    lk2 = ET.SubElement(root, 'link', {'rel':'locations', 'href':'/locations', 'type':'application/vnd.bonfire+xml'})
+    lk3 = ET.SubElement(root, 'link', {'rel':'users', 'href':'/users', 'type':'application/vnd.bonfire+xml'})
 
-    return xml_content_root    
-    
+    return prettify(root)
     
 
 '''
@@ -85,24 +82,56 @@ GET emulation
 
 @route('/emulations', method ='GET')
 def get_emulations():
-    response.content_type = CONTENT
+    
+    emuList=EmulationManager.getEmulationList()
+    
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    
+    '''
+    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
+    '''
+    
+    ET.register_namespace("test", "http://127.0.0.1/occi")
+    
+    #building the XML we will return
+    emulations = ET.Element('collection', { 'xmlns':'file:///home/melo/cocoma','href':'/emulations'})
+    #<items offset="0" total="2">
+    items =ET.SubElement(emulations,'items', { 'offset':'0','total':str(len(emuList))})
+    
+    #<emulator href="/emulations/1" name="Emu1"/>
+    
+    for elem in emuList :
+        emulator = ET.SubElement(items,'emulator', { 'href':'/emulations/'+str(elem[0]),'name':'Emu'+str(elem[1])})
+        
+    
+    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk = ET.SubElement(emulations, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    
+    
+
+    return prettify(emulations)    
+    
+   
+    
     '''
     ##############
     DUMMY
     ##############
     '''
     #curl -k -i http://10.55.164.211:8050/emulations
-    xml_content_emulations='''<?xml version="1.0" encoding="UTF-8"?>
-<collection xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulations">
-  <items offset="0" total="2">
-    <emulator href="/emulations/1" name="Emu1"/>
-    <emulator href="/emulations/2" name="Emu2"/>
-  </items>
-  <link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
-</collection>
+    #xml_content_emulations=
+    '''
+    <?xml version="1.0" encoding="UTF-8"?>
+    <collection xmlns="file:///home/melo/cocoma" href="/emulations">
+      <items offset="0" total="2">
+        <emulator href="/emulations/1" name="Emu1"/>
+        <emulator href="/emulations/2" name="Emu2"/>
+      </items>
+      <link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    </collection>
     '''    
     
-    return xml_content_emulations  
+    #return xml_content_emulations  
     
     
     '''
@@ -124,94 +153,93 @@ def get_emulations():
 
 @route('/emulations/<ID>', method='GET')
 def get_emulation(ID=""):
-    response.content_type = CONTENT
-    #curl -k -i http://10.55.164.211:8050/emulations/1
+    
+    #curl -k -i http:///10.55.164.232:8050/emulations/1
+    
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    
+    try:
+        (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(ID)
+    except:
+        return "<error>Wrong ID</error>"
 
-    xml_content_emulationsID= '''<?xml version="1.0" encoding="UTF-8"?>
-<emulation xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulations/1">
-  <id>'''+ID+'''</id>
-  <emulationName>myMixEmu</emulationName>
-  <emulationType>Mix</emulationType>
-  <resourceType>Mix</resourceType>
-  <startTime>now</startTime>
-  <!--duration in seconds -->
-  <stopTime>now+180</stopTime>
-  <distributions name=" myMixEmu-dis-1">
-     <startTime>0</startTime>
-     <!--duration in seconds -->
-     <duration>60</duration>
-     <distribution href="/distributions/linear" name="linear" />
-      <startLoad>10</startLoad>
-      <stopLoad>90</stopLoad>
-      <emulator href="/emulators/stressapptest" name="stressapptest" />
-      <emulator-params>
-        <!--more parameters will be added -->
-        <resourceType>CPU</resourceType>
-      </emulator-params>
-  </distributions>
-  <distributions name=" myMixEmu-dis-2">
-     <startTime>60</startTime>
-     <!--duration in seconds -->
-     <duration>60</duration>
-     <distribution href="/distributions/poisson" name="poisson" />
-      <emulator href="/emulators/stress" name="stress" />
-      <emulator-params>
-        <resourceType>CPU</resourceType>
-      </emulator-params>
-  </distributions>
-  <distributions name=" myMixEmu-dis-3">
-     <startTime>now+60</startTime>
-     <!--duration in seconds -->
-     <duration>60</duration>
-     <distribution href="/distributions/linear" name="linear" />
-      <emulator href="/emulators/stressapptest" name="stressapptest" />
-      <emulator-params>
-        <resourceType>NET</resourceType>
-      </emulator-params>
-  </distributions>
-  <distributions name=" myMixEmu-dis-4">
-     <startTime>120</startTime>
-     <!--duration in seconds -->
-     <duration>60</duration>
-     <distribution href="/distributions/poisson" name="poisson" />
-      <emulator href="/emulators/stressapptest" name="stressapptest" />
-      <emulator-params>
-        <resourceType>CPU</resourceType>
-      </emulator-params>
-  </distributions>
-  <distributions name=" myMixEmu-dis-5">
-     <startTime>120</startTime>
-     <!--duration in seconds -->
-     <duration>60</duration>
-     <distribution href="/distributions/geometric" name="geometric" />
-      <emulator href="/emulators/wireshark" name="wireshark" />
-      <emulator-params>
-        <resourceType>net</resourceType>
-      </emulator-params>
-  </distributions>
-  <link rel="parent" href="/"/>
-  <link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
-</emulation>'''
-    return xml_content_emulationsID
+    ET.register_namespace("test", "http://127.0.0.1/occi")
     
+    #building the XML we will return
+    emulation = ET.Element('emulation', { 'xmlns':'file:///home/melo/cocoma','href':'/emulations/'+str(ID)})
+    #<id>1</id>
+    idXml =ET.SubElement(emulation,'id')
+    idXml.text = str(emulationID)
+    #<emulationName>myMixEmu</emulationName>
+    emulationNameXml =ET.SubElement(emulation,'emulationName')
+    emulationNameXml.text = emulationName
     
+    #<emulationType>Mix</emulationType>
+    emulationTypeXml =ET.SubElement(emulation,'emulationType')
+    emulationTypeXml.text = emulationType
     
+    #<resourceType>Mix</resourceType>
+    resourceTypeXml =ET.SubElement(emulation,'resourceType')
+    resourceTypeXml.text = resourceTypeEmulation
+        
+    #<startTime>now</startTime>
+    startTimeEmuXml =ET.SubElement(emulation,'startTime')
+    startTimeEmuXml.text = startTimeEmu    
     
+    #<stopTime>now+180</stopTime>
+    stopTimeEmuXml =ET.SubElement(emulation,'stopTime')
+    stopTimeEmuXml.text = str(stopTimeEmu)
     
-    '''
-    xml = request.forms.get( "xml" )
-    e = request.forms.get("e")
-    ret = str(e)+str(xml)+"\n"
-    return  ret
-    '''
+    #create distributions list
+    for distro in distroList :
+        #<distributions ID="1" name="myMixEmu-dis-1" >
+        distributionsXml = ET.SubElement(emulation,'distributions', { 'ID':str(distro['distributionsID']),'name':distro['distributionsName']})
+        
+        startTimeDistroXml=ET.SubElement(distributionsXml,'startTime')
+        startTimeDistroXml.text = str(distro['startTimeDistro'])
+        
+        durationDistroXml=ET.SubElement(distributionsXml,'duration')
+        durationDistroXml.text = str(distro['durationDistro'])
+        
+        distroArgs = distro['distroArgs']
+        for distroArg in distroArgs:
+            distroArgXml =ET.SubElement(distributionsXml,distroArg) 
+            distroArgXml.text = str(distroArgs[distroArg])
+        
+        
+        #<distribution href="/distributions/geometric" name="geometric" />
+        distributionXml = ET.SubElement(distributionsXml,'distribution', { 'href':'/distributions/'+ str(distro['distrType']),'name':str(distro['distrType'])})
+        
+        #<emulator href="/emulators/wireshark" name="wireshark" />
+        emulatorXml = ET.SubElement(distributionsXml,'emulator', { 'href':'/emulators/'+ str(distro['emulatorName']),'name':str(distro['emulatorName'])})
+        
+        emulatorParamsXml = ET.SubElement(distributionsXml,'emulator-params')
 
+        resourceTypeXml=ET.SubElement(emulatorParamsXml,'resourceType')
+        resourceTypeXml.text = str(distro['resourceTypeDist'])
+        
+        
+        emulatorArg = distro['emulatorArg']
+        for emuArg in emulatorArg:
+            emuArgXml =ET.SubElement(emulatorParamsXml,emuArg) 
+            emuArgXml.text = str(emulatorArg[emuArg])
 
+    
+    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk1 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
+    
+    
+
+    return prettify(emulation)    
+ 
 @route('/emulators', method='GET')
 def get_emulators(ID=""):
     response.content_type = CONTENT
     #curl -k -i http://10.55.164.211:8050/emulations/1/emulators
     xml_content_emulators ='''<?xml version="1.0" encoding="UTF-8"?>
-<collection xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulators">
+<collection xmlns="file:///home/melo/cocoma" href="/emulators">
   <items offset="0" total="2">
     <emulator href="/emulators/stressapptest" name="stressapptest"/>
     <emulator href="/emulators/stress" name="stress"/>
@@ -229,7 +257,7 @@ def get_emulator(name=""):
     response.content_type = CONTENT
     #curl -k -i http://10.55.164.211:8050/emulations/1/emulators/stressapptest
     xml_content_emulatorName = '''<?xml version="1.0" encoding="UTF-8"?>
-<emulator xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/emulators/stressapptest">
+<emulator xmlns="file:///home/melo/cocoma" href="/emulators/stressapptest">
    <name>'''+name+'''</name>
    <info>
         Stats: SAT revision 1.0.3_autoconf, 32 bit binary
@@ -287,7 +315,7 @@ def get_distributions(ID=""):
     response.content_type = CONTENT
     #curl -k -i http://10.55.164.211:8050/emulations/1/distributions
     xml_content_distributions ='''<?xml version="1.0" encoding="UTF-8"?>
-<collection xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/distributions">
+<collection xmlns="file:///home/melo/cocoma" href="/distributions">
   <items offset="0" total="2">
     <distribution href="/distributions/linear" name="linear"/>
     <distribution href="/distributions/poisson" name="poisson"/>
@@ -303,7 +331,7 @@ def get_distribution(dtype=""):
     response.content_type = CONTENT
     #curl -k -i http://10.55.164.211:8050/emulations/1/distributions/linear
     xml_content_distributionName = '''<?xml version="1.0" encoding="UTF-8"?>
-<distribution xmlns="http://api.bonfire-project.eu/doc/schemas/cocoma" href="/distributions/linear">
+<distribution xmlns="file:///home/melo/cocoma" href="/distributions/linear">
    <distributionType>'''+dtype+'''</distributionType>
    <info>
         --g        granularity
