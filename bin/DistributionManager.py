@@ -216,7 +216,8 @@ def loadDistributionArgNames(modName):
    
 
 
-def listDistributions(name):
+def listDistributions():
+    name="all"
     distroList=[]
     print "this is listDistro"
     if name=="all":
@@ -231,7 +232,26 @@ def listDistributions(name):
                 distName = str(fname[5:-3])
                 distroList.append(distName)
         
-        return distroList  
+        return distroList 
+    
+    
+def listEmulations():
+    name="all"
+    emulatorList=[]
+    print "this is listDistro"
+    if name=="all":
+        if HOMEPATH:
+            path=HOMEPATH+"/emulators/"  # root folder of project
+        else:
+            path="./emulators/"  # root folder of project
+            
+        dirList=os.listdir(path)
+        for fname in dirList:
+            if fname.startswith("run_") and fname.endswith(".py"):
+                distName = str(fname[4:-3])
+                emulatorList.append(distName)
+        
+        return emulatorList   
 
 '''
 ###############################
@@ -252,6 +272,23 @@ def loadEmulatorArgNames(modName):
     modhandle = imp.load_source(modname, modfile)
         
     return modhandle.emulatorArgNames
+
+
+
+def loadEmulatorHelp(modName):
+    '''
+    We are Loading module by file name. File name will be determined by emulator type (i.e. stressapptest)
+    '''
+    if HOMEPATH:
+        modfile = HOMEPATH+"/emulators/run_"+modName+".py"
+        modname = "run_"+modName
+    else:
+        modfile = "./emulators/run_"+modName+".py"
+        modname = "run_"+modName
+    
+    modhandle = imp.load_source(modname, modfile)
+        
+    return modhandle.emulatorHelp
 
 
 

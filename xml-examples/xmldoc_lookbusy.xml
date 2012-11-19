@@ -2,7 +2,7 @@
   <emulationName>myMixEmu</emulationName>
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
-  <startTime>2012-11-12T18:30:00</startTime>
+  <startTime>2013-11-12T18:30:00</startTime>
   <!--duration in seconds -->
   <stopTime>now+180</stopTime>
   

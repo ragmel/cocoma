@@ -1,5 +1,4 @@
 Bottle v0.11.2 server starting up (using WSGIRefServer())...
-Listening on http://10.55.164.232:8050/
+Listening on http://127.0.0.1:8050/
 Hit Ctrl-C to quit.
 
-<h1>Critical error while processing request: /</h1>10.30.91.27 - - [05/Nov/2012 12:21:32] "GET / HTTP/1.1" 500 51

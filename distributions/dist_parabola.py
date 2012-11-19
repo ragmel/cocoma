@@ -120,6 +120,7 @@ def distHelp():
     print "Enter arg0 for first point and arg1 for 2nd point"
     
     print "Have fun"
+    return "Parabola Distribution How-To: Enter arg0 for first point and arg1 for 2nd point"
     
 '''
 here we specify how many arguments distribution instance require to run properly

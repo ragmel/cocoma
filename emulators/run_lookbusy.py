@@ -190,7 +190,7 @@ def emulatorHelp():
     print "Module gets emulationID,emulationLifetimeID,duration, stressValue,runNo,HOMEPATH and loads system accordingly using \"cpulimit\" and \"stressapptest\""
     
     print "Have fun"
-
+    return "Stressapptest emulator How-To:"+"Module gets emulationID,emulationLifetimeID,duration, stressValue,runNo,HOMEPATH and loads system accordingly using \"cpulimit\" and \"stressapptest\""
 '''
 here we specify how many arguments emulator instance require to run properly
 '''

@@ -33,7 +33,7 @@ try:
 except:
     print "no $COCOMA environmental variable set"
 
-def getEmulationList():
+def getAllEmulationList():
     emulationList=[]
     try:
         if HOMEPATH:
@@ -54,13 +54,62 @@ def getEmulationList():
 
     return emulationList
     
-    #if emulationList:
-        #for row in emulationList:
-            #print row[0],row[1] 
-        #return emulationList
-    #else:
-        #return emulationList
+def getActiveEmulationList():
     
+    activeEmu=[]
+    dtNowSec = DistributionManager.timestamp(dt.now())
+    print "dt.now():",dt.now()
+    print "dtNow:",dtNowSec
+    
+    
+    
+    try:
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+            
+        c = conn.cursor()
+        
+        
+        c.execute('SELECT startTime, stopTime, emulationID FROM emulationLifetime')
+        conn.commit()
+                
+        emulationLifetimeFetch = c.fetchall()
+        
+        if emulationLifetimeFetch:
+            print "emulation Found"
+            for row in emulationLifetimeFetch:
+                
+                startTimeDBsec= DistributionManager.timestamp(DistributionManager.timeConv(row[0]))
+                #we already have it in sec
+                #stopTimeDBsec = DistributionManager.timestamp(DistributionManager.timeConv(row[1]))
+                stopTimeDBsec=startTimeDBsec+float(row[1])
+                
+                if stopTimeDBsec > dtNowSec:
+                    print "Emulation ID: "+str(row[2])+" is active"
+                    
+                    c.execute('SELECT emulationID,emulationName FROM emulation WHERE emulationID=?',[str(row[2])])
+                    emunameFetch = c.fetchall()
+                    
+                    activeEmu.extend(emunameFetch)
+
+                    
+                
+        else:
+            print "no active emulations exists" 
+        
+        print activeEmu
+        return activeEmu
+        
+        
+        
+    except sqlite.Error, e:
+        print "dateOverlapCheck() SQL Error %s:" % e.args[0]
+        print e
+        sys.exit(1)
+    
+    c.close()
     
 
 def getEmulation(emulationID):
@@ -662,7 +711,8 @@ def checkPid(PROCNAME):
 def services_control(service,action,args):
     if action == "start":
             HOMEPATH= os.environ['COCOMA']
-            if service == "scheduler":
+            print "Homepath", HOMEPATH
+            if service == "scheduler".lower():
                 #converting to our format
                 service = "Scheduler.py"
                 print "Starting ",service
@@ -683,7 +733,7 @@ def services_control(service,action,args):
                         print "Started Scheduler on PID No: ",schedPidNo
                         os.system("ps -Crp "+str(schedPidNo))
                     
-                    except subprocess.CalledProcessError, e:
+                    except subprocess.CalledProcessError, e :
                         print "Error in launching scheduler: ",e
                 
 
@@ -706,7 +756,8 @@ def services_control(service,action,args):
                     try:
                         HOMEPATH= os.environ['COCOMA']
                         aout=open(HOMEPATH+"/.~aout","wb")
-                        ccmshAPI = subprocess.Popen(HOMEPATH+"/bin/ccmshAPI.py",stdout=aout,stderr=aout)
+                        print "args",args
+                        ccmshAPI = subprocess.Popen("python "+HOMEPATH+"/bin/ccmshAPI.py "+args,shell=True,stdout=aout,stderr=aout)
                         apiPidNo =ccmshAPI.pid
                         print "Started API on PID No: ",apiPidNo
                         os.system("ps -Crp "+str(apiPidNo))
@@ -736,12 +787,12 @@ def services_control(service,action,args):
         if service == "api":
             service ="ccmshAPI.py"
             runner = checkPid(service)
-            if runner!=False:
+            while runner!=False:
                 print "Killing API on PID: ", runner
                
                 os.kill(int(runner), 9)
 
-                sys.exit(1)
+                runner = checkPid(service)
             else:
                 print "ERROR: API is not running start it first"
                 sys.exit(1)                
@@ -811,6 +862,7 @@ if __name__ == '__main__':
     #startLoad = 20
     #stopLoad = 100
     #print getEmulationList()
-    getEmulation(2)
-       
+    #getEmulation(2)
+    getActiveEmulationList()
+    
     pass

@@ -64,11 +64,13 @@ def get_root():
     
     root = ET.Element('root', { 'href':'/'})
     ver = ET.SubElement(root, 'version')
-    ver.text = '1.9.5'
+    ver.text = '0.1.1'
     ts = ET.SubElement(root, 'timestamp')
     ts.text = str(time.time())
     lk = ET.SubElement(root, 'link', {'rel':'emulations', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
-    
+    lk = ET.SubElement(root, 'link', {'rel':'emulationshistory', 'href':'/emulationshistory', 'type':'application/vnd.bonfire+xml'})
+    lk = ET.SubElement(root, 'link', {'rel':'emulators', 'href':'/emulators', 'type':'application/vnd.bonfire+xml'})
+    lk = ET.SubElement(root, 'link', {'rel':'distributions', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
     
 
     return prettify(root)
@@ -79,11 +81,11 @@ def get_root():
 GET emulation
 #######
 '''
-@route('/emulations/', method ='GET')
-@route('/emulations', method ='GET')
-def get_emulations():
+@route('/emulationshistory/', method ='GET')
+@route('/emulationshistory', method ='GET')
+def get_emulationsHistory():
     
-    emuList=EmulationManager.getEmulationList()
+    emuList=EmulationManager.getAllEmulationList()
     
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     
@@ -94,14 +96,14 @@ def get_emulations():
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     
     #building the XML we will return
-    emulations = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations'})
+    emulations = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulationshistory'})
     #<items offset="0" total="2">
     items =ET.SubElement(emulations,'items', { 'offset':'0','total':str(len(emuList))})
     
     #<emulator href="/emulations/1" name="Emu1"/>
     
     for elem in emuList :
-        emulator = ET.SubElement(items,'emulator', { 'href':'/emulations/'+str(elem[0]),'name':'Emu'+str(elem[1])})
+        emulator = ET.SubElement(items,'emulator', { 'href':'/emulationshistory/'+str(elem[0]),'name':str(elem[1])})
         
     
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
@@ -110,7 +112,7 @@ def get_emulations():
     
 
     return prettify(emulations)    
-    
+
    
     
     '''
@@ -149,6 +151,38 @@ def get_emulations():
         #return "emulation ID: \"",emulationID,"\" does not exists"
         return {"success":False, "error": "No emulations found"}
     '''
+@route('/emulations/', method ='GET')
+@route('/emulations', method ='GET')
+def get_emulations():
+    
+    emuList=EmulationManager.getActiveEmulationList()
+    
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    
+    '''
+    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
+    '''
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    
+    #building the XML we will return
+    emulations = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations'})
+    #<items offset="0" total="2">
+    items =ET.SubElement(emulations,'items', { 'offset':'0','total':str(len(emuList))})
+    
+    #<emulator href="/emulations/1" name="Emu1"/>
+    
+    for elem in emuList :
+        emulator = ET.SubElement(items,'emulator', { 'href':'/emulations/'+str(elem[0]),'name':str(elem[1])})
+        
+    
+    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk = ET.SubElement(emulations, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    
+    
+
+    return prettify(emulations)
+
 
 @route('/emulations/<ID>/', method='GET')
 @route('/emulations/<ID>', method='GET')
@@ -228,122 +262,140 @@ def get_emulation(ID=""):
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
     lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
     #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
-    lk1 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
+    lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
+    lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/emulationshistory', 'type':'application/vnd.bonfire+xml'})
     
     
 
     return prettify(emulation)    
- 
+
+@route('/emulators/', method='GET')
 @route('/emulators', method='GET')
-def get_emulators(ID=""):
-    response.content_type = CONTENT
-    #curl -k -i http://10.55.164.211:8050/emulations/1/emulators
-    xml_content_emulators ='''<?xml version="1.0" encoding="UTF-8"?>
-<collection xmlns="file:///home/melo/cocoma" href="/emulators">
-  <items offset="0" total="2">
-    <emulator href="/emulators/stressapptest" name="stressapptest"/>
-    <emulator href="/emulators/stress" name="stress"/>
-  </items>
-  <link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
-</collection>
+def get_emulators():
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    
+    
+    emuList=DistributionManager.listEmulations()
+    print "emulist",emuList
     '''
-    return xml_content_emulators
-
-
-
-
-@route('/emulators/<name>', method='GET')
-def get_emulator(name=""):
-    response.content_type = CONTENT
-    #curl -k -i http://10.55.164.211:8050/emulations/1/emulators/stressapptest
-    xml_content_emulatorName = '''<?xml version="1.0" encoding="UTF-8"?>
-<emulator xmlns="file:///home/melo/cocoma" href="/emulators/stressapptest">
-   <name>'''+name+'''</name>
-   <info>
-        Stats: SAT revision 1.0.3_autoconf, 32 bit binary
-        Log: buildd @ biber on Thu Jul 29 21:47:10 UTC 2010 from open source release
-        Usage: ./sat(32|64) [options]
-         -M mbytes        megabytes of ram to test
-         -H mbytes        minimum megabytes of hugepages to require
-         -s seconds       number of seconds to run
-         -m threads       number of memory copy threads to run
-         -i threads       number of memory invert threads to run
-         -C threads       number of memory CPU stress threads to run
-         --findfiles      find locations to do disk IO automatically
-         -d device        add a direct write disk thread with block device (or file) 'device'
-         -f filename      add a disk thread with tempfile 'filename'
-         -l logfile       log output to file 'logfile'
-         --max_errors n   exit early after finding 'n' errors
-         -v level         verbosity (0-20), default is 8
-         -W               Use more CPU-stressful memory copy
-         -A               run in degraded mode on incompatible systems
-         -p pagesize      size in bytes of memory chunks
-         --filesize size  size of disk IO tempfiles
-         -n ipaddr        add a network thread connecting to system at 'ipaddr'
-         --listen         run a thread to listen for and respond to network threads.
-         --no_errors      run without checking for ECC or other errors
-         --force_errors   inject false errors to test error handling
-         --force_errors_like_crazy   inject a lot of false errors to test error handling
-         -F               don't result check each transaction
-         --stop_on_errors  Stop after finding the first error.
-         --read-block-size     size of block for reading (-d)
-         --write-block-size    size of block for writing (-d). If not defined, the size of block for writing will be defined as the size of block for reading
-         --segment-size   size of segments to split disk into (-d)
-         --cache-size     size of disk cache (-d)
-         --blocks-per-segment  number of blocks to read/write per segment per iteration (-d)
-         --read-threshold      maximum time (in us) a block read should take (-d)
-         --write-threshold     maximum time (in us) a block write should take (-d)
-         --random-threads      number of random threads for each disk write thread (-d)
-         --destructive    write/wipe disk partition (-d)
-         --monitor_mode   only do ECC error polling, no stress load.
-         --cc_test        do the cache coherency testing
-         --cc_inc_count   number of times to increment the cacheline's member
-         --cc_line_count  number of cache line sized datastructures to allocate for the cache coherency threads to operate
-         --paddr_base     allocate memory starting from this address
-         --pause_delay    delay (in seconds) between power spikes
-         --pause_duration duration (in seconds) of each pause
-         --local_numa : choose memory regions associated with each CPU to be tested by that CPU
-         --remote_numa : choose memory regions not associated with each CPU to be tested by that CPU
-   </info>
-</emulator>
+    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
     '''
     
-    return xml_content_emulatorName
+    
+    
+    #building the XML we will return
+    emulators = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulators'})
+    #<items offset="0" total="2">
+    items =ET.SubElement(emulators,'items', { 'offset':'0','total':str(len(emuList))})
+    
+    #<emulator href="/emulations/1" name="Emu1"/>
+    
+    for elem in emuList :
+        emulator = ET.SubElement(items,'emulator', { 'href':'/emulators/'+str(elem),'name':str(elem)})
+        
+        
+    
+    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk = ET.SubElement(emulators, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    
+    
 
+    return prettify(emulators)
+
+
+
+
+@route('/emulators/<name>/', method='GET')
+@route('/emulators/<name>', method='GET')
+def get_emulator(name=""):
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    
+    helpMod=DistributionManager.loadEmulatorHelp(name)
+    
+    
+    emulatorXml = ET.Element('emulator', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulator/'+str(name)})
+    
+    emulatorHelpXml=ET.SubElement(emulatorXml,'info')
+    emulatorHelpXml.text = str(helpMod())    
+    
+    #distroArgXml=ET.SubElement(distributionXml,'arguments')
+    #distroArgXml.text = str(argMod())    
+    
+    lk0 = ET.SubElement(emulatorXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk0 = ET.SubElement(emulatorXml, 'link', {'rel':'parent', 'href':'/emulators', 'type':'application/vnd.bonfire+xml'})
+    
+    
+    return prettify(emulatorXml)    
+    
+    
+    #curl -k -i http://10.55.164.211:8050/emulations/1/emulators/stressapptest
+ 
+@route('/distributions/', method='GET')
 @route('/distributions', method='GET')
-def get_distributions(ID=""):
-    response.content_type = CONTENT
-    #curl -k -i http://10.55.164.211:8050/emulations/1/distributions
-    xml_content_distributions ='''<?xml version="1.0" encoding="UTF-8"?>
-<collection xmlns="file:///home/melo/cocoma" href="/distributions">
-  <items offset="0" total="2">
-    <distribution href="/distributions/linear" name="linear"/>
-    <distribution href="/distributions/poisson" name="poisson"/>
-  </items>
-  <link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
-</collection>
+def get_distributions():
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    
+    
+    distroList=DistributionManager.listDistributions()
+    print "distroList",distroList
     '''
-    return xml_content_distributions
-
-
-@route('/distributions/<dtype>', method='GET')
-def get_distribution(dtype=""):
-    response.content_type = CONTENT
-    #curl -k -i http://10.55.164.211:8050/emulations/1/distributions/linear
-    xml_content_distributionName = '''<?xml version="1.0" encoding="UTF-8"?>
-<distribution xmlns="file:///home/melo/cocoma" href="/distributions/linear">
-   <distributionType>'''+dtype+'''</distributionType>
-   <info>
-        --g        granularity
-        --st    startTime
-        --d        duration
-        --sl    startLoad
-        --stl    stopLoad
-        ...
-   </info>
-</distribution>
+    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
     '''
-    return xml_content_distributionName
+    
+    
+    
+    #building the XML we will return
+    distributions = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/distributions'})
+    #<items offset="0" total="2">
+    items =ET.SubElement(distributions,'items', { 'offset':'0','total':str(len(distroList))})
+    
+    #<distribution href="/emulations/1" name="Emu1"/>
+    
+    for elem in distroList :
+        distribution = ET.SubElement(items,'distribution', { 'href':'/distributions/'+str(elem),'name':str(elem)})
+        
+        
+    
+    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk = ET.SubElement(distributions, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    
+    
+
+    return prettify(distributions)
+
+@route('/distributions/<name>/', method='GET')
+@route('/distributions/<name>', method='GET')
+def get_distribution(name=""):
+    #curl -k -i http://10.55.164.232:8050/distributions/linear
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    
+    helpMod=DistributionManager.loadDistributionHelp(name)
+    argMod=DistributionManager.loadDistributionArgNames(name)
+    
+    distributionXml = ET.Element('distribution', { 'xmlns':'http://127.0.0.1/cocoma','href':'/distributions/'+str(name)})
+    
+    distroHelpXml=ET.SubElement(distributionXml,'info')
+    distroHelpXml.text = str(helpMod())    
+    
+    distroArgXml=ET.SubElement(distributionXml,'arguments')
+    distroArgXml.text = str(argMod())    
+    
+    lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
+    
+    
+    return prettify(distributionXml)
+ 
 
 
 
