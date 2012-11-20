@@ -48,17 +48,38 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     startLoad = distributionArg["startLoad"]
     stopLoad = distributionArg["stopLoad"]
     
+    print "hello this is dist linear"
+    print "startLoad",startLoad
+    print "stopLoad",stopLoad
+    print "distributionGranularity",distributionGranularity
+    
     distributionGranularity_count=distributionGranularity
+    upperBoundary= int(distributionGranularity)-1
     #startTimesec = startTimesec
     duration = float(duration)
     
-    runNo=int(0)
-    
-    
+    #lists for return
     stressValues = []        
-    runStartTimeList=[]      
-                
-    while(distributionGranularity_count>=0):
+    runStartTimeList=[]         
+    
+    
+    #run 1
+    runStartTimeList.append(startTimesec)
+    stressValues.append(startLoad)
+    
+    
+    
+    
+    
+    
+    
+    runNo=int(1)
+    
+    runStartTime=startTimesec+(duration*upperBoundary)
+    
+
+    linearStress=0
+    while(upperBoundary !=runNo):
     
             print "Run No: "
             print runNo
@@ -75,12 +96,16 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             '''
             1. Distribution formula goes here
             '''
-                            
-            linearStep=((int(startLoad)-int(stopLoad))/int(distributionGranularity))
-            linearStep=math.fabs((int(linearStep)))
+             
+            linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
+            print "linearSterp",linearStep
+            linearStep=math.fabs((int(linearStep)))#making positive value
             print "LINEAR STEP SHOULD BE THE SAME"
             print linearStep
-            linearStress= ((linearStep*int(runNo)))+int(startLoad)
+            if startLoad < stopLoad:
+                linearStress= (linearStep*int(runNo))+int(startLoad)
+            if startLoad > stopLoad:
+                linearStress= (linearStep*(upperBoundary-int(runNo)))+int(stopLoad)
             #make sure we return integer
             linearStress=int(linearStress)
             print "LINEAR STRESS SHOULD CHANGE"
@@ -99,9 +124,11 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             runNo=int(runNo)+1
             
         
-            print "distributionGranularity_count:"
-            distributionGranularity_count= int(distributionGranularity_count)-1
-            print distributionGranularity_count
+            
+    #run last
+    runStartTimeList.append(startTimesec+duration*distributionGranularity)
+    stressValues.append(stopLoad)            
+            
         
     return stressValues, runStartTimeList
     

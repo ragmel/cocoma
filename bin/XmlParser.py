@@ -43,7 +43,7 @@
   <resourceType>Mix</resourceType>
   <startTime>now</startTime>
   <!--duration in seconds -->
-  <stopTime>now+180</stopTime>
+  <stopTime>180</stopTime>
   
   <distributions name=" myMixEmu-dis-1">
      <startTime>0</startTime>
@@ -89,19 +89,14 @@ def xmlReader(filename):
     #close file because we dont need it anymore:
     file.close()
     #parse the xml you got from the file
-    (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList)=xmlParser(data)
-    return emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList
+    (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList)=xmlParser(data)
+    return emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
 def xmlParser(xmlData):
     
     ##new##
     dom2 = parseString(xmlData)
     distroList = []
-    
-    emulationName=""
-    emulationType=""
-    resourceTypeEmulation=""
-    startTimeEmu=""
 
 
     distributionsXml=dom2.getElementsByTagName('distributions')
@@ -110,12 +105,14 @@ def xmlParser(xmlData):
     emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationType')[0].firstChild.data
     resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('resourceType')[0].firstChild.data
     startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('startTime')[0].firstChild.data
+    stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('stopTime')[0].firstChild.data
     
     print "##########################"
     print "emulation name: ",emulationName
     print "emulation type: ",emulationType
     print "resource type: ",resourceTypeEmulation
     print "start time: ",startTimeEmu
+    print "stop time: ",stopTimeEmu
     print "##########################"
     
     n=0
@@ -259,9 +256,9 @@ def xmlParser(xmlData):
         # print "Distro ",n
         #print durationDistro,  startTimeDistro, distribution,emulator 
         
-    print emulationName,emulationType, resourceTypeEmulation, startTimeEmu,distroList
+    print emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
     
-    return (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList)
+    return emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
     
 
 
@@ -277,7 +274,7 @@ if __name__ == '__main__':
   <resourceType>Mix</resourceType>
   <startTime>now</startTime>
   <!--duration in seconds -->
-  <stopTime>now+180</stopTime>
+  <stopTime>now</stopTime>
   
   <distributions name=" myMixEmu-dis-1">
      <startTime>0</startTime>

@@ -125,7 +125,7 @@ def main():
                 EmulationManager.services_control("scheduler","start"," ")
      
             if arguments[0] == "api":
-                print arguments[1], arguments[0],
+                #print arguments[1], arguments[0],
                 try:
                     print "Starting ",arguments[0],"on interface ",arguments[1]
                     EmulationManager.services_control("api","start",arguments[1])
@@ -267,12 +267,12 @@ def main():
         if options.xml and not options.emuNow:  
                 #(emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
                 #print "CCMSH:",emulationName, emulationType, distroList
-                (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
+                (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
                 if startTimeEmu.lower() =="now":
                     (startTimeEmu1, stopTime) = EmulationManager.emulationNow(1)
-                    EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu1,distroList)
+                    EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu1,stopTimeEmu,distroList)
                 else:
-                    EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu,distroList)
+                    EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu,distroList)
                 
                 
                 #EmulationManager.dataCheck(startTime,stopTime)
@@ -285,9 +285,9 @@ def main():
             #just giving random value at the moment
             arguments[1] = 1
             
-            (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,distroList) = XmlParser.xmlReader(arguments[0])
+            (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu,distroList) = XmlParser.xmlReader(arguments[0])
             (startTimeEmu, stopTime) = EmulationManager.emulationNow(arguments[1])
-            EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList)
+            EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
             #(emulationName, distributionType, resourceType, emulationType, startTime0, stopTime0,emulator, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
             #EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
             

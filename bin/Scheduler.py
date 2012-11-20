@@ -58,7 +58,7 @@ class schedulerDaemon(object):
         sys.exit(0) 
     
     def hello(self):
-        greeting = "Hello, Yes this is schedulerDaemon"
+        greeting = "Hello, Yes this is schedulerDaemon. I am online send me some jobs!"
         print greeting 
         return greeting
     

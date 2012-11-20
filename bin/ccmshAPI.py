@@ -23,7 +23,7 @@
 from bottle import route, run,response,request
 import sys,os, time
 from datetime import datetime as dt
-import EmulationManager,ccmsh,DistributionManager
+import EmulationManager,ccmsh,DistributionManager,XmlParser
 from json import dumps
 from xml.etree import ElementTree
 from xml.dom import minidom
@@ -407,185 +407,138 @@ def api_status():
     response.content_type = "application/vnd.cocoma+xml"
     return "Yes, Hello this is ccmshAPI."
 
-
+def isStr(s):
+    try: 
+        int(s)
+        return False
+    except ValueError:
+        return True
 
 '''
 #######
 Creating emulation
 #######
 '''
-
-@route('/emulations/<ID>', method='PUT')
-def create_emu(ID=""):
-    xml = request.forms.get( "xml" )
-    e = request.forms.get("e")
-    ret = str(e)+str(xml)+"\n"
-    return  ret
+@route('/emulations', method='POST')
+@route('/emulations/', method='POST')
+def create_emu():
+    #http://10.55.164.232:8050/emulations
     
-
-
-
-
-
-@route('/ccmsh/create', method='PUT')
-def create_emulation():
+    xml_stream =request.files.data
+    if xml_stream:
         
-        #checking for daemon
-        if ccmsh.daemonCheck()==0:
-            return "Daemon is not running or cannot be located. Please check Scheduler configuration"
-        else:
-            d={}
+        print "File data detected:\n",xml_stream
+        return xml_stream
+        try:
+            (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(xml_stream)
+        except Exception,e:
+            print e
+            response.status = 400
             
-                                     
-            emulationName = request.query.get('emulationName')
-            distributionType = request.query.get('distributionType')
-            resourceType = request.query.get('resourceType')
-            emulationType = request.query.get('emulationType')
-            startTime = request.query.get('startTime')
-            stopTime = request.query.get('stopTime')
-            distributionGranularity = request.query.get('distributionGranularity')
+    else:    
+        print "Body data detected:\n",xml_stream
+        try:
+            xml_stream =request.body.read()
+            (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlParser(xml_stream)
+        except Exception,e:
+            print e
+            response.status = 400
+    
+    
+    #return xml_stream
+    #parse xml stream
+    #(emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(xml_stream)
+    
+    #create emulation
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    try:
+        emulationID=EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu,distroList)
+        if isStr(emulationID):
             
-            #taking up to 10 custom arguments for distribution and adding them to array
-            #if is empty we get array: 
-            #[None, None, None, None, None, None, None, None, None, None]
-            arg=[]
-            arg.append(request.query.get('arg0'))
-            arg.append(request.query.get('arg1'))
-            arg.append(request.query.get('arg2'))
-            arg.append(request.query.get('arg3'))
-            arg.append(request.query.get('arg4'))
-            arg.append(request.query.get('arg5'))
-            arg.append(request.query.get('arg6'))
-            arg.append(request.query.get('arg7'))
-            arg.append(request.query.get('arg8'))
-            arg.append(request.query.get('arg9'))
-                        
-            print arg
-            try:           
-                emulationID=EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime, distributionGranularity,arg)        
-                d= {'emulationID':emulationID}
+            response.status = 400
+            return "Unable to create emulation please check data.\n"+str(emulationID)
+        #return new resource ID
+        print str(emulationID)
         
-                print d
-            
-                return d
-            
-            except:
-                return "Error: Cannot create emulation please check parameters and conflicts with already created emulations" 
+
         
+        response.set_header('Location', 'http://127.0.0.1/emulations/'+str(emulationID))
+        
+        emulationXml = ET.Element('emulation', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations/'+str(emulationID)})
+        
+        emulationIDXml=ET.SubElement(emulationXml,'ID')
+        emulationIDXml.text = str(emulationID)
+        
+
+        
+        lk0 = ET.SubElement(emulationXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+        #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
+        lk0 = ET.SubElement(emulationXml, 'link', {'rel':'parent', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
+        
+        response.status = 201
+        return prettify(emulationXml)
+        
+    except Exception.message, e:
+        response.status = 400
+        print "Unable to create emulation please check data\n",e
+        #print e
+        #return error
+        return "Unable to create emulation please check data\n"+str(e)
+
+
 '''
-Update emulation is not in the documentation and is currently not working.
-Later we have to decide how to do it correctly
-'''
-@route('/ccmsh/update')
-def update_emulation():
-        
-        
-        #checking for daemon
-        if ccmsh.daemonCheck()==0:
-            return "Daemon is not running or cannot be located. Please check Scheduler configuration"
-        else:
-            #setting all values to NULL
-            
-            emulationID = 'NULL'
-            emulationName = 'NULL'
-            distributionType = 'NULL'
-            resourceType = 'NULL'
-            emulationType = 'NULL'
-            startTime = 'NULL'
-            stopTime = 'NULL'
-            distributionGranularity = 'NULL'
-            
-            
-            
-            d={}
-            arg=[]
-            
-            
-            
-            if request.query.get('emulationID'):
-                emulationID = request.query.get('emulationID')
-                
-                if request.query.get('emulationName'):
-                    emulationName = request.query.get('emulationName')
-                                
-                if request.query.get('distributionType'):
-                    distributionType = request.query.get('distributionType')
-                
-                if request.query.get('resourceType'):
-                    resourceType = request.query.get('resourceType')
-                
-                if request.query.get('emulationType'):
-                    emulationType = request.query.get('emulationType')
-                    
-                if request.query.get('startTime'):
-                    startTime = request.query.get('startTime')
-                
-                if request.query.get('stopTime'):
-                    stopTime = request.query.get('stopTime')
-                    
-                if request.query.get('distributionGranularity'):
-                    distributionGranularity = request.query.get('distributionGranularity')
-                    
-                if request.query.get('arg0'):
-                    arg.append(request.query.get('arg0'))
-                    
-                if request.query.get('arg1'):
-                    arg.append(request.query.get('arg1'))
-                
-                if request.query.get('arg2'):
-                    arg.append(request.query.get('arg2'))
-                
-                if request.query.get('arg3'):
-                    arg.append(request.query.get('arg3'))
-                
-                if request.query.get('arg4'):
-                    arg.append(request.query.get('arg4'))
-                
-                if request.query.get('arg5'):
-                    arg.append(request.query.get('arg5'))
-                
-                if request.query.get('arg6'):
-                    arg.append(request.query.get('arg6'))
-                
-                if request.query.get('arg7'):
-                    arg.append(request.query.get('arg7'))
-                
-                if request.query.get('arg8'):
-                    arg.append(request.query.get('arg8'))
-                
-                if request.query.get('arg9'):
-                    arg.append(request.query.get('arg9'))
-                    
-                
-                
-                try:
-                    EmulationManager.updateEmulation(emulationID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,arg)        
-                    d= {'emulationName':emulationName, 'distributionType':distributionType, 'resourceType':resourceType, 'emulationType':emulationType, 'startTime':startTime, 'stopTime':stopTime, 'distributionGranularity':distributionGranularity,'arguments':arg}
-                
-                    return d
-                except:
-                    
-                    return {'error':'Update could not be done, check your data'}
-            
-            else:
-                
-                print "No emulation ID specified"
-            
-                return {'error':'Update could not be done, Provide Emulation ID'} 
-        
+HTTP/1.1 201 Created
+Location: https://api.bonfire-project.eu/experiments/{{experiment_id}}
+Content-Type: application/vnd.bonfire+xml
 
-@route('/ccmsh/delete')
-def emulationDelete():
-    #checking for daemon
-        if ccmsh.daemonCheck()==0:
-            return "{'error':'Daemon is not running or cannot be located. Please check Scheduler configuration'}"
-        else:
-            try:
-                emulationID = request.query.get('emulationID')
-                EmulationManager.deleteEmulation(emulationID)
-                return "EmulationID: "+emulationID+" was deleted"
-            except:
-                return "{error:Was not able to delete emulation, check parameters}"
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment xmlns="http://api.bonfire-project.eu/doc/schemas/occi"
+            href="/experiments/{{experiment_id}}">
+  <name>My Experiment</name>
+  <description>Experiment description</description>
+  <walltime>7200</walltime>
+  <computes>
+    ...
+  </computes>
+  <storages>
+    ...
+  </storages>
+  <networks>
+    ...
+  </networks>
+  <link rel="parent" href="/" type="application/vnd.bonfire+xml" />
+</experiment>
+'''
+
+
+
+@route('/emulations/<ID>/', method='DELETE')
+@route('/emulations/<ID>', method='DELETE')
+def emulationDelete(ID=""):
+    
+    '''
+    DELETE /experiments/{{experiment_id}} HTTP/1.1
+    Host: api.bonfire-project.eu
+    Accept: */*
+    
+    =>
+    
+    HTTP/1.1 202 Accepted
+    Content-Length: 0
+    Location: https://api.bonfire-project.eu/experiments/{{experiment_id}}
+    '''
+    #delete_header=request.get_header("DELETE")
+    #print "header info:",delete_header
+    #delete_header =request.header.read()
+    
+    
+    EmulationManager.deleteEmulation(emulationID)
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.status = 202
+    response.set_header('Location', 'http://127.0.0.1/emulations/'+str(ID))
 
 def getifip(ifn):
     import socket, fcntl, struct

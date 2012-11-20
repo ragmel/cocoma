@@ -1,4 +1,11 @@
 Bottle v0.11.2 server starting up (using WSGIRefServer())...
-Listening on http://127.0.0.1:8050/
+Listening on http://10.55.164.232:8050/
 Hit Ctrl-C to quit.
 
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/bottle.py", line 764, in _handle
+    return route.call(**args)
+  File "/usr/local/lib/python2.7/dist-packages/bottle.py", line 1573, in wrapper
+    rv = callback(*a, **ka)
+TypeError: create_emu() takes exactly 1 argument (0 given)
+10.28.92.12 - - [20/Nov/2012 14:12:28] "PUT /emulations HTTP/1.1" 500 755

@@ -487,9 +487,36 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
     
     
 
-def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList):
+def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList):
                     
     print "Hello this is createEmulation"
+
+
+        # 3. We add end to emulationLifetime date by the longest distribution
+    emulationLifetimeEndTime =int(stopTimeEmu)
+    for n in distroList:
+        compareEndTime = int(n["startTimeDistro"])+int(n["durationDistro"]) 
+        print "compareEndTime",compareEndTime
+        if compareEndTime > emulationLifetimeEndTime:
+            print "Distribution has date longer than emulation.Check distribution name: "+n["distributionsName"]
+            return "Distribution has date longer than emulation.Check distribution name: "+n["distributionsName"]
+            sys.exit(0)
+    
+    uri ="PYRO:scheduler.daemon@localhost:51889"
+
+    daemon=Pyro4.Proxy(uri)
+    try:
+        print daemon.hello()
+    except  Pyro4.errors.CommunicationError, e:
+            print e
+            print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---\n"
+            return "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---\n"
+            sys.exit(0)
+            
+
+
+
+
     
     #TO-DO: we need to check here if there is another emulation scheduled for the same time and if the date is in the future
     #dateCheck(startTime,stopTime)
@@ -508,15 +535,10 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
         emulationID = c.lastrowid
         
         # 2. We populate "emulationLifetime" table  
-        c.execute('INSERT INTO emulationLifetime (startTime,emulationID) VALUES (?, ?)', [startTimeEmu,emulationID])
+        c.execute('INSERT INTO emulationLifetime (startTime,stopTime,emulationID) VALUES (?,?,?)', [startTimeEmu,stopTimeEmu,emulationID])
         emulationLifetimeID = c.lastrowid
         
-        # 3. We add end to emulationLifetime date by the longest distribution
-        emulationLifetimeEndTime =0
-        for n in distroList:
-            compareEndTime = int(n["startTimeDistro"])+int(n["durationDistro"]) 
-            if compareEndTime > emulationLifetimeEndTime:
-                emulationLifetimeEndTime = compareEndTime
+
         
         print "longest time: ",emulationLifetimeEndTime
         
@@ -565,19 +587,21 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
             emulatorArg=n["emulatorArg"]
             
             #print "sending to DM these: ",emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg
-            DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg)
             
+            DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg)
+            return emulationID
             
         #emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg
-        
+            c.close()
     except sqlite.Error, e:
         print "SQL Error %s:" % e.args[0]
         print e
+        return "SQL error:",e
         sys.exit(1)
     
-    c.close()
+    
 
-    return emulationID
+    
 
 def distributionTypeCheck(distributionType):
     #check if distribution type available in the framework

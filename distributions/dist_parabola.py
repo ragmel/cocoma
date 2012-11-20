@@ -42,7 +42,7 @@ class distributionMod(object):
         print "Hello this is dist_parabola"
         
                           
-        while(self.distributionGranularity_count>=0):
+        while(self.distributionGranularity_count >1):
     
             print "Run No: "
             print self.runNo

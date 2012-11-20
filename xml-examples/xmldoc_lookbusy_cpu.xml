@@ -2,15 +2,15 @@
   <emulationName>myMixEmu</emulationName>
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
-  <startTime>2012-11-12T18:45:00</startTime>
+  <startTime>2013-11-12T18:45:00</startTime>
   <!--duration in seconds -->
-  <stopTime>now+180</stopTime>
+  <stopTime>100</stopTime>
   
   <distributions name="myMixEmu-dis-1">
      <startTime>10</startTime>
      <!--duration in seconds -->
      <duration>60</duration>
-     <granularity>6</granularity>
+     <granularity>8</granularity>
      <distribution href="/distributions/linear" name="linear" />
 
 	<!-- Desired utilization of each CPU, in percent -->
