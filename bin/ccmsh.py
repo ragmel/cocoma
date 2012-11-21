@@ -43,20 +43,20 @@ def main():
     listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='[emulationID] [all]  List of emulations by ID or all')
     #listEmu.add_option('--list-active', action='store_true', default=False,dest='listActive', help='List of active emulations')
     #listEmu.add_option('--list-inactive', action='store_true', default=False,dest='listInactive', help='List of inactive emulations')
-    listEmu.add_option('--list-jobs', action='store_true', default=False,dest='listJobs', help='List of active Jobs running on Scheduler daemon')
+    listEmu.add_option('--list-jobs', action='store_true', default=False,dest='listJobs', help='[all] List of all active Jobs running on Scheduler daemon')
         
     
     createEmu = optparse.OptionGroup(parser, 'Create new emulations')
     createEmu.add_option('-x', '--xml', action='store_true', dest='xml',default=False, help='[file.xml] enter name XML document')
-    createEmu.add_option('-n', '--now', action='store_true', dest='emuNow',default=False, help='[-x filename -n minutes] enter duration only and emulation starts immediately')
+    createEmu.add_option('-n', '--now', action='store_true', dest='emuNow',default=False, help='[-x filename] plus [-n] emulation starts immediately')
     
-    updateEmu = optparse.OptionGroup(parser, 'Update emulations')
-    updateEmu.add_option('-u', '--update', action='store_true', dest='updateID',default=False, help='Update already created emulation. Usage: -u [emulationID] [emulationName] [distributionType] [resourceType] [emulationType] [startTime] [stopTime] [distributionGranularity] [startLoad] [stopLoad] . If no value needs to be changed enter NULL')
+    #updateEmu = optparse.OptionGroup(parser, 'Update emulations')
+    #updateEmu.add_option('-u', '--update', action='store_true', dest='updateID',default=False, help='Update already created emulation. Usage: -u [emulationID] [emulationName] [distributionType] [resourceType] [emulationType] [startTime] [stopTime] [distributionGranularity] [startLoad] [stopLoad] . If no value needs to be changed enter NULL')
     
     
     deleteEmu = optparse.OptionGroup(parser, 'Delete emulations')
     deleteEmu.add_option('-d', '--delete', action='store_true',default=False, dest='deleteID', help='[emulationID] Deletes full emulation')
-    deleteEmu.add_option('--purge', action='store_true',default=False, dest='purge_all', help='[all] clears everything. !!USE WITH CAUTION!!')
+    deleteEmu.add_option('--purge', action='store_true',default=False, dest='purge_all', help='[all] clears everything in DB. !!USE WITH CAUTION!!')
     
     listDistro = optparse.OptionGroup(parser, 'List available distributions')  
     listDistro.add_option('-i', '--dist', action='store_true', default=False,dest='listAllDistro',help='[all]  List of all available distributions')
@@ -79,7 +79,7 @@ def main():
     parser.add_option_group(listEmulator)
     parser.add_option_group(createEmu)
     parser.add_option_group(deleteEmu)
-    parser.add_option_group(updateEmu)
+    #parser.add_option_group(updateEmu)
     parser.add_option_group(serviceControl)
        
 
@@ -91,7 +91,7 @@ def main():
         ################################
         updateEmu
         ###############################
-        '''
+        
         
         if options.updateID and len(arguments) ==10:
               
@@ -111,7 +111,7 @@ def main():
         
         if options.updateID and len(arguments) !=10:
             parser.print_help()
-        
+        '''
         '''
         ################################
         serviceControl
@@ -160,7 +160,7 @@ def main():
         listEmu
         ###############################
         '''
-                  
+        '''          
         if options.listActive:
             EmulationManager.getEmulation("NULL","NULL",1,1)
             sys.exit(1)
@@ -169,12 +169,28 @@ def main():
             EmulationManager.getEmulation("NULL","NULL",1,0)
             sys.exit(1)
         
-       
+        '''
+        
         if options.listAll:
             if arguments[0]=="all":
-                EmulationManager.getEmulation("NULL","NULL",1,"NULL")
+                emuList=EmulationManager.getAllEmulationList()
+                for elem in emuList :
+                    print "---->\nID: "+str(elem[0])+"\nName: "+str(elem[1]+"")
             else:
-                EmulationManager.getEmulation("NULL",arguments[0],0,"NULL")
+                try:
+                    (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(arguments[0])
+                    print "--->\nID: "+str(emulationID)+"\nName: "+str(emulationName)+"\nType: "+str(emulationType)+"\nResourceType: "+str(resourceTypeEmulation)+"\nStartTime: "+str(startTimeEmu)+"\nstopTime: "+str(stopTimeEmu)
+#{'distroArgs': {'startLoad': u'10', 'stopLoad': u'90'}, 'emulatorName': u'lookbusy', 'distrType': u'linear', 'resourceTypeDist': u'CPU', 'startTimeDistro': u'10',
+# 'distributionsName': u'myMixEmu-dis-1', 'durationDistro': u'60', 'emulatorArg': {'ncpus': u'0'}, 'granularity': u'8'}
+                    for dist in distroList:
+                        print "---\nDistrName: "+str(dist['distributionsName'])+"\nDistrType: "+str(dist['distrType'])+"\nDistrResourceType: "+str(dist['resourceTypeDist'])+"\nDistroStartTime: "+str(dist['startTimeDistro'])+"\nDistroDuration: "+str(dist['durationDistro'])+"\nDistroArgs: "+str(dist['distroArgs'])+"\nEmulatorName: "+str(dist['emulatorName'])+"\nEmulatorArgs: "+str(dist['emulatorArg'])
+                    
+                    
+                    
+                except Exception,e:
+               
+                        print "\nEmulation ID:"+str(arguments[0])+" not found.\nError:"+str(e)
+                        sys.exit(0)
                     
         if options.listJobs:
             connectionCheck=daemonCheck()
@@ -195,15 +211,17 @@ def main():
                     if job.name==arguments[0]:
                         print job
         
+        '''
         if options.listName:
             EmulationManager.getEmulation(arguments[0],"NULL",0,"NULL")
-                
+        
+                                
         if options.listActive:
             if arguments[0]=="all":
                 #TO-DO: List inactive values with 0 param
                 print "Listing all active values"
                 EmulationManager.getEmulation("NULL","NULL",0,1)
-
+        '''
 
 
         '''

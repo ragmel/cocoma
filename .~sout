@@ -1,1290 +1,725 @@
-Object <__main__.schedulerDaemon object at 0x9d5c3cc>:
+Object <__main__.schedulerDaemon object at 0x8a3c3cc>:
     uri = PYRO:scheduler.daemon@localhost:51889
 Pyro daemon running.
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 This is deleteJobs
 This is deleteJobs
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-This is deleteJobs
-This is deleteJobs
-This is deleteJobs
-This is deleteJobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  80
-emulationLifetimeID 80
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  80
-emulationLifetimeID 80
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  80
-emulationLifetimeID 80
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  80
-emulationLifetimeID 80
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  80
-emulationLifetimeID 80
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  80
-emulationLifetimeID 80
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  80
-emulationLifetimeID 80
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  80
-emulationLifetimeID 80
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  81
-emulationLifetimeID 81
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  81
-emulationLifetimeID 81
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  81
-emulationLifetimeID 81
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  81
-emulationLifetimeID 81
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  81
-emulationLifetimeID 81
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  81
-emulationLifetimeID 81
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  81
-emulationLifetimeID 81
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  81
-emulationLifetimeID 81
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2013-11-12 18:45:00
-emulationID  82
-emulationLifetimeID 82
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-<open file '<stdout>', mode 'w' at 0xb74e5078>
-Job: 82-myMixEmu-dis-1 with run No: 0 start date 1384281900.0 created
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2013-11-12 18:45:07
-emulationID  82
-emulationLifetimeID 82
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-<open file '<stdout>', mode 'w' at 0xb74e5078>
-Job: 82-myMixEmu-dis-1 with run No: 1 start date 1384281907.0 created
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2013-11-12 18:45:14
-emulationID  82
-emulationLifetimeID 82
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-<open file '<stdout>', mode 'w' at 0xb74e5078>
-Job: 82-myMixEmu-dis-1 with run No: 2 start date 1384281914.0 created
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2013-11-12 18:45:21
-emulationID  82
-emulationLifetimeID 82
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-<open file '<stdout>', mode 'w' at 0xb74e5078>
-Job: 82-myMixEmu-dis-1 with run No: 3 start date 1384281921.0 created
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2013-11-12 18:45:28
-emulationID  82
-emulationLifetimeID 82
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-<open file '<stdout>', mode 'w' at 0xb74e5078>
-Job: 82-myMixEmu-dis-1 with run No: 4 start date 1384281928.0 created
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2013-11-12 18:45:35
-emulationID  82
-emulationLifetimeID 82
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-<open file '<stdout>', mode 'w' at 0xb74e5078>
-Job: 82-myMixEmu-dis-1 with run No: 5 start date 1384281935.0 created
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2013-11-12 18:45:42
-emulationID  82
-emulationLifetimeID 82
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-<open file '<stdout>', mode 'w' at 0xb74e5078>
-Job: 82-myMixEmu-dis-1 with run No: 6 start date 1384281942.0 created
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2013-11-12 18:45:56
-emulationID  82
-emulationLifetimeID 82
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-<open file '<stdout>', mode 'w' at 0xb74e5078>
-Job: 82-myMixEmu-dis-1 with run No: 7 start date 1384281956.0 created
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  83
-emulationLifetimeID 83
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  83
-emulationLifetimeID 83
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  83
-emulationLifetimeID 83
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  83
-emulationLifetimeID 83
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  83
-emulationLifetimeID 83
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  83
-emulationLifetimeID 83
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  83
-emulationLifetimeID 83
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  83
-emulationLifetimeID 83
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  84
-emulationLifetimeID 84
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  84
-emulationLifetimeID 84
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  84
-emulationLifetimeID 84
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  84
-emulationLifetimeID 84
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  84
-emulationLifetimeID 84
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  84
-emulationLifetimeID 84
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  84
-emulationLifetimeID 84
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  84
-emulationLifetimeID 84
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  85
-emulationLifetimeID 85
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  85
-emulationLifetimeID 85
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  85
-emulationLifetimeID 85
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  85
-emulationLifetimeID 85
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  85
-emulationLifetimeID 85
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  85
-emulationLifetimeID 85
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  85
-emulationLifetimeID 85
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  85
-emulationLifetimeID 85
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  86
-emulationLifetimeID 86
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  86
-emulationLifetimeID 86
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  86
-emulationLifetimeID 86
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  86
-emulationLifetimeID 86
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  86
-emulationLifetimeID 86
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  86
-emulationLifetimeID 86
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  86
-emulationLifetimeID 86
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  86
-emulationLifetimeID 86
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  87
-emulationLifetimeID 87
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  87
-emulationLifetimeID 87
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  87
-emulationLifetimeID 87
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  87
-emulationLifetimeID 87
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  87
-emulationLifetimeID 87
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  87
-emulationLifetimeID 87
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  87
-emulationLifetimeID 87
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  87
-emulationLifetimeID 87
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 sending list of jobs
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  88
-emulationLifetimeID 88
-distributionName myMixEmu-dis-1
+ StartTime: 2012-11-21 17:12:09
+emulationID  3
+emulationLifetimeID 3
+distributionName CPU-dis-1
 stressValue 10
-duration 7
+duration 10
 runNo 0
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-CPU-dis-1 with run No: 0 start date 1353517929.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  88
-emulationLifetimeID 88
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
+ StartTime: 2012-11-21 17:12:19
+emulationID  3
+emulationLifetimeID 3
+distributionName CPU-dis-1
+stressValue 26
+duration 10
 runNo 1
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-CPU-dis-1 with run No: 1 start date 1353517939.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  88
-emulationLifetimeID 88
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
+ StartTime: 2012-11-21 17:12:29
+emulationID  3
+emulationLifetimeID 3
+distributionName CPU-dis-1
+stressValue 42
+duration 10
 runNo 2
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-CPU-dis-1 with run No: 2 start date 1353517949.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  88
-emulationLifetimeID 88
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  88
-emulationLifetimeID 88
-distributionName myMixEmu-dis-1
+ StartTime: 2012-11-21 17:12:39
+emulationID  3
+emulationLifetimeID 3
+distributionName CPU-dis-1
 stressValue 58
-duration 7
+duration 10
+runNo 3
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-CPU-dis-1 with run No: 3 start date 1353517959.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-21 17:12:49
+emulationID  3
+emulationLifetimeID 3
+distributionName CPU-dis-1
+stressValue 74
+duration 10
 runNo 4
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-CPU-dis-1 with run No: 4 start date 1353517969.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  88
-emulationLifetimeID 88
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  88
-emulationLifetimeID 88
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  88
-emulationLifetimeID 88
-distributionName myMixEmu-dis-1
+ StartTime: 2012-11-21 17:13:09
+emulationID  3
+emulationLifetimeID 3
+distributionName CPU-dis-1
 stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
+duration 10
+runNo 5
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-CPU-dis-1 with run No: 5 start date 1353517989.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-21 17:12:09
+emulationID  3
+emulationLifetimeID 3
+distributionName MEM-dis-1
+stressValue 10
+duration 10
+runNo 0
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-MEM-dis-1 with run No: 0 start date 1353517929.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-21 17:12:19
+emulationID  3
+emulationLifetimeID 3
+distributionName MEM-dis-1
+stressValue 28
+duration 10
+runNo 1
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-MEM-dis-1 with run No: 1 start date 1353517939.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-21 17:12:29
+emulationID  3
+emulationLifetimeID 3
+distributionName MEM-dis-1
+stressValue 46
+duration 10
+runNo 2
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-MEM-dis-1 with run No: 2 start date 1353517949.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-21 17:12:39
+emulationID  3
+emulationLifetimeID 3
+distributionName MEM-dis-1
+stressValue 64
+duration 10
+runNo 3
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-MEM-dis-1 with run No: 3 start date 1353517959.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-21 17:12:49
+emulationID  3
+emulationLifetimeID 3
+distributionName MEM-dis-1
+stressValue 82
+duration 10
+runNo 4
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-MEM-dis-1 with run No: 4 start date 1353517969.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-21 17:13:09
+emulationID  3
+emulationLifetimeID 3
+distributionName MEM-dis-1
+stressValue 100
+duration 10
+runNo 5
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 3-MEM-dis-1 with run No: 5 start date 1353517989.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+10
+10
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 CPU 10.0 10 0
+CPU load selected
+10
+10
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 MEM 10.0 10 0
+MEM load selected
+TrueTrue
+
+10
+26
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 CPU 10.0 1026
+28
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3  1
+CPU load selected
+3True MEM 10.0 
+28 1
+MEM load selected
+lookbusy (6676): mem stirrer started, PID 6677
+killing mem spinner 6677
+
+
+this is mem load:memUtil,memSleep,duration 10 100 10.0 
+
+
+Started lookbusy on PID No:  6676
+sleep: 10.0
+cpu_spin (6675): starting 4 spinner(s) for 10%-10% usage
+lookbusy (6675): CPU spinner started, PID 6678
+lookbusy (6675): CPU spinner started, PID 6679
+lookbusy (6675): CPU spinner started, PID 6680
+lookbusy (6675): CPU spinner started, PID 6681
+killing CPU spinner 0 (PID 6678)
+killing CPU spinner 1 (PID 6679)
+killing CPU spinner 2 (PID 6680)
+killing CPU spinner 3 (PID 6681)
+got SIGCHLD for dead child 6680; exited with signal 15
+cpu_spin (6675): starting 4 spinner(s) for 10%-10% usage
+lookbusy (6675): CPU spinner started, PID 6678
+lookbusy (6675): CPU spinner started, PID 6679
+lookbusy (6675): CPU spinner started, PID 6680
+lookbusy (6675): CPU spinner started, PID 6681
+killing CPU spinner 0 (PID 6678)
+killing CPU spinner 1 (PID 6679)
+killing CPU spinner 2 (PID 6680)
+killing CPU spinner 3 (PID 6681)
+No handlers could be found for logger "apscheduler.scheduler"
+No handlers could be found for logger "apscheduler.scheduler"
+True
+10
+42
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 CPU 10.0 42 2
+CPU load selected
+True
+10
+46
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 MEM 10.0 46 2
+MEM load selected
+3
+
+cpuUtil,ncpus,duration 26 0 10.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  6687
+sleep: 10.0
+PU spinner started, PID 6690
+lookbusy (6687): CPU spinner started, PID 6691
+lookbusy (6687): CPU spinner started, PID 6693
+killing CPU spinner 0 (PID 6689)
+killing CPU spinner 1 (PID 6690)
+killing CPU spinner 2 (PID 6691)
+killing CPU spinner 3 (PID 6693)
+got SIGCHLD for dead child 6691; exited with signal 15
+cpu_spin (6687): starting 4 spinner(s) for 26%-26% usage
+lookbusy (6687): CPU spinner started, PID 6689
+lookbusy (6687): CPU spinner started, PID 6690
+lookbusy (6687): CPU spinner started, PID 6691
+lookbusy (6687): CPU spinner started, PID 6693
+killing CPU spinner 0 (PID 6689)
+killing CPU spinner 1 (PID 6690)
+killing CPU spinner 2 (PID 6691)
+killing CPU spinner 3 (PID 6693)
+
+
+this is mem load:memUtil,memSleep,duration 28 100 10.0 
+
+
+Started lookbusy on PID No:  6688
+sleep: 10.0
+lookbusy (6688): mem stirrer started, PID 6692
+killing mem spinner 6692
+True
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+10
+58
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 CPU 10.0 58 3
+CPU load selected
+True
+10
+64
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 MEM 10.0 64 3
+MEM load selected
+
+
+cpuUtil,ncpus,duration 42 0 10.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  6698
+sleep: 10.0
+cpu_spin (6698): starting 4 spinner(s) for 42%-42% usage
+lookbusy (6698): CPU spinner started, PID 6701
+lookbusy (6698): CPU spinner started, PID 6702
+lookbusy (6698): CPU spinner started, PID 6703
+lookbusy (6698): CPU spinner started, PID 6704
+killing CPU spinner 0 (PID 6701)
+killing CPU spinner 1 (PID 6702)
+killing CPU spinner 2 (PID 6703)
+killing CPU spinner 3 (PID 6704)
+got SIGCHLD for dead child 6703; exited with signal 15
+cpu_spin (6698): starting 4 spinner(s) for 42%-42% usage
+lookbusy (6698): CPU spinner started, PID 6701
+lookbusy (6698): CPU spinner started, PID 6702
+lookbusy (6698): CPU spinner started, PID 6703
+lookbusy (6698): CPU spinner started, PID 6704
+killing CPU spinner 0 (PID 6701)
+killing CPU spinner 1 (PID 6702)
+killing CPU spinner 2 (PID 6703)
+killing CPU spinner 3 (PID 6704)
+
+
+this is mem load:memUtil,memSleep,duration 46 100 10.0 
+
+
+Started lookbusy on PID No:  6700
+sleep: 10.0
+lookbusy (6700): mem stirrer started, PID 6705
+killing mem spinner 6705
+True
+10
+74
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 CPU 10.0 74 4
+CPU load selected
+True
+10
+82
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 MEM 10.0 82 4
+MEM load selected
+
+
+cpuUtil,ncpus,duration 58 0 10.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  6715
+sleep: 10.0
+cpu_spin (6715): starting 4 spinner(s) for 58%-58% usage
+lookbusy (6715): CPU spinner started, PID 6717
+lookbusy (6715): CPU spinner started, PID 6718
+lookbusy (6715): CPU spinner started, PID 6719
+lookbusy (6715): CPU spinner started, PID 6720
+killing CPU spinner 0 (PID 6717)
+killing CPU spinner 1 (PID 6718)
+killing CPU spinner 2 (PID 6719)
+killing CPU spinner 3 (PID 6720)
+got SIGCHLD for dead child 6719; exited with signal 15
+cpu_spin (6715): starting 4 spinner(s) for 58%-58% usage
+lookbusy (6715): CPU spinner started, PID 6717
+lookbusy (6715): CPU spinner started, PID 6718
+lookbusy (6715): CPU spinner started, PID 6719
+lookbusy (6715): CPU spinner started, PID 6720
+killing CPU spinner 0 (PID 6717)
+killing CPU spinner 1 (PID 6718)
+killing CPU spinner 2 (PID 6719)
+killing CPU spinner 3 (PID 6720)
+
+
+this is mem load:memUtil,memSleep,duration 64 100 10.0 
+
+
+Started lookbusy on PID No:  6716
+sleep: 10.0
+lookbusy (6716): mem stirrer started, PID 6721
+killing mem spinner 6721
+lookbusy (6727): mem stirrer started, PID 6732
+killing mem spinner 6732
+
+
+this is mem load:memUtil,memSleep,duration 82 100 10.0 
+
+
+Started lookbusy on PID No:  6727
+sleep: 10.0
+cpu_spin (6725): starting 4 spinner(s) for 74%-74% usage
+lookbusy (6725): CPU spinner started, PID 6728
+lookbusy (6725): CPU spinner started, PID 6729
+lookbusy (6725): CPU spinner started, PID 6730
+lookbusy (6725): CPU spinner started, PID 6731
+killing CPU spinner 0 (PID 6728)
+killing CPU spinner 1 (PID 6729)
+killing CPU spinner 2 (PID 6730)
+killing CPU spinner 3 (PID 6731)
+
+
+cpuUtil,ncpus,duration 74 0 10.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  6725
+sleep: 10.0
+True
+10
+90
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 310
+100
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  3 3 MEM 10.0 100  CPU5 10.0 
+MEM load selected
+90 5
+CPU load selected
+ 90 5
+CPU load selected
+ 
+
+this is mem load:memUtil,memSleep,duration 100 100 10.0 
+
+
+Started lookbusy on PID No:  6739
+sleep: 10.0
+True
+
+
+cpuUtil,ncpus,duration 90 0 10.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  6738
+sleep: 10.0
+cpu_spin (6738): starting 4 spinner(s) for 90%-90% usage
+lookbusy (6738): CPU spinner started, PID 6741
+lookbusy (6738): CPU spinner started, PID 6742
+lookbusy (6738): CPU spinner started, PID 6743
+lookbusy (6738): CPU spinner started, PID 6744
+killing CPU spinner 0 (PID 6741)
+killing CPU spinner 1 (PID 6742)
+killing CPU spinner 2 (PID 6743)
+killing CPU spinner 3 (PID 6744)
+got SIGCHLD for dead child 6742; exited with signal 15
+cpu_spin (6738): starting 4 spinner(s) for 90%-90% usage
+lookbusy (6738): CPU spinner started, PID 6741
+lookbusy (6738): CPU spinner started, PID 6742
+lookbusy (6738): CPU spinner started, PID 6743
+lookbusy (6738): CPU spinner started, PID 6744
+killing CPU spinner 0 (PID 6741)
+killing CPU spinner 1 (PID 6742)
+killing CPU spinner 2 (PID 6743)
+killing CPU spinner 3 (PID 6744)
+True
+True
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 sending list of jobs
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  89
-emulationLifetimeID 89
+ StartTime: 2012-11-21 18:15:49
+emulationID  4
+emulationLifetimeID 4
 distributionName myMixEmu-dis-1
 stressValue 10
 duration 7
 runNo 0
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 4-myMixEmu-dis-1 with run No: 0 start date 1353521749.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  89
-emulationLifetimeID 89
+ StartTime: 2012-11-21 18:15:56
+emulationID  4
+emulationLifetimeID 4
 distributionName myMixEmu-dis-1
 stressValue 22
 duration 7
 runNo 1
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 4-myMixEmu-dis-1 with run No: 1 start date 1353521756.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  89
-emulationLifetimeID 89
+ StartTime: 2012-11-21 18:16:03
+emulationID  4
+emulationLifetimeID 4
 distributionName myMixEmu-dis-1
 stressValue 34
 duration 7
 runNo 2
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 4-myMixEmu-dis-1 with run No: 2 start date 1353521763.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  89
-emulationLifetimeID 89
+ StartTime: 2012-11-21 18:16:10
+emulationID  4
+emulationLifetimeID 4
 distributionName myMixEmu-dis-1
 stressValue 46
 duration 7
 runNo 3
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 4-myMixEmu-dis-1 with run No: 3 start date 1353521770.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  89
-emulationLifetimeID 89
+ StartTime: 2012-11-21 18:16:17
+emulationID  4
+emulationLifetimeID 4
 distributionName myMixEmu-dis-1
 stressValue 58
 duration 7
 runNo 4
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 4-myMixEmu-dis-1 with run No: 4 start date 1353521777.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  89
-emulationLifetimeID 89
+ StartTime: 2012-11-21 18:16:24
+emulationID  4
+emulationLifetimeID 4
 distributionName myMixEmu-dis-1
 stressValue 70
 duration 7
 runNo 5
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 4-myMixEmu-dis-1 with run No: 5 start date 1353521784.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  89
-emulationLifetimeID 89
+ StartTime: 2012-11-21 18:16:31
+emulationID  4
+emulationLifetimeID 4
 distributionName myMixEmu-dis-1
 stressValue 82
 duration 7
 runNo 6
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 4-myMixEmu-dis-1 with run No: 6 start date 1353521791.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  89
-emulationLifetimeID 89
+ StartTime: 2012-11-21 18:16:45
+emulationID  4
+emulationLifetimeID 4
 distributionName myMixEmu-dis-1
 stressValue 90
 duration 7
 runNo 7
-Scheduler createJob(): error creating Job 
+<open file '<stdout>', mode 'w' at 0xb751b078>
+Job: 4-myMixEmu-dis-1 with run No: 7 start date 1353521805.0 created
 Hello, Yes this is schedulerDaemon. I am online send me some jobs!
 sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  90
-emulationLifetimeID 90
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  90
-emulationLifetimeID 90
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  90
-emulationLifetimeID 90
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  90
-emulationLifetimeID 90
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  90
-emulationLifetimeID 90
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  90
-emulationLifetimeID 90
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  90
-emulationLifetimeID 90
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  90
-emulationLifetimeID 90
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  91
-emulationLifetimeID 91
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  91
-emulationLifetimeID 91
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  91
-emulationLifetimeID 91
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  91
-emulationLifetimeID 91
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  91
-emulationLifetimeID 91
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  91
-emulationLifetimeID 91
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  91
-emulationLifetimeID 91
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  91
-emulationLifetimeID 91
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  92
-emulationLifetimeID 92
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  92
-emulationLifetimeID 92
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  92
-emulationLifetimeID 92
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  92
-emulationLifetimeID 92
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  92
-emulationLifetimeID 92
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  92
-emulationLifetimeID 92
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  92
-emulationLifetimeID 92
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:56
-emulationID  92
-emulationLifetimeID 92
-distributionName myMixEmu-dis-1
-stressValue 90
-duration 7
-runNo 7
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-sending list of jobs
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:00
-emulationID  93
-emulationLifetimeID 93
-distributionName myMixEmu-dis-1
-stressValue 10
-duration 7
-runNo 0
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:07
-emulationID  93
-emulationLifetimeID 93
-distributionName myMixEmu-dis-1
-stressValue 22
-duration 7
-runNo 1
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:14
-emulationID  93
-emulationLifetimeID 93
-distributionName myMixEmu-dis-1
-stressValue 34
-duration 7
-runNo 2
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:21
-emulationID  93
-emulationLifetimeID 93
-distributionName myMixEmu-dis-1
-stressValue 46
-duration 7
-runNo 3
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:28
-emulationID  93
-emulationLifetimeID 93
-distributionName myMixEmu-dis-1
-stressValue 58
-duration 7
-runNo 4
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:35
-emulationID  93
-emulationLifetimeID 93
-distributionName myMixEmu-dis-1
-stressValue 70
-duration 7
-runNo 5
-Scheduler createJob(): error creating Job 
-Hello, Yes this is schedulerDaemon. I am online send me some jobs!
-Hello this is Scheduler createJob()
-Job added with:
- StartTime: 2012-11-12 18:45:42
-emulationID  93
-emulationLifetimeID 93
-distributionName myMixEmu-dis-1
-stressValue 82
-duration 7
-runNo 6
-Sc
+7
+10
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  4 4 CPU 7.0 10 0
+CPU load selected
+True
+7
+22
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  4 4 CPU 7.0 22 1
+CPU load selected
+
+
+cpuUtil,ncpus,duration 10 0 7.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  7554
+sleep: 7.0
+: CPU spinner started, PID 7556
+lookbusy (7554): CPU spinner started, PID 7557
+lookbusy (7554): CPU spinner started, PID 7558
+killing CPU spinner 0 (PID 7555)
+killing CPU spinner 1 (PID 7556)
+killing CPU spinner 2 (PID 7557)
+killing CPU spinner 3 (PID 7558)
+got SIGCHLD for dead child 7555; exited with signal 15
+cpu_spin (7554): starting 4 spinner(s) for 10%-10% usage
+lookbusy (7554): CPU spinner started, PID 7555
+lookbusy (7554): CPU spinner started, PID 7556
+lookbusy (7554): CPU spinner started, PID 7557
+lookbusy (7554): CPU spinner started, PID 7558
+killing CPU spinner 0 (PID 7555)
+killing CPU spinner 1 (PID 7556)
+killing CPU spinner 2 (PID 7557)
+killing CPU spinner 3 (PID 7558)
+True
+7
+34
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  4 4 CPU 7.0 34 2
+CPU load selected
+
+
+cpuUtil,ncpus,duration 22 0 7.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  7564
+sleep: 7.0
+cpu_spin (7564): starting 4 spinner(s) for 22%-22% usage
+lookbusy (7564): CPU spinner started, PID 7565
+lookbusy (7564): CPU spinner started, PID 7566
+lookbusy (7564): CPU spinner started, PID 7567
+lookbusy (7564): CPU spinner started, PID 7568
+killing CPU spinner 0 (PID 7565)
+killing CPU spinner 1 (PID 7566)
+killing CPU spinner 2 (PID 7567)
+killing CPU spinner 3 (PID 7568)
+got SIGCHLD for dead child 7565; exited with signal 15
+cpu_spin (7564): starting 4 spinner(s) for 22%-22% usage
+lookbusy (7564): CPU spinner started, PID 7565
+lookbusy (7564): CPU spinner started, PID 7566
+lookbusy (7564): CPU spinner started, PID 7567
+lookbusy (7564): CPU spinner started, PID 7568
+killing CPU spinner 0 (PID 7565)
+killing CPU spinner 1 (PID 7566)
+killing CPU spinner 2 (PID 7567)
+killing CPU spinner 3 (PID 7568)
+True
+7
+46
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  4 4 CPU 7.0 46 3
+CPU load selected
+
+
+cpuUtil,ncpus,duration 34 0 7.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  7574
+sleep: 7.0
+: CPU spinner started, PID 7576
+lookbusy (7574): CPU spinner started, PID 7577
+lookbusy (7574): CPU spinner started, PID 7578
+killing CPU spinner 0 (PID 7575)
+killing CPU spinner 1 (PID 7576)
+killing CPU spinner 2 (PID 7577)
+killing CPU spinner 3 (PID 7578)
+got SIGCHLD for dead child 7575; exited with signal 15
+cpu_spin (7574): starting 4 spinner(s) for 34%-34% usage
+lookbusy (7574): CPU spinner started, PID 7575
+lookbusy (7574): CPU spinner started, PID 7576
+lookbusy (7574): CPU spinner started, PID 7577
+lookbusy (7574): CPU spinner started, PID 7578
+killing CPU spinner 0 (PID 7575)
+killing CPU spinner 1 (PID 7576)
+killing CPU spinner 2 (PID 7577)
+killing CPU spinner 3 (PID 7578)
+True
+7
+58
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  4 4 CPU 7.0 58 4
+CPU load selected
+
+
+cpuUtil,ncpus,duration 46 0 7.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  7586
+sleep: 7.0
+cpu_spin (7586): starting 4 spinner(s) for 46%-46% usage
+lookbusy (7586): CPU spinner started, PID 7587
+lookbusy (7586): CPU spinner started, PID 7588
+lookbusy (7586): CPU spinner started, PID 7589
+lookbusy (7586): CPU spinner started, PID 7590
+killing CPU spinner 0 (PID 7587)
+killing CPU spinner 1 (PID 7588)
+killing CPU spinner 2 (PID 7589)
+killing CPU spinner 3 (PID 7590)
+True
+7
+70
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  4 4 CPU 7.0 70 5
+CPU load selected
+
+
+cpuUtil,ncpus,duration 58 0 7.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  7593
+sleep: 7.0
+True
+7
+82
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  4 4 CPU 7.0 82 6
+CPU load selected
+
+
+cpuUtil,ncpus,duration 70 0 7.0 
+
+
+run_lookbusy executing this ncpus= 0
+Started lookbusy on PID No:  7600
+sleep: 7.0
+: CPU spinner started, PID 7602
+lookbusy (7600): CPU spinner started, PID 7603
+lookbusy (7600): CPU spinner started, PID 7604
+killing CPU spinner 0 (PID 7601)
+killing CPU spinner 1 (PID 7602)
+killing CPU spinner 2 (PID 7603)
+killing CPU spinner 3 (PID 7604)
+got SIGCHLD for dead child 7601; exited with signal 15
+cpu_spin (7600): starting 4 spinner(s) for 70%-70% usage
+lookbusy (7600): CPU spinner started, PID 7601
+lookbusy (7600): CPU spinner started, PID 7602
+lookbusy (7600): CPU spinner started, PID 7603
+lookbusy (7600): CPU spinner started, PID 7604
+killing CPU spinner 0 (PID 7601)
+killing CPU spinner 1 (PID 7602)
+killing CPU spinner 2 (PID 7603)
+killing CPU spinner 3 (PID 7604)
+cpu_spin (7607): starting 4 spinner(s) for 82%-82% usage
+lookbusy (7607): CPU spinner started, PID 7608
+lookbusy (7607): CPU spinner started, PID 7609
+lookbusy (7607): CPU spinner started, PID 7610
+lookbusy (7607): CPU spinner started, PID 7611
+killing CPU spinner 0 (PID 7608)
+killing CPU spinner 1 (PID 7609)
+killing CPU spinner 2 (PID 7610)
+killing CPU spinner 3 (PID 7611)
+got SIGCHLD for dead child 7608; exited with signal 15
+cpu_spin (7607): starting 4 spinner(s) for 82%-82% usage
+lookbusy (7607): CPU spinner started, PID 7608
+lookbusy (7607): CPU spinner started, PID 7609
+lookbusy (7607): CPU spinner started, PID 7610
+lookbusy (7607): CPU spinner started, PID 7611
+killing CPU spinner 0 (PID 7608)
+killing CPU spinner 1 (PID 7609)
+killing CPU spinner 2 (PID 7610)
+killing CPU spinner 3 (PID 7611)
+True
+7
+90
+Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo:  4 4 CPU 7.0 90 7
+CPU load selected
+cpu_spin (7615): starting 4 spinner(s) for 90%-90% usage
+lookbusy (7615): CPU spinner started, PID 7616
+lookbusy (7615): CPU spinner started, PID 7617
+lookbusy (7615): CPU spinner started, PID 7618
+lookbusy (7615): CPU spinner started, PID 7619
+killing CPU spinner 0 (PID 7616)
+killing CPU spinner 1 (PID 7617)
+killing CPU spinner 2 (PID 7618)
+killing CPU spinner 3 (PID 7619)
+got SIGCHLD for dead child 7616; exited with signal 15
+cpu_spin (7615): starting 4 spinner(s) for 90%-90% usage
+lookbusy (7615): CPU spinner started, PID 7616
+lookbusy (7615): CPU spinner started, PID 7617
+lookbusy (7615): CPU spinner started, PID 7618
+lookbusy (7615): CPU spinner started, PID 7619
+killing CPU spinner 0 (PID 7616)
+killing CPU spinner 1 (PID 7617)
+killing CPU spinner 2 (PID 7618)
+killing CPU spinner 3 (PID 7619)
