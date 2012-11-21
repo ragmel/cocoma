@@ -194,8 +194,11 @@ def get_emulation(ID=""):
     
     try:
         (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(ID)
-    except:
-        return "<error>Wrong ID</error>"
+    except Exception,e:
+            
+        response.status = 404
+        return "<error>Emulation ID:"+ID+" not found. Error:"+str(e)+"</error>"
+        
 
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     
@@ -311,26 +314,31 @@ def get_emulators():
 @route('/emulators/<name>', method='GET')
 def get_emulator(name=""):
     
-    ET.register_namespace("test", "http://127.0.0.1/cocoma")
-    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    try:
+        ET.register_namespace("test", "http://127.0.0.1/cocoma")
+        response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     
-    helpMod=DistributionManager.loadEmulatorHelp(name)
-    
-    
-    emulatorXml = ET.Element('emulator', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulator/'+str(name)})
-    
-    emulatorHelpXml=ET.SubElement(emulatorXml,'info')
-    emulatorHelpXml.text = str(helpMod())    
-    
-    #distroArgXml=ET.SubElement(distributionXml,'arguments')
-    #distroArgXml.text = str(argMod())    
-    
-    lk0 = ET.SubElement(emulatorXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
-    #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
-    lk0 = ET.SubElement(emulatorXml, 'link', {'rel':'parent', 'href':'/emulators', 'type':'application/vnd.bonfire+xml'})
+        helpMod=DistributionManager.loadEmulatorHelp(name)
     
     
-    return prettify(emulatorXml)    
+        emulatorXml = ET.Element('emulator', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulator/'+str(name)})
+    
+        emulatorHelpXml=ET.SubElement(emulatorXml,'info')
+        emulatorHelpXml.text = str(helpMod())    
+    
+        #distroArgXml=ET.SubElement(distributionXml,'arguments')
+        #distroArgXml.text = str(argMod())    
+    
+        lk0 = ET.SubElement(emulatorXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+        #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
+        lk0 = ET.SubElement(emulatorXml, 'link', {'rel':'parent', 'href':'/emulators', 'type':'application/vnd.bonfire+xml'})
+    
+    
+        return prettify(emulatorXml)
+    
+    except Exception, e:
+        response.status = 404
+        return "<error>"+str(e)+"</error>"    
     
     
     #curl -k -i http://10.55.164.211:8050/emulations/1/emulators/stressapptest
@@ -377,24 +385,28 @@ def get_distribution(name=""):
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    try:
+        helpMod=DistributionManager.loadDistributionHelp(name)
+        argMod=DistributionManager.loadDistributionArgNames(name)
     
-    helpMod=DistributionManager.loadDistributionHelp(name)
-    argMod=DistributionManager.loadDistributionArgNames(name)
+        distributionXml = ET.Element('distribution', { 'xmlns':'http://127.0.0.1/cocoma','href':'/distributions/'+str(name)})
     
-    distributionXml = ET.Element('distribution', { 'xmlns':'http://127.0.0.1/cocoma','href':'/distributions/'+str(name)})
+        distroHelpXml=ET.SubElement(distributionXml,'info')
+        distroHelpXml.text = str(helpMod())    
     
-    distroHelpXml=ET.SubElement(distributionXml,'info')
-    distroHelpXml.text = str(helpMod())    
+        distroArgXml=ET.SubElement(distributionXml,'arguments')
+        distroArgXml.text = str(argMod())    
     
-    distroArgXml=ET.SubElement(distributionXml,'arguments')
-    distroArgXml.text = str(argMod())    
-    
-    lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
-    #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
-    lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
+        lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+        #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
+        lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
     
     
-    return prettify(distributionXml)
+        return prettify(distributionXml)
+    
+    except Exception, e:
+        response.status = 404
+        return "<error>"+str(e)+"</error>"
  
 
 
