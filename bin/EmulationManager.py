@@ -257,7 +257,8 @@ def getEmulation(emulationID):
         
 def deleteEmulation(emulationID):
     print "Hello this is deleteEmulation"
-     
+         
+    distributionName=[]
     
     try:
         if HOMEPATH:
@@ -265,62 +266,50 @@ def deleteEmulation(emulationID):
         else:
             conn = sqlite.connect('./data/cocoma.sqlite')
         c = conn.cursor()
-        c.execute('SELECT distributionID, emulationName FROM emulation WHERE emulationID=?',[str(emulationID)])
+        c.execute('SELECT distributionID,distributionName FROM distribution WHERE emulationID=?',[str(emulationID)])
                 
         distributionIDfetch = c.fetchall()
         
+        #getting list of distributions for emulation
         if distributionIDfetch:
             for row in distributionIDfetch:
                 print row
                 distributionID= row[0]
-                emulationName = row[1]
+                distributionName.append(row[1])
+                
+                #deleting distribution related data
+                c.execute('DELETE FROM DistributionParameters WHERE distributionID=?',[str(distributionID)])
+                c.execute('DELETE FROM EmulatorParameters WHERE distributionID=?',[str(distributionID)])
                 
         else:
             print "Emulation ID: "+str(emulationID)+" does not exists" 
+            return "Emulation ID: "+str(emulationID)+" does not exists"
             sys.exit(1)
         
-        print "distro ID: ",distributionID
-        
-        c.execute('SELECT distributionType FROM distribution WHERE distributionID=?',[str(distributionID)]) 
-        
-        distributionTypeFetch = c.fetchall()
-        
-        if distributionTypeFetch:
-            for row in distributionTypeFetch:
-                distributionType= row[0]
-        print "distro Type: ",distributionType
         
         
-        c.execute('SELECT emulationLifetimeID FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
-                
-        emulationLifetimeIDfetch = c.fetchall()
-        
-        if emulationLifetimeIDfetch:
-            for row in emulationLifetimeIDfetch:
-                emulationLifetimeID= row[0]
-        
-        
-        
-        c.execute('DELETE FROM distribution WHERE distributionID=?',[str(distributionID)])
+
+        c.execute('DELETE FROM distribution WHERE emulationID=?',[str(emulationID)])
         c.execute('DELETE FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
-        c.execute('DELETE FROM runLog WHERE emulationLifetimeID=?',[str(emulationLifetimeID)])
-        c.execute('DELETE FROM DistributionParameters WHERE distributionID=?',[str(distributionID)])
         c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
+        
         
         conn.commit()
     except sqlite.Error, e:
         print "Could not delete emulationID: ",emulationID
         print "Error %s:" % e.args[0]
         print e
+        return "Database error: "+str(e)
         sys.exit(1)
         
     c.close()
     print "Emulation ID: ", emulationID," was deleted"
     
-    #Now here we need to remove the emulation from the scheduler
+    #Now here we need to remove the emulation from the scheduler if exist
     uri ="PYRO:scheduler.daemon@localhost:51889"
     daemon=Pyro4.Proxy(uri)
-    daemon.deleteJobs(emulationID, emulationName)
+    for items in distributionName:
+        daemon.deleteJobs(emulationID, distributionName)
     
 def purgeAll():
     print "Hello this is purgeAll"

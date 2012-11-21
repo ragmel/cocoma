@@ -534,7 +534,7 @@ def emulationDelete(ID=""):
     #delete_header =request.header.read()
     
     
-    EmulationManager.deleteEmulation(emulationID)
+    EmulationManager.deleteEmulation(ID)
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.status = 202
