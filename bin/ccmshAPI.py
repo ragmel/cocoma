@@ -532,13 +532,27 @@ def emulationDelete(ID=""):
     #delete_header=request.get_header("DELETE")
     #print "header info:",delete_header
     #delete_header =request.header.read()
-    
-    
-    EmulationManager.deleteEmulation(ID)
-    
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
-    response.status = 202
-    response.set_header('Location', 'http://127.0.0.1/emulations/'+str(ID))
+    try:
+        
+        deleteAction=EmulationManager.deleteEmulation(ID)
+        if deleteAction == "success":
+            #set confirmation headers
+            response.status = 202
+            response.set_header('Location', 'http://127.0.0.1/emulations/'+str(ID))
+        else:
+            response.status = 400
+            return "Unable to delete emulation. Error:\n"+str(deleteAction)
+    except Exception.message, e:
+        response.status = 400
+        print "Unable to create emulation please check data\n",e
+        #print e
+        #return error
+        return "Unable to delete emulation please check data\n"+str(e)
+    
+    
+    
+
 
 def getifip(ifn):
     import socket, fcntl, struct

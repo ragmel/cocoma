@@ -303,13 +303,15 @@ def deleteEmulation(emulationID):
         sys.exit(1)
         
     c.close()
-    print "Emulation ID: ", emulationID," was deleted"
+    print "Emulation ID: ", emulationID," was deleted from DB"
     
     #Now here we need to remove the emulation from the scheduler if exist
     uri ="PYRO:scheduler.daemon@localhost:51889"
     daemon=Pyro4.Proxy(uri)
     for items in distributionName:
         daemon.deleteJobs(emulationID, distributionName)
+    
+    return "success"
     
 def purgeAll():
     print "Hello this is purgeAll"
