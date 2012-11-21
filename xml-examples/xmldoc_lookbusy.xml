@@ -2,9 +2,9 @@
   <emulationName>myMixEmu</emulationName>
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
-  <startTime>2013-11-12T18:30:00</startTime>
+  <startTime>nOw</startTime>
   <!--duration in seconds -->
-  <stopTime>180</stopTime>
+  <stopTime>180</stopTime>-n
   
   <distributions name="CPU-dis-1">
      <startTime>10</startTime>

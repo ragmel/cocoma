@@ -1,0 +1,1290 @@
+Object <__main__.schedulerDaemon object at 0x9d5c3cc>:
+    uri = PYRO:scheduler.daemon@localhost:51889
+Pyro daemon running.
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+This is deleteJobs
+This is deleteJobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+This is deleteJobs
+This is deleteJobs
+This is deleteJobs
+This is deleteJobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  80
+emulationLifetimeID 80
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  80
+emulationLifetimeID 80
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  80
+emulationLifetimeID 80
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  80
+emulationLifetimeID 80
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  80
+emulationLifetimeID 80
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  80
+emulationLifetimeID 80
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  80
+emulationLifetimeID 80
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  80
+emulationLifetimeID 80
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  81
+emulationLifetimeID 81
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  81
+emulationLifetimeID 81
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  81
+emulationLifetimeID 81
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  81
+emulationLifetimeID 81
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  81
+emulationLifetimeID 81
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  81
+emulationLifetimeID 81
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  81
+emulationLifetimeID 81
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  81
+emulationLifetimeID 81
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-12 18:45:00
+emulationID  82
+emulationLifetimeID 82
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+<open file '<stdout>', mode 'w' at 0xb74e5078>
+Job: 82-myMixEmu-dis-1 with run No: 0 start date 1384281900.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-12 18:45:07
+emulationID  82
+emulationLifetimeID 82
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+<open file '<stdout>', mode 'w' at 0xb74e5078>
+Job: 82-myMixEmu-dis-1 with run No: 1 start date 1384281907.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-12 18:45:14
+emulationID  82
+emulationLifetimeID 82
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+<open file '<stdout>', mode 'w' at 0xb74e5078>
+Job: 82-myMixEmu-dis-1 with run No: 2 start date 1384281914.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-12 18:45:21
+emulationID  82
+emulationLifetimeID 82
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+<open file '<stdout>', mode 'w' at 0xb74e5078>
+Job: 82-myMixEmu-dis-1 with run No: 3 start date 1384281921.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-12 18:45:28
+emulationID  82
+emulationLifetimeID 82
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+<open file '<stdout>', mode 'w' at 0xb74e5078>
+Job: 82-myMixEmu-dis-1 with run No: 4 start date 1384281928.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-12 18:45:35
+emulationID  82
+emulationLifetimeID 82
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+<open file '<stdout>', mode 'w' at 0xb74e5078>
+Job: 82-myMixEmu-dis-1 with run No: 5 start date 1384281935.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-12 18:45:42
+emulationID  82
+emulationLifetimeID 82
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+<open file '<stdout>', mode 'w' at 0xb74e5078>
+Job: 82-myMixEmu-dis-1 with run No: 6 start date 1384281942.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-12 18:45:56
+emulationID  82
+emulationLifetimeID 82
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+<open file '<stdout>', mode 'w' at 0xb74e5078>
+Job: 82-myMixEmu-dis-1 with run No: 7 start date 1384281956.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  83
+emulationLifetimeID 83
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  83
+emulationLifetimeID 83
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  83
+emulationLifetimeID 83
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  83
+emulationLifetimeID 83
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  83
+emulationLifetimeID 83
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  83
+emulationLifetimeID 83
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  83
+emulationLifetimeID 83
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  83
+emulationLifetimeID 83
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  84
+emulationLifetimeID 84
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  84
+emulationLifetimeID 84
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  84
+emulationLifetimeID 84
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  84
+emulationLifetimeID 84
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  84
+emulationLifetimeID 84
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  84
+emulationLifetimeID 84
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  84
+emulationLifetimeID 84
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  84
+emulationLifetimeID 84
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  85
+emulationLifetimeID 85
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  85
+emulationLifetimeID 85
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  85
+emulationLifetimeID 85
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  85
+emulationLifetimeID 85
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  85
+emulationLifetimeID 85
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  85
+emulationLifetimeID 85
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  85
+emulationLifetimeID 85
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  85
+emulationLifetimeID 85
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  86
+emulationLifetimeID 86
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  86
+emulationLifetimeID 86
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  86
+emulationLifetimeID 86
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  86
+emulationLifetimeID 86
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  86
+emulationLifetimeID 86
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  86
+emulationLifetimeID 86
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  86
+emulationLifetimeID 86
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  86
+emulationLifetimeID 86
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  87
+emulationLifetimeID 87
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  87
+emulationLifetimeID 87
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  87
+emulationLifetimeID 87
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  87
+emulationLifetimeID 87
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  87
+emulationLifetimeID 87
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  87
+emulationLifetimeID 87
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  87
+emulationLifetimeID 87
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  87
+emulationLifetimeID 87
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  88
+emulationLifetimeID 88
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  88
+emulationLifetimeID 88
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  88
+emulationLifetimeID 88
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  88
+emulationLifetimeID 88
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  88
+emulationLifetimeID 88
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  88
+emulationLifetimeID 88
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  88
+emulationLifetimeID 88
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  88
+emulationLifetimeID 88
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  89
+emulationLifetimeID 89
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  89
+emulationLifetimeID 89
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  89
+emulationLifetimeID 89
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  89
+emulationLifetimeID 89
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  89
+emulationLifetimeID 89
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  89
+emulationLifetimeID 89
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  89
+emulationLifetimeID 89
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  89
+emulationLifetimeID 89
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  90
+emulationLifetimeID 90
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  90
+emulationLifetimeID 90
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  90
+emulationLifetimeID 90
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  90
+emulationLifetimeID 90
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  90
+emulationLifetimeID 90
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  90
+emulationLifetimeID 90
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  90
+emulationLifetimeID 90
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  90
+emulationLifetimeID 90
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  91
+emulationLifetimeID 91
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  91
+emulationLifetimeID 91
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  91
+emulationLifetimeID 91
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  91
+emulationLifetimeID 91
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  91
+emulationLifetimeID 91
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  91
+emulationLifetimeID 91
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  91
+emulationLifetimeID 91
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  91
+emulationLifetimeID 91
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  92
+emulationLifetimeID 92
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  92
+emulationLifetimeID 92
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  92
+emulationLifetimeID 92
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  92
+emulationLifetimeID 92
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  92
+emulationLifetimeID 92
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  92
+emulationLifetimeID 92
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  92
+emulationLifetimeID 92
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:56
+emulationID  92
+emulationLifetimeID 92
+distributionName myMixEmu-dis-1
+stressValue 90
+duration 7
+runNo 7
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:00
+emulationID  93
+emulationLifetimeID 93
+distributionName myMixEmu-dis-1
+stressValue 10
+duration 7
+runNo 0
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:07
+emulationID  93
+emulationLifetimeID 93
+distributionName myMixEmu-dis-1
+stressValue 22
+duration 7
+runNo 1
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:14
+emulationID  93
+emulationLifetimeID 93
+distributionName myMixEmu-dis-1
+stressValue 34
+duration 7
+runNo 2
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:21
+emulationID  93
+emulationLifetimeID 93
+distributionName myMixEmu-dis-1
+stressValue 46
+duration 7
+runNo 3
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:28
+emulationID  93
+emulationLifetimeID 93
+distributionName myMixEmu-dis-1
+stressValue 58
+duration 7
+runNo 4
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:35
+emulationID  93
+emulationLifetimeID 93
+distributionName myMixEmu-dis-1
+stressValue 70
+duration 7
+runNo 5
+Scheduler createJob(): error creating Job 
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2012-11-12 18:45:42
+emulationID  93
+emulationLifetimeID 93
+distributionName myMixEmu-dis-1
+stressValue 82
+duration 7
+runNo 6
+Sc

@@ -453,8 +453,9 @@ def create_emu():
             xml_stream =request.body.read()
             (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlParser(xml_stream)
         except Exception,e:
-            print e
             response.status = 400
+            return e
+            
     
     
     #return xml_stream
@@ -492,7 +493,7 @@ def create_emu():
         response.status = 201
         return prettify(emulationXml)
         
-    except Exception.message, e:
+    except Exception, e:
         response.status = 400
         print "Unable to create emulation please check data\n",e
         #print e

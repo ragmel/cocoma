@@ -74,7 +74,7 @@
 </emulation>
 '''
 from xml.dom.minidom import parseString, Node
-import DistributionManager,sys
+import DistributionManager,sys,EmulationManager
 
 
 def xmlReader(filename):
@@ -106,6 +106,10 @@ def xmlParser(xmlData):
     resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('resourceType')[0].firstChild.data
     startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('startTime')[0].firstChild.data
     stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('stopTime')[0].firstChild.data
+    
+
+    
+    
     
     print "##########################"
     print "emulation name: ",emulationName
@@ -243,7 +247,7 @@ def xmlParser(xmlData):
         
         #listing all available distribution parameters
         
-        print distroArgs
+        print "distroArgs",distroArgs
                     
         print "emulator:", emulatorName
         print "resource type: ", resourceTypeDist

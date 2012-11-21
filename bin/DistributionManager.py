@@ -112,12 +112,12 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         daemon=Pyro4.Proxy(uri)
         n=0
         for vals in stressValues:
-            print vals
+            print "stressValues: ",vals
             try:
                 
                 print daemon.hello()
                 print daemon.createJob(emulationID,emulationName,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n))
-                                   #lf,emulationID,emulationName,emulationLifetimeID,duration,emulator,resourceType,stressValue,runStartTime,runNo
+                #lf,emulationID,emulationName,emulationLifetimeID,duration,emulator,resourceType,stressValue,runStartTime,runNo
                 n= n+1
                 
             except  Pyro4.errors.CommunicationError, e:
@@ -296,7 +296,7 @@ def loadEmulatorHelp(modName):
 
 
 def timeConv(dbtimestamp):
-        print "this is timeConv!!!"
+        #print "this is timeConv!!!"
         Year = int(dbtimestamp[0:4])
         Month = int(dbtimestamp[4+1:7])
         Day = int(dbtimestamp[7+1:10])
@@ -315,8 +315,8 @@ def timeConv(dbtimestamp):
             
 #convert date to seconds
 def timestamp(date):
-    print"This is timestamp"
-    print date
+    #print"This is timestamp"
+    #print date
     gmtTime = time.mktime(date.timetuple())#+3600
     return gmtTime
 

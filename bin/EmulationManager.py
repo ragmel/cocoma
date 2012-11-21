@@ -482,10 +482,27 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
                     
     print "Hello this is createEmulation"
 
-
-        # 3. We add end to emulationLifetime date by the longest distribution
+    #data checks
+    
+    print "startTimeEmu: ",startTimeEmu.lower()
+    if startTimeEmu.lower() == "now":
+        startTimeEmu = emulationNow()
+        print "Converted startTimeEmu11: ",startTimeEmu
+    print "Converted startTimeEmu: ",startTimeEmu
+    
+    try:
+        check= dataCheck(startTimeEmu,float(stopTimeEmu))
+        if check != "success":
+            return "error check the dates:"+str(check)
+            
+    except Exception, e:
+        return "error check the dates:"+str(startTimeEmu)+"\n"+str(e)
+    
+    
+    # 3. We add end to emulationLifetime date by the longest distribution
     emulationLifetimeEndTime =int(stopTimeEmu)
     for n in distroList:
+        print "Distrolist n: ",n
         compareEndTime = int(n["startTimeDistro"])+int(n["durationDistro"]) 
         print "compareEndTime",compareEndTime
         if compareEndTime > emulationLifetimeEndTime:
@@ -580,7 +597,7 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
             #print "sending to DM these: ",emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg
             
             DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg)
-            return emulationID
+            
             
         #emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg
             c.close()
@@ -590,7 +607,7 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
         return "SQL error:",e
         sys.exit(1)
     
-    
+    return emulationID
 
     
 
@@ -629,23 +646,26 @@ def dataCheck(startTime,stopTime):
     time_re = re.compile('\d{4}[-]\d{2}[-]\d{2}[T]\d{2}[:]\d{2}[:]\d{2}')
     
     
-    if time_re.match(startTime) and time_re.match(stopTime) :
+    if time_re.match(startTime): 
+    #and time_re.match(stopTime) :
         print "date is correct"
+        #checking the date overlap
+        return dateOverlapCheck(startTime, stopTime)
     else:
         print "Date incorrect use YYYY-MM-DDTHH:MM:SS format "
+        return "Date incorrect use YYYY-MM-DDTHH:MM:SS format "
         sys.exit(0)
     
-    #checking the date overlap
-    dateOverlapCheck(startTime, stopTime)
+
     
 
    
 def dateOverlapCheck(startTime, stopTime):
     print "Hello this is dateOverlapCheck" 
     startTimeSec = DistributionManager.timestamp(DistributionManager.timeConv(startTime))
-    stopTimeSec = DistributionManager.timestamp(DistributionManager.timeConv(stopTime))
-    print startTimeSec
-    print stopTimeSec
+    stopTimeSec = startTimeSec+float(stopTime)
+    #print startTimeSec
+    #print stopTimeSec
     
     dtNowSec = DistributionManager.timestamp(dt.now())
     print "dt.now():",dt.now()
@@ -661,7 +681,7 @@ def dateOverlapCheck(startTime, stopTime):
         return 
         sys.exit(1)
      
-    
+    n= "1"
     try:
         if HOMEPATH:
             conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
@@ -676,22 +696,28 @@ def dateOverlapCheck(startTime, stopTime):
         
         if emulationLifetimeFetch:
             for row in emulationLifetimeFetch:
-                print row
+                #print row
                 startTimeDBsec= DistributionManager.timestamp(DistributionManager.timeConv(row[0]))
-                stopTimeDBsec = DistributionManager.timestamp(DistributionManager.timeConv(row[1]))
+                stopTimeDBsec = startTimeDBsec+float(row[1])
                 
                 if startTimeSec >= startTimeDBsec and startTimeSec <= stopTimeDBsec:
                     print "Emulation already exist for this date change the date(1)"
-                    return "Emulation already exist for this date change the date(1)",sys.exit(1)
+                    
+                    n= "Emulation already exist for this date change the date(1)"
+                
+                    
                     
                 if stopTimeSec >= startTimeDBsec and stopTimeSec <= stopTimeDBsec:
                     print "Emulation already exist for this date change the date(2)"
-                    return "Emulation already exist for this date change the date(2)",sys.exit(1)
+                    n= "Emulation already exist for this date change the date(2)"
+                    
                     
                 
                 if startTimeSec <= startTimeDBsec and stopTimeSec >= stopTimeDBsec:
                     print "Emulation already exist for this date change the date(3)"
-                    return "Emulation already exist for this date change the date(3)",sys.exit(1)
+                    
+                    n= "Emulation already exist for this date change the date(3)"
+                    
                     
                 
         else:
@@ -700,13 +726,18 @@ def dateOverlapCheck(startTime, stopTime):
         conn.commit()
         
         
-        
+        c.close()
     except sqlite.Error, e:
         print "dateOverlapCheck() SQL Error %s:" % e.args[0]
         print e
+        return str(e)
         sys.exit(1)
+        
+    if n=="1":
+        return "success"
+    else:
+        return n
     
-    c.close()
 
 
 def checkPid(PROCNAME):        
@@ -833,17 +864,17 @@ def services_control(service,action,args):
             else:
                 print "API is not running" 
                     
-def emulationNow(duration):
+def emulationNow():
     print "EmulationManager.emulation.Now"
     #we are adding 5 seconds to compensate for incert
        
     timeNow = dt.now()
     pyStartTimeIn5 = timeNow + datetime.timedelta(seconds=5)
-    pyStopTime=pyStartTimeIn5+ datetime.timedelta(minutes=int(duration))
+    #pyStopTime=pyStartTimeIn5+ datetime.timedelta(minutes=int(duration))
     
     print "timeNow: ",timeNow
     print "startTimeIn5: ",pyStartTimeIn5
-    print "stopTime: ",pyStopTime
+    #print "stopTime: ",pyStopTime
     
     #converting "2012-10-23 11:40:20.866356" to "2012-10-23T11:40:20"
     def timeFix(pydate):
@@ -854,11 +885,11 @@ def emulationNow(duration):
         return dateNorm 
     
     startTimeIn5 = timeFix(pyStartTimeIn5)
-    stopTime = timeFix(pyStopTime)
+    #stopTime = timeFix(pyStopTime)
     print "startTimeIn5: ",startTimeIn5
-    print "stopTime: ",stopTime
+    #print "stopTime: ",stopTime
     
-    return startTimeIn5,stopTime
+    return startTimeIn5
    
     
 

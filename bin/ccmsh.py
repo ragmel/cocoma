@@ -269,7 +269,7 @@ def main():
                 #print "CCMSH:",emulationName, emulationType, distroList
                 (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
                 if startTimeEmu.lower() =="now":
-                    (startTimeEmu1, stopTime) = EmulationManager.emulationNow(1)
+                    startTimeEmu1 = EmulationManager.emulationNow()
                     EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu1,stopTimeEmu,distroList)
                 else:
                     EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu,distroList)
@@ -283,10 +283,12 @@ def main():
         if options.emuNow and options.xml:
             print "Starting Now"
             #just giving random value at the moment
-            arguments[1] = 1
+            
+            
             
             (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu,distroList) = XmlParser.xmlReader(arguments[0])
-            (startTimeEmu, stopTime) = EmulationManager.emulationNow(arguments[1])
+            startTimeEmu = EmulationManager.emulationNow()
+            
             EmulationManager.createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
             #(emulationName, distributionType, resourceType, emulationType, startTime0, stopTime0,emulator, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
             #EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
