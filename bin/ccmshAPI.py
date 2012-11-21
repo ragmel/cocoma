@@ -103,8 +103,8 @@ def get_emulationsHistory():
     #<emulator href="/emulations/1" name="Emu1"/>
     
     for elem in emuList :
-        emulator = ET.SubElement(items,'emulator', { 'href':'/emulationshistory/'+str(elem[0]),'name':str(elem[1])})
-        
+        #emulator = ET.SubElement(items,'emulator', { 'href':'/emulationshistory/'+str(elem[0]),'name':str(elem[1])})
+        emulation = ET.SubElement(items,'emulation', { 'href':'/emulations/'+str(elem[0]),'ID':str(elem[0]),'name':str(elem[1])})
     
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
     lk = ET.SubElement(emulations, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
@@ -173,7 +173,7 @@ def get_emulations():
     #<emulator href="/emulations/1" name="Emu1"/>
     
     for elem in emuList :
-        emulator = ET.SubElement(items,'emulator', { 'href':'/emulations/'+str(elem[0]),'name':str(elem[1])})
+        emulation = ET.SubElement(items,'emulation', { 'href':'/emulations/'+str(elem[0]),'ID':str(elem[0]),'name':str(elem[1])})
         
     
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>

@@ -41,9 +41,8 @@ def main():
     
     listEmu = optparse.OptionGroup(parser, 'List existing emulations')
     listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='[emulationID] [all]  List of emulations by ID or all')
-    listEmu.add_option('--list-name', action='store_true', default=False,dest='listName', help='[emulationName] List of emulations by name')
-    listEmu.add_option('--list-active', action='store_true', default=False,dest='listActive', help='List of active emulations')
-    listEmu.add_option('--list-inactive', action='store_true', default=False,dest='listInactive', help='List of inactive emulations')
+    #listEmu.add_option('--list-active', action='store_true', default=False,dest='listActive', help='List of active emulations')
+    #listEmu.add_option('--list-inactive', action='store_true', default=False,dest='listInactive', help='List of inactive emulations')
     listEmu.add_option('--list-jobs', action='store_true', default=False,dest='listJobs', help='List of active Jobs running on Scheduler daemon')
         
     
