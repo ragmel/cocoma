@@ -4,7 +4,7 @@
   <resourceType>Mix</resourceType>
   <startTime>2012-11-12T18:30:00</startTime>
   <!--duration in seconds -->
-  <stopTime>now+180</stopTime>
+  <stopTime>180</stopTime>
   
   <distributions name="CPU-opposite-1">
      <startTime>5</startTime>

@@ -14,8 +14,8 @@
      <granularity>3</granularity>
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
-      <startLoad>100</startLoad>
-      <stopLoad>10</stopLoad>
+      <startLoad>10</startLoad>
+      <stopLoad>100</stopLoad>
       <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
         <resourceType>IO</resourceType>

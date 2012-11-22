@@ -114,24 +114,43 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         for vals in stressValues:
             print "stressValues: ",vals
             try:
-                
+                print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
                 print daemon.hello()
-                print daemon.createJob(emulationID,emulationName,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n))
+                print daemon.createJob(emulationID,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n))
                 #lf,emulationID,emulationName,emulationLifetimeID,duration,emulator,resourceType,stressValue,runStartTime,runNo
+                
+                
+                #adding values to the table for recovery
+                
+                try:
+                    if HOMEPATH:
+                        print
+                        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+                    else:
+                        conn = sqlite.connect('./data/cocoma.sqlite')
+                    
+                    c = conn.cursor()
+                        
+                    # 1. We populate "distribution" table :stressValue,runStartTime,runNo     
+                    c.execute('INSERT INTO runLog (stressValue, runStartTime,runNo,distributionID) VALUES (?, ?, ?, ?)', [vals, runStartTime[n],str(n),distributionID])
+                
+                                    
+                    conn.commit()
+                    c.close()
+                except sqlite.Error, e:
+                    print "Error %s:" % e.args[0]
+                    print e
+                    sys.exit(1)                         
+                
                 n= n+1
+                
+                
                 
             except  Pyro4.errors.CommunicationError, e:
                 print e
                 print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
         
-        
-        
-
-         
-                                  
-        uri ="PYRO:scheduler.daemon@localhost:51889"
-
-        daemon=Pyro4.Proxy(uri)
+                
         try:
           
             print daemon.hello()
@@ -216,11 +235,11 @@ def loadDistributionArgNames(modName):
    
 
 
-def listDistributions():
-    name="all"
+def listDistributions(name):
+    
     distroList=[]
-    print "this is listDistro"
-    if name=="all":
+    print "This is listDistro\n"
+    if name.lower()=="all":
         if HOMEPATH:
             path=HOMEPATH+"/distributions/"  # root folder of project
         else:
@@ -233,13 +252,16 @@ def listDistributions():
                 distroList.append(distName)
         
         return distroList 
+    else:
+        loadMod=loadDistributionHelp(name)
+        return loadMod()
     
     
-def listEmulations():
-    name="all"
+def listEmulators(name):
+    
     emulatorList=[]
-    print "this is listDistro"
-    if name=="all":
+    print "This is listEmulators\n"
+    if name.lower()=="all":
         if HOMEPATH:
             path=HOMEPATH+"/emulators/"  # root folder of project
         else:
@@ -251,7 +273,12 @@ def listEmulations():
                 distName = str(fname[4:-3])
                 emulatorList.append(distName)
         
-        return emulatorList   
+        return emulatorList
+    
+    else:
+        
+        EmuhelpMod=loadEmulatorHelp(name)
+        return EmuhelpMod()   
 
 '''
 ###############################

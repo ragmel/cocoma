@@ -7,7 +7,7 @@
   <stopTime>now+180</stopTime>
   
  
-  <distributions name="MEM-reverse-1">
+  <distributions name="IO-1a">
      <startTime>5</startTime>
      <!--duration in seconds -->
      <duration>30</duration>
@@ -18,9 +18,10 @@
       <stopLoad>10</stopLoad>
       <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
-        <resourceType>MEM</resourceType>
+        <resourceType>IO</resourceType>
 	<!--time between iterations in usec (default 1000)-->
-	<memSleep>0</memSleep>
+	<ioSleep>0</ioSleep>
+	<ioBlockSize>10</ioBlockSize>
       </emulator-params>
   </distributions>
 

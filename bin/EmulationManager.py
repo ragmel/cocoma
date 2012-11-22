@@ -292,6 +292,7 @@ def deleteEmulation(emulationID):
         c.execute('DELETE FROM distribution WHERE emulationID=?',[str(emulationID)])
         c.execute('DELETE FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
         c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
+        c.execute('DELETE FROM runLog WHERE distributionID=?',[str(distributionID)])
         
         
         conn.commit()
@@ -308,8 +309,11 @@ def deleteEmulation(emulationID):
     #Now here we need to remove the emulation from the scheduler if exist
     uri ="PYRO:scheduler.daemon@localhost:51889"
     daemon=Pyro4.Proxy(uri)
-    for items in distributionName:
-        daemon.deleteJobs(emulationID, distributionName)
+    try:
+        for Names in distributionName:
+            daemon.deleteJobs(emulationID, Names)
+    except:
+        print "Scheduler is offline. Job cancelled."
     
     return "success"
     

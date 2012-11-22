@@ -59,8 +59,8 @@ def main():
     deleteEmu.add_option('--purge', action='store_true',default=False, dest='purge_all', help='[all] clears everything in DB. !!USE WITH CAUTION!!')
     
     listDistro = optparse.OptionGroup(parser, 'List available distributions')  
-    listDistro.add_option('-i', '--dist', action='store_true', default=False,dest='listAllDistro',help='[all]  List of all available distributions')
-    listDistro.add_option('--dist-help', action='store_true', default=False,dest='listDistroOptions',help='[name]  List of all available distribution arguments')
+    listDistro.add_option('-i', '--dist', action='store_true', default=False,dest='listAllDistro',help='[all] or [name] List of all available distributions')
+    
     
     serviceControl = optparse.OptionGroup(parser, 'Services Control')
     serviceControl.add_option('--start', action='store_true', default=False,dest='startServices',help='[scheduler][api] start services')
@@ -68,8 +68,8 @@ def main():
     serviceControl.add_option('--show', action='store_true', default=False,dest='showServices',help='[scheduler][api] show services')
     
     listEmulator = optparse.OptionGroup(parser, 'List available emulators')  
-    listEmulator.add_option('-e', '--emu', action='store_true', default=False,dest='listAllEmulators',help='[all]  List of all available emulators')
-    listEmulator.add_option('--emu-help', action='store_true', default=False,dest='listEmulatorOptions',help='[name]  List of all available emulator arguments')
+    listEmulator.add_option('-e', '--emu', action='store_true', default=False,dest='listAllEmulators',help='[all] or [name]  List of all available emulators')
+    
     
     
     
@@ -180,8 +180,8 @@ def main():
                 try:
                     (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(arguments[0])
                     print "--->\nID: "+str(emulationID)+"\nName: "+str(emulationName)+"\nType: "+str(emulationType)+"\nResourceType: "+str(resourceTypeEmulation)+"\nStartTime: "+str(startTimeEmu)+"\nstopTime: "+str(stopTimeEmu)
-#{'distroArgs': {'startLoad': u'10', 'stopLoad': u'90'}, 'emulatorName': u'lookbusy', 'distrType': u'linear', 'resourceTypeDist': u'CPU', 'startTimeDistro': u'10',
-# 'distributionsName': u'myMixEmu-dis-1', 'durationDistro': u'60', 'emulatorArg': {'ncpus': u'0'}, 'granularity': u'8'}
+
+
                     for dist in distroList:
                         print "---\nDistrName: "+str(dist['distributionsName'])+"\nDistrType: "+str(dist['distrType'])+"\nDistrResourceType: "+str(dist['resourceTypeDist'])+"\nDistroStartTime: "+str(dist['startTimeDistro'])+"\nDistroDuration: "+str(dist['durationDistro'])+"\nDistroArgs: "+str(dist['distroArgs'])+"\nEmulatorName: "+str(dist['emulatorName'])+"\nEmulatorArgs: "+str(dist['emulatorArg'])
                     
@@ -255,22 +255,41 @@ def main():
 
 
         if options.listAllDistro:
-            distroList=DistributionManager.listDistributions("all")
-            print "\nThese are available distributions:"
-            for distName in distroList:
-                print distName
-        
-        if options.listDistroOptions:
-            print "This is listDistroOptions"
-            #1. check name
-            EmulationManager.distributionTypeCheck(arguments[0])
-            #2. Load module
-            distroModHelp=DistributionManager.loadDistributionHelp(arguments[0])
-            #3. Call distHelp()
-            print "\n"
-            distroModHelp()
-            print "\n"
-            
+            if arguments[0].lower()=="all":
+                distroList=DistributionManager.listDistributions(arguments[0])
+
+                print "\nThese are available distributions:"
+                for distName in distroList:
+                    print distName
+            else:
+                try:
+                    distroList=DistributionManager.listDistributions(arguments[0])
+                    print distroList
+                except Exception, e:
+                    print "Error: ",e
+                    print "Distribution \"%s\" not found. Check name."%(arguments[0])
+                     
+        '''
+        ################################
+        listEmulators
+        ###############################
+        '''
+
+        if options.listAllEmulators:
+            if arguments[0].lower()=="all":
+                emuList=DistributionManager.listEmulators(arguments[0])
+
+                print "\nThese are available Emulators:"
+                for emuName in emuList:
+                    print emuName
+            else:
+                try:
+                    
+                    emuList2=DistributionManager.listEmulators(arguments[0])
+                    print emuList2
+                except Exception, e:
+                    print "Error: ",e
+                    print "Emulator \"%s\" not found. Check name."%(arguments[0])            
 
 
         '''

@@ -44,7 +44,7 @@ class schedulerDaemon(object):
         #starting scheduler 
         self.sched = Scheduler()
         self.sched.start()
-        #self.recoverySchedulerDaemon()
+        self.recoverySchedulerDaemon()
 
     def listJobs(self):
         print "sending list of jobs"
@@ -62,18 +62,19 @@ class schedulerDaemon(object):
         print greeting 
         return greeting
     
-    def deleteJobs(self,emulationID,emulationName):
+    def deleteJobs(self,emulationID,distribitionName):
         print "This is deleteJobs"
         #stringify
         emulationID =str(emulationID)
-        emulationName=str(emulationName)
+        distribitionName=str(distribitionName)
         
+        print "Trying to look for job name:", emulationID+"-"+distribitionName
         
         for job in self.sched.get_jobs():
             
-            if job.name == emulationID+"-"+emulationName :
+            if job.name == emulationID+"-"+distribitionName :
                 self.sched.unschedule_job(job)
-                print "Job: "+job.name+" emulationID+emulationName: "+emulationID+"-"+emulationName
+                print "Job: "+job.name+" emulationID+emulationName: "+emulationID+"-"+distribitionName
                 print "Deleted"
             
             else:
@@ -83,7 +84,7 @@ class schedulerDaemon(object):
     #    print "This is purgeAllJobs daemon"
     #    self.sched.shutdown(False, True, True)
     
-    def createJob(self,emulationID,emulationName,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
+    def createJob(self,emulationID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
         
         
         print "Hello this is Scheduler createJob()"
@@ -163,7 +164,7 @@ class schedulerDaemon(object):
             
                 
             emulationLifetimeFetch = c.fetchall()
-        
+            #if a
             if emulationLifetimeFetch:
                 for row in emulationLifetimeFetch:
                     print row
@@ -178,32 +179,53 @@ class schedulerDaemon(object):
                         print "Current time in seconds"
                         print self.timestamp(dt.datetime.now())
                         
-                        ca.execute('SELECT runLog.duration,runLog.stressValue,runLog.runNo,emulation.emulationName FROM runLog,emulation WHERE emulation.emulationLifetimeID =? and runLog.emulationLifetimeID=?',[str(emulationLifetimeID),str(emulationLifetimeID)])
-                        runLogFetch = ca.fetchall()
-                        print runLogFetch
-        
-                        if runLogFetch:
-                            print "run log has values"
-                            for row in runLogFetch:
-                                print row
-                                duration = row[0]
-                                stressValue = row[1]
-                                runNo = row[2]
-                                emulationName =row[3]
-                        
-                                startTimeSec= self.timeConv(startTime)
+                        #If active emulation is found. Getting info from active emulation to restore runs 
+                        ca.execute('SELECT distributionID,distributionName,duration,emulator FROM distribution WHERE emulationID=?',[str(emulationID)])
+                        distroParamsFetch = ca.fetchall()
+                        for items in distroParamsFetch:
+                            distributionID =items[0]
+                            distributionName=items[1]
+                            duration=items[2]
+                            emulator=items[3]
+    
+                            emulatorArg={}
+                            resourceTypeDist=""
+                            ca.execute('SELECT paramName,value,resourceType FROM EmulatorParameters WHERE distributionID=?',[str(distributionID)])
+                            emuParamsFetch = ca.fetchall()
+                            for items in emuParamsFetch:
+                                paramName=items[0]
+                                value=items[1]
+                                resourceType=items[2]
+                                resourceTypeDist=resourceType#not100%
+                                emulatorArg.update({paramName:value})
+                            print "emulatorArg@ ",emulatorArg
                                 
-                                runStartTime=self.timestamp(startTimeSec)+(int(duration)*int(runNo))
-                                print "Job added with:\n StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
+                            #EmulatorParameters.emulatorArg {'memSleep': u'100'} distroID
+                            
+    
+                            ca.execute('SELECT stressValue,runStartTime,runNo FROM runLog WHERE distributionID =?',[str(distributionID)])
+                            runLogFetch = ca.fetchall()
+                            print runLogFetch
             
-                                print "emulationID ",emulationID
-                                print "emulationLifetimeID",emulationLifetimeID
-                                print "stressValue",stressValue
-                                print "duration",duration
-                                print "runNo",runNo
-                                
-                                self.createJob(emulationID,emulationName,emulationLifetimeID,duration,stressValue,runStartTime,runNo)
-                                
+                            if runLogFetch:
+                                print "run log has values"
+                                for row in runLogFetch:
+                                    print row
+                                    stressValue = row[0]
+                                    runStartTime = float(row[1])
+                                    runNo = row[2]
+                                            
+                                    
+                                    print "Job added with:\n StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
+                
+                                    print "emulationID ",emulationID
+                                    print "emulationLifetimeID",emulationLifetimeID
+                                    print "stressValue",stressValue
+                                    print "duration",duration
+                                    print "runNo",runNo
+                                    #                       8           MEM-dis-1              8             10     lookbusy {'memSleep': u'100'}      MEM              64         1359680491.0   3
+                                    self.createJob(emulationID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo)
+                                               
                                 
                                 
                     else:
