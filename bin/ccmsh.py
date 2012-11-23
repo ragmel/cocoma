@@ -173,9 +173,10 @@ def main():
         
         if options.listAll:
             if arguments[0]=="all":
-                emuList=EmulationManager.getAllEmulationList()
+                emuList=EmulationManager.getActiveEmulationList()
+                
                 for elem in emuList :
-                    print "---->\nID: "+str(elem[0])+"\nName: "+str(elem[1]+"")
+                    print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])
             else:
                 try:
                     (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(arguments[0])

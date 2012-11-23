@@ -186,31 +186,48 @@ def checkPid(PROCNAME):
         return False            
         
 def emulatorHelp():
-    print "Stressapptest emulator How-To:"
-    print "Module gets emulationID,emulationLifetimeID,duration, stressValue,runNo,HOMEPATH and loads system accordingly using \"cpulimit\" and \"stressapptest\""
+
+    return """
+    Emulator "lookbusy" can be used for following resources:
+    1)CPU with parameters:
+      ncpus - Number of CPUs to keep busy (default: autodetected)
+      
+    2)Memory(MEM) with parameters:
+      memSleep - Time to sleep between iterations, in usec (default 1000)
+      
+    3)IO with parameters:
+      ioBlockSize - Size of blocks to use for I/O in MB
+      ioSleep - Time to sleep between iterations, in msec (default 100)
     
-    print "Have fun"
-    return "Stressapptest emulator How-To:"+"Module gets emulationID,emulationLifetimeID,duration, stressValue,runNo,HOMEPATH and loads system accordingly using \"cpulimit\" and \"stressapptest\""
+    
+    XML block example:
+    <emulator-params>
+        <resourceType>CPU</resourceType>
+        <ncpus>0</ncpus>
+    </emulator-params>
+    
+    """
+    
 '''
 here we specify how many arguments emulator instance require to run properly
 '''
-def emulatorArgNames(type):
+def emulatorArgNames(Rtype):
     '''
     type = <MEM, CPU, IO>
     
     '''
-    if type.lower() == "cpu":
+    if Rtype.lower() == "cpu":
         
         argNames=["ncpus"]
         print "Use Arg's: ",argNames
         return argNames
     
-    if type.lower() == "mem":
+    if Rtype.lower() == "mem":
         argNames=["memSleep"]
         print "Use Arg's: ",argNames
         return argNames
     
-    if type.lower() == "io":
+    if Rtype.lower() == "io":
         argNames=["ioBlockSize","ioSleep"]
         print "Use Arg's: ",argNames
         return argNames

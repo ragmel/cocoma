@@ -85,21 +85,29 @@ def getActiveEmulationList():
                 #we already have it in sec
                 #stopTimeDBsec = DistributionManager.timestamp(DistributionManager.timeConv(row[1]))
                 stopTimeDBsec=startTimeDBsec+float(row[1])
+
+
+                c.execute('SELECT emulationID,emulationName FROM emulation WHERE emulationID=?',[str(row[2])])
+                emunameFetch = c.fetchall()
+                    
+ 
                 
                 if stopTimeDBsec > dtNowSec:
                     print "Emulation ID: "+str(row[2])+" is active"
-                    
-                    c.execute('SELECT emulationID,emulationName FROM emulation WHERE emulationID=?',[str(row[2])])
-                    emunameFetch = c.fetchall()
-                    
-                    activeEmu.extend(emunameFetch)
-
-                    
-                
+                    for items in emunameFetch:
+                        
+                        activeEmu.append({"ID":items[0],"Name":items[1],"State":"active"})
+                else:
+                    print "Emulation ID: "+str(row[2])+" is inactive"
+                    for items in emunameFetch:
+                        
+                        activeEmu.append({"ID":items[0],"Name":items[1],"State":"inactive"})                    
+ 
         else:
-            print "no active emulations exists" 
-        
-        print activeEmu
+            print "no emulations exists" 
+            
+        #[{'State': 'active', 'ID': 11, 'Name': u'myMixEmu'}, {'State': 'active', 'ID': 12, 'Name': u'myMixEmu'}]
+        #print activeEmu
         return activeEmu
         
         

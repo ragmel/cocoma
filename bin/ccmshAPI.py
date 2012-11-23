@@ -48,7 +48,7 @@ try:
     HOMEPATH= os.environ['COCOMA']
 except:
     print "no $COCOMA environmental variable set"
-CONTENT = "application/vnd.bonfire+xml"
+
 
 
 '''
@@ -60,6 +60,8 @@ COCOMA ROOT
 def get_root():
     #curl -k -i http://10.55.164.232:8050/
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD') 
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     
     root = ET.Element('root', { 'href':'/'})
@@ -68,7 +70,6 @@ def get_root():
     ts = ET.SubElement(root, 'timestamp')
     ts.text = str(time.time())
     lk = ET.SubElement(root, 'link', {'rel':'emulations', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
-    lk = ET.SubElement(root, 'link', {'rel':'emulationshistory', 'href':'/emulationshistory', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'emulators', 'href':'/emulators', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'distributions', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
     
@@ -81,82 +82,14 @@ def get_root():
 GET emulation
 #######
 '''
-@route('/emulationshistory/', method ='GET')
-@route('/emulationshistory', method ='GET')
-def get_emulationsHistory():
-    
-    emuList=EmulationManager.getAllEmulationList()
-    
-    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
-    
-    '''
-    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
-    '''
-    
-    ET.register_namespace("test", "http://127.0.0.1/cocoma")
-    
-    #building the XML we will return
-    emulations = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulationshistory'})
-    #<items offset="0" total="2">
-    items =ET.SubElement(emulations,'items', { 'offset':'0','total':str(len(emuList))})
-    
-    #<emulator href="/emulations/1" name="Emu1"/>
-    
-    for elem in emuList :
-        #emulator = ET.SubElement(items,'emulator', { 'href':'/emulationshistory/'+str(elem[0]),'name':str(elem[1])})
-        emulation = ET.SubElement(items,'emulation', { 'href':'/emulations/'+str(elem[0]),'ID':str(elem[0]),'name':str(elem[1])})
-    
-    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
-    lk = ET.SubElement(emulations, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
-    
-    
 
-    return prettify(emulations)    
 
-   
-    
-    '''
-    ##############
-    DUMMY
-    ##############
-    '''
-    #curl -k -i http://10.55.164.211:8050/emulations
-    #xml_content_emulations=
-    '''
-    <?xml version="1.0" encoding="UTF-8"?>
-    <collection xmlns="file:///home/melo/cocoma" href="/emulations">
-      <items offset="0" total="2">
-        <emulator href="/emulations/1" name="Emu1"/>
-        <emulator href="/emulations/2" name="Emu2"/>
-      </items>
-      <link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
-    </collection>
-    '''    
-    
-    #return xml_content_emulations  
-    
-    
-    '''
-    emulationSelect=EmulationManager.getEmulation("NULL","NULL",1,"NULL")
-    print emulationSelect
-    
-    if emulationSelect:
-            
-                response.content_type = 'application/json'
-                #return dumps(emulationSelect)
-                return { "success" : True, "list" : dumps(emulationSelect) }
-
-    else:
-        
-        #return "emulation ID: \"",emulationID,"\" does not exists"
-        return {"success":False, "error": "No emulations found"}
-    '''
 @route('/emulations/', method ='GET')
 @route('/emulations', method ='GET')
 def get_emulations():
-    
-    emuList=EmulationManager.getActiveEmulationList()
-    
+    response.set_header('Allow', 'GET, HEAD, POST')
+    response.set_header('Accept', '*/*')
+    emuList=EmulationManager.getActiveEmulationList()#[{'State': 'active', 'ID': 11, 'Name': u'myMixEmu'}, {'State': 'active', 'ID': 12, 'Name': u'myMixEmu'}]
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     
     '''
@@ -173,7 +106,7 @@ def get_emulations():
     #<emulator href="/emulations/1" name="Emu1"/>
     
     for elem in emuList :
-        emulation = ET.SubElement(items,'emulation', { 'href':'/emulations/'+str(elem[0]),'ID':str(elem[0]),'name':str(elem[1])})
+        emulation = ET.SubElement(items,'emulation', { 'href':'/emulations/'+str(elem["ID"]),'ID':str(elem["ID"]),'name':str(elem["Name"]),'state':str(elem["State"])})
         
     
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
@@ -191,6 +124,8 @@ def get_emulation(ID=""):
     #curl -k -i http:///10.55.164.232:8050/emulations/1
     
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD') 
     
     try:
         (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(ID)
@@ -266,7 +201,6 @@ def get_emulation(ID=""):
     lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
     #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
     lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
-    lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/emulationshistory', 'type':'application/vnd.bonfire+xml'})
     
     
 
@@ -278,9 +212,10 @@ def get_emulators():
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD')     
     
-    
-    emuList=DistributionManager.listEmulations()
+    emuList=DistributionManager.listEmulators("all")
     print "emulist",emuList
     '''
     XML namespaces are used for providing uniquely named elements and attributes in an XML document.
@@ -317,7 +252,8 @@ def get_emulator(name=""):
     try:
         ET.register_namespace("test", "http://127.0.0.1/cocoma")
         response.set_header('Content-Type', 'application/vnd.bonfire+xml')
-    
+        response.set_header('Accept', '*/*')
+        response.set_header('Allow', 'GET, HEAD')     
         helpMod=DistributionManager.loadEmulatorHelp(name)
     
     
@@ -349,7 +285,8 @@ def get_distributions():
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
-    
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD')     
     
     distroList=DistributionManager.listDistributions()
     print "distroList",distroList
@@ -385,6 +322,9 @@ def get_distribution(name=""):
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD') 
+    
     try:
         helpMod=DistributionManager.loadDistributionHelp(name)
         argMod=DistributionManager.loadDistributionArgNames(name)
@@ -418,6 +358,8 @@ def api_status():
     response.headers['status'] = response.status#str(response.status_code())
     response.content_type = "application/vnd.cocoma+xml"
     return "Yes, Hello this is ccmshAPI."
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD') 
 
 def isStr(s):
     try: 
