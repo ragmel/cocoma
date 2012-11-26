@@ -63,7 +63,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     runStartTimeList=[]         
     
     
-    #run 1
+    #run 1 at 0 time
     runStartTimeList.append(startTimesec)
     stressValues.append(startLoad)
     
@@ -75,7 +75,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     
     runNo=int(1)
     
-    runStartTime=startTimesec+(duration*upperBoundary)
+    #runStartTime=startTimesec+(duration*upperBoundary)
     
 
     linearStress=0
@@ -126,7 +126,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         
             
     #run last
-    runStartTimeList.append(startTimesec+duration*distributionGranularity)
+    runStartTimeList.append(startTimesec+duration*upperBoundary)
     stressValues.append(stopLoad)            
             
         

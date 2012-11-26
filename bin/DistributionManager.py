@@ -85,7 +85,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             
                         
         startTime= timeConv(startTime)
-        startTimesec=timestamp(startTime)
+        startTimesec=timestamp(startTime)+float(startTimeDistro)
         print "startTime:",startTime
         
         #make sure it is integer

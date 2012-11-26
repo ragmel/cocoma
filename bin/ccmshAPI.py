@@ -352,14 +352,16 @@ def get_distribution(name=""):
 
 
     
-@route('/ccmsh/hello')
+@route('/hello', method='OPTIONS')
+@route('/hello', method='GET')
 def api_status():
     response.status = 200
-    response.headers['status'] = response.status#str(response.status_code())
+    #response.headers['status'] = response.status#str(response.status_code())
     response.content_type = "application/vnd.cocoma+xml"
-    return "Yes, Hello this is ccmshAPI."
+    
     response.set_header('Accept', '*/*')
-    response.set_header('Allow', 'GET, HEAD') 
+    response.set_header('Allow', 'GET, HEAD, OPTIONS')
+    return "Yes, Hello this is ccmshAPI." 
 
 def isStr(s):
     try: 
@@ -379,6 +381,8 @@ def create_emu():
     #http://10.55.164.232:8050/emulations
     
     xml_stream =request.files.data
+    xml_stream_body =request.body.read()
+    print "xml_stream_body",xml_stream_body
     if xml_stream:
         
         print "File data detected:\n",xml_stream
@@ -390,14 +394,11 @@ def create_emu():
             response.status = 400
             
     else:    
-        print "Body data detected:\n",xml_stream
-        try:
-            xml_stream =request.body.read()
-            (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlParser(xml_stream)
-        except Exception,e:
-            response.status = 400
-            return e
+        print "Body data detected:\n",xml_stream_body
+        
             
+        (emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlParser(xml_stream_body)
+
     
     
     #return xml_stream
