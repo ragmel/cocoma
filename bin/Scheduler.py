@@ -68,18 +68,25 @@ class schedulerDaemon(object):
         emulationID =str(emulationID)
         distribitionName=str(distribitionName)
         
-        print "Trying to look for job name:", emulationID+"-"+distribitionName
+        print "Looking for job name:", emulationID+"-"+distribitionName
         
-        for job in self.sched.get_jobs():
-            
-            if job.name == emulationID+"-"+distribitionName :
+        if emulationID=="all":
+            print "Jobs deleted:"
+            for job in self.sched.get_jobs():
                 self.sched.unschedule_job(job)
-                print "Job: "+job.name+" emulationID+emulationName: "+emulationID+"-"+distribitionName
-                print "Deleted"
-            
-            else:
-                print "These jobs remains: "+job.name
-    
+                print job.name
+                
+        else:
+            for job in self.sched.get_jobs():
+                
+                if job.name == emulationID+"-"+distribitionName :
+                    self.sched.unschedule_job(job)
+                    print "Job: "+job.name+" emulationID+emulationName: "+emulationID+"-"+distribitionName
+                    print "Deleted"
+                
+                else:
+                    print "These jobs remains: "+job.name
+        
     #def purgeAllJobs(self):
     #    print "This is purgeAllJobs daemon"
     #    self.sched.shutdown(False, True, True)
@@ -109,6 +116,10 @@ class schedulerDaemon(object):
             return "Scheduler createJob(): error creating Job check dates "
 
         
+    def createLoggerJob(self,emulationID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
+        print"to be done"
+
+
         
         
     

@@ -318,4 +318,421 @@ duration 85
 runNo 4
 Hello this is Scheduler createJob()
 Job added with:
- StartTime: 2013-11-25 18:5
+ StartTime: 2013-11-25 18:56:07
+emulationID  17
+emulationLifetimeID 17
+distributionName MEM-dis-2
+stressValue 500
+duration 85
+runNo 4
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 17-MEM-dis-2 with run No: 4 start date 1385405767.0 created
+(u'600', u'1385405775.0', 5)
+Job added with:
+ StartTime: 2013-11-25 18:56:15
+emulationID  17
+emulationLifetimeID 17
+stressValue 600
+duration 85
+runNo 5
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:15
+emulationID  17
+emulationLifetimeID 17
+distributionName MEM-dis-2
+stressValue 600
+duration 85
+runNo 5
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 17-MEM-dis-2 with run No: 5 start date 1385405775.0 created
+(u'700', u'1385405783.0', 6)
+Job added with:
+ StartTime: 2013-11-25 18:56:23
+emulationID  17
+emulationLifetimeID 17
+stressValue 700
+duration 85
+runNo 6
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:23
+emulationID  17
+emulationLifetimeID 17
+distributionName MEM-dis-2
+stressValue 700
+duration 85
+runNo 6
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 17-MEM-dis-2 with run No: 6 start date 1385405783.0 created
+(u'800', u'1385405791.0', 7)
+Job added with:
+ StartTime: 2013-11-25 18:56:31
+emulationID  17
+emulationLifetimeID 17
+stressValue 800
+duration 85
+runNo 7
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:31
+emulationID  17
+emulationLifetimeID 17
+distributionName MEM-dis-2
+stressValue 800
+duration 85
+runNo 7
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 17-MEM-dis-2 with run No: 7 start date 1385405791.0 created
+(u'900', u'1385405799.0', 8)
+Job added with:
+ StartTime: 2013-11-25 18:56:39
+emulationID  17
+emulationLifetimeID 17
+stressValue 900
+duration 85
+runNo 8
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:39
+emulationID  17
+emulationLifetimeID 17
+distributionName MEM-dis-2
+stressValue 900
+duration 85
+runNo 8
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 17-MEM-dis-2 with run No: 8 start date 1385405799.0 created
+(u'1000', u'1385405807.0', 9)
+Job added with:
+ StartTime: 2013-11-25 18:56:47
+emulationID  17
+emulationLifetimeID 17
+stressValue 1000
+duration 85
+runNo 9
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:47
+emulationID  17
+emulationLifetimeID 17
+distributionName MEM-dis-2
+stressValue 1000
+duration 85
+runNo 9
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 17-MEM-dis-2 with run No: 9 start date 1385405807.0 created
+Object <__main__.schedulerDaemon object at 0x86f33ec>:
+    uri = PYRO:scheduler.daemon@localhost:51889
+Pyro daemon running.
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+This is deleteJobs
+Trying to look for job name: all-all
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+This is deleteJobs
+Trying to look for job name: all-all
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+These jobs remains: 17-MEM-dis-2
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:54:05
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 10
+duration 9
+runNo 0
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 0 start date 1385405645.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:54:14
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 19
+duration 9
+runNo 1
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 1 start date 1385405654.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:54:23
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 28
+duration 9
+runNo 2
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 2 start date 1385405663.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:54:32
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 37
+duration 9
+runNo 3
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 3 start date 1385405672.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:54:41
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 46
+duration 9
+runNo 4
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 4 start date 1385405681.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:54:50
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 55
+duration 9
+runNo 5
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 5 start date 1385405690.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:54:59
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 64
+duration 9
+runNo 6
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 6 start date 1385405699.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:55:08
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 73
+duration 9
+runNo 7
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 7 start date 1385405708.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:55:17
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 82
+duration 9
+runNo 8
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 8 start date 1385405717.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:55:26
+emulationID  1
+emulationLifetimeID 1
+distributionName CPU-dis-1
+stressValue 90
+duration 9
+runNo 9
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-CPU-dis-1 with run No: 9 start date 1385405726.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:55:35
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 100
+duration 8
+runNo 0
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 0 start date 1385405735.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:55:43
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 200
+duration 8
+runNo 1
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 1 start date 1385405743.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:55:51
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 300
+duration 8
+runNo 2
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 2 start date 1385405751.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:55:59
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 400
+duration 8
+runNo 3
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 3 start date 1385405759.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:07
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 500
+duration 8
+runNo 4
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 4 start date 1385405767.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:15
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 600
+duration 8
+runNo 5
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 5 start date 1385405775.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:23
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 700
+duration 8
+runNo 6
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 6 start date 1385405783.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:31
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 800
+duration 8
+runNo 7
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 7 start date 1385405791.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:39
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 900
+duration 8
+runNo 8
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 8 start date 1385405799.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+Hello this is Scheduler createJob()
+Job added with:
+ StartTime: 2013-11-25 18:56:47
+emulationID  1
+emulationLifetimeID 1
+distributionName MEM-dis-2
+stressValue 1000
+duration 8
+runNo 9
+<open file '<stdout>', mode 'w' at 0xb7541078>
+Job: 1-MEM-dis-2 with run No: 9 start date 1385405807.0 created
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+Hello, Yes this is schedulerDaemon. I am online send me some jobs!
+sending list of jobs
+This is deleteJobs
+Trying to look for job name: 1-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These jobs remains: 17-CPU-dis-1
+These job

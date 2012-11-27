@@ -362,6 +362,16 @@ def purgeAll():
     c.close()
     print "Everything was deleted in DB"
     
+    uri ="PYRO:scheduler.daemon@localhost:51889"
+    daemon=Pyro4.Proxy(uri)
+    try:
+        print "Trying to delete jobs"
+        daemon.deleteJobs("all", "all")
+    except Exception, e:
+        print "Scheduler is not reachable: ",e
+        
+    
+    
     #Now here we need to remove the emulation from the scheduler
     #uri ="PYRO:scheduler.daemon@localhost:51889"
     #daemon=Pyro4.Proxy(uri)
