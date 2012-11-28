@@ -37,6 +37,35 @@
 #
 
 '''
+----------------------------------SPAIN-----------------------------------
+
+<?xml version="1.0" encoding="UTF-8"?>
+<emulation xmlns="http://api.bonfire-project.eu/doc/schemas/occi"> 
+        <name>myRubyEmu</name>
+        <stopTime>180</stopTime>
+        <emulationType>Mix</emulationType>
+        <startTime>2013-11-22T17:22:01</startTime>
+        <distributions>
+                <name>CPU-ruby</name>
+                <duration>60</duration>
+                <granularity>6</granularity>
+                <distribution name="linear" href="/distributions/linear"/>
+                <startTime>5</startTime>
+                <emulator-params>
+                        <ncpus>0</ncpus>
+                        <resourceType>CPU</resourceType>
+                </emulator-params>
+                <startLoad>10</startLoad>
+                <stopLoad>90</stopLoad>
+                <emulator name="lookbusy" href="/emulators/stressapptest"/>
+        </distributions>
+        <resourceType>Mix</resourceType>
+</emulation>
+
+----------------------------------SPAIN-----------------------------------
+
+
+
 <emulation>
   <emulationName>myMixEmu</emulationName>
   <emulationType>Mix</emulationType>
@@ -100,8 +129,8 @@ def xmlParser(xmlData):
 
 
     distributionsXml=dom2.getElementsByTagName('distributions')
-
-    emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
+    #emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
+    emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('name')[0].firstChild.data
     emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationType')[0].firstChild.data
     resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('resourceType')[0].firstChild.data
     startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('startTime')[0].firstChild.data
@@ -123,8 +152,12 @@ def xmlParser(xmlData):
     for node in distributionsXml:
         print "n: ",n
         #Loading distribution type by module (linear, parabola, etc.)
+        
         distribution = dom2.getElementsByTagName('distribution')[n]
-        distrType = distribution.attributes["name"].value        
+        distrType = distribution.attributes["name"].value
+        
+            
+                
         try:
             moduleMethod=DistributionManager.loadDistributionArgNames(distrType)
             moduleArgs=moduleMethod()
@@ -225,8 +258,9 @@ def xmlParser(xmlData):
         
         #get attributes
 
-        distributions= dom2.getElementsByTagName('distributions')[n]
-        distributionsName = distributions.attributes["name"].value
+        #distributions= dom2.getElementsByTagName('distributions')[n]
+        #distributionsName = distributions.attributes["name"].value
+        distributionsName=dom2.getElementsByTagName('distributions')[0].getElementsByTagName('name')[0].firstChild.data
         
         emulator = dom2.getElementsByTagName('emulator')[n]
         emulatorName = emulator.attributes["name"].value

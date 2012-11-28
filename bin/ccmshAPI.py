@@ -29,6 +29,8 @@ from xml.etree import ElementTree
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
 
+PORT_ADDR=0
+IP_ADDR=0
 
 
 
@@ -420,7 +422,7 @@ def create_emu():
         
 
         
-        response.set_header('Location', 'http://127.0.0.1/emulations/'+str(emulationID))
+        response.set_header('Location', 'http://'+str(IP_ADDR)+':'+str(PORT_ADDR)+'/emulations/'+str(emulationID))
         
         emulationXml = ET.Element('emulation', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations/'+str(emulationID)})
         
@@ -495,7 +497,7 @@ def emulationDelete(ID=""):
         if deleteAction == "success":
             #set confirmation headers
             response.status = 202
-            response.set_header('Location', 'http://127.0.0.1/emulations/'+str(ID))
+            response.set_header('Location', 'http://'+str(IP_ADDR)+':'+str(PORT_ADDR)+'/emulations/'+str(ID))
         else:
             response.status = 400
             return "Unable to delete emulation. Error:\n"+str(deleteAction)
@@ -516,19 +518,31 @@ def getifip(ifn):
     return socket.inet_ntoa(fcntl.ioctl(sck.fileno(),0x8915,struct.pack('256s', ifn[:15]))[20:24])
 
 
-def startAPI(iface):
+def startAPI(IP_ADDR,PORT_ADDR):
     if ccmsh.daemonCheck() ==0:
         sys.exit(0)
-    print "Interface: ",iface
+
+
     
-    run(host=getifip(iface), port=8050)
+    print"IP address:",IP_ADDR
     
+    
+    
+    API_HOST=run(host=IP_ADDR, port=PORT_ADDR)
+    print "API_HOST.host",API_HOST.host
+    return IP_ADDR
 if __name__ == '__main__':
+    PORT_ADDR=8050
     try: 
         if sys.argv[1] == "-h":
             print "Use ccmshAPI <name of network interface> . Default network interface is eth0."
         else:
-            startAPI(sys.argv[1])
+            print "Interface: ",sys.argv[1]
+            IP_ADDR=getifip(sys.argv[1])
+            startAPI(IP_ADDR,PORT_ADDR)
     except:
-        startAPI("eth0")
+        print "Interface: ","eth0"
+        IP_ADDR=getifip("eth0")
+        startAPI(IP_ADDR,PORT_ADDR)
+        
     
