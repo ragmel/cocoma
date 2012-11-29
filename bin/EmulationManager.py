@@ -602,6 +602,11 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
         {'emulatorName': u'stressapptest', 'distrType': u'linear', 'distrinutionsName': u' myMixEmu-dis-1',
          'durationDistro': u'120', 'resourceTypeEmu': u'CPU', 'startTimeDistro': u'0', 'granularity': u'10', 'arg': [u'10', u'90']}'''
         
+        daemon=Pyro4.Proxy(uri)
+        #creating run for logger with probe interval of 2 seconds
+        interval=2
+        singleRunStartTime =DistributionManager.timestamp(DistributionManager.timeConv(startTimeEmu))
+        daemon.createLoggerJob(singleRunStartTime,emulationLifetimeEndTime,interval,emulationID)       
         
         for n in distroList:
             emulator=n["emulatorName"]
@@ -617,6 +622,9 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
             emulatorArg=n["emulatorArg"]
             
             #print "sending to DM these: ",emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg
+        
+ 
+
             
             DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg)
             

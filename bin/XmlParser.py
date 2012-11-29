@@ -260,7 +260,7 @@ def xmlParser(xmlData):
 
         #distributions= dom2.getElementsByTagName('distributions')[n]
         #distributionsName = distributions.attributes["name"].value
-        distributionsName=dom2.getElementsByTagName('distributions')[0].getElementsByTagName('name')[0].firstChild.data
+        distributionsName=dom2.getElementsByTagName('distributions')[n].getElementsByTagName('name')[0].firstChild.data
         
         emulator = dom2.getElementsByTagName('emulator')[n]
         emulatorName = emulator.attributes["name"].value

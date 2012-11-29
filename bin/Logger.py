@@ -18,12 +18,20 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-import psutil,sys
+import psutil,sys,os,time
 from datetime import datetime
 
 
+
+
 def loadMon(duration,interval,emulationName):
+    try:
+        HOMEPATH= os.environ['COCOMA']
+    except:
+        print "no $COCOMA environmental variable set"
+    
     emulationName=str(emulationName)
+    interval=int(interval)
     
     '''
     starting cpu monitoring in the loop
@@ -31,9 +39,10 @@ def loadMon(duration,interval,emulationName):
     iterationsNo=int(duration)/int(interval)
    
     try:
-        f = open('./logs/log_'+str(emulationName)+str(datetime.now())+'.csv', 'a')    
-        f.write(emulationName+";\nTime;CPU;MEM;IOread;IOwrite;NET(bytes_sent)\n")
-
+        f = open(HOMEPATH+'/logs/log_emuID'+str(emulationName)+"_"+str(datetime.now())+'.csv', 'a')    
+        f.write(emulationName+";\nCountdown;Time;CPU(%);MEM(%);IOread(bytes);IOwrite(bytes);NET(bytes_sent)\n")
+        #start time
+        initTime=time.time()
         while iterationsNo !=0:
             CPU=str(psutil.cpu_percent(interval, False))
             MEM=str(psutil.virtual_memory().percent)
@@ -41,9 +50,10 @@ def loadMon(duration,interval,emulationName):
             IOw=str(psutil.disk_io_counters().write_time)
             NET=str(psutil.network_io_counters(False).bytes_sent)
 
-            print (emulationName+";\nTime;CPU(%);MEM(%);IOread(bytes);IOwrite(bytes);NET(bytes_sent)\n"+str(datetime.now())+";"+CPU+";"+MEM+";"+IOr+";"+IOw+";"+NET)
+            #print (emulationName+";\nTime;CPU(%);MEM(%);IOread(bytes);IOwrite(bytes);NET(bytes_sent)\n"+str(time.time())+";"+CPU+";"+MEM+";"+IOr+";"+IOw+";"+NET)
+            probeTime=time.time()-initTime
             
-            f.write(str(datetime.now())+";"+CPU+";"+MEM+";"+IOr+";"+IOw+";"+NET+"\n")
+            f.write(str(int(probeTime))+";"+str(time.time())+";"+CPU+";"+MEM+";"+IOr+";"+IOw+";"+NET+"\n")
 
             iterationsNo=iterationsNo-1
     except Exception,e:

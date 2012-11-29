@@ -108,7 +108,7 @@ def get_emulations():
     #<emulator href="/emulations/1" name="Emu1"/>
     
     for elem in emuList :
-        emulation = ET.SubElement(items,'emulation', { 'href':'/emulations/'+str(elem["ID"]),'ID':str(elem["ID"]),'name':str(elem["Name"]),'state':str(elem["State"])})
+        emulation = ET.SubElement(items,'emulation', { 'href':'/emulations/'+str(elem["ID"]),'id':str(elem["ID"]),'name':str(elem["Name"]),'state':str(elem["State"])})
         
     
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
@@ -290,7 +290,7 @@ def get_distributions():
     response.set_header('Accept', '*/*')
     response.set_header('Allow', 'GET, HEAD')     
     
-    distroList=DistributionManager.listDistributions()
+    distroList=DistributionManager.listDistributions("all")
     print "distroList",distroList
     '''
     XML namespaces are used for providing uniquely named elements and attributes in an XML document.

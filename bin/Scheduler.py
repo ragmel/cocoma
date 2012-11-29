@@ -28,7 +28,7 @@ import datetime as dt
 import Run
 import sqlite3 as sqlite
 #from __future__ import print_function
-import Pyro4
+import Pyro4, Logger
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
@@ -106,6 +106,7 @@ class schedulerDaemon(object):
             print "stressValue",stressValue
             print "duration",duration
             print "runNo",runNo
+                
             self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo], name=str(emulationID)+"-"+distributionName)
             print sys.stdout
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
@@ -116,8 +117,16 @@ class schedulerDaemon(object):
             return "Scheduler createJob(): error creating Job check dates "
 
         
-    def createLoggerJob(self,emulationID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
-        print"to be done"
+    def createLoggerJob(self,singleRunStartTime,duration,interval,emulationID):
+        print "Hello this is createLoggerJob"
+        interval=int(interval)
+        
+        
+        self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID], name=str(emulationID)+"-logger")
+        return "Started logger"
+        #except Exception, e:
+        #    print "Could not start logger. Error: ",e
+        #    return  
 
 
         
@@ -147,7 +156,7 @@ class schedulerDaemon(object):
     def timestamp(self,date):
         print"This is timestamp"
         print date
-        gmtTime = time.mktime(date.timetuple())+3600
+        gmtTime = time.mktime(date.timetuple())#+3600
         return gmtTime
 
     def recoverySchedulerDaemon(self):
@@ -169,7 +178,7 @@ class schedulerDaemon(object):
                 
             c = conn.cursor()
             ca = conn.cursor() 
-            c.execute('SELECT startTime,emulationID,emulationLifetimeID FROM emulationLifetime')
+            c.execute('SELECT startTime,emulationID,emulationLifetimeID,stopTime FROM emulationLifetime')
             
             
             
@@ -182,6 +191,7 @@ class schedulerDaemon(object):
                     startTime= row[0]
                     emulationID = row[1]
                     emulationLifetimeID = row[2]
+                    duration= int(row[3])
                     #Compare starting times and re-launch 
                     #TO-DO: We can recover some individual runs if the emulation lifetime end date is still in future
                     if self.timestamp(self.timeConv(startTime))>self.timestamp(dt.datetime.now()):
@@ -189,6 +199,11 @@ class schedulerDaemon(object):
                         print self.timestamp(self.timeConv(startTime))
                         print "Current time in seconds"
                         print self.timestamp(dt.datetime.now())
+                        
+                        #If active emulation is found starting logger
+                        #2sec interval
+                        interval=2
+                        self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(self.timeConv(startTime)))), args=[duration,interval,emulationID], name=str(emulationID)+"-logger")
                         
                         #If active emulation is found. Getting info from active emulation to restore runs 
                         ca.execute('SELECT distributionID,distributionName,duration,emulator FROM distribution WHERE emulationID=?',[str(emulationID)])
