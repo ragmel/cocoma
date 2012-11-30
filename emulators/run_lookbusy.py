@@ -57,6 +57,7 @@ import Pyro4,imp,time,sys,os,psutil
 import sqlite3 as sqlite
 import datetime as dt
 import subprocess
+from signal import *
 from subprocess import *
 
 #perhaps needs to be set somewhere else
@@ -114,38 +115,70 @@ class emulatorMod(object):
         
         
 def memLoad(memUtil,memSleep,duration):
-            print "\n\nthis is mem load:memUtil,memSleep,duration",memUtil,memSleep,duration,"\n\n"
-            
-            if memSleep ==0 :
+            try:
+                print "\n\nthis is mem load:memUtil,memSleep,duration",memUtil,memSleep,duration,"\n\n"
                 
-                runLookbusy = subprocess.Popen(["lookbusy","-c","0", "-m",memUtil+"MB","&"])
-            
-                runLookbusyPidNo =runLookbusy.pid
-            else:
-                runLookbusy = subprocess.Popen(["lookbusy", "-c","0","-m",memUtil+"MB","-M",memSleep,"&"])
-                runLookbusyPidNo =runLookbusy.pid
+                if memSleep ==0 :
+                    
+                    runLookbusy = subprocess.Popen(["lookbusy","-c","0", "-m",memUtil+"MB","&"])
+                
+                    runLookbusyPidNo =runLookbusy.pid
+                    print "Started lookbusy on PID No: ",runLookbusyPidNo
+                else:
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0","-m",memUtil+"MB","-M",memSleep,"&"])
+                    runLookbusyPidNo =runLookbusy.pid
+                    print "Started lookbusy on PID No: ",runLookbusyPidNo
         
-    
-            print "Started lookbusy on PID No: ",runLookbusyPidNo
-            print "sleep:", duration
-            time.sleep(duration)
-            runLookbusy.terminate()
+                
+                print "sleep:", duration
+                
+                print "Here executed"
+                runLookbusy.terminate()
+                print "writing success into DB..."
+                
+            except Exception, e:
+                "run_lookbusy job memLoad exception: ", e
+                
 #stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration        
 def ioLoad(ioUtil,ioBlockSize,ioSleep,duration):
+        
             print "this is io load"
 
             if ioSleep ==0 or ioSleep =="0":
-                runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","&"])
-                
-                runLookbusyPidNo =runLookbusy.pid
+                try:
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","&"])
+                    runLookbusyPidNo =runLookbusy.pid
+                    
+                    print "Started lookbusy on PID No: ",runLookbusyPidNo
+                    print"falling a sleep for: ",duration
+                    
+                    #if this part of the code does not execute then program failed and process has no reason to fall asleep
+                    time.sleep(duration)
+                    
+                    runLookbusy.terminate()
+                    
+                    print "writing success into DB..."
+                    
+                        
+                        
+                except Exception, e:
+                    print "run_lookbusy job ioLoad exception: ", e
+
             else:
-                runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","-D",ioSleep,"&"])
-                runLookbusyPidNo =runLookbusy.pid
-        
-    
-            print "Started lookbusy on PID No: ",runLookbusyPidNo
-            time.sleep(duration)
-            runLookbusy.terminate()
+                try:
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","-D",ioSleep,"&"])
+                    runLookbusyPidNo =runLookbusy.pid
+                    
+                    print "Started lookbusy on PID No: ",runLookbusyPidNo
+                    time.sleep(duration)
+                    runLookbusy.terminate()
+                    print "writing success into DB..."
+                    
+                except Exception, e:
+                    print "run_lookbusy job ioLoad exception: ", e
+
+
+            
 
 def cpuLoad(cpuUtil,ncpus,duration):
     
@@ -153,37 +186,32 @@ def cpuLoad(cpuUtil,ncpus,duration):
 
     if ncpus =="0" :
         print "run_lookbusy executing this ncpus=", ncpus
-        runLookbusy = subprocess.Popen(["lookbusy", "-c",cpuUtil,"&"])
-        runLookbusy.stdout
+        try:
+            runLookbusy = subprocess.Popen(["lookbusy", "-c",cpuUtil,"&"])
+            runLookbusy.stdout
+            runLookbusyPidNo =runLookbusy.pid
+            print "Started lookbusy on PID No: ",runLookbusyPidNo
+        except Exception,e:
+            print "error in cpuload:",e
+            
     
-        runLookbusyPidNo =runLookbusy.pid
+        
     else:
         print "run_lookbusy executing this ncpus=", ncpus
         runLookbusy = subprocess.Popen(["lookbusy", "-c",cpuUtil,"-n",ncpus,"&"])
         runLookbusy.stdout
         runLookbusyPidNo =runLookbusy.pid
+        print "Started lookbusy on PID No: ",runLookbusyPidNo
 
-
-    print "Started lookbusy on PID No: ",runLookbusyPidNo
+    
     print "sleep:", duration
     time.sleep(duration)
+    print "Here executed"
     runLookbusy.terminate()
+    print "writing success into DB..."
     
+        
 
-def checkPid(PROCNAME):
-    pid=[]        
-    #ps ax | grep -v grep | grep Scheduler.py
-    #print "ps ax | grep -v grep | grep "+str(PROCNAME)
-    procTrace = subprocess.Popen("ps ax | grep -v grep | grep "+str(PROCNAME),shell=True,stdout=PIPE).communicate()[0]
-    #print "procTrace: ",procTrace
-    if procTrace:
-        pid.append(procTrace[0:5])
-        #print "procTracePID: ",pid
-        #program running
-        return pid
-    else:
-        #program not running
-        return False            
         
 def emulatorHelp():
 
@@ -233,14 +261,16 @@ def emulatorArgNames(Rtype):
         return argNames
 
 if __name__ == '__main__':
-    
-    filename = "xmldoc.xml"
-    util ="50"
-    ncpus ="b"
-    m = multiprocessing.Process(target = cpuLoad, args=("50","0",10))
-    m.start()
-    print(m.is_alive())
-    m.join()
+    try:
+        filename = "xmldoc.xml"
+        util ="50"
+        ncpus ="b"
+        m = multiprocessing.Process(target = cpuLoad, args=("50","0",10))
+        m.start()
+        print(m.is_alive())
+        m.join()
+    except Exception, e:
+        print "run_lookbusy job main exception: ", e
     #cpuLoad("50","0",10)
     
     

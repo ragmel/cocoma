@@ -29,6 +29,7 @@ import Run
 import sqlite3 as sqlite
 #from __future__ import print_function
 import Pyro4, Logger
+from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_MISSED,EVENT_JOB_ERROR
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
@@ -44,12 +45,28 @@ class schedulerDaemon(object):
         #starting scheduler 
         self.sched = Scheduler()
         self.sched.start()
+        self.sched.add_listener(self.job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED )
         self.recoverySchedulerDaemon()
 
     def listJobs(self):
         print "sending list of jobs"
         if self.sched.get_jobs():
             return self.sched.get_jobs()
+    
+    def job_listener(self,event):
+        
+        if str(event.exception) !="None":
+            print 'Error11: ',event.exception
+            print '\n'+str(event.job.name)+'The job crashed :(\n'
+            print "event.retval: ",event.retval
+            print "event.exception: ",event.exception
+            print "event.traceback: ",event.traceback.j
+            print "event.scheduled_run_time: ",event.scheduled_run_time
+            print "event.SchedulerEvent: ",event.SchedulerEvent
+        
+        else:
+            print 'Positive event.exception: ',event.exception
+            print '\nThe job'+str(event.job.name)+' worked :)\n'    
        
        
     def stopSchedulerDaemon(self):
@@ -274,8 +291,6 @@ class schedulerDaemon(object):
     
         c.close()
         ca.close()
-    
-    
     
 
 
