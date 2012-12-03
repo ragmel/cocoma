@@ -62,12 +62,15 @@ from subprocess import *
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
-
+try:
+    HOMEPATH= os.environ['COCOMA']
+except:
+    print "no $COCOMA environmental variable set"    
 
 class emulatorMod(object):
     
     
-    def __init__(self,emulationID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg, stressValues,runNo):
+    def __init__(self,emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg, stressValues,runNo):
         #emulationID,emulationLifetimeID,duration, stressValue,runNo
         self.emulationID = emulationID
         self.emulationLifetimeID = emulationLifetimeID
@@ -75,6 +78,7 @@ class emulatorMod(object):
         duration =float(duration)
         self.stressValues = stressValues
         self.runNo=runNo
+        self.distributionID=distributionID
         
         
         
@@ -104,10 +108,13 @@ class emulatorMod(object):
             print "vals"
             print stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration
 
-            ioMulti = multiprocessing.Process(target = ioLoad, args=(stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration))
+            ioMulti = multiprocessing.Process(target = ioLoad, args=(self.distributionID,self.runNo,stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration))
             ioMulti.start()
             print(ioMulti.is_alive())
             ioMulti.join()
+            
+            
+                
 
 
             #cpuLoad(stressValues[0],stressValues[1],stressValues[2],duration)
@@ -130,34 +137,53 @@ def memLoad(memUtil,memSleep,duration):
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
         
                 
-                print "sleep:", duration
-                
-                print "Here executed"
-                runLookbusy.terminate()
-                print "writing success into DB..."
-                
             except Exception, e:
                 "run_lookbusy job memLoad exception: ", e
+            
+            time.sleep(duration)
+            #catching failed runs
+            if zombieBuster(runLookbusyPidNo):
+                print "Job failed, sending wait()."
+                runLookbusy.wait()
+                print "writing fail into DB..."
+            else:
+                runLookbusy.terminate()
+            
+                print "writing success into DB..."
                 
 #stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration        
-def ioLoad(ioUtil,ioBlockSize,ioSleep,duration):
+def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
         
             print "this is io load"
 
             if ioSleep ==0 or ioSleep =="0":
                 try:
-                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","&"])
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB"])
                     runLookbusyPidNo =runLookbusy.pid
                     
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
-                    print"falling a sleep for: ",duration
+                    print "falling a sleep for: ",duration
                     
-                    #if this part of the code does not execute then program failed and process has no reason to fall asleep
+                    
+                    
                     time.sleep(duration)
+                    #catching failed runs
+                    if zombieBuster(runLookbusyPidNo):
+                        print "Job failed, sending wait()."
+                        runLookbusy.wait()
+                        message="Error in the emulator execution"
+                        executed="False"
+                        dbWriter(distributionID,runNo,message,executed)
+                        return False
+                    else:
+                        runLookbusy.terminate()
                     
-                    runLookbusy.terminate()
-                    
-                    print "writing success into DB..."
+                        print "writing success into DB..."
+                        message="Success"
+                        executed="True"
+                        dbWriter(distributionID,runNo,message,executed)
+                        return True
+        
                     
                         
                         
@@ -166,13 +192,19 @@ def ioLoad(ioUtil,ioBlockSize,ioSleep,duration):
 
             else:
                 try:
-                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","-D",ioSleep,"&"])
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","-D",ioSleep])
                     runLookbusyPidNo =runLookbusy.pid
                     
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
-                    time.sleep(duration)
-                    runLookbusy.terminate()
-                    print "writing success into DB..."
+                    #catching failed runs
+                    if zombieBuster(runLookbusyPidNo):
+                        print "Job failed, sending wait()."
+                        runLookbusy.wait()
+                        print "writing fail into DB..."
+                    else:
+                        runLookbusy.terminate()
+                    
+                        print "writing success into DB..."
                     
                 except Exception, e:
                     print "run_lookbusy job ioLoad exception: ", e
@@ -191,6 +223,7 @@ def cpuLoad(cpuUtil,ncpus,duration):
             runLookbusy.stdout
             runLookbusyPidNo =runLookbusy.pid
             print "Started lookbusy on PID No: ",runLookbusyPidNo
+
         except Exception,e:
             print "error in cpuload:",e
             
@@ -206,10 +239,15 @@ def cpuLoad(cpuUtil,ncpus,duration):
     
     print "sleep:", duration
     time.sleep(duration)
-    print "Here executed"
-    runLookbusy.terminate()
-    print "writing success into DB..."
+    #catching failed runs
+    if zombieBuster(runLookbusyPidNo):
+        print "Job failed, sending wait()."
+        runLookbusy.wait()
+        print "writing fail into DB..."
+    else:
+        runLookbusy.terminate()
     
+        print "writing success into DB..."
         
 
         
@@ -259,6 +297,40 @@ def emulatorArgNames(Rtype):
         argNames=["ioBlockSize","ioSleep"]
         print "Use Arg's: ",argNames
         return argNames
+
+
+def dbWriter(distributionID,runNo,message,executed):
+        #connecting to the DB and storing parameters
+        try:
+            if HOMEPATH:
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+            else:
+                conn = sqlite.connect('./data/cocoma.sqlite')
+                
+            c = conn.cursor()
+                    
+            # 1. Populate "emulation"
+            c.execute('UPDATE runLog SET executed=? ,message=? WHERE distributionID =? and runNo=?',(executed,message,distributionID,runNo))
+            
+            conn.commit()
+            c.close()
+        except sqlite.Error, e:
+            print "Error %s:" % e.args[0]
+            print e
+            sys.exit(1)             
+
+
+def zombieBuster(PID_ID):
+
+    #catching failed runs
+    p = psutil.Process(PID_ID)
+    print "Process name: ",p.name,"\nProcess status: ",p.status
+    if str(p.status) =="zombie":
+        return True
+    else:
+        return False
+
+
 
 if __name__ == '__main__':
     try:

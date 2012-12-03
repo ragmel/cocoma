@@ -45,7 +45,7 @@ class schedulerDaemon(object):
         #starting scheduler 
         self.sched = Scheduler()
         self.sched.start()
-        self.sched.add_listener(self.job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED )
+        self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED )
         self.recoverySchedulerDaemon()
 
     def listJobs(self):
@@ -53,20 +53,11 @@ class schedulerDaemon(object):
         if self.sched.get_jobs():
             return self.sched.get_jobs()
     
-    def job_listener(self,event):
-        
-        if str(event.exception) !="None":
-            print 'Error11: ',event.exception
-            print '\n'+str(event.job.name)+'The job crashed :(\n'
-            print "event.retval: ",event.retval
-            print "event.exception: ",event.exception
-            print "event.traceback: ",event.traceback.j
-            print "event.scheduled_run_time: ",event.scheduled_run_time
-            print "event.SchedulerEvent: ",event.SchedulerEvent
-        
-        else:
-            print 'Positive event.exception: ',event.exception
-            print '\nThe job'+str(event.job.name)+' worked :)\n'    
+    
+
+
+
+
        
        
     def stopSchedulerDaemon(self):
@@ -108,7 +99,7 @@ class schedulerDaemon(object):
     #    print "This is purgeAllJobs daemon"
     #    self.sched.shutdown(False, True, True)
     
-    def createJob(self,emulationID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
+    def createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
         
         
         print "Hello this is Scheduler createJob()"
@@ -124,7 +115,7 @@ class schedulerDaemon(object):
             print "duration",duration
             print "runNo",runNo
                 
-            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo], name=str(emulationID)+"-"+distributionName)
+            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName)
             print sys.stdout
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             print valBack
@@ -292,7 +283,47 @@ class schedulerDaemon(object):
         c.close()
         ca.close()
     
+def dbWriter(distributionID,runNo,message,executed):
+        #connecting to the DB and storing parameters
+        try:
+            if HOMEPATH:
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+            else:
+                conn = sqlite.connect('./data/cocoma.sqlite')
+                
+            c = conn.cursor()
+                    
+            # 1. Populate "emulation"
+            c.execute('UPDATE runLog SET executed=? ,message=? WHERE distributionID =? and runNo=?',(executed,message,distributionID,runNo))
+            
+            conn.commit()
+            c.close()
+        except sqlite.Error, e:
+            print "Error %s:" % e.args[0]
+            print e
+            sys.exit(1)    
+            
+def job_listener(event,distributionID,runNo):
+    
+    if str(event.exception) !="None":
+        
+        message= str(event.job.name)+'The job crashed Error11: '+str(event.exception)
+        print '\n'+str(event.job.name)+'The job crashed :(\n'
+        print "event.retval: ",event.retval
+        print "event.exception: ",event.exception
+        print "event.traceback: ",event.traceback.j
+        print "event.scheduled_run_time: ",event.scheduled_run_time
+        print "event.SchedulerEvent: ",event.SchedulerEvent
+        executed="False"
 
+        
+    else:
+        message="Success"
+        executed="True"
+        print 'Positive event.exception: ',event.exception
+        print '\nThe job'+str(event.job.name)+' worked :)\n'   
+    
+    dbWriter(distributionID,runNo,message,executed)
 
 def main():
     

@@ -122,7 +122,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             try:
                 print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
                 print daemon.hello()
-                print daemon.createJob(emulationID,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n))
+                print daemon.createJob(emulationID,distributionID,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n))
                 #lf,emulationID,emulationName,emulationLifetimeID,duration,emulator,resourceType,stressValue,runStartTime,runNo
                 
                 
