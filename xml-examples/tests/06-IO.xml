@@ -1,0 +1,31 @@
+<emulation>
+  <emulationName>Emu-IO</emulationName>
+  <emulationType>Mix</emulationType>
+  <resourceType>Mix</resourceType>
+  <!-- as startTime use the format '2012-11-26T17:28:00' or the keyword 'now' (no '' characters needed) -->
+  <startTime>2012-11-25T18:17:00</startTime>
+  <!--Emulation duration in seconds -->
+  <stopTime>180</stopTime>
+  
+  <distributions>
+     <name>IO-dis-3</name>
+     <!--Distribution Start Time relative to emulation start time-->
+     <startTime>5</startTime>
+     <!--duration in seconds -->
+     <duration>120</duration>
+     <granularity>10</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+     <!--Size of files to use for disk churn, in MB-->
+      <startLoad>1000</startLoad>
+      <stopLoad>2000</stopLoad>
+      <emulator href="/emulators/lookbusy" name="lookbusy" />
+      <emulator-params>
+        <resourceType>IO</resourceType>
+	<!--Time to sleep between iterations, in msec-->
+	<ioSleep>100</ioSleep>
+	<!--Size of blocks to use for I/O, in MB-->
+	<ioBlockSize>100</ioBlockSize>
+      </emulator-params>
+  </distributions>
+  
+</emulation>

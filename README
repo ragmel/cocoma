@@ -1,1 +1,21 @@
-This is the COCOMA README file. Long description will be in this file
+COCOMA is a tool for creating deliberate contention (in the future also malicious and faulty) load
+in a controlled way.
+
+Quick start
+-----------------------------------
+Run COCOMA through command line (ccmsh)
+
+First start the scheduler
+
+	ccmsh --start scheduler
+
+	ccmsh -x <path to xml file>
+
+
+xml files examples can be found in the xml-examples/ and xml-examples/tests/ (the test dir should have more updated xml files)
+
+You can check that jobs have been scheduled by running
+
+	ccmsh --list-jobs all
+
+To understand if the jobs are running properly, you can use "top" or "iostat -x 3" commands

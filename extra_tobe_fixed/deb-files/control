@@ -8,7 +8,7 @@ Standards-Version: 3.9.3
 
 Package: cocoma
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python(>=2.6), python(<<3.0), libsqlite3-dev, gcc, python-dev
+Depends: ${misc:Depends}, ${python:Depends}, python-pip, gcc, python-dev
 #XB-Python-Version: ${python:Versions}
 #Provides: ${python:Provides}
 Description: This is the COCOMA README file. Long description will be in 
