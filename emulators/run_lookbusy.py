@@ -89,14 +89,14 @@ class emulatorMod(object):
             print "CPU load selected"
             #cpuLoad(stressValues,emulatorArg["ncpus"],duration)
             
-            m = multiprocessing.Process(target = cpuLoad, args=(stressValues,emulatorArg["ncpus"],duration))
+            m = multiprocessing.Process(target = cpuLoad, args=(distributionID,runNo,stressValues,emulatorArg["ncpus"],duration))
             m.start()
             print(m.is_alive())
             m.join()
         
         if resourceTypeDist.lower() == "mem":
             print "MEM load selected"
-            memMulti = multiprocessing.Process(target = memLoad, args=(stressValues,emulatorArg["memSleep"],duration))
+            memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memSleep"],duration))
             memMulti.start()
             print(memMulti.is_alive())
             memMulti.join()
@@ -121,7 +121,8 @@ class emulatorMod(object):
         
         
         
-def memLoad(memUtil,memSleep,duration):
+def memLoad(distributionID,runNo,memUtil,memSleep,duration):
+            runLookbusyPidNo=0
             try:
                 print "\n\nthis is mem load:memUtil,memSleep,duration",memUtil,memSleep,duration,"\n\n"
                 
@@ -146,10 +147,16 @@ def memLoad(memUtil,memSleep,duration):
                 print "Job failed, sending wait()."
                 runLookbusy.wait()
                 print "writing fail into DB..."
+                message="Fail"
+                executed="False"
             else:
                 runLookbusy.terminate()
             
                 print "writing success into DB..."
+                message="Success"
+                executed="True"
+                
+            dbWriter(distributionID,runNo,message,executed)
                 
 #stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration        
 def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
@@ -201,10 +208,16 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
                         print "Job failed, sending wait()."
                         runLookbusy.wait()
                         print "writing fail into DB..."
+                        message="Error in the emulator execution"
+                        executed="False"
+                        dbWriter(distributionID,runNo,message,executed)
                     else:
                         runLookbusy.terminate()
                     
                         print "writing success into DB..."
+                        message="Success"
+                        executed="True"
+                        dbWriter(distributionID,runNo,message,executed)
                     
                 except Exception, e:
                     print "run_lookbusy job ioLoad exception: ", e
@@ -212,7 +225,7 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
 
             
 
-def cpuLoad(cpuUtil,ncpus,duration):
+def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
     
     print "\n\ncpuUtil,ncpus,duration",cpuUtil,ncpus,duration,"\n\n"
 
@@ -223,6 +236,8 @@ def cpuLoad(cpuUtil,ncpus,duration):
             runLookbusy.stdout
             runLookbusyPidNo =runLookbusy.pid
             print "Started lookbusy on PID No: ",runLookbusyPidNo
+            
+            
 
         except Exception,e:
             print "error in cpuload:",e
@@ -244,10 +259,17 @@ def cpuLoad(cpuUtil,ncpus,duration):
         print "Job failed, sending wait()."
         runLookbusy.wait()
         print "writing fail into DB..."
+           
+        message="Error in the emulator execution"
+        executed="False"
+        dbWriter(distributionID,runNo,message,executed)
     else:
         runLookbusy.terminate()
     
         print "writing success into DB..."
+        message="Success"
+        executed="True"
+        dbWriter(distributionID,runNo,message,executed)
         
 
         

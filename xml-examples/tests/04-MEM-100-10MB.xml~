@@ -1,10 +1,10 @@
 <emulation>
-  <emulationName>myMixEmu</emulationName>
+  <name>Emu-CPU-RAM-IO</name>
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
   <startTime>2012-11-12T18:30:00</startTime>
   <!--duration in seconds -->
-  <stopTime>now+180</stopTime>
+  <stopTime>180</stopTime>
   
  
   <distributions name="IO-1a">

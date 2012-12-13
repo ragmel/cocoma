@@ -45,8 +45,8 @@ class distributionMod(object):
 
 def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
     
-    startLoad = distributionArg["startLoad"]
-    stopLoad = distributionArg["stopLoad"]
+    startLoad = int(distributionArg["startLoad"])
+    stopLoad = int(distributionArg["stopLoad"])
     
     print "hello this is dist linear"
     print "startLoad",startLoad
@@ -67,11 +67,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     runStartTimeList.append(startTimesec)
     stressValues.append(startLoad)
     
-    
-    
-    
-    
-    
+
     
     runNo=int(1)
     
@@ -97,15 +93,23 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             1. Distribution formula goes here
             '''
              
+            
             linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
             print "linearSterp",linearStep
             linearStep=math.fabs((int(linearStep)))#making positive value
             print "LINEAR STEP SHOULD BE THE SAME"
             print linearStep
+            
             if startLoad < stopLoad:
+                
                 linearStress= (linearStep*int(runNo))+int(startLoad)
             if startLoad > stopLoad:
+
                 linearStress= (linearStep*(upperBoundary-int(runNo)))+int(stopLoad)
+            
+            if startLoad == stopLoad:
+                linearStress=startLoad
+                
             #make sure we return integer
             linearStress=int(linearStress)
             print "LINEAR STRESS SHOULD CHANGE"

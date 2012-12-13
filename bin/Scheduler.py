@@ -19,7 +19,7 @@
 #
 
 
-import sys, os, time,imp
+import sys, os, time,imp,re
 from signal import SIGTERM 
 
 from datetime import datetime
@@ -45,7 +45,7 @@ class schedulerDaemon(object):
         #starting scheduler 
         self.sched = Scheduler()
         self.sched.start()
-        self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED )
+        self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)    
         self.recoverySchedulerDaemon()
 
     def listJobs(self):
@@ -86,10 +86,10 @@ class schedulerDaemon(object):
                 
         else:
             for job in self.sched.get_jobs():
-                
-                if job.name == emulationID+"-"+distribitionName :
+                ID_params=re.split(r"-",job.name)
+                if str(ID_params[0]) == emulationID :
                     self.sched.unschedule_job(job)
-                    print "Job: "+job.name+" emulationID+emulationName: "+emulationID+"-"+distribitionName
+                    print "Job: "+job.name
                     print "Deleted"
                 
                 else:
@@ -114,7 +114,7 @@ class schedulerDaemon(object):
             print "stressValue",stressValue
             print "duration",duration
             print "runNo",runNo
-                
+            #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)     
             self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName)
             print sys.stdout
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
@@ -208,10 +208,17 @@ class schedulerDaemon(object):
                         print "Current time in seconds"
                         print self.timestamp(dt.datetime.now())
                         
+                        
                         #If active emulation is found starting logger
                         #2sec interval
-                        interval=2
-                        self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(self.timeConv(startTime)))), args=[duration,interval,emulationID], name=str(emulationID)+"-logger")
+                        c.execute('SELECT logging FROM emulation WHERE emulationID=?',[str(emulationID)])
+                        emulationLogging = c.fetchall()
+                        
+                        for row in emulationLogging:
+                            
+                            if str(row[0]) =="1":
+                                interval=2
+                                self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(self.timeConv(startTime)))), args=[duration,interval,emulationID], name=str(emulationID)+"-logger")
                         
                         #If active emulation is found. Getting info from active emulation to restore runs 
                         ca.execute('SELECT distributionID,distributionName,duration,emulator FROM distribution WHERE emulationID=?',[str(emulationID)])
@@ -257,9 +264,11 @@ class schedulerDaemon(object):
                                     print "stressValue",stressValue
                                     print "duration",duration
                                     print "runNo",runNo
+                                    #
                                     #                       8           MEM-dis-1              8             10     lookbusy {'memSleep': u'100'}      MEM              64         1359680491.0   3
-                                    self.createJob(emulationID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo)
-                                               
+                                    self.createJob(emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo)
+                                    
+
                                 
                                 
                     else:
@@ -303,27 +312,28 @@ def dbWriter(distributionID,runNo,message,executed):
             print e
             sys.exit(1)    
             
-def job_listener(event,distributionID,runNo):
+def job_listener(event):
     
     if str(event.exception) !="None":
         
-        message= str(event.job.name)+'The job crashed Error11: '+str(event.exception)
+        
         print '\n'+str(event.job.name)+'The job crashed :(\n'
         print "event.retval: ",event.retval
         print "event.exception: ",event.exception
         print "event.traceback: ",event.traceback.j
         print "event.scheduled_run_time: ",event.scheduled_run_time
         print "event.SchedulerEvent: ",event.SchedulerEvent
-        executed="False"
+        return True
 
         
     else:
-        message="Success"
-        executed="True"
+        
+        
         print 'Positive event.exception: ',event.exception
-        print '\nThe job'+str(event.job.name)+' worked :)\n'   
+        print '\nThe job'+str(event.job.name)+' worked :)\n'
+        return False   
     
-    dbWriter(distributionID,runNo,message,executed)
+
 
 def main():
     

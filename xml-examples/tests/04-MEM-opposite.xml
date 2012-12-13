@@ -1,5 +1,5 @@
 <emulation>
-  <emulationName>myMixEmu</emulationName>
+  <name>Emu-CPU-RAM-IO</name>
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
   <startTime>2012-11-12T18:30:00</startTime>
@@ -8,6 +8,7 @@
   
  
   <distributions name="MEM-opposite-1">
+		<name>Distro1</name>
      <startTime>5</startTime>
      <!--duration in seconds -->
      <duration>30</duration>
@@ -25,6 +26,7 @@
   </distributions>
 
   <distributions name="MEM-opposite-2">
+		<name>Distro2</name>
      <startTime>5</startTime>
      <!--duration in seconds -->
      <duration>30</duration>

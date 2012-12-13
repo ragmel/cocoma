@@ -288,6 +288,7 @@ def deleteEmulation(emulationID):
                 #deleting distribution related data
                 c.execute('DELETE FROM DistributionParameters WHERE distributionID=?',[str(distributionID)])
                 c.execute('DELETE FROM EmulatorParameters WHERE distributionID=?',[str(distributionID)])
+                c.execute('DELETE FROM runLog WHERE distributionID=?',[str(distributionID)])
                 
         else:
             print "Emulation ID: "+str(emulationID)+" does not exists" 
@@ -300,7 +301,7 @@ def deleteEmulation(emulationID):
         c.execute('DELETE FROM distribution WHERE emulationID=?',[str(emulationID)])
         c.execute('DELETE FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
         c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
-        c.execute('DELETE FROM runLog WHERE distributionID=?',[str(distributionID)])
+        #c.execute('DELETE FROM runLog WHERE distributionID=?',[str(distributionID)])
         
         
         conn.commit()
@@ -500,7 +501,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
     
     
 
-def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList):
+def createEmulation(emulationName, emulationType,emulationLog, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList):
                     
     print "Hello this is createEmulation"
 
@@ -561,7 +562,7 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
         c = conn.cursor()
                 
         # 1. Populate "emulation"
-        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active) VALUES (?, ?, ?, ?)', [emulationName,emulationType,resourceTypeEmulation,1])
+        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active,logging) VALUES (?, ?, ?, ?,?)', [emulationName,emulationType,resourceTypeEmulation,1,emulationLog])
         emulationID = c.lastrowid
         
         # 2. We populate "emulationLifetime" table  
@@ -601,12 +602,12 @@ def createEmulation(emulationName, emulationType, resourceTypeEmulation, startTi
         '''
         {'emulatorName': u'stressapptest', 'distrType': u'linear', 'distrinutionsName': u' myMixEmu-dis-1',
          'durationDistro': u'120', 'resourceTypeEmu': u'CPU', 'startTimeDistro': u'0', 'granularity': u'10', 'arg': [u'10', u'90']}'''
-        
-        daemon=Pyro4.Proxy(uri)
-        #creating run for logger with probe interval of 2 seconds
-        interval=2
-        singleRunStartTime =DistributionManager.timestamp(DistributionManager.timeConv(startTimeEmu))
-        daemon.createLoggerJob(singleRunStartTime,emulationLifetimeEndTime,interval,emulationID)       
+        if emulationLog=="1":
+            daemon=Pyro4.Proxy(uri)
+            #creating run for logger with probe interval of 2 seconds
+            interval=2
+            singleRunStartTime =DistributionManager.timestamp(DistributionManager.timeConv(startTimeEmu))
+            daemon.createLoggerJob(singleRunStartTime,emulationLifetimeEndTime,interval,emulationID)       
         
         for n in distroList:
             emulator=n["emulatorName"]

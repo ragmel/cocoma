@@ -118,8 +118,8 @@ def xmlReader(filename):
     #close file because we dont need it anymore:
     file.close()
     #parse the xml you got from the file
-    (emulationName,emulationType, resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList)=xmlParser(data)
-    return emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
+    (emulationName,emulationType,emulationLog, resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList)=xmlParser(data)
+    return emulationName,emulationType,emulationLog, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
 def xmlParser(xmlData):
     
@@ -131,6 +131,7 @@ def xmlParser(xmlData):
     distributionsXml=dom2.getElementsByTagName('distributions')
     #emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
     emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('name')[0].firstChild.data
+    emulationLog=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].firstChild.data
     emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationType')[0].firstChild.data
     resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('resourceType')[0].firstChild.data
     startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('startTime')[0].firstChild.data
@@ -294,9 +295,9 @@ def xmlParser(xmlData):
         # print "Distro ",n
         #print durationDistro,  startTimeDistro, distribution,emulator 
         
-    print emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
+    print emulationName,emulationType,emulationLog, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
     
-    return emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
+    return emulationName,emulationType,emulationLog, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
     
 
 
