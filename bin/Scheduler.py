@@ -115,7 +115,7 @@ class schedulerDaemon(object):
             print "duration",duration
             print "runNo",runNo
             #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)     
-            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName)
+            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+" Stress:"+str(stressValue))
             print sys.stdout
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             print valBack
@@ -130,7 +130,7 @@ class schedulerDaemon(object):
         interval=int(interval)
         
         
-        self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID], name=str(emulationID)+"-logger")
+        self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID], name=str(emulationID)+"-logger interval-"+str(interval)+"sec.")
         return "Started logger"
         #except Exception, e:
         #    print "Could not start logger. Error: ",e
@@ -211,14 +211,14 @@ class schedulerDaemon(object):
                         
                         #If active emulation is found starting logger
                         #2sec interval
-                        c.execute('SELECT logging FROM emulation WHERE emulationID=?',[str(emulationID)])
+                        c.execute('SELECT logging,logFrequency FROM emulation WHERE emulationID=?',[str(emulationID)])
                         emulationLogging = c.fetchall()
                         
                         for row in emulationLogging:
                             
                             if str(row[0]) =="1":
-                                interval=2
-                                self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(self.timeConv(startTime)))), args=[duration,interval,emulationID], name=str(emulationID)+"-logger")
+                                interval=int(row[1])
+                                self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(self.timeConv(startTime)))), args=[duration,interval,emulationID], name=str(emulationID)+"-logger interval-"+str(interval)+"sec.")
                         
                         #If active emulation is found. Getting info from active emulation to restore runs 
                         ca.execute('SELECT distributionID,distributionName,duration,emulator FROM distribution WHERE emulationID=?',[str(emulationID)])
@@ -323,15 +323,32 @@ def job_listener(event):
         print "event.traceback: ",event.traceback.j
         print "event.scheduled_run_time: ",event.scheduled_run_time
         print "event.SchedulerEvent: ",event.SchedulerEvent
-        return True
-
+        executed="False"
+        message="Job crashed by scheduler"
+        aaa=re.search("logger", str(event.job.name))
+        print"aaa",aaa
+        if not aaa:
+            paramsArray=re.split(r"-",str(event.job.name))
+            distributionID=paramsArray[1]
+            runNo=paramsArray[2]
+            dbWriter(distributionID,runNo,message,executed)
+            
         
     else:
         
         
         print 'Positive event.exception: ',event.exception
         print '\nThe job'+str(event.job.name)+' worked :)\n'
-        return False   
+        executed="True"
+        message="Job launched by scheduler"
+        aaa=re.search("logger", str(event.job.name))
+        print"aaa",aaa
+        if not aaa:
+            print "aaa Writing to db"
+            paramsArray=re.split(r"-",str(event.job.name))
+            distributionID=paramsArray[1]
+            runNo=paramsArray[2]
+            dbWriter(distributionID,runNo,message,executed)   
     
 
 

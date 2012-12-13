@@ -501,7 +501,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
     
     
 
-def createEmulation(emulationName, emulationType,emulationLog, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList):
+def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList):
                     
     print "Hello this is createEmulation"
 
@@ -562,7 +562,7 @@ def createEmulation(emulationName, emulationType,emulationLog, resourceTypeEmula
         c = conn.cursor()
                 
         # 1. Populate "emulation"
-        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active,logging) VALUES (?, ?, ?, ?,?)', [emulationName,emulationType,resourceTypeEmulation,1,emulationLog])
+        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active,logging,logFrequency) VALUES (?, ?, ?, ?, ?, ?)', [emulationName,emulationType,resourceTypeEmulation,1,emulationLog,emulationLogFrequency])
         emulationID = c.lastrowid
         
         # 2. We populate "emulationLifetime" table  
@@ -605,7 +605,7 @@ def createEmulation(emulationName, emulationType,emulationLog, resourceTypeEmula
         if emulationLog=="1":
             daemon=Pyro4.Proxy(uri)
             #creating run for logger with probe interval of 2 seconds
-            interval=2
+            interval=int(emulationLogFrequency)
             singleRunStartTime =DistributionManager.timestamp(DistributionManager.timeConv(startTimeEmu))
             daemon.createLoggerJob(singleRunStartTime,emulationLifetimeEndTime,interval,emulationID)       
         

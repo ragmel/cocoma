@@ -390,7 +390,7 @@ def create_emu():
         print "File data detected:\n",xml_stream
         return xml_stream
         try:
-            (emulationName,emulationType,emulationLog, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(xml_stream)
+            (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(xml_stream)
         except Exception,e:
             print e
             response.status = 400
@@ -399,7 +399,7 @@ def create_emu():
         print "Body data detected:\n",xml_stream_body
         
             
-        (emulationName,emulationType,emulationLog, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlParser(xml_stream_body)
+        (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlParser(xml_stream_body)
 
     
     
@@ -412,7 +412,7 @@ def create_emu():
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     try:
-        emulationID=EmulationManager.createEmulation(emulationName, emulationType,emulationLog, resourceTypeEmulation, startTimeEmu,stopTimeEmu,distroList)
+        emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
         if isStr(emulationID):
             
             response.status = 400
