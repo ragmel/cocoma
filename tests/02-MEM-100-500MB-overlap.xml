@@ -1,0 +1,53 @@
+<emulation>
+  <name>Emu-CPU-RAM-IO</name>
+  <emulationType>Mix</emulationType>
+  <resourceType>Mix</resourceType>
+  <startTime>2012-11-12T18:30:00</startTime>
+  <!--duration in seconds -->
+  <stopTime>180</stopTime>
+  
+ 
+  <distributions>
+     <name>Distro1</name>
+     <startTime>5</startTime>
+     <!--duration in seconds -->
+     <duration>30</duration>
+     <granularity>3</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+     <!--Megabytes for memory -->
+      <startLoad>100</startLoad>
+      <stopLoad>500</stopLoad>
+      <emulator href="/emulators/stressapptest" name="lookbusy" />
+      <emulator-params>
+        <resourceType>MEM</resourceType>
+	<!--time between iterations in usec (default 1000)-->
+	<memSleep>0</memSleep>
+      </emulator-params>
+  </distributions>
+
+  <distributions>
+     <name>Distro2</name>
+     <startTime>10</startTime>
+     <!--duration in seconds -->
+     <duration>30</duration>
+     <granularity>3</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+     <!--Megabytes for memory -->
+      <startLoad>100</startLoad>
+      <stopLoad>500</stopLoad>
+      <emulator href="/emulators/stressapptest" name="lookbusy" />
+      <emulator-params>
+        <resourceType>MEM</resourceType>
+	<!--time between iterations in usec (default 1000)-->
+	<memSleep>0</memSleep>
+      </emulator-params>
+  </distributions>
+
+  <log>
+  	<!-- Use value "1" to enable logging(by default logging is off)  -->
+  	<enable>1</enable>
+  	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+  	<frequency>3</frequency>
+  </log>
+
+</emulation>

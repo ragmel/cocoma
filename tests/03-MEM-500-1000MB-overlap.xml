@@ -7,16 +7,16 @@
   <stopTime>180</stopTime>
   
  
-  <distributions name="MEM-opposite-1">
-		<name>Distro1</name>
+  <distributions>
+     <name>Distro1</name>
      <startTime>5</startTime>
      <!--duration in seconds -->
      <duration>30</duration>
      <granularity>3</granularity>
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
-      <startLoad>10</startLoad>
-      <stopLoad>100</stopLoad>
+      <startLoad>500</startLoad>
+      <stopLoad>1000</stopLoad>
       <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
         <resourceType>MEM</resourceType>
@@ -25,16 +25,16 @@
       </emulator-params>
   </distributions>
 
-  <distributions name="MEM-opposite-2">
-		<name>Distro2</name>
-     <startTime>5</startTime>
+  <distributions>
+     <name>Distro2</name>
+     <startTime>10</startTime>
      <!--duration in seconds -->
      <duration>30</duration>
      <granularity>3</granularity>
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
-      <startLoad>100</startLoad>
-      <stopLoad>10</stopLoad>
+      <startLoad>500</startLoad>
+      <stopLoad>1000</stopLoad>
       <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
         <resourceType>MEM</resourceType>
@@ -42,5 +42,12 @@
 	<memSleep>0</memSleep>
       </emulator-params>
   </distributions>
+
+  <log>
+  	<!-- Use value "1" to enable logging(by default logging is off)  -->
+  	<enable>1</enable>
+  	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+  	<frequency>3</frequency>
+  </log>
 
 </emulation>

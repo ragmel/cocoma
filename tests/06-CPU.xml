@@ -1,29 +1,36 @@
 <emulation>
-  <name>Emu-CPU-RAM-IO</name>
+  <emulationName>Emu-CPU</emulationName>
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
-  <startTime>2012-11-12T18:30:00</startTime>
+  <!-- as startTime use the format '2012-11-26T17:28:00' or the keyword 'now' (no '' characters needed) -->
+  <startTime>2012-11-25T17:46:00</startTime>
   <!--duration in seconds -->
   <stopTime>180</stopTime>
   
-  <distributions> 
-   <name>CPU-dis-1a</name>
+  <distributions>
+     <name>CPU-dis-1</name>
      <startTime>5</startTime>
      <!--duration in seconds -->
-     <duration>30</duration>
-     <granularity>3</granularity>
+     <duration>170</duration>
+     <granularity>10</granularity>
      <distribution href="/distributions/linear" name="linear" />
 	<!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
       <stopLoad>90</stopLoad>
-      <emulator href="/emulators/stressapptest" name="lookbusy" />
+      <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
         <!--more parameters will be added -->
         <resourceType>CPU</resourceType>
 	<!--Number of CPUs to keep busy (default: autodetected)-->
 	<ncpus>0</ncpus>
-
       </emulator-params>
   </distributions>
-  
+
+  <log>
+  	<!-- Use value "1" to enable logging(by default logging is off)  -->
+  	<enable>1</enable>
+  	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+  	<frequency>3</frequency>
+  </log>
+
 </emulation>

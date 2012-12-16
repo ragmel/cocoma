@@ -301,9 +301,17 @@ def dbWriter(distributionID,runNo,message,executed):
                 conn = sqlite.connect('./data/cocoma.sqlite')
                 
             c = conn.cursor()
-                    
-            # 1. Populate "emulation"
-            c.execute('UPDATE runLog SET executed=? ,message=? WHERE distributionID =? and runNo=?',(executed,message,distributionID,runNo))
+            # 1. Check if info is in the table before updating it
+            c.execute('SELECT executed FROM runLog WHERE distributionID =? and runNo=?',[str(distributionID),str(runNo)])
+            runLogFetch = c.fetchall()
+            if runLogFetch:
+                for row in runLogFetch:
+                    if row[0]=="False":
+                        print "Job already failed"
+            
+            # 2. Populate "emulation"
+            else:
+                c.execute('UPDATE runLog SET executed=? ,message=? WHERE distributionID =? and runNo=?',(executed,message,distributionID,runNo))
             
             conn.commit()
             c.close()
