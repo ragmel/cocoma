@@ -261,6 +261,30 @@ def listDistributions(name):
     else:
         loadMod=loadDistributionHelp(name)
         return loadMod()
+
+def listTests(name):
+    
+    testsList=[]
+    print "This is listTests\n"
+    if name.lower()=="all":
+        if HOMEPATH:
+            path=HOMEPATH+"/tests/"  # root folder of project
+        else:
+            path="./tests/"  # root folder of project
+            
+        dirList=os.listdir(path)
+        for fname in dirList:
+            if fname.endswith(".xml") or fname.endswith(".XML"):
+                distName = str(fname)#str(fname[0:-4])
+                testsList.append(distName)
+        
+        return testsList 
+    else:
+        print "Display XML content"
+        #and return XML
+
+
+
     
     
 def listEmulators(name):

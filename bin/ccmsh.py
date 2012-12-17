@@ -175,8 +175,23 @@ def main():
             if arguments[0]=="all":
                 emuList=EmulationManager.getActiveEmulationList()
                 
+                
                 for elem in emuList :
-                    print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])
+                    failedRunsInfo=elem["failedRunsInfo"]
+                    
+                    print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
+                    
+                    if failedRunsInfo:
+                        print "###Failed Runs Info###"
+                        for Runs in failedRunsInfo:
+                            print "#\nRun No: ", Runs["runNo"]
+                            print "Distribution ID: ",Runs["distributionID"]
+                            print "Distribution Name: ",Runs["distributionName"]
+                            
+                            print "Stress Value: ", Runs["stressValue"]
+                            print "Error Message: ", Runs["message"]
+                            #distributionID":distro[0],"distributionName":distro[1],"runNo":run[0],"stressValue":run[1],"message":run[3]
+                        #+"\nFailed Runs: "+str(len(elem["failedRunsInfo"]))
             else:
                 try:
                     (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(arguments[0])

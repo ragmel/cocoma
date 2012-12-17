@@ -296,11 +296,13 @@ def dbWriter(distributionID,runNo,message,executed):
         #connecting to the DB and storing parameters
         try:
             if HOMEPATH:
-                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite',timeout=1)
             else:
                 conn = sqlite.connect('./data/cocoma.sqlite')
                 
             c = conn.cursor()
+            
+            
             # 1. Check if info is in the table before updating it
             c.execute('SELECT executed FROM runLog WHERE distributionID =? and runNo=?',[str(distributionID),str(runNo)])
             runLogFetch = c.fetchall()
@@ -313,12 +315,17 @@ def dbWriter(distributionID,runNo,message,executed):
             else:
                 c.execute('UPDATE runLog SET executed=? ,message=? WHERE distributionID =? and runNo=?',(executed,message,distributionID,runNo))
             
-            conn.commit()
-            c.close()
+            
+            #c.close()
+            
         except sqlite.Error, e:
             print "Error %s:" % e.args[0]
             print e
             sys.exit(1)    
+        
+        finally:
+            if conn:
+                conn.close()
             
 def job_listener(event):
     
@@ -333,12 +340,13 @@ def job_listener(event):
         print "event.SchedulerEvent: ",event.SchedulerEvent
         executed="False"
         message="Job crashed by scheduler"
-        aaa=re.search("logger", str(event.job.name))
-        print"aaa",aaa
-        if not aaa:
+        loggerSearch=re.search("logger", str(event.job.name))
+        print "Logger Search result: ",loggerSearch
+        if not loggerSearch:
             paramsArray=re.split(r"-",str(event.job.name))
             distributionID=paramsArray[1]
             runNo=paramsArray[2]
+            print "Writing to DB distributionID,runNo,message,executed:",distributionID,runNo,message,executed
             dbWriter(distributionID,runNo,message,executed)
             
         
@@ -349,13 +357,14 @@ def job_listener(event):
         print '\nThe job'+str(event.job.name)+' worked :)\n'
         executed="True"
         message="Job launched by scheduler"
-        aaa=re.search("logger", str(event.job.name))
-        print"aaa",aaa
-        if not aaa:
-            print "aaa Writing to db"
+        loggerSearch=re.search("logger", str(event.job.name))
+        print "Logger Search result: ",loggerSearch
+        if not loggerSearch:
+            
             paramsArray=re.split(r"-",str(event.job.name))
             distributionID=paramsArray[1]
             runNo=paramsArray[2]
+            print "Writing to DB distributionID,runNo,message,executed:",distributionID,runNo,message,executed
             dbWriter(distributionID,runNo,message,executed)   
     
 

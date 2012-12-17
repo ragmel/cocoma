@@ -78,9 +78,13 @@ def getActiveEmulationList():
         emulationLifetimeFetch = c.fetchall()
         
         if emulationLifetimeFetch:
+
             print "emulation Found"
             for row in emulationLifetimeFetch:
-                
+                runsTotal=0
+                runsExecuted=0
+                failedRunsInfo=[]
+                    
                 startTimeDBsec= DistributionManager.timestamp(DistributionManager.timeConv(row[0]))
                 #we already have it in sec
                 #stopTimeDBsec = DistributionManager.timestamp(DistributionManager.timeConv(row[1]))
@@ -89,19 +93,35 @@ def getActiveEmulationList():
 
                 c.execute('SELECT emulationID,emulationName FROM emulation WHERE emulationID=?',[str(row[2])])
                 emunameFetch = c.fetchall()
-                    
+                
+                #getting number of executed runs 
+                c.execute('SELECT distributionID,distributionName FROM distribution WHERE emulationID=?',[str(row[2])])
+                distroFetch = c.fetchall()
+                for distro in distroFetch:
+                    c.execute('SELECT runNo,stressValue,executed,message FROM runLog WHERE distributionID=?',[str(distro[0])])
+                    runLogFetch = c.fetchall()
+                    for run in runLogFetch:
+                        runsTotal=runsTotal+1
+                        if run[2]== "False":
+                            failedRunsInfo.append({"distributionID":distro[0],"distributionName":distro[1],"runNo":run[0],"stressValue":run[1],"message":run[3]})
+                        
+                        if run[2]== "True":
+                            runsExecuted=runsExecuted+1
+                            
+                            
+                            
  
                 
                 if stopTimeDBsec > dtNowSec:
                     print "Emulation ID: "+str(row[2])+" is active"
                     for items in emunameFetch:
                         
-                        activeEmu.append({"ID":items[0],"Name":items[1],"State":"active"})
+                        activeEmu.append({"ID":items[0],"Name":items[1],"State":"active","runsTotal":runsTotal,"runsExecuted":runsExecuted,"failedRunsInfo":failedRunsInfo})
                 else:
                     print "Emulation ID: "+str(row[2])+" is inactive"
                     for items in emunameFetch:
                         
-                        activeEmu.append({"ID":items[0],"Name":items[1],"State":"inactive"})                    
+                        activeEmu.append({"ID":items[0],"Name":items[1],"State":"inactive","runsTotal":runsTotal,"runsExecuted":runsExecuted,"failedRunsInfo":failedRunsInfo})                    
  
         else:
             print "no emulations exists" 

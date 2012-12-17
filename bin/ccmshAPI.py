@@ -74,6 +74,7 @@ def get_root():
     lk = ET.SubElement(root, 'link', {'rel':'emulations', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'emulators', 'href':'/emulators', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'distributions', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
+    lk = ET.SubElement(root, 'link', {'rel':'tests', 'href':'/tests', 'type':'application/vnd.bonfire+xml'})
     
 
     return prettify(root)
@@ -349,10 +350,90 @@ def get_distribution(name=""):
     except Exception, e:
         response.status = 404
         return "<error>"+str(e)+"</error>"
+''' 
+#############################
+tests repository
+#############################
+'''
+
+@route('/tests/', method='GET')
+@route('/tests', method='GET')
+def get_tests():
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD')     
+    
+    testsList=DistributionManager.listTests("all")
+    print "testsList",testsList
+    '''
+    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
+    '''
+    
+    
+    
+    #building the XML we will return
+    tests = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/tests'})
+    #<items offset="0" total="2">
+    items =ET.SubElement(tests,'items', { 'offset':'0','total':str(len(testsList))})
+    
+    #<distribution href="/emulations/1" name="Emu1"/>
+    
+    for elem in testsList :
+        test = ET.SubElement(items,'test', { 'href':'/tests/'+str(elem),'name':str(elem)})
+        
+        
+    
+    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk = ET.SubElement(tests, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    
+    
+    
+
+    return prettify(tests)
+
+@route('/tests/<name>/', method='GET')
+@route('/tests/<name>', method='GET')
+def get_test(name=""):
+    #curl -k -i http://10.55.164.232:8050/distributions/linear
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD') 
+    
+    try:
+        filename=open(HOMEPATH+"tests/"+name,'r')
+        print "filename to show: ",filename
+        xmlFileContent = filename.read()
+        filename.close()
+        #xmlFileContent=XmlParser.xmlReader(filename)
+        
+        #DistributionManager.listTests(name)
+        
+        testXml = ET.Element('test', { 'xmlns':'http://127.0.0.1/cocoma','href':'/tests/'+str(name)})
+        
+        #xmlContent=ET.SubElement(testXml,)
+        
+    
+        lk0 = ET.SubElement(testXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+        #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
+        lk0 = ET.SubElement(testXml, 'link', {'rel':'parent', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
+    
+    
+        return prettify(ET.fromstring(xmlFileContent))
+    
+    except Exception, e:
+        response.status = 404
+        return "<error>"+str(e)+"</error>"
  
 
 
-
+'''
+#############################
+'''    
+    
     
 @route('/hello', method='OPTIONS')
 @route('/hello', method='GET')

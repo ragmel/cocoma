@@ -53,7 +53,7 @@
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
       <startLoad>50</startLoad>
-      <stopLoad>200</stopLoad>
+      <stopLoad>500</stopLoad>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
         <resourceType>IO</resourceType>
