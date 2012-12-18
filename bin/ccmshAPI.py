@@ -493,6 +493,21 @@ def start_test():
         response.set_header('Location', 'http://'+str(IP_ADDR)+':'+str(PORT_ADDR)+'/results/'+str(emulationID))
         response.status = 201
         
+        
+        resultsEmulation = ET.Element('test', { 'xmlns':'http://127.0.0.1/cocoma','href':'/tests/'+str(emulationID)})
+            
+        emuName= ET.SubElement(resultsEmulation,'emulationName')
+        emuName.text = str(emulationID)
+        emuStart=ET.SubElement(resultsEmulation,'startTime')
+        emuStart.text=str(startTimeEmu)
+        
+        emuDate=ET.SubElement(resultsEmulation,'durationSec')
+        emuDate.text=str(stopTimeEmu)
+        
+        
+        
+        return prettify(resultsEmulation)
+        
 
 
 '''
