@@ -3,7 +3,7 @@
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
   <!-- as startTime use the format '2012-11-26T17:28:00' or the keyword 'now' (no '' characters needed) -->
-  <startTime>2012-11-26T17:28:00</startTime>
+  <startTime>now</startTime>
   <!--duration in seconds -->
   <stopTime>180</stopTime>
   

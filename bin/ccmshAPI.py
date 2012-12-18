@@ -75,6 +75,7 @@ def get_root():
     lk = ET.SubElement(root, 'link', {'rel':'emulators', 'href':'/emulators', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'distributions', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'tests', 'href':'/tests', 'type':'application/vnd.bonfire+xml'})
+    lk = ET.SubElement(root, 'link', {'rel':'results', 'href':'/results', 'type':'application/vnd.bonfire+xml'})
     
 
     return prettify(root)
@@ -92,7 +93,7 @@ GET emulation
 def get_emulations():
     response.set_header('Allow', 'GET, HEAD, POST')
     response.set_header('Accept', '*/*')
-    emuList=EmulationManager.getActiveEmulationList()#[{'State': 'active', 'ID': 11, 'Name': u'myMixEmu'}, {'State': 'active', 'ID': 12, 'Name': u'myMixEmu'}]
+    emuList=EmulationManager.getActiveEmulationList("all")#[{'State': 'active', 'ID': 11, 'Name': u'myMixEmu'}, {'State': 'active', 'ID': 12, 'Name': u'myMixEmu'}]
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     
     '''
@@ -109,7 +110,7 @@ def get_emulations():
     #<emulator href="/emulations/1" name="Emu1"/>
     
     for elem in emuList :
-        emulation = ET.SubElement(items,'emulation', { 'href':'/emulations/'+str(elem["ID"]),'id':str(elem["ID"]),'name':str(elem["Name"]),'state':str(elem["State"])})
+        emulation = ET.SubElement(items,'emulation', { 'href':'/emulations/'+str(elem["Name"]),'id':str(elem["ID"]),'name':str(elem["Name"]),'state':str(elem["State"])})
         
     
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
@@ -395,7 +396,7 @@ def get_tests():
 
 @route('/tests/<name>/', method='GET')
 @route('/tests/<name>', method='GET')
-def get_test(name=""):
+def show_test(name=""):
     #curl -k -i http://10.55.164.232:8050/distributions/linear
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
@@ -430,9 +431,183 @@ def get_test(name=""):
  
 
 
+
+
+@route('/tests', method='POST')
+@route('/tests/', method='POST')
+def start_test():
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD, POST') 
+    
+    
+    
+    emulationID=""
+    
+    fileName_stream =request.files.data
+    fileName_stream_body =request.body.read()
+    print "xml_stream_body",fileName_stream_body
+    
+    
+    
+    if fileName_stream:
+        
+        filename=HOMEPATH+"tests/"+fileName_stream
+        
+        print "File data detected:\n",filename
+        return fileName_stream
+        try:
+
+            (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(filename)
+            if startTimeEmu.lower() =="now":
+                startTimeEmu = EmulationManager.emulationNow()
+                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
+            else:
+                
+                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
+        
+        except Exception,e:
+            print e
+            response.status = 400
+            return "<error>"+str(e)+"</error>"
+    else:    
+        filename=HOMEPATH+"tests/"+fileName_stream_body
+        print "Body data detected:\n", fileName_stream_body
+        try:
+
+            (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(filename)
+            if startTimeEmu.lower() =="now":
+                startTimeEmu = EmulationManager.emulationNow()
+                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
+            else:
+                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
+    
+        except Exception,e:
+            print e
+            response.status = 400
+            return "<error>"+str(e)+"</error>"
+        
+        #Location: http://10.55.164.154:8050/results/2-CPU-dis-1
+        response.set_header('Location', 'http://'+str(IP_ADDR)+':'+str(PORT_ADDR)+'/results/'+str(emulationID))
+        response.status = 201
+        
+
+
 '''
 #############################
 '''    
+@route('/results', method='GET')
+@route('/results/', method='GET')
+def show_all_results():
+    #curl -k -i http://10.55.164.232:8050/distributions/linear
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD') 
+    emuList=EmulationManager.getActiveEmulationList("all")
+    
+    #root element
+    resultsCollection = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/results'})
+    items =ET.SubElement(resultsCollection,'items', { 'offset':'0','total':str(len(emuList))})
+        
+        
+    for elem in emuList :
+        failedRunsInfo=elem["failedRunsInfo"]
+        
+        
+        print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
+        
+        emuResults = ET.SubElement(items,'results', { 'href':'/results/'+str(elem["Name"]),'failedRuns':str(len(failedRunsInfo)),'name':str(elem["Name"]),'state':str(elem["State"])})
+
+
+        
+    
+    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk = ET.SubElement(resultsCollection, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    
+    
+
+    return prettify(resultsCollection)   
+
+
+@route('/results/<name>/', method='GET')
+@route('/results/<name>', method='GET')
+def show_results(name=""):
+    #curl -k -i http://10.55.164.232:8050/distributions/linear
+    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD') 
+    
+    
+    try:    
+        emuList=EmulationManager.getActiveEmulationList(name)
+        
+        
+        for elem in emuList :
+            failedRunsInfo=elem["failedRunsInfo"]
+            
+            print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
+            
+            resultsEmulation = ET.Element('results', { 'xmlns':'http://127.0.0.1/cocoma','href':'/results/'+str(elem["Name"])})
+            
+            emuName= ET.SubElement(resultsEmulation,'emulationName')
+            emuName.text = str(elem["Name"])
+            
+            totalRuns= ET.SubElement(resultsEmulation,'totalRuns')
+            totalRuns.text=str(elem["runsTotal"])
+            
+            executedRuns=ET.SubElement(resultsEmulation,'executedRuns')
+            executedRuns.text=str(elem["runsExecuted"])
+            
+            failedRuns=ET.SubElement(resultsEmulation,'failedRuns')
+            failedRuns.text=str(len(failedRunsInfo))
+            
+            
+            emuState= ET.SubElement(resultsEmulation,'emuState')
+            emuState.text=str(elem["State"])
+            
+            if failedRunsInfo:
+            
+                failedRunsDetails= ET.SubElement(resultsEmulation,'failedRunsDetails')
+            
+                print "###Failed Runs Info###"
+                for Runs in failedRunsInfo:
+                    runNo= ET.SubElement(failedRunsDetails,'runNo',{'runNo':str(Runs["runNo"])})
+                    #runNo.text=str(Runs["runNo"])
+                    
+                    distributionID= ET.SubElement(runNo,'distributionID')
+                    distributionID.text=str(Runs["distributionID"])
+                                   
+                    distributionName= ET.SubElement(runNo,'distributionName')
+                    distributionName.text=str(Runs["distributionName"])
+                    
+                    stressValue= ET.SubElement(runNo,'stressValue')
+                    stressValue.text=str(Runs["stressValue"])
+                    
+                    message= ET.SubElement(runNo,'message')
+                    message.text=str(Runs["message"])
+                    
+                    print "#\nRun No: ", Runs["runNo"]
+                    print "Distribution ID: ",Runs["distributionID"]
+                    print "Distribution Name: ",Runs["distributionName"]
+                    
+                    print "Stress Value: ", Runs["stressValue"]
+                    print "Error Message: ", Runs["message"]
+        
+            return prettify(resultsEmulation)
+        
+            
+    except Exception,e:
+        response.status = 400
+        print "\nEmulation ID:"+str(name)+" not found.\nError:"+str(e)
+        return "<error>Emulation ID:"+str(name)+" not found.\nError:"+str(e)+"</error>"
+
+
     
     
 @route('/hello', method='OPTIONS')

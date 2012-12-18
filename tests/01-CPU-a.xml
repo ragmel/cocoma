@@ -2,7 +2,7 @@
   <name>Emu-CPU-RAM-IO</name>
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
-  <startTime>2012-11-12T18:30:00</startTime>
+  <startTime>now</startTime>
   <!--duration in seconds -->
   <stopTime>180</stopTime>
   

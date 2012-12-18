@@ -54,7 +54,7 @@ def getAllEmulationList():
 
     return emulationList
     
-def getActiveEmulationList():
+def getActiveEmulationList(name):
     
     activeEmu=[]
     dtNowSec = DistributionManager.timestamp(dt.now())
@@ -71,10 +71,21 @@ def getActiveEmulationList():
             
         c = conn.cursor()
         
+        if name=="all":
+            c.execute('SELECT startTime, stopTime, emulationID FROM emulationLifetime')
+            
+        else:
+            c.execute("SELECT emulationID FROM emulation WHERE emulationName=?",[name])
+            emulationIdArray = c.fetchone()
         
-        c.execute('SELECT startTime, stopTime, emulationID FROM emulationLifetime')
-        conn.commit()
-                
+            if emulationIdArray:
+                emulationID=emulationIdArray[0]
+            else:
+                raise sqlite.Error("Emulation "+str(name)+" not found")
+            
+            c.execute("SELECT startTime, stopTime, emulationID FROM emulationLifetime WHERE emulationID=?",[emulationID])
+            
+        conn.commit()                
         emulationLifetimeFetch = c.fetchall()
         
         if emulationLifetimeFetch:
@@ -135,12 +146,13 @@ def getActiveEmulationList():
     except sqlite.Error, e:
         print "dateOverlapCheck() SQL Error %s:" % e.args[0]
         print e
+        return "<error>str(e)</error>"
         sys.exit(1)
     
     c.close()
     
 
-def getEmulation(emulationID):
+def getEmulation(emulationName):
     print "Hello this is getEmulation by ID"
     
     distroList=[]
@@ -167,8 +179,16 @@ def getEmulation(emulationID):
             conn = sqlite.connect('./data/cocoma.sqlite')
         c = conn.cursor()
         
+        c.execute("SELECT emulationID FROM emulation WHERE emulationName=?",[emulationName])
+        emulationIdArray = c.fetchone()
         
-
+        if emulationIdArray:
+            emulationID=emulationIdArray[0]
+        else:
+            raise sqlite.Error("Emulation "+str(emulationName)+" not found")
+            
+            
+            
        
         
         #EMULATION & EMULATION LIFETIME
@@ -274,13 +294,15 @@ def getEmulation(emulationID):
 
         
         c.close()
+        print emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
+        return (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
+
     except sqlite.Error, e:
         print "Error getting emulation list %s:" % e.args[0]
         print e
+        return str(e)
         sys.exit(1)
         
-    print emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
-    return (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
 
         
 def deleteEmulation(emulationID):
@@ -584,6 +606,8 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
         # 1. Populate "emulation"
         c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active,logging,logFrequency) VALUES (?, ?, ?, ?, ?, ?)', [emulationName,emulationType,resourceTypeEmulation,1,emulationLog,emulationLogFrequency])
         emulationID = c.lastrowid
+        returnEmulationName=(str(emulationID)+"-"+emulationName)
+        c.execute('UPDATE emulation SET emulationName=? WHERE emulationID =?',(str(emulationID)+"-"+emulationName,emulationID))
         
         # 2. We populate "emulationLifetime" table  
         c.execute('INSERT INTO emulationLifetime (startTime,stopTime,emulationID) VALUES (?,?,?)', [startTimeEmu,stopTimeEmu,emulationID])
@@ -658,7 +682,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
         return "SQL error:",e
         sys.exit(1)
     
-    return emulationID
+    return returnEmulationName
 
     
 

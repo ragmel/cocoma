@@ -40,7 +40,9 @@ def main():
     parser = optparse.OptionParser()
     
     listEmu = optparse.OptionGroup(parser, 'List existing emulations')
-    listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='[emulationID] [all]  List of emulations by ID or all')
+    listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='[emulationName]  List of emulations by ID or all')
+    listEmu.add_option('-r', '--results', action='store_true', default=False,dest='resAll',help='[emulationName] [all]  List of emulation results')
+    
     #listEmu.add_option('--list-active', action='store_true', default=False,dest='listActive', help='List of active emulations')
     #listEmu.add_option('--list-inactive', action='store_true', default=False,dest='listInactive', help='List of inactive emulations')
     listEmu.add_option('--list-jobs', action='store_true', default=False,dest='listJobs', help='[all] List of all active Jobs running on Scheduler daemon')
@@ -171,9 +173,9 @@ def main():
         
         '''
         
-        if options.listAll:
+        if options.resAll:
             if arguments[0]=="all":
-                emuList=EmulationManager.getActiveEmulationList()
+                emuList=EmulationManager.getActiveEmulationList("all")
                 
                 
                 for elem in emuList :
@@ -190,8 +192,53 @@ def main():
                             
                             print "Stress Value: ", Runs["stressValue"]
                             print "Error Message: ", Runs["message"]
-                            #distributionID":distro[0],"distributionName":distro[1],"runNo":run[0],"stressValue":run[1],"message":run[3]
-                        #+"\nFailed Runs: "+str(len(elem["failedRunsInfo"]))
+
+            else:
+                try:
+                    emuList=EmulationManager.getActiveEmulationList(arguments[0])
+                    for elem in emuList :
+                        failedRunsInfo=elem["failedRunsInfo"]
+                    
+                    print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
+                    
+                    if failedRunsInfo:
+                        print "###Failed Runs Info###"
+                        for Runs in failedRunsInfo:
+                            print "#\nRun No: ", Runs["runNo"]
+                            print "Distribution ID: ",Runs["distributionID"]
+                            print "Distribution Name: ",Runs["distributionName"]
+                            
+                            print "Stress Value: ", Runs["stressValue"]
+                            print "Error Message: ", Runs["message"]
+                except Exception,e:
+               
+                        print "\nEmulation ID:"+str(arguments[0])+" not found.\nError:"+str(e)
+                        sys.exit(0)
+                
+                
+ 
+                
+        if options.listAll:
+
+            if arguments[0]=="all":
+                emuList=EmulationManager.getActiveEmulationList("all")
+                
+                
+                for elem in emuList :
+                    failedRunsInfo=elem["failedRunsInfo"]
+                    
+                    print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
+                    
+                    if failedRunsInfo:
+                        print "###Failed Runs Info###"
+                        for Runs in failedRunsInfo:
+                            print "#\nRun No: ", Runs["runNo"]
+                            print "Distribution ID: ",Runs["distributionID"]
+                            print "Distribution Name: ",Runs["distributionName"]
+                            
+                            print "Stress Value: ", Runs["stressValue"]
+                            print "Error Message: ", Runs["message"]
+                            
             else:
                 try:
                     (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(arguments[0])
