@@ -454,7 +454,7 @@ def start_test():
     
     if fileName_stream:
         
-        filename=HOMEPATH+"tests/"+fileName_stream
+        filename=HOMEPATH+"/tests/"+fileName_stream[6:-7]
         
         print "File data detected:\n",filename
         return fileName_stream
@@ -473,8 +473,8 @@ def start_test():
             response.status = 400
             return "<error>"+str(e)+"</error>"
     else:    
-        filename=HOMEPATH+"tests/"+fileName_stream_body
-        print "Body data detected:\n", fileName_stream_body
+        filename=HOMEPATH+"/tests/"+fileName_stream_body[6:-7]
+        print "Body data detected:\n", filename
         try:
 
             (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(filename)
