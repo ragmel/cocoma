@@ -168,6 +168,18 @@ class schedulerDaemon(object):
         return gmtTime
 
     def recoverySchedulerDaemon(self):
+        os.system("clear")
+        print'''
+      ___  _____  ___  _____  __  __    __       
+     / __)(  _  )/ __)(  _  )(  \/  )  /__\     
+    ( (__  )(_)(( (__  )(_)(  )    (  /(__)\    
+     \___)(_____)\___)(_____)(_/\/\_)(__)(__) SCHEDULER   
+
+        
+        
+        '''
+        
+        
         print "Recovering list of emulations"
     
         '''

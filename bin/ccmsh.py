@@ -68,6 +68,7 @@ def main():
     serviceControl.add_option('--start', action='store_true', default=False,dest='startServices',help='[scheduler][api] start services')
     serviceControl.add_option('--stop', action='store_true', default=False,dest='stopServices',help='[scheduler][api] stop services')
     serviceControl.add_option('--show', action='store_true', default=False,dest='showServices',help='[scheduler][api] show services')
+    serviceControl.add_option('-v','--version', action='store_true', default=False,dest='version',help='Display version info')
     
     listEmulator = optparse.OptionGroup(parser, 'List available emulators')  
     listEmulator.add_option('-e', '--emu', action='store_true', default=False,dest='listAllEmulators',help='[all] or [name]  List of all available emulators')
@@ -86,6 +87,42 @@ def main():
        
 
     options, arguments = parser.parse_args()
+    
+    if options.version:
+        os.system("clear")
+        print '''
+            
+     _______  _______  _______  _______  _______  _______              
+    (  ____ \(  ___  )(  ____ \(  ___  )(       )(  ___  )  
+    | (    \/| (   ) || (    \/| (   ) || () () || (   ) |  
+    | |      | |   | || |      | |   | || || || || (___) |  
+    | |      | |   | || |      | |   | || |(_)| ||  ___  |  
+    | |      | |   | || |      | |   | || |   | || (   ) |   
+    | (____/\| (___) || (____/\| (___) || )   ( || )   ( |    
+    (_______/(_______)(_______/(_______)|/     \||/     \| Ver. 0.0001
+                                                                                  
+                                                                                  
+Copyright 2012-2013 SAP Ltd
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ 
+COCOMA is a framework for COntrolled COntentious and MAlicious patterns
+                                                                                  
+
+            '''
+        sys.exit(1) 
+    
     #catch empty arguments
     if len(arguments)>0:
         
@@ -119,7 +156,8 @@ def main():
         serviceControl
         ###############################
         '''
-        
+
+            
         if options.startServices:
             if arguments[0] == "scheduler":
                 print "Starting ",arguments[0]
