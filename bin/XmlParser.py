@@ -64,43 +64,6 @@
 
 ----------------------------------SPAIN-----------------------------------
 
-
-
-<emulation>
-  <emulationName>myMixEmu</emulationName>
-  <emulationType>Mix</emulationType>
-  <resourceType>Mix</resourceType>
-  <startTime>now</startTime>
-  <!--duration in seconds -->
-  <stopTime>180</stopTime>
-  
-  <distributions name=" myMixEmu-dis-1">
-     <startTime>0</startTime>
-     <!--duration in seconds -->
-     <duration>60</duration>
-     <distribution href="/distributions/linear" name="linear" />
-      <startLoad>10</startLoad>
-      <stopLoad>90</stopLoad>
-      <emulator href="/emulators/stressapptest" name="stressapptest" />
-      <emulator-params>
-        <!--more parameters will be added -->
-        <resourceType>CPU</resourceType>
-      </emulator-params>
-  </distributions>
-
-  <distributions name=" myMixEmu-dis-3">
-     <startTime>now+60</startTime>
-     <!--duration in seconds -->
-     <duration>60</duration>
-     <distribution href="/distributions/linear" name="linear" />
-      <emulator href="/emulators/stressapptest" name="stressapptest" />
-      <emulator-params>
-        <resourceType>NET</resourceType>
-      </emulator-params>
-  </distributions>
-
-
-</emulation>
 '''
 from xml.dom.minidom import parseString, Node
 import DistributionManager,sys,EmulationManager
@@ -317,8 +280,14 @@ def xmlParser(xmlData):
     
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
     
+def parse_tests(xmlStream):
+    dom2 = parseString(xmlStream)
 
-
+    testNameXml=dom2.getElementsByTagName('testName')[0].firstChild.data
+    ##emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
+    #emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('name')[0].firstChild.data
+    print "Filename: ",testNameXml
+    return testNameXml
 
 if __name__ == '__main__':
     

@@ -448,16 +448,20 @@ def start_test():
     
     fileName_stream =request.files.data
     fileName_stream_body =request.body.read()
-    print "xml_stream_body",fileName_stream_body
+    
     
     
     
     if fileName_stream:
+        try:
+            filename=HOMEPATH+"/tests/"+XmlParser.parse_tests(fileName_stream)
+        except Exception,e:
+            print e
+            response.status = 400
+            return "<error>"+str(e)+"</error>"
         
-        filename=HOMEPATH+"/tests/"+fileName_stream[6:-7]
-        
-        print "File data detected:\n",filename
-        return fileName_stream
+        print "File data detected:\n",fileName_stream
+        #return fileName_stream
         try:
 
             (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(filename)
@@ -471,9 +475,17 @@ def start_test():
         except Exception,e:
             print e
             response.status = 400
-            return "<error>"+str(e)+"</error>"
-    else:    
-        filename=HOMEPATH+"/tests/"+fileName_stream_body[6:-7]
+            return "<error>Cannot parse:"+str(e)+"</error>"
+    else:
+        print "xml_stream_body:\n",fileName_stream_body
+        
+        try:   
+            filename=HOMEPATH+"/tests/"+XmlParser.parse_tests(fileName_stream_body)
+        except Exception,e:
+            print e
+            response.status = 400
+            return "<error>Cannot parse body:"+str(e)+"</error>"        
+        
         print "Body data detected:\n", filename
         try:
 
@@ -655,7 +667,7 @@ def create_emu():
     
     xml_stream =request.files.data
     xml_stream_body =request.body.read()
-    print "xml_stream_body",xml_stream_body
+    
     if xml_stream:
         
         print "File data detected:\n",xml_stream

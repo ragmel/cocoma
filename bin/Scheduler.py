@@ -284,7 +284,7 @@ class schedulerDaemon(object):
                 
     
         except sqlite.Error, e:
-            print "Could retrieve SQL for startTime,emulationID FROM emulationLifetime "
+            print "Could not retrieve SQL for startTime,emulationID FROM emulationLifetime "
             print "Error %s:" % e.args[0]
             print e
             sys.exit(1)    
