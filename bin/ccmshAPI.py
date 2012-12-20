@@ -20,7 +20,7 @@
 
 
 
-from bottle import route, run,response,request
+from bottle import route, run,response,request,re
 import sys,os, time
 from datetime import datetime as dt
 import EmulationManager,ccmsh,DistributionManager,XmlParser
@@ -502,6 +502,12 @@ def start_test():
             return "<error>"+str(e)+"</error>"
         
         #Location: http://10.55.164.154:8050/results/2-CPU-dis-1
+        paramsArray=re.split(r"-",str(emulationID))
+        if isStr(paramsArray[0]):
+            
+            response.status = 400
+            return "Unable to create emulation please check data.\n"+str(emulationID)
+        
         response.set_header('Location', 'http://'+str(IP_ADDR)+':'+str(PORT_ADDR)+'/results/'+str(emulationID))
         response.status = 201
         
@@ -696,7 +702,8 @@ def create_emu():
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     try:
         emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
-        if isStr(emulationID):
+        paramsArray=re.split(r"-",str(emulationID))
+        if isStr(paramsArray[0]):
             
             response.status = 400
             return "Unable to create emulation please check data.\n"+str(emulationID)
