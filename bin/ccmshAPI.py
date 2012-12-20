@@ -364,7 +364,7 @@ def get_tests():
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     response.set_header('Accept', '*/*')
-    response.set_header('Allow', 'GET, HEAD')     
+    response.set_header('Allow', 'GET, HEAD, POST')     
     
     testsList=DistributionManager.listTests("all")
     print "testsList",testsList

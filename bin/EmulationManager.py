@@ -846,7 +846,7 @@ def services_control(service,action,args):
                 else:
                     try:
                         HOMEPATH= os.environ['COCOMA']
-                        sout=open(HOMEPATH+"/.~sout","wb")
+                        sout=open("/tmp/cocoma_scheduler.out","wb")
                         
                         procSched = subprocess.Popen(HOMEPATH+"/bin/Scheduler.py",stdout=sout,stderr=sout)
                         procSched.stdout
@@ -876,7 +876,7 @@ def services_control(service,action,args):
                 else:
                     try:
                         HOMEPATH= os.environ['COCOMA']
-                        aout=open(HOMEPATH+"/.~aout","wb")
+                        aout=open("/tmp/cocoma_api.out","wb")
                         print "args",args
                         ccmshAPI = subprocess.Popen("python "+HOMEPATH+"/bin/ccmshAPI.py "+args,shell=True,stdout=aout,stderr=aout)
                         apiPidNo =ccmshAPI.pid
