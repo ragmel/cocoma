@@ -84,6 +84,9 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
                 print "self.startTimesec",startTimesec
                 runStartTime=startTimesec+(duration*runNo)
                 
+                #delay of one sec
+                runStartTime =(runStartTime+(2*runNo))
+                
                 
                 runStartTimeList.append(runStartTime)
                 print "This run start time: "
@@ -131,8 +134,8 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
                 
             
                 
-        #run last
-        runStartTimeList.append(startTimesec+duration*upperBoundary)
+        #run last plus 2sec
+        runStartTimeList.append((startTimesec+duration*upperBoundary)+(int(upperBoundary*2)))
         stressValues.append(stopLoad)            
                 
             

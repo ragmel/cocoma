@@ -4,19 +4,19 @@
   <resourceType>MEM</resourceType>
   <startTime>now</startTime>
   <!--duration in seconds -->
-  <stopTime>130</stopTime>
+  <stopTime>50</stopTime>
   
  
   <distributions>
      <name>Distro1</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>120</duration>
-     <granularity>1</granularity>
+     <duration>40</duration>
+     <granularity>4</granularity>
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
-      <startLoad>100</startLoad>
-      <stopLoad>100</stopLoad>
+      <startLoad>1000</startLoad>
+      <stopLoad>2000</stopLoad>
       <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
         <resourceType>MEM</resourceType>
