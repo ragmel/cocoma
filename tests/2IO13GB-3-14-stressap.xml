@@ -1,0 +1,35 @@
+<emulation>
+  <name>Emulation2</name>
+  <emulationType>CO</emulationType>
+  <resourceType>IO</resourceType>
+  <startTime>now</startTime>
+  <!--duration in seconds -->
+  <stopTime>130</stopTime>
+  
+ 
+  <distributions>
+     <name>Distro1</name>
+     <startTime>0</startTime>
+     <!--duration in seconds -->
+     <duration>120</duration>
+     <granularity>3</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+     <!--Megabytes for memory -->
+      <startLoad>100</startLoad>
+      <stopLoad>1000</stopLoad>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator-params>
+        <resourceType>IO</resourceType>
+	<!--Number of threads (default cpu number)-->
+	<fileQty>0</fileQty>
+      </emulator-params>
+  </distributions>
+
+  <log>
+  	<!-- Use value "1" to enable logging(by default logging is off)  -->
+  	<enable>1</enable>
+  	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+  	<frequency>3</frequency>
+  </log>
+
+</emulation>
