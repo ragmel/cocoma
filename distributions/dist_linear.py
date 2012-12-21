@@ -67,74 +67,76 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     runStartTimeList.append(startTimesec)
     stressValues.append(startLoad)
     
-
+    if int(distributionGranularity)==1:
+        return stressValues, runStartTimeList
     
-    runNo=int(1)
-    
-    #runStartTime=startTimesec+(duration*upperBoundary)
-    
-
-    linearStress=0
-    while(upperBoundary !=runNo):
-    
-            print "Run No: "
-            print runNo
-            print "self.startTimesec",startTimesec
-            runStartTime=startTimesec+(duration*runNo)
-            
-            
-            runStartTimeList.append(runStartTime)
-            print "This run start time: "
-            print runStartTime
-            print "This is time passed to scheduler:"
-            print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
+    else:
+        runNo=int(1)
         
-            '''
-            1. Distribution formula goes here
-            '''
-             
-            
-            linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
-            print "linearSterp",linearStep
-            linearStep=math.fabs((int(linearStep)))#making positive value
-            print "LINEAR STEP SHOULD BE THE SAME"
-            print linearStep
-            
-            if startLoad < stopLoad:
+        #runStartTime=startTimesec+(duration*upperBoundary)
+        
+    
+        linearStress=0
+        while(upperBoundary !=runNo):
+        
+                print "Run No: "
+                print runNo
+                print "self.startTimesec",startTimesec
+                runStartTime=startTimesec+(duration*runNo)
                 
-                linearStress= (linearStep*int(runNo))+int(startLoad)
-            if startLoad > stopLoad:
-
-                linearStress= (linearStep*(upperBoundary-int(runNo)))+int(stopLoad)
-            
-            if startLoad == stopLoad:
-                linearStress=startLoad
                 
-            #make sure we return integer
-            linearStress=int(linearStress)
-            print "LINEAR STRESS SHOULD CHANGE"
-            print linearStress
+                runStartTimeList.append(runStartTime)
+                print "This run start time: "
+                print runStartTime
+                print "This is time passed to scheduler:"
+                print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
             
+                '''
+                1. Distribution formula goes here
+                '''
+                 
+                
+                linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
+                print "linearSterp",linearStep
+                linearStep=math.fabs((int(linearStep)))#making positive value
+                print "LINEAR STEP SHOULD BE THE SAME"
+                print linearStep
+                
+                if startLoad < stopLoad:
+                    
+                    linearStress= (linearStep*int(runNo))+int(startLoad)
+                if startLoad > stopLoad:
+    
+                    linearStress= (linearStep*(upperBoundary-int(runNo)))+int(stopLoad)
+                
+                if startLoad == stopLoad:
+                    linearStress=startLoad
+                    
+                #make sure we return integer
+                linearStress=int(linearStress)
+                print "LINEAR STRESS SHOULD CHANGE"
+                print linearStress
+                
+                
+                
+                
+                stressValues.append(linearStress)
+                print "This run stress Value: "
+                print stressValues
+                
+                print "runStartTimeList",runStartTimeList
+                 
+                #increasing to next run            
+                runNo=int(runNo)+1
+                
             
+                
+        #run last
+        runStartTimeList.append(startTimesec+duration*upperBoundary)
+        stressValues.append(stopLoad)            
+                
             
-            
-            stressValues.append(linearStress)
-            print "This run stress Value: "
-            print stressValues
-            
-            print "runStartTimeList",runStartTimeList
-             
-            #increasing to next run            
-            runNo=int(runNo)+1
-            
-        
-            
-    #run last
-    runStartTimeList.append(startTimesec+duration*upperBoundary)
-    stressValues.append(stopLoad)            
-            
-        
-    return stressValues, runStartTimeList
+        return stressValues, runStartTimeList
     
     
 def distHelp():
