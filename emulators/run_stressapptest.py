@@ -212,11 +212,11 @@ def ioLoad(distributionID,runNo,memSize,fileQty,duration):
             
             print "Started Stressapptest on PID No: ",runStressapptestPidNo
         else:
-            print"MULTIPLE FILES NOT WORKING! SELECT ZERO"
+            #print"MULTIPLE FILES NOT WORKING! SELECT ZERO"
             fileStr=""
-            '''
+            
             fileQty=int(fileQty)
-            fileStr=fileStr+" -f /tmp/stressapptestFile"+str(fileQty)
+            #fileStr=fileStr+" -f /tmp/stressapptestFile"+str(fileQty)
             print "fileStr: ",fileStr
             
             while fileQty !=0:
@@ -225,8 +225,8 @@ def ioLoad(distributionID,runNo,memSize,fileQty,duration):
                 
             
             cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -s "+str(duration)+" --stop_on_errors&"
-            
-            print cmd
+            #stressapptest -M 100 -f /tmp/stressapptestFile1 -f /tmp/stressapptestFile2 -s 240
+            print "The command we execute: ",cmd
             
             #runStressapptest = subprocess.Popen(["stressapptest","-M",memSize,"-i",memThreads,"-s",duration])
             
@@ -236,7 +236,7 @@ def ioLoad(distributionID,runNo,memSize,fileQty,duration):
             runStressapptestPidNo =pidFinder("stressapptest")
             
             print "Started Stressapptest on PID No: ",runStressapptestPidNo
-            '''
+            
             
     except Exception, e:
         "run_Stressapptest job memLoad exception: ", e
