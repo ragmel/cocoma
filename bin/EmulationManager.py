@@ -153,7 +153,7 @@ def getActiveEmulationList(name):
     
 
 def getEmulation(emulationName):
-    print "Hello this is getEmulation by ID"
+    print "Hello this is getEmulation by name"
     
     distroList=[]
     """

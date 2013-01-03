@@ -290,7 +290,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                     
                 except Exception,e:
                
-                        print "\nEmulation ID:"+str(arguments[0])+" not found.\nError:"+str(e)
+                        print "\nEmulation Name:"+str(arguments[0])+" not found.\nError:"+str(e)
                         sys.exit(0)
                     
         if options.listJobs:
