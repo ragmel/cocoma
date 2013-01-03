@@ -275,6 +275,16 @@ def emulatorHelp():
         <memThreads>0</memThreads>
     </emulator-params>
     
+    
+    Input Output(IO) with parameters:
+        fileQty - number of files to write simultaneously( default is one file)
+    
+    XML Block Example: 
+    <emulator-params>
+        <resourceType>IO</resourceType>
+        <fileQty>3</fileQty>
+    </emulator-params>
+    
     """
     
 '''
