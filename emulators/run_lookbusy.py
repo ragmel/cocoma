@@ -306,17 +306,17 @@ def emulatorArgNames(Rtype):
     '''
     if Rtype.lower() == "cpu":
         
-        argNames=["ncpus"]
+        argNames={"ncpus":{"upperBound":10,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
     
     if Rtype.lower() == "mem":
-        argNames=["memSleep"]
+        argNames={"memSleep":{"upperBound":10,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
     
     if Rtype.lower() == "io":
-        argNames=["ioBlockSize","ioSleep"]
+        argNames={"ioBlockSize":{"upperBound":10,"lowerBound":0},"ioSleep":{"upperBound":10,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
 

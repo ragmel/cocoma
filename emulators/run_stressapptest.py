@@ -297,12 +297,12 @@ def emulatorArgNames(Rtype):
     '''
     
     if Rtype.lower() == "mem":
-        argNames=["memThreads"]
+        argNames={"memThreads":{"upperBound":10,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
     
     if Rtype.lower() == "io":
-        argNames=["fileQty"]
+        argNames={"fileQty":{"upperBound":10,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
 

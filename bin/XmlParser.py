@@ -161,7 +161,10 @@ def xmlParser(xmlData):
         print "emulatorType,resourceTypeDist:",emulatorType,resourceTypeDist        
         try:
             EmulatorModuleMethod=DistributionManager.loadEmulatorArgNames(emulatorType)
-            emulatorArgs=EmulatorModuleMethod(resourceTypeDist)
+            #argNames={"fileQty":{"upperBound":10,"lowerBound":0}}
+            emulatorArgsDict=EmulatorModuleMethod(resourceTypeDist)
+            emulatorArgs=emulatorArgsDict.keys()
+            
             print "emulatorArgs:",emulatorArgs
         except IOError, e:
             print "Unable to load module name \"",emulatorType,"\" error:"

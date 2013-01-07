@@ -159,4 +159,29 @@ def argNames():
     argNames=["startLoad","stopLoad"]
     print "Use Arg's: ",argNames
     return argNames
+#under development
+def ArgNamesLimits(Rtype):
+    '''
+    Rtype = <MEM, CPU, IO>
+    
+    '''
+    if Rtype.lower() == "cpu":
+        
+        argNames={"startLoad":{"upperBound":100,"lowerBound":0},"stopLoad":{"upperBound":100,"lowerBound":0}}
+        print "Use Arg's: ",argNames
+        return argNames
+    #get free amount of memory and set it to upper bound
+    if Rtype.lower() == "mem":
+        argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
+        print "Use Arg's: ",argNames
+        return argNames
+    
+    if Rtype.lower() == "io":
+        argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
+        print "Use Arg's: ",argNames
+        return argNames
+
+
+    
+
 
