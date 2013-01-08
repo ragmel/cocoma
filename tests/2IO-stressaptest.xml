@@ -4,19 +4,19 @@
   <resourceType>IO</resourceType>
   <startTime>now</startTime>
   <!--duration in seconds -->
-  <stopTime>25</stopTime>
+  <stopTime>120</stopTime>
   
  
   <distributions>
      <name>Distro1</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>20</duration>
+     <duration>118</duration>
      <granularity>1</granularity>
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
-      <startLoad>100</startLoad>
-      <stopLoad>100</stopLoad>
+      <startLoad>250</startLoad>
+      <stopLoad>250</stopLoad>
       <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
         <resourceType>IO</resourceType>
