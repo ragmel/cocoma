@@ -138,11 +138,16 @@ def xmlParser(xmlData):
         distribution = dom2.getElementsByTagName('distribution')[n]
         distrType = distribution.attributes["name"].value
         
+        #getting resource type of distribution CPU,IO,MEM or NET
+        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourceType')[0].firstChild.data
             
                 
         try:
             moduleMethod=DistributionManager.loadDistributionArgNames(distrType)
-            moduleArgs=moduleMethod()
+            
+            distroArgsLimitsDict=moduleMethod(resourceTypeDist)
+            moduleArgs=distroArgsLimitsDict.keys()
+            
             print "moduleArgs:",moduleArgs
         except IOError, e:
             print "Unable to load module name \"",distrType,"\" error:"
@@ -157,13 +162,13 @@ def xmlParser(xmlData):
         emulator = dom2.getElementsByTagName('emulator')[n]
         emulatorType = emulator.attributes["name"].value
         
-        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourceType')[0].firstChild.data
+        
         print "emulatorType,resourceTypeDist:",emulatorType,resourceTypeDist        
         try:
             EmulatorModuleMethod=DistributionManager.loadEmulatorArgNames(emulatorType)
             #argNames={"fileQty":{"upperBound":10,"lowerBound":0}}
-            emulatorArgsDict=EmulatorModuleMethod(resourceTypeDist)
-            emulatorArgs=emulatorArgsDict.keys()
+            emulatorArgsLimitsDict=EmulatorModuleMethod(resourceTypeDist)
+            emulatorArgs=emulatorArgsLimitsDict.keys()
             
             print "emulatorArgs:",emulatorArgs
         except IOError, e:
@@ -217,13 +222,19 @@ def xmlParser(xmlData):
                 #arg0 = dom2.getElementsByTagName(moduleArgs[a])[n].firstChild.data
                 arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(emulatorArgs[a])[0].firstChild.data
                 print "Emulator Arg",a," arg Name: ", emulatorArgs[a]," arg Value: ",arg0
-                emulatorArgDict={emulatorArgs[a]:arg0}
-                emulatorArg.update({emulatorArgs[a]:arg0})
+                #emulatorArgDict={emulatorArgs[a]:arg0}
+                
+                emulatorLimitsDictValues = emulatorArgsLimitsDict[emulatorArgs[a]]
+                print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues)
+                                    
+                emulatorArg.update({emulatorArgs[a]:boundsCompare(arg0,emulatorLimitsDictValues)})
+                
                 #append(emulatorArgs[a]:arg0)
                 a= a+1
                 #print a, moduleArgs[a]
-            except IndexError,e:
-                    #print e, "setting value to NULL"
+            except Exception, e:
+                print e
+                sys.exit(0)
                     #arg0="NULL"
                     #print arg0
                     #arg.append(arg0)
@@ -279,9 +290,32 @@ def xmlParser(xmlData):
         # print "Distro ",n
         #print durationDistro,  startTimeDistro, distribution,emulator 
         
+        #    CPU-dis-1        Mix          1              3                        Mix               now         180       [{'distroArgs': {'startLoad': u'10', 'stopLoad': u'90'}, 'emulatorName': u'lookbusy', 'distrType': u'linear', 'resourceTypeDist': u'CPU', 'startTimeDistro': u'5', 'distributionsName': u'CPU-dis-1', 'durationDistro': u'170', 'emulatorArg': {'ncpus': u'0'}, 'granularity': u'10'}] 
+                                                                                                                                            
     print emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
     
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
+
+
+def boundsCompare(xmlValue,LimitsDictValues):
+    upperBound=int(LimitsDictValues["upperBound"])
+    lowerBound=int(LimitsDictValues["lowerBound"])
+    xmlValue=int(xmlValue)
+    
+    if xmlValue >= lowerBound:
+        if xmlValue <= upperBound:
+            print "1 ",xmlValue,upperBound,lowerBound
+            return xmlValue
+            
+        else:
+            print "Higher than upperBound taking maximum value"
+            print "2 ",xmlValue,upperBound,lowerBound
+            return upperBound
+    else:
+        print "Lower than lowerBound taking minimum value"
+        print "3 ",xmlValue,upperBound,lowerBound
+        return lowerBound 
+
     
 def parse_tests(xmlStream):
     dom2 = parseString(xmlStream)
@@ -296,104 +330,48 @@ if __name__ == '__main__':
     
     #filename = "xmldoc.xml"
     #xmlFileReader(filename)
-    xmlData='''<?xml version="1.0" encoding="UTF-8"?>
+    xmlData='''
 <emulation>
-  <emulationName>myMixEmu</emulationName>
+  <name>Emu-CPU-RAM-IO</name>
   <emulationType>Mix</emulationType>
   <resourceType>Mix</resourceType>
   <startTime>now</startTime>
   <!--duration in seconds -->
-  <stopTime>now</stopTime>
+  <stopTime>180</stopTime>
   
-  <distributions name=" myMixEmu-dis-1">
-     <startTime>0</startTime>
+  <distributions> 
+   <name>CPU-dis-1a</name>
+     <startTime>5</startTime>
      <!--duration in seconds -->
-     <duration>120</duration>
-     <granularity>10</granularity>
+     <duration>30</duration>
+     <granularity>3</granularity>
      <distribution href="/distributions/linear" name="linear" />
-      <startLoad>11</startLoad>
-      <stopLoad>91</stopLoad>
+    <!--cpu utilization distribution range-->
+      <startLoad>10</startLoad>
+      <stopLoad>90</stopLoad>
       <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
         <!--more parameters will be added -->
         <resourceType>CPU</resourceType>
-        <!--Number of CPUs to keep busy (default: autodetected)-->
-        <ncpus>0</ncpus>
+    <!--Number of CPUs to keep busy (default: autodetected)-->
+    <ncpus>10</ncpus>
+
       </emulator-params>
   </distributions>
+
+  <log>
+      <!-- Use value "1" to enable logging(by default logging is off)  -->
+      <enable>1</enable>
+      <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+      <frequency>3</frequency>
+  </log>
   
-  <distributions name=" myMixEmu-dis-2">
-     <startTime>60</startTime>
-     <!--duration in seconds -->
-     <duration>200</duration>
-     <granularity>10</granularity>
-     <distribution href="/distributions/poisson" name="linear" />
-    <startLoad>12</startLoad>
-      <stopLoad>92</stopLoad>  
-      <emulator href="/emulators/stress" name="lookbusy" />
-      <emulator-params>
-        <resourceType>CPU</resourceType>
-        <ncpus>3</ncpus>
-      </emulator-params>
-  </distributions>
-
-  <distributions name=" myMixEmu-dis-3">
-     <startTime>50</startTime>
-     <!--duration in seconds -->
-     <duration>3</duration>
-     <granularity>10</granularity>
-     <distribution href="/distributions/linear" name="linear" />
-    <startLoad>13</startLoad>
-      <stopLoad>93</stopLoad>  
-      <emulator href="/emulators/stressapptest" name="lookbusy" />
-      <emulator-params>
-        <resourceType>MEM</resourceType>
-        <memUtil>10GB</memUtil>
-        <memSleep>100</memSleep>
-      </emulator-params>
-  </distributions>
-
-  <distributions name=" myMixEmu-dis-4">
-     <startTime>120</startTime>
-     <!--duration in seconds -->
-     <duration>4</duration>
-     <granularity>10</granularity>
-     <distribution href="/distributions/poisson" name="parabola" />
-      <curve>14</curve>
-      <sphere>34</sphere>
-      <bend>94</bend>     
-      <emulator href="/emulators/stressapptest" name="lookbusy" />
-      <emulator-params>
-        <resourceType>CPU</resourceType>
-        <ncpus>3</ncpus>
-      </emulator-params>
-  </distributions>
-
-  <distributions name=" myMixEmu-dis-5">
-     <startTime>120</startTime>
-     <!--duration in seconds -->
-     <duration>5</duration>
-     <granularity>10</granularity>
-     <distribution href="/distributions/geometric" name="linear" />
-      <startLoad>15</startLoad>
-      <stopLoad>95</stopLoad>     
-      <emulator href="/emulators/wireshark" name="lookbusy" />
-      <emulator-params>
-        <resourceType>IO</resourceType>
-        <ioUtil>10</ioUtil>
-        <ioBlockSize>20</ioBlockSize>
-        <ioSleep>30</ioSleep>
-      </emulator-params>
-  </distributions>
-
-  <link rel="parent" href="/"/>
-  <link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
 </emulation>
+
     
     
     '''
     xmlParser(xmlData)
-    
     
     
     pass

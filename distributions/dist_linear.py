@@ -154,31 +154,36 @@ def distHelp():
 '''
 here we specify how many arguments distribution instance require to run properly
 '''
-def argNames():
+#def argNames():
     
-    argNames=["startLoad","stopLoad"]
-    print "Use Arg's: ",argNames
-    return argNames
+#    argNames=["startLoad","stopLoad"]
+#    print "Use Arg's: ",argNames
+#    return argNames
 #under development
-def ArgNamesLimits(Rtype):
+def argNames(Rtype):
     '''
-    Rtype = <MEM, CPU, IO>
+    Rtype = <MEM, CPU, IO, NET>
     
     '''
     if Rtype.lower() == "cpu":
         
         argNames={"startLoad":{"upperBound":100,"lowerBound":0},"stopLoad":{"upperBound":100,"lowerBound":0}}
-        print "Use Arg's: ",argNames
+        print "Use Arg's: ",argNames," with cpu"
         return argNames
     #get free amount of memory and set it to upper bound
     if Rtype.lower() == "mem":
         argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
-        print "Use Arg's: ",argNames
+        print "Use Arg's: ",argNames," with mem"
         return argNames
     
     if Rtype.lower() == "io":
         argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
-        print "Use Arg's: ",argNames
+        print "Use Arg's: ",argNames," with io"
+        return argNames
+    
+    if Rtype.lower() == "net":
+        argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
+        print "Use Arg's: ",argNames," with net"
         return argNames
 
 
