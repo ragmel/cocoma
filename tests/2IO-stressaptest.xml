@@ -4,14 +4,22 @@
   <resourceType>IO</resourceType>
   <startTime>now</startTime>
   <!--duration in seconds -->
+<<<<<<< .mine
+  <stopTime>10</stopTime>
+=======
   <stopTime>120</stopTime>
+>>>>>>> .r161
   
  
   <distributions>
      <name>Distro1</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
+<<<<<<< .mine
+     <duration>5</duration>
+=======
      <duration>118</duration>
+>>>>>>> .r161
      <granularity>1</granularity>
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
@@ -21,7 +29,8 @@
       <emulator-params>
         <resourceType>IO</resourceType>
 	<!--Number of threads (default cpu number)-->
-	<fileQty>3</fileQty>
+	<fileQty>0</fileQty>
+	<memThreads>1</memThreads>
       </emulator-params>
   </distributions>
 

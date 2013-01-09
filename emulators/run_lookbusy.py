@@ -122,19 +122,19 @@ class emulatorMod(object):
         
         
 def memLoad(distributionID,runNo,memUtil,memSleep,duration):
-            memUtil,memSleep,duration= str(memUtil),str(memSleep),str(duration)
+            #memUtil,memSleep,duration= str(memUtil),str(memSleep),str(duration)
             runLookbusyPidNo=0
             try:
                 print "\n\nthis is mem load:memUtil,memSleep,duration",memUtil,memSleep,duration,"\n\n"
                 
                 if memSleep ==0 :
                     
-                    runLookbusy = subprocess.Popen(["lookbusy","-c","0", "-m",memUtil+"MB","&"])
+                    runLookbusy = subprocess.Popen(["lookbusy","-c","0", "-m",str(memUtil)+"MB","&"])
                 
                     runLookbusyPidNo =runLookbusy.pid
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
                 else:
-                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0","-m",memUtil+"MB","-M",memSleep,"&"])
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0","-m",str(memUtil)+"MB","-M",str(memSleep),"&"])
                     runLookbusyPidNo =runLookbusy.pid
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
         
@@ -161,13 +161,13 @@ def memLoad(distributionID,runNo,memUtil,memSleep,duration):
                 
 #stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration        
 def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
-            ioUtil,ioBlockSize,ioSleep,duration = str(ioUtil),str(ioBlockSize),str(ioSleep),str(duration)
+            #ioUtil,ioBlockSize,ioSleep,duration = str(ioUtil),str(ioBlockSize),str(ioSleep),str(duration)
         
             print "this is io load"
 
             if ioSleep ==0 or ioSleep =="0":
                 try:
-                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB"])
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioBlockSize)+"MB"])
                     runLookbusyPidNo =runLookbusy.pid
                     
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
@@ -201,7 +201,7 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
 
             else:
                 try:
-                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",ioUtil+"MB","-b",ioBlockSize+"MB","-D",ioSleep])
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioBlockSize)+"MB","-D",ioSleep])
                     runLookbusyPidNo =runLookbusy.pid
                     
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
@@ -228,13 +228,13 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
             
 
 def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
-    cpuUtil,ncpus,duration = str(cpuUtil),str(ncpus),str(duration)
+    #cpuUtil,ncpus,duration = str(cpuUtil),str(ncpus),str(duration)
     print "\n\ncpuUtil,ncpus,duration",cpuUtil,ncpus,duration,"\n\n"
 
     if ncpus =="0" :
         print "run_lookbusy executing this ncpus=", ncpus
         try:
-            runLookbusy = subprocess.Popen(["lookbusy", "-c",cpuUtil,"&"])
+            runLookbusy = subprocess.Popen(["lookbusy", "-c",str(cpuUtil),"&"])
             runLookbusy.stdout
             runLookbusyPidNo =runLookbusy.pid
             print "Started lookbusy on PID No: ",runLookbusyPidNo
@@ -248,7 +248,7 @@ def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
         
     else:
         print "run_lookbusy executing this ncpus=", ncpus
-        runLookbusy = subprocess.Popen(["lookbusy", "-c",cpuUtil,"-n",ncpus,"&"])
+        runLookbusy = subprocess.Popen(["lookbusy", "-c",str(cpuUtil),"-n",str(ncpus),"&"])
         runLookbusy.stdout
         runLookbusyPidNo =runLookbusy.pid
         print "Started lookbusy on PID No: ",runLookbusyPidNo
