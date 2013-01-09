@@ -195,10 +195,18 @@ def xmlParser(xmlData):
                 arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(moduleArgs[a])[0].firstChild.data
                 print "Distro Arg",a," arg Name: ", moduleArgs[a]," arg Value: ",arg0
                 
-                distroArgs.update({moduleArgs[a]:arg0})
+                distributionsLimitsDictValues = distroArgsLimitsDict[moduleArgs[a]]
+                print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
+                                    
+                distroArgs.update({moduleArgs[a]:boundsCompare(arg0,distributionsLimitsDictValues)})                
+                
+                
+                #distroArgs.update({moduleArgs[a]:arg0})
                 a= a+1
                 #print a, moduleArgs[a]
-            except IndexError,e:
+            except Exception,e:
+                    print e 
+                    sys.exit(0)
                     #print e, "setting value to NULL"
                     #arg0="NULL"
                     #print arg0
@@ -206,9 +214,9 @@ def xmlParser(xmlData):
                 
                 
                 
-                arg0="NULL"
-                #arg.append(arg0)
-                a= a+1
+                    arg0="NULL"
+                    #arg.append(arg0)
+                    a= a+1
         '''
         getting all the arguments for emulator
         '''
@@ -371,6 +379,8 @@ if __name__ == '__main__':
     
     
     '''
+    
+    
     xmlParser(xmlData)
     
     

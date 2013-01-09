@@ -122,6 +122,7 @@ class emulatorMod(object):
         
         
 def memLoad(distributionID,runNo,memUtil,memSleep,duration):
+            memUtil,memSleep,duration= str(memUtil),str(memSleep),str(duration)
             runLookbusyPidNo=0
             try:
                 print "\n\nthis is mem load:memUtil,memSleep,duration",memUtil,memSleep,duration,"\n\n"
@@ -160,6 +161,7 @@ def memLoad(distributionID,runNo,memUtil,memSleep,duration):
                 
 #stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration        
 def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
+            ioUtil,ioBlockSize,ioSleep,duration = str(ioUtil),str(ioBlockSize),str(ioSleep),str(duration)
         
             print "this is io load"
 
@@ -226,7 +228,7 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
             
 
 def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
-    
+    cpuUtil,ncpus,duration = str(cpuUtil),str(ncpus),str(duration)
     print "\n\ncpuUtil,ncpus,duration",cpuUtil,ncpus,duration,"\n\n"
 
     if ncpus =="0" :
@@ -306,17 +308,17 @@ def emulatorArgNames(Rtype):
     '''
     if Rtype.lower() == "cpu":
         
-        argNames={"ncpus":{"upperBound":10,"lowerBound":0}}
+        argNames={"ncpus":{"upperBound":100,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
     
     if Rtype.lower() == "mem":
-        argNames={"memSleep":{"upperBound":10,"lowerBound":0}}
+        argNames={"memSleep":{"upperBound":999999999,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
     
     if Rtype.lower() == "io":
-        argNames={"ioBlockSize":{"upperBound":10,"lowerBound":0},"ioSleep":{"upperBound":10,"lowerBound":0}}
+        argNames={"ioBlockSize":{"upperBound":9999999,"lowerBound":0},"ioSleep":{"upperBound":999999999,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
 

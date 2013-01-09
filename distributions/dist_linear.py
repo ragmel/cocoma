@@ -18,7 +18,7 @@
 #
 
 import math
-import Pyro4,imp,time,sys
+import Pyro4,imp,time,sys, psutil
 import sqlite3 as sqlite
 import datetime as dt
 #perhaps needs to be set somewhere else
@@ -172,12 +172,13 @@ def argNames(Rtype):
         return argNames
     #get free amount of memory and set it to upper bound
     if Rtype.lower() == "mem":
-        argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
+        
+        argNames={"startLoad":{"upperBound":999999,"lowerBound":0},"stopLoad":{"upperBound":999999,"lowerBound":0}}
         print "Use Arg's: ",argNames," with mem"
         return argNames
     
     if Rtype.lower() == "io":
-        argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
+        argNames={"startLoad":{"upperBound":999999,"lowerBound":0},"stopLoad":{"upperBound":999999,"lowerBound":0}}
         print "Use Arg's: ",argNames," with io"
         return argNames
     
@@ -187,6 +188,11 @@ def argNames(Rtype):
         return argNames
 
 
-    
+if __name__=="__main__":
+        
 
-
+    print psutil.virtual_memory().available
+    print psutil.avail_phymem()
+    print psutil.virtmem_usage().free
+    phymem = psutil.phymem_usage()
+    phymem.free

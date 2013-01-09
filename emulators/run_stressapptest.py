@@ -127,7 +127,7 @@ class emulatorMod(object):
 
         if resourceTypeDist.lower() == "io":
             print "IO load selected"
-            ioMulti = multiprocessing.Process(target = ioLoad, args=(distributionID,runNo,stressValues,emulatorArg["fileQty"],duration))
+            ioMulti = multiprocessing.Process(target = ioLoad, args=(distributionID,runNo,stressValues,emulatorArg["fileQty"],emulatorArg["memThreads"],duration))
             ioMulti.start()
             print(ioMulti.is_alive())
             ioMulti.join()
@@ -194,50 +194,72 @@ def memLoad(distributionID,runNo,memSize,memThreads,duration):
     dbWriter(distributionID,runNo,message,executed)
     time.sleep(duration)            
 
-def ioLoad(distributionID,runNo,memSize,fileQty,duration):
+def ioLoad(distributionID,runNo,memSize,fileQty,memThreads,duration):
     runStressapptestPidNo=0
             
     try:
-        print "\n\nthis is ioLoad load:memSize,fileQty,duration",memSize,fileQty,duration,"\n\n"
-        
-        if int(fileQty) ==0 :
-            cmd="stressapptest "+" -M "+str(memSize)+" -f /tmp/stressapptestFile1"+" -s "+str(duration)+" --stop_on_errors&"
+        print "\n\nthis is ioLoad load:memSize,fileQty,duration,memThreads",memSize,fileQty,duration,memThreads,"\n\n"
+            
+        if int(fileQty) ==0 and int(memThreads) != 0 :
+            #print "\n\n\n\n!!!!zer_o!!!!!\n\n\n\n"
+            
+            cmd="stressapptest "+" -M "+str(memSize)+" -i "+str(memThreads)+" -f /tmp/stressapptestFile1"+" -s "+str(duration)+"&"
             print cmd
-            #runStressapptest = subprocess.Popen(["stressapptest", "-M",memSize,"-s",duration])
-            
             runStressapptest=os.system(cmd)
-            #runStressapptestPidNo =runStressapptest.pid
-            
             runStressapptestPidNo =pidFinder("stressapptest")
-            
             print "Started Stressapptest on PID No: ",runStressapptestPidNo
-        else:
-            #print"MULTIPLE FILES NOT WORKING! SELECT ZERO"
+        
+        elif int(fileQty) !=0 and int(memThreads) == 0 :
+            #print "\n\n\n\n!!!!one!!!!!\n\n\n\n"
+    
             fileStr=""
             
             fileQty=int(fileQty)
-            #fileStr=fileStr+" -f /tmp/stressapptestFile"+str(fileQty)
+    
+            while fileQty !=0:
+                fileStr=fileStr+" -f /tmp/stressapptestFile"+str(fileQty)
+                fileQty =fileQty-1            
             print "fileStr: ",fileStr
+            
+            cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -s "+str(duration)+" --stop_on_errors&"
+            print cmd
+            runStressapptest=os.system(cmd)
+            runStressapptestPidNo =pidFinder("stressapptest")
+            print "Started Stressapptest on PID No: ",runStressapptestPidNo
+    
+    
+    
+        
+        elif int(fileQty) == 0 and int(memThreads) == 0 :
+            #print "\n\n\n\n!!!!two!!!!!\n\n\n\n"
+    
+            cmd="stressapptest "+" -M "+str(memSize)+" -f /tmp/stressapptestFile1"+" -s "+str(duration)+" --stop_on_errors&"
+            print cmd
+            runStressapptest=os.system(cmd)
+            runStressapptestPidNo =pidFinder("stressapptest")
+            print "Started Stressapptest on PID No: ",runStressapptestPidNo
+            
+        elif int(memThreads) !=0 and int(fileQty) !=0 :
+            #print "\n\n\n\n!!!!else!!!!!\n\n\n\n"
+        
+            
+            fileStr=""
+            
+            fileQty=int(fileQty)
+            
+            
             
             while fileQty !=0:
                 fileStr=fileStr+" -f /tmp/stressapptestFile"+str(fileQty)
                 fileQty =fileQty-1
                 
-            
-            cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -s "+str(duration)+" --stop_on_errors&"
-            #stressapptest -M 100 -f /tmp/stressapptestFile1 -f /tmp/stressapptestFile2 -s 240
-            print "The command we execute: ",cmd
-            
-            #runStressapptest = subprocess.Popen(["stressapptest","-M",memSize,"-i",memThreads,"-s",duration])
-            
+            print "fileStr: ",fileStr
+            cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -i "+str(memThreads)+" -s "+str(duration)+" --stop_on_errors&"
+            print cmd
             runStressapptest=os.system(cmd)
-            
-            #runStressapptestPidNo =runStressapptest.pid
             runStressapptestPidNo =pidFinder("stressapptest")
-            
-            print "Started Stressapptest on PID No: ",runStressapptestPidNo
-            
-            
+            print "Started Stressapptest on PID No: ",runStressapptestPidNo    
+
     except Exception, e:
         "run_Stressapptest job memLoad exception: ", e
         
@@ -257,8 +279,8 @@ def ioLoad(distributionID,runNo,memSize,fileQty,duration):
         executed="True"
         
     dbWriter(distributionID,runNo,message,executed)
-    time.sleep(duration)            
-    
+    time.sleep(duration)           
+        
         
 def emulatorHelp():
 
@@ -276,13 +298,14 @@ def emulatorHelp():
     </emulator-params>
     
     
-    Input Output(IO) with parameters:
+    Input Output(IO) and Memory with parameters:
         fileQty - number of files to write simultaneously( default is one file)
     
     XML Block Example: 
     <emulator-params>
         <resourceType>IO</resourceType>
         <fileQty>3</fileQty>
+        <memThreads>0</memThreads>
     </emulator-params>
     
     """
@@ -302,7 +325,7 @@ def emulatorArgNames(Rtype):
         return argNames
     
     if Rtype.lower() == "io":
-        argNames={"fileQty":{"upperBound":10,"lowerBound":0}}
+        argNames={"fileQty":{"upperBound":10,"lowerBound":0},"memThreads":{"upperBound":10,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
 

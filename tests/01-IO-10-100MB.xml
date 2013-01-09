@@ -8,7 +8,7 @@
   
  
   <distributions>
-	< name>IO-1a</name>
+	<name>IO-1a</name>
      <startTime>5</startTime>
      <!--duration in seconds -->
      <duration>30</duration>
@@ -17,7 +17,7 @@
      <!--Megabytes for memory -->
       <startLoad>10</startLoad>
       <stopLoad>100</stopLoad>
-      <emulator href="/emulators/stressapptest" name="lookbusy" />
+      <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
         <resourceType>IO</resourceType>
 	<!--time between iterations in usec (default 1000)-->
