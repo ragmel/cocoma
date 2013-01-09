@@ -405,7 +405,7 @@ def show_test(name=""):
     response.set_header('Allow', 'GET, HEAD') 
     
     try:
-        filename=open(HOMEPATH+"tests/"+name,'r')
+        filename=open(HOMEPATH+"/tests/"+name,'r')
         print "filename to show: ",filename
         xmlFileContent = filename.read()
         filename.close()
@@ -822,7 +822,7 @@ def startAPI(IP_ADDR,PORT_ADDR):
     print "API_HOST.host",API_HOST.host
     return IP_ADDR
 if __name__ == '__main__':
-    PORT_ADDR=8050
+    PORT_ADDR=80
     try: 
         if sys.argv[1] == "-h":
             print "Use ccmshAPI <name of network interface> . Default network interface is eth0."
