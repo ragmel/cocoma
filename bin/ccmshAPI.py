@@ -703,6 +703,7 @@ def create_emu():
     try:
         emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
         paramsArray=re.split(r"-",str(emulationID))
+        print "paramsArray[0]",paramsArray[0]
         if isStr(paramsArray[0]):
             
             response.status = 400
@@ -718,6 +719,25 @@ def create_emu():
         
         emulationIDXml=ET.SubElement(emulationXml,'ID')
         emulationIDXml.text = str(emulationID)
+        #note about values change if out of bounds
+        emulationEmuNotesXml=ET.SubElement(emulationXml,'EmuNotes')
+        emulationDistroNotesXml=ET.SubElement(emulationXml,'DistroNotes')
+        
+        distroNotesStr=""
+        emuNotesStr=""
+        print "distroList",distroList
+        for items in distroList:
+            for enotes in items['emulatorArgNotes']:
+                    emuNotesStr+=str(enotes)
+                
+            for dnotes in items['distroArgsNotes']:
+                    distroNotesStr+=str(dnotes)                
+        
+            #notesStr=str(n)+")"+items['distroArgs']['emulatorArgNotes'][0]+"\n"
+            
+        
+        emulationEmuNotesXml.text = emuNotesStr
+        emulationDistroNotesXml.text= distroNotesStr
         
 
         
@@ -822,7 +842,7 @@ def startAPI(IP_ADDR,PORT_ADDR):
     print "API_HOST.host",API_HOST.host
     return IP_ADDR
 if __name__ == '__main__':
-    PORT_ADDR=80
+    PORT_ADDR=5050
     try: 
         if sys.argv[1] == "-h":
             print "Use ccmshAPI <name of network interface> . Default network interface is eth0."
