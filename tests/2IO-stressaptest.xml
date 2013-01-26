@@ -4,25 +4,45 @@
   <resourceType>IO</resourceType>
   <startTime>now</startTime>
   <!--duration in seconds -->
+<<<<<<< .mine
+  <stopTime>75</stopTime>
+  
+=======
   <stopTime>10</stopTime>
   <stopTime>120</stopTime>
+>>>>>>> .r165
  
   <distributions>
      <name>Distro1</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
+<<<<<<< .mine
+     <duration>70</duration>
+     <granularity>7</granularity>
+=======
      <duration>5</duration>
      <granularity>1</granularity>
+>>>>>>> .r165
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
+<<<<<<< .mine
+      <startLoad>100</startLoad>
+      <stopLoad>500</stopLoad>
+=======
       <startLoad>250</startLoad>
       <stopLoad>250</stopLoad>
+>>>>>>> .r165
       <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
         <resourceType>IO</resourceType>
+<<<<<<< .mine
+	<!--Number of files to write at the same time (default is one)-->
+		<fileQty>1</fileQty>
+=======
 	<!--Number of threads (default cpu number)-->
 	<fileQty>0</fileQty>
 	<memThreads>1</memThreads>
+>>>>>>> .r165
       </emulator-params>
   </distributions>
 

@@ -154,12 +154,7 @@ def distHelp():
 '''
 here we specify how many arguments distribution instance require to run properly
 '''
-#def argNames():
-    
-#    argNames=["startLoad","stopLoad"]
-#    print "Use Arg's: ",argNames
-#    return argNames
-#under development
+
 def argNames(Rtype):
     '''
     Rtype = <MEM, CPU, IO, NET>
@@ -170,13 +165,28 @@ def argNames(Rtype):
         argNames={"startLoad":{"upperBound":100,"lowerBound":0},"stopLoad":{"upperBound":100,"lowerBound":0}}
         print "Use Arg's: ",argNames," with cpu"
         return argNames
+   
     #get free amount of memory and set it to upper bound
     if Rtype.lower() == "mem":
         
-        argNames={"startLoad":{"upperBound":999999,"lowerBound":0},"stopLoad":{"upperBound":999999,"lowerBound":0}}
+        memReading=psutil.phymem_usage()
+        
+        freeMem =memReading.free/1048576
+        print "free mem for border:",freeMem
+        
+
+        argNames={"startLoad":{"upperBound":freeMem,"lowerBound":50},"stopLoad":{"upperBound":freeMem,"lowerBound":50}}
         print "Use Arg's: ",argNames," with mem"
         return argNames
     
+    if Rtype.lower() == "mem%":
+        memReading=psutil.phymem_usage()
+        freeMemPercent=memReading.percent
+        
+        argNames={"startLoad":{"upperBound":freeMemPercent,"lowerBound":1},"stopLoad":{"upperBound":freeMemPercent,"lowerBound":1}}
+        print "Use Arg's: ",argNames," with mem%"
+        return argNames
+        
     if Rtype.lower() == "io":
         argNames={"startLoad":{"upperBound":999999,"lowerBound":0},"stopLoad":{"upperBound":999999,"lowerBound":0}}
         print "Use Arg's: ",argNames," with io"
@@ -190,9 +200,4 @@ def argNames(Rtype):
 
 if __name__=="__main__":
         
-
-    print psutil.virtual_memory().available
-    print psutil.avail_phymem()
-    print psutil.virtmem_usage().free
-    phymem = psutil.phymem_usage()
-    phymem.free
+        pass

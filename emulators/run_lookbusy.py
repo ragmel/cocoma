@@ -100,6 +100,13 @@ class emulatorMod(object):
             memMulti.start()
             print(memMulti.is_alive())
             memMulti.join()
+        
+        if resourceTypeDist.lower() == "mem%":
+            print "MEM load selected"
+            memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memSleep"],duration))
+            memMulti.start()
+            print(memMulti.is_alive())
+            memMulti.join()
             
             #memLoad(stressValues[0],stressValues[1],duration)
         
@@ -316,6 +323,11 @@ def emulatorArgNames(Rtype):
         argNames={"memSleep":{"upperBound":999999999,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
+
+    if Rtype.lower() == "mem%":
+        argNames={"memSleep":{"upperBound":999999999,"lowerBound":0}}
+        print "Use Arg's: ",argNames
+        return argNames    
     
     if Rtype.lower() == "io":
         argNames={"ioBlockSize":{"upperBound":9999999,"lowerBound":0},"ioSleep":{"upperBound":999999999,"lowerBound":0}}
