@@ -49,8 +49,8 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             '''
             {'startLoad': u'10', 'stopLoad': u'90'}
             '''
-            print distributionArg
-            print emulatorArg
+            print "distributionArg:", distributionArg
+            print "emulatorArg:",emulatorArg
             
             #2. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
             #a={"aa":"AA","bb":"BB"}

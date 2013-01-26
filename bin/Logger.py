@@ -45,7 +45,8 @@ def loadMon(duration,interval,emulationName):
         initTime=time.time()
         while iterationsNo !=0:
             CPU=str(psutil.cpu_percent(interval, False))
-            MEM=str(psutil.virtual_memory().percent)
+            #MEM=str(psutil.virtual_memory().percent)
+            MEM=str(psutil.avail_virtmem())
             IOr=str(psutil.disk_io_counters().read_time)
             IOw=str(psutil.disk_io_counters().write_time)
             NET=str(psutil.network_io_counters(False).bytes_sent)

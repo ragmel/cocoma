@@ -165,6 +165,7 @@ def xmlParser(xmlData):
         
         print "emulatorType,resourceTypeDist:",emulatorType,resourceTypeDist        
         try:
+            print "trying to load emulatorType:",emulatorType
             EmulatorModuleMethod=DistributionManager.loadEmulatorArgNames(emulatorType)
             #argNames={"fileQty":{"upperBound":10,"lowerBound":0}}
             emulatorArgsLimitsDict=EmulatorModuleMethod(resourceTypeDist)
@@ -187,7 +188,8 @@ def xmlParser(xmlData):
         #for things in moduleArgs:
         '''
         Getting all the arguments for distribution
-        '''    
+        ''' 
+        distroArgsNotes=[]   
         for args in moduleArgs:
             try:
                
@@ -197,8 +199,11 @@ def xmlParser(xmlData):
                 
                 distributionsLimitsDictValues = distroArgsLimitsDict[moduleArgs[a]]
                 print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
-                                    
-                distroArgs.update({moduleArgs[a]:boundsCompare(arg0,distributionsLimitsDictValues)})                
+
+
+                checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)                
+                distroArgsNotes.append(checkDistroNote)
+                distroArgs.update({moduleArgs[a]:checked_distroArgs})                
                 
                 
                 #distroArgs.update({moduleArgs[a]:arg0})
@@ -221,6 +226,7 @@ def xmlParser(xmlData):
         getting all the arguments for emulator
         '''
         emulatorArg={}
+        emulatorArgNotes=[]
         a=0
         #for things in moduleArgs:
         
@@ -234,8 +240,9 @@ def xmlParser(xmlData):
                 
                 emulatorLimitsDictValues = emulatorArgsLimitsDict[emulatorArgs[a]]
                 print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues)
-                                    
-                emulatorArg.update({emulatorArgs[a]:boundsCompare(arg0,emulatorLimitsDictValues)})
+                checked_emuargs,check_note = boundsCompare(arg0,emulatorLimitsDictValues)                
+                emulatorArg.update({emulatorArgs[a]:checked_emuargs})
+                emulatorArgNotes.append(check_note)
                 
                 #append(emulatorArgs[a]:arg0)
                 a= a+1
@@ -273,7 +280,7 @@ def xmlParser(xmlData):
         
         
         #add every emulation in the dictionary
-        distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,"distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist}
+        distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,"distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist,"emulatorArgNotes":emulatorArgNotes,"distroArgsNotes":distroArgsNotes}
         
        
         
@@ -313,16 +320,19 @@ def boundsCompare(xmlValue,LimitsDictValues):
     if xmlValue >= lowerBound:
         if xmlValue <= upperBound:
             print "1 ",xmlValue,upperBound,lowerBound
-            return xmlValue
+            return_note ="\nOK"
+            return xmlValue, return_note
             
         else:
             print "Higher than upperBound taking maximum value"
             print "2 ",xmlValue,upperBound,lowerBound
-            return upperBound
+            return_note ="\nThe scpecified value "+str(xmlValue)+" was higher than the maximum limit "+str(upperBound)+" changing to the maximum limit"
+            return upperBound , return_note 
     else:
         print "Lower than lowerBound taking minimum value"
         print "3 ",xmlValue,upperBound,lowerBound
-        return lowerBound 
+        return_note ="\nThe scpecified value "+str(xmlValue)+" was lower than the minimum limit "+str(lowerBound)+" changing to the maximum limit"
+        return lowerBound, return_note
 
     
 def parse_tests(xmlStream):

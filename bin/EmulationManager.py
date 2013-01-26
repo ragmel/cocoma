@@ -454,7 +454,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
                       
         
             for row in emulationTable:
-                
+                print "row:",row
                 print "------->\nemulation.emulationID",row[0],"\nemulation.emulationName",row[1], "\nemulation.emulationType",row[2], "\nemulation.resourceType",row[3],"\nemulation.active",row[4],"\ndistribution.distributionGranularity",row[5],"\ndistribution.distributionType",row[6],"\nDistributionParameters.startLoad",row[7],"\nDistributionParameters.stopLoad",row[8], "\nemulationLifetime.startTime",row[9],"\nemulationLifetime.stopTime",row[10]
                 
                 emulationID=row[0]
