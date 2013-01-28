@@ -180,10 +180,14 @@ def get_emulation(name=""):
                 print 
                 jobXml.text=str(job)
                 n+=1
+            else:
+                jobXml = ET.SubElement(scheduledJobsXml,"jobsempty")
+                jobXml.text="No jobs are scheduled/Or scheduler is offline"
     
     except Exception,e :
             print e
-            jobXml.text="No jobs are scheduled/Or scheduler is offline"
+            jobXml = ET.SubElement(scheduledJobsXml,"error")
+            jobXml.text=e
     
     
     #create distributions list
