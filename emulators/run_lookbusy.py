@@ -238,11 +238,12 @@ def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
     #cpuUtil,ncpus,duration = str(cpuUtil),str(ncpus),str(duration)
     print "\n\ncpuUtil,ncpus,duration",cpuUtil,ncpus,duration,"\n\n"
 
-    if ncpus =="0" :
+    if str(ncpus) =="0" :
         print "run_lookbusy executing this ncpus=", ncpus
         try:
+            print "Running with these parameters: "+"lookbusy-c "+str(cpuUtil)
             runLookbusy = subprocess.Popen(["lookbusy", "-c",str(cpuUtil),"&"])
-            runLookbusy.stdout
+            print runLookbusy.stdout
             runLookbusyPidNo =runLookbusy.pid
             print "Started lookbusy on PID No: ",runLookbusyPidNo
             
@@ -254,6 +255,7 @@ def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
     
         
     else:
+        print "Running with these parameters: "+"lookbusy-c "+str(cpuUtil)+"-n "+str(ncpus)
         print "run_lookbusy executing this ncpus=", ncpus
         runLookbusy = subprocess.Popen(["lookbusy", "-c",str(cpuUtil),"-n",str(ncpus),"&"])
         runLookbusy.stdout

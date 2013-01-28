@@ -1,22 +1,22 @@
 <emulation>
-  <name>Emu-CPU-RAM-IO</name>
+  <name>CPU_emu</name>
   <emulationType>Mix</emulationType>
-  <resourceType>Mix</resourceType>
+  <resourceType>CPU</resourceType>
   <startTime>now</startTime>
   <!--duration in seconds -->
-  <stopTime>180</stopTime>
+  <stopTime>250</stopTime>
   
   <distributions> 
-   <name>CPU-dis-1a</name>
-     <startTime>5</startTime>
+   <name>CPU_distro</name>
+     <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>30</duration>
-     <granularity>3</granularity>
+     <duration>240</duration>
+     <granularity>1</granularity>
      <distribution href="/distributions/linear" name="linear" />
 	<!--cpu utilization distribution range-->
-      <startLoad>10</startLoad>
-      <stopLoad>90</stopLoad>
-      <emulator href="/emulators/stressapptest" name="lookbusy" />
+      <startLoad>95</startLoad>
+      <stopLoad>95</stopLoad>
+      <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
         <!--more parameters will be added -->
         <resourceType>CPU</resourceType>

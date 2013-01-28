@@ -21,7 +21,7 @@
 
 
 from bottle import route, run,response,request,re
-import sys,os, time
+import sys,os, time, Pyro4
 from datetime import datetime as dt
 import EmulationManager,ccmsh,DistributionManager,XmlParser
 from json import dumps
@@ -31,7 +31,7 @@ import xml.etree.ElementTree as ET
 
 PORT_ADDR=0
 IP_ADDR=0
-
+Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 
 def prettify(elem):
@@ -120,10 +120,9 @@ def get_emulations():
 
     return prettify(emulations)
 
-
-@route('/emulations/<ID>/', method='GET')
-@route('/emulations/<ID>', method='GET')
-def get_emulation(ID=""):
+@route('/emulations/<name>/', method='GET')
+@route('/emulations/<name>', method='GET')
+def get_emulation(name=""):
     
     #curl -k -i http:///10.55.164.232:8050/emulations/1
     
@@ -132,17 +131,17 @@ def get_emulation(ID=""):
     response.set_header('Allow', 'GET, HEAD') 
     
     try:
-        (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(ID)
+        (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(name)
     except Exception,e:
             
         response.status = 404
-        return "<error>Emulation ID:"+ID+" not found. Error:"+str(e)+"</error>"
+        return "<error>Emulation ID:"+name+" not found. Error:"+str(e)+"</error>"
         
 
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     
     #building the XML we will return
-    emulation = ET.Element('emulation', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations/'+str(ID)})
+    emulation = ET.Element('emulation', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations/'+str(name)})
     #<id>1</id>
     idXml =ET.SubElement(emulation,'id')
     idXml.text = str(emulationID)
@@ -165,6 +164,27 @@ def get_emulation(ID=""):
     #<stopTime>now+180</stopTime>
     stopTimeEmuXml =ET.SubElement(emulation,'stopTime')
     stopTimeEmuXml.text = str(stopTimeEmu)
+    
+    
+    scheduledJobsXml = ET.SubElement(emulation,'scheduledJobs')
+    uri ="PYRO:scheduler.daemon@localhost:51889"
+    daemon=Pyro4.Proxy(uri)    
+    
+    #create active jobs list
+    try:
+        n=1
+        for job in daemon.listJobs():    
+            #6-6-0-CPU-stable-lookbusy-CPU
+            if job.name[len(str(emulationID))-1]==str(emulationID):
+                jobXml = ET.SubElement(scheduledJobsXml,"job"+str(n))
+                print 
+                jobXml.text=str(job)
+                n+=1
+    
+    except Exception,e :
+            print e
+            jobXml.text="No jobs are scheduled/Or scheduler is offline"
+    
     
     #create distributions list
     for distro in distroList :

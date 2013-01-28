@@ -12,7 +12,7 @@
      <startTime>0</startTime>
      <!--duration in seconds -->
      <duration>40</duration>
-     <granularity>4</granularity>
+     <granularity>1</granularity>
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
       <startLoad>1000</startLoad>

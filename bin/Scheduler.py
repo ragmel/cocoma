@@ -53,12 +53,7 @@ class schedulerDaemon(object):
         if self.sched.get_jobs():
             return self.sched.get_jobs()
     
-    
-
-
-
-
-       
+        
        
     def stopSchedulerDaemon(self):
         print "stopping Daemon"
