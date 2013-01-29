@@ -1,4 +1,4 @@
-#Copyright 2012 SAP Ltd
+#Copyright 2012-2013 SAP Ltd
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -36,35 +36,6 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-'''
-----------------------------------SPAIN-----------------------------------
-
-<?xml version="1.0" encoding="UTF-8"?>
-<emulation xmlns="http://api.bonfire-project.eu/doc/schemas/occi"> 
-        <name>myRubyEmu</name>
-        <stopTime>180</stopTime>
-        <emulationType>Mix</emulationType>
-        <startTime>2013-11-22T17:22:01</startTime>
-        <distributions>
-                <name>CPU-ruby</name>
-                <duration>60</duration>
-                <granularity>6</granularity>
-                <distribution name="linear" href="/distributions/linear"/>
-                <startTime>5</startTime>
-                <emulator-params>
-                        <ncpus>0</ncpus>
-                        <resourceType>CPU</resourceType>
-                </emulator-params>
-                <startLoad>10</startLoad>
-                <stopLoad>90</stopLoad>
-                <emulator name="lookbusy" href="/emulators/stressapptest"/>
-        </distributions>
-        <resourceType>Mix</resourceType>
-</emulation>
-
-----------------------------------SPAIN-----------------------------------
-
-'''
 from xml.dom.minidom import parseString, Node
 import DistributionManager,sys,EmulationManager
 

@@ -192,7 +192,12 @@ def argNames(Rtype):
         print "Use Arg's: ",argNames," with io"
         return argNames
     
-    if Rtype.lower() == "net":
+    if Rtype.lower() == "net-server":
+        argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
+        print "Use Arg's: ",argNames," with net"
+        return argNames
+    
+    if Rtype.lower() == "net-client":
         argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
         print "Use Arg's: ",argNames," with net"
         return argNames
