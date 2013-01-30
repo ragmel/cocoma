@@ -63,7 +63,10 @@ def xmlParser(xmlData):
     emulationLog="0"
     
     ##new##
-    dom2 = parseString(xmlData)
+    #normal values
+    dom1 = parseString(xmlData)
+    #lower case values
+    dom2 = parseString(xmlData.lower())
     domNode=dom2.documentElement
     
     distroList = []
@@ -71,7 +74,7 @@ def xmlParser(xmlData):
 
     distributionsXml=dom2.getElementsByTagName('distributions')
     #emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
-    emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuName')[0].firstChild.data
+    emulationName=dom1.getElementsByTagName('emulation')[0].getElementsByTagName('emuname')[0].firstChild.data
     
     #if <log> block is written in XML file we will find it and read it, if not we will just set default values 
     try:
@@ -87,10 +90,10 @@ def xmlParser(xmlData):
     except Exception, e:
         print "Logging is Off"
     
-    emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuType')[0].firstChild.data
-    startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuStartTime')[0].firstChild.data
-    resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuResourceType')[0].firstChild.data
-    stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuStopTime')[0].firstChild.data
+    emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emutype')[0].firstChild.data
+    startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustarttime')[0].firstChild.data
+    resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuresourcetype')[0].firstChild.data
+    stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustoptime')[0].firstChild.data
      
     
     
@@ -111,7 +114,7 @@ def xmlParser(xmlData):
         distrType = distribution.attributes["name"].value
         
         #getting resource type of distribution CPU,IO,MEM or NET
-        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourceType')[0].firstChild.data
+        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data
             
                 
         try:
@@ -119,6 +122,7 @@ def xmlParser(xmlData):
             
             distroArgsLimitsDict=moduleMethod(resourceTypeDist)
             moduleArgs=distroArgsLimitsDict.keys()
+            
             
             print "moduleArgs:",moduleArgs
         except IOError, e:
@@ -142,7 +146,6 @@ def xmlParser(xmlData):
             #argNames={"fileQty":{"upperBound":10,"lowerBound":0}}
             emulatorArgsLimitsDict=EmulatorModuleMethod(resourceTypeDist)
             emulatorArgs=emulatorArgsLimitsDict.keys()
-            
             print "emulatorArgs:",emulatorArgs
         except IOError, e:
             print "Unable to load module name \"",emulatorType,"\" error:"
@@ -151,7 +154,7 @@ def xmlParser(xmlData):
         
         
         #get things inside "distributions"
-        startTimeDistro = dom2.getElementsByTagName('distributions')[n].getElementsByTagName('startTime')[0].firstChild.data
+        startTimeDistro = dom2.getElementsByTagName('distributions')[n].getElementsByTagName('starttime')[0].firstChild.data
         durationDistro = dom2.getElementsByTagName('duration')[n].firstChild.data
         granularity= dom2.getElementsByTagName('granularity')[n].firstChild.data
          
@@ -169,17 +172,17 @@ def xmlParser(xmlData):
             try:
                
                 
-                arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(moduleArgs[a])[0].firstChild.data
-                print "Distro Arg",a," arg Name: ", moduleArgs[a]," arg Value: ",arg0
+                arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(moduleArgs[a].lower())[0].firstChild.data
+                print "Distro Arg",a," arg Name: ", moduleArgs[a].lower()," arg Value: ",arg0
                 
-                distributionsLimitsDictValues = distroArgsLimitsDict[moduleArgs[a]]
+                distributionsLimitsDictValues = distroArgsLimitsDict[moduleArgs[a].lower()]
                 print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
 
 
                 checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)         
                 print "checked_distroArgs,checkDistroNote",checked_distroArgs,checkDistroNote       
                 distroArgsNotes.append(checkDistroNote)
-                distroArgs.update({moduleArgs[a]:checked_distroArgs})                
+                distroArgs.update({moduleArgs[a].lower():checked_distroArgs})                
                 
                 
                 #distroArgs.update({moduleArgs[a]:arg0})
@@ -209,15 +212,15 @@ def xmlParser(xmlData):
         for args in emulatorArgs:
             logging.debug("Inside emulatorArgs loop!")
             try:
-                print "emulatorArgs[a]",emulatorArgs[a]
-                arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(emulatorArgs[a])[0].firstChild.data
-                print "Emulator Arg",a," arg Name: ", emulatorArgs[a]," arg Value: ",arg0
+                print "emulatorArgs[a]",emulatorArgs[a].lower()
+                arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(emulatorArgs[a].lower())[0].firstChild.data
+                print "Emulator Arg",a," arg Name: ", emulatorArgs[a].lower()," arg Value: ",arg0
                 #emulatorArgDict={emulatorArgs[a]:arg0}
                 
-                emulatorLimitsDictValues = emulatorArgsLimitsDict[emulatorArgs[a]]
-                print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a])
-                checked_emuargs,check_note = boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a])                
-                emulatorArg.update({emulatorArgs[a]:checked_emuargs})
+                emulatorLimitsDictValues = emulatorArgsLimitsDict[emulatorArgs[a].lower()]
+                print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())
+                checked_emuargs,check_note = boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())                
+                emulatorArg.update({emulatorArgs[a].lower():checked_emuargs})
                 emulatorArgNotes.append(check_note)
                 
                 #append(emulatorArgs[a]:arg0)
@@ -225,7 +228,7 @@ def xmlParser(xmlData):
                 #print a, moduleArgs[a]
             except Exception, e:
                 print e
-                logging.exception("Not all emulator arguments are in use, setting Value of "+str(emulatorArgs[a])+" to NULL")
+                logging.exception("Not all emulator arguments are in use, setting Value of "+str(emulatorArgs[a].lower())+" to NULL")
                     #arg0="NULL"
                     #print arg0
                     #arg.append(arg0)
@@ -236,7 +239,7 @@ def xmlParser(xmlData):
         print "emulatorArg:",emulatorArg
                     #a=a+1
         
-        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourceType')[0].firstChild.data 
+        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data 
         #dom2.getElementsByTagName('resourceType')[n].firstChild.data
         ##############
         
@@ -244,9 +247,9 @@ def xmlParser(xmlData):
 
         #distributions= dom2.getElementsByTagName('distributions')[n]
         #distributionsName = distributions.attributes["name"].value
-        distributionsName=dom2.getElementsByTagName('distributions')[n].getElementsByTagName('name')[0].firstChild.data
+        distributionsName=dom1.getElementsByTagName('distributions')[n].getElementsByTagName('name')[0].firstChild.data
         
-        emulator = dom2.getElementsByTagName('emulator')[n]
+        emulator = dom1.getElementsByTagName('emulator')[n]
         emulatorName = emulator.attributes["name"].value
         
         ##############
@@ -328,7 +331,7 @@ if __name__ == '__main__':
     #xmlFileReader(filename)
     xmlData='''
 <emulation>
-  <emuName>NETworkCLIent</emuName>
+  <emuname>NETworkCLIent</emuname>
   <emuType>Mix</emuType>
   <emuResourceType>NET</emuResourceType>
   <emuStartTime>now</emuStartTime>

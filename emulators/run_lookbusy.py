@@ -314,6 +314,8 @@ def emulatorArgNames(Rtype):
     '''
     type = <MEM, CPU, IO>
     
+    IMPORTANT: All argument variable names must be in lower case
+    
     '''
     if Rtype.lower() == "cpu":
         
@@ -322,17 +324,17 @@ def emulatorArgNames(Rtype):
         return argNames
     
     if Rtype.lower() == "mem":
-        argNames={"memSleep":{"upperBound":999999999,"lowerBound":0}}
+        argNames={"memsleep":{"upperBound":999999999,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
 
     if Rtype.lower() == "mem%":
-        argNames={"memSleep":{"upperBound":999999999,"lowerBound":0}}
+        argNames={"memsleep":{"upperBound":999999999,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames    
     
     if Rtype.lower() == "io":
-        argNames={"ioBlockSize":{"upperBound":9999999,"lowerBound":0},"ioSleep":{"upperBound":999999999,"lowerBound":0}}
+        argNames={"ioblocksize":{"upperBound":9999999,"lowerBound":0},"iosleep":{"upperBound":999999999,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
 

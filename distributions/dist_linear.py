@@ -159,10 +159,11 @@ def argNames(Rtype):
     '''
     Rtype = <MEM, CPU, IO, NET>
     
+    IMPORTANT: All argument variable names must be in lower case
     '''
     if Rtype.lower() == "cpu":
         
-        argNames={"startLoad":{"upperBound":100,"lowerBound":0},"stopLoad":{"upperBound":100,"lowerBound":0}}
+        argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}}
         print "Use Arg's: ",argNames," with cpu"
         return argNames
    
@@ -175,7 +176,7 @@ def argNames(Rtype):
         print "free mem for border:",freeMem
         
 
-        argNames={"startLoad":{"upperBound":freeMem,"lowerBound":50},"stopLoad":{"upperBound":freeMem,"lowerBound":50}}
+        argNames={"startload":{"upperBound":freeMem,"lowerBound":50},"stopload":{"upperBound":freeMem,"lowerBound":50}}
         print "Use Arg's: ",argNames," with mem"
         return argNames
     
@@ -183,24 +184,20 @@ def argNames(Rtype):
         memReading=psutil.phymem_usage()
         freeMemPercent=memReading.percent
         
-        argNames={"startLoad":{"upperBound":freeMemPercent,"lowerBound":1},"stopLoad":{"upperBound":freeMemPercent,"lowerBound":1}}
+        argNames={"startload":{"upperBound":freeMemPercent,"lowerBound":1},"stopload":{"upperBound":freeMemPercent,"lowerBound":1}}
         print "Use Arg's: ",argNames," with mem%"
         return argNames
         
     if Rtype.lower() == "io":
-        argNames={"startLoad":{"upperBound":999999,"lowerBound":0},"stopLoad":{"upperBound":999999,"lowerBound":0}}
+        argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}}
         print "Use Arg's: ",argNames," with io"
         return argNames
     
-    if Rtype.lower() == "net-server":
-        argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
+    if Rtype.lower() == "net":
+        argNames={"startload":{"upperBound":10,"lowerBound":0},"stopload":{"upperBound":10,"lowerBound":0}}
         print "Use Arg's: ",argNames," with net"
         return argNames
     
-    if Rtype.lower() == "net-client":
-        argNames={"startLoad":{"upperBound":10,"lowerBound":0},"stopLoad":{"upperBound":10,"lowerBound":0}}
-        print "Use Arg's: ",argNames," with net"
-        return argNames
 
 
 if __name__=="__main__":
