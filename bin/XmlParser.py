@@ -37,9 +37,10 @@
 #
 
 from xml.dom.minidom import parseString, Node
+import xml.dom.minidom
 import DistributionManager,sys,EmulationManager
-
-
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 def xmlReader(filename):
     
@@ -57,17 +58,20 @@ def xmlReader(filename):
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
 def xmlParser(xmlData):
+    
     emulationLogFrequency = "3"
     emulationLog="0"
     
     ##new##
     dom2 = parseString(xmlData)
+    domNode=dom2.documentElement
+    
     distroList = []
 
 
     distributionsXml=dom2.getElementsByTagName('distributions')
     #emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
-    emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('name')[0].firstChild.data
+    emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuName')[0].firstChild.data
     
     #if <log> block is written in XML file we will find it and read it, if not we will just set default values 
     try:
@@ -82,15 +86,12 @@ def xmlParser(xmlData):
     
     except Exception, e:
         print "Logging is Off"
-        
     
-    emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationType')[0].firstChild.data
-    resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('resourceType')[0].firstChild.data
-    startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('startTime')[0].firstChild.data
-    stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('stopTime')[0].firstChild.data
-    
-
-    
+    emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuType')[0].firstChild.data
+    startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuStartTime')[0].firstChild.data
+    resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuResourceType')[0].firstChild.data
+    stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuStopTime')[0].firstChild.data
+     
     
     
     print "##########################"
@@ -160,11 +161,14 @@ def xmlParser(xmlData):
         '''
         Getting all the arguments for distribution
         ''' 
-        distroArgsNotes=[]   
+        distroArgsNotes=[]
+        print "moduleArgs",moduleArgs
+        
         for args in moduleArgs:
+            logging.debug("Inside distribution moduleArgs loop!")
             try:
                
-                #arg0 = dom2.getElementsByTagName(moduleArgs[a])[n].firstChild.data
+                
                 arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(moduleArgs[a])[0].firstChild.data
                 print "Distro Arg",a," arg Name: ", moduleArgs[a]," arg Value: ",arg0
                 
@@ -172,16 +176,17 @@ def xmlParser(xmlData):
                 print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
 
 
-                checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)                
+                checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)         
+                print "checked_distroArgs,checkDistroNote",checked_distroArgs,checkDistroNote       
                 distroArgsNotes.append(checkDistroNote)
                 distroArgs.update({moduleArgs[a]:checked_distroArgs})                
                 
                 
                 #distroArgs.update({moduleArgs[a]:arg0})
-                a= a+1
+                a+=1
                 #print a, moduleArgs[a]
             except Exception,e:
-                    print e 
+                    logging.exception("error getting distribution arguments")
                     sys.exit(0)
                     #print e, "setting value to NULL"
                     #arg0="NULL"
@@ -200,33 +205,30 @@ def xmlParser(xmlData):
         emulatorArgNotes=[]
         a=0
         #for things in moduleArgs:
-        
+        print "emulatorArgs",emulatorArgs
         for args in emulatorArgs:
+            logging.debug("Inside emulatorArgs loop!")
             try:
-                
-                #arg0 = dom2.getElementsByTagName(moduleArgs[a])[n].firstChild.data
+                print "emulatorArgs[a]",emulatorArgs[a]
                 arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(emulatorArgs[a])[0].firstChild.data
                 print "Emulator Arg",a," arg Name: ", emulatorArgs[a]," arg Value: ",arg0
                 #emulatorArgDict={emulatorArgs[a]:arg0}
                 
                 emulatorLimitsDictValues = emulatorArgsLimitsDict[emulatorArgs[a]]
-                print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues)
-                checked_emuargs,check_note = boundsCompare(arg0,emulatorLimitsDictValues)                
+                print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a])
+                checked_emuargs,check_note = boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a])                
                 emulatorArg.update({emulatorArgs[a]:checked_emuargs})
                 emulatorArgNotes.append(check_note)
                 
                 #append(emulatorArgs[a]:arg0)
-                a= a+1
+                a+=1
                 #print a, moduleArgs[a]
             except Exception, e:
                 print e
-                sys.exit(0)
+                logging.exception("Not all emulator arguments are in use, setting Value of "+str(emulatorArgs[a])+" to NULL")
                     #arg0="NULL"
                     #print arg0
                     #arg.append(arg0)
-                
-                
-                
                 arg0="NULL"
                 emulatorArg.append(arg0)
                 a= a+1
@@ -283,7 +285,12 @@ def xmlParser(xmlData):
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
 
-def boundsCompare(xmlValue,LimitsDictValues):
+def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
+    #ignoring IP address(variableName=emulatorArgs[a])
+    if  variableName == "remoteip":
+        return_note ="\nOK"
+        return xmlValue,return_note
+    
     upperBound=int(LimitsDictValues["upperBound"])
     lowerBound=int(LimitsDictValues["lowerBound"])
     xmlValue=int(xmlValue)
@@ -321,12 +328,12 @@ if __name__ == '__main__':
     #xmlFileReader(filename)
     xmlData='''
 <emulation>
-  <name>Emu-CPU-RAM-IO</name>
-  <emulationType>Mix</emulationType>
-  <resourceType>Mix</resourceType>
-  <startTime>now</startTime>
+  <emuName>NETworkCLIent</emuName>
+  <emuType>Mix</emuType>
+  <emuResourceType>NET</emuResourceType>
+  <emuStartTime>now</emuStartTime>
   <!--duration in seconds -->
-  <stopTime>180</stopTime>
+  <emuStopTime>25</emuStopTime>
   
   <distributions> 
    <name>CPU-dis-1a</name>
