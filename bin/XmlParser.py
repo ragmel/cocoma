@@ -176,11 +176,22 @@ def xmlParser(xmlData):
                 print "Distro Arg",a," arg Name: ", moduleArgs[a].lower()," arg Value: ",arg0
                 
                 distributionsLimitsDictValues = distroArgsLimitsDict[moduleArgs[a].lower()]
-                print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
+                
+                #checking for percentage sign
+                if arg0[-1]=="%":
+                    #get total amount of memory devide by 100(to get mb per single percent) and multiply on the percentage in the document 
+                    print "Value is in %",distroArgsLimitsDict[moduleArgs[a].lower()]
+                    import psutil
+                    memReading=psutil.phymem_usage()
+                    percentageInMegabytes=((memReading.total/100)*int(arg0[:-1]))/1048576 
+                    print percentageInMegabytes
+                    checked_distroArgs,checkDistroNote = boundsCompare(percentageInMegabytes,distributionsLimitsDictValues)
+                
 
-
-                checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)         
-                print "checked_distroArgs,checkDistroNote",checked_distroArgs,checkDistroNote       
+                else:
+                    checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)         
+                    print "checked_distroArgs,checkDistroNote",checked_distroArgs,checkDistroNote       
+                
                 distroArgsNotes.append(checkDistroNote)
                 distroArgs.update({moduleArgs[a].lower():checked_distroArgs})                
                 
@@ -189,7 +200,7 @@ def xmlParser(xmlData):
                 a+=1
                 #print a, moduleArgs[a]
             except Exception,e:
-                    logging.exception("error getting distribution arguments")
+                    logging.exception("Error getting distribution arguments. Check stress values of "+"\""+str(moduleArgs[a].lower())+"\"")
                     sys.exit(0)
                     #print e, "setting value to NULL"
                     #arg0="NULL"
@@ -294,24 +305,24 @@ def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
         return_note ="\nOK"
         return xmlValue,return_note
     
+    
     upperBound=int(LimitsDictValues["upperBound"])
     lowerBound=int(LimitsDictValues["lowerBound"])
     xmlValue=int(xmlValue)
     
+    
     if xmlValue >= lowerBound:
         if xmlValue <= upperBound:
-            print "1 ",xmlValue,upperBound,lowerBound
+            print "1)Xml value",xmlValue,"is within the bounds"
             return_note ="\nOK"
             return xmlValue, return_note
             
         else:
-            print "Higher than upperBound taking maximum value"
-            print "2 ",xmlValue,upperBound,lowerBound
+            print "2)Xml value",xmlValue,"Higher than upperBound taking maximum value",upperBound
             return_note ="\nThe scpecified value "+str(xmlValue)+" was higher than the maximum limit "+str(upperBound)+" changing to the maximum limit"
             return upperBound , return_note 
     else:
-        print "Lower than lowerBound taking minimum value"
-        print "3 ",xmlValue,upperBound,lowerBound
+        print "3)Xml value",xmlValue,"lover than lowerBound taking maximum value",lowerBound
         return_note ="\nThe scpecified value "+str(xmlValue)+" was lower than the minimum limit "+str(lowerBound)+" changing to the maximum limit"
         return lowerBound, return_note
 
@@ -338,23 +349,21 @@ if __name__ == '__main__':
   <!--duration in seconds -->
   <emuStopTime>25</emuStopTime>
   
-  <distributions> 
-   <name>CPU-dis-1a</name>
+    <distributions>
+     <name>Distro1</name>
      <startTime>5</startTime>
      <!--duration in seconds -->
      <duration>30</duration>
      <granularity>3</granularity>
      <distribution href="/distributions/linear" name="linear" />
-    <!--cpu utilization distribution range-->
-      <startLoad>10</startLoad>
-      <stopLoad>90</stopLoad>
+     <!--Megabytes for memory -->
+      <startLoad>10asd0%</startLoad>
+      <stopLoad>1000</stopLoad>
       <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
-        <!--more parameters will be added -->
-        <resourceType>CPU</resourceType>
-    <!--Number of CPUs to keep busy (default: autodetected)-->
-    <ncpus>10</ncpus>
-
+        <resourceType>MEM</resourceType>
+    <!--time between iterations in usec (default 1000)-->
+    <memSleep>0</memSleep>
       </emulator-params>
   </distributions>
 

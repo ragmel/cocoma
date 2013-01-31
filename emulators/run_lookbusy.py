@@ -327,11 +327,6 @@ def emulatorArgNames(Rtype):
         argNames={"memsleep":{"upperBound":999999999,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
-
-    if Rtype.lower() == "mem%":
-        argNames={"memsleep":{"upperBound":999999999,"lowerBound":0}}
-        print "Use Arg's: ",argNames
-        return argNames    
     
     if Rtype.lower() == "io":
         argNames={"ioblocksize":{"upperBound":9999999,"lowerBound":0},"iosleep":{"upperBound":999999999,"lowerBound":0}}
