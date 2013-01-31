@@ -229,7 +229,6 @@ def xmlParser(xmlData):
                 #emulatorArgDict={emulatorArgs[a]:arg0}
                 
                 emulatorLimitsDictValues = emulatorArgsLimitsDict[emulatorArgs[a].lower()]
-                print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())
                 checked_emuargs,check_note = boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())                
                 emulatorArg.update({emulatorArgs[a].lower():checked_emuargs})
                 emulatorArgNotes.append(check_note)
@@ -313,16 +312,16 @@ def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
     
     if xmlValue >= lowerBound:
         if xmlValue <= upperBound:
-            print "1)Xml value",xmlValue,"is within the bounds"
+            print "\n1)Xml value",xmlValue,"is within the bounds"
             return_note ="\nOK"
             return xmlValue, return_note
             
         else:
-            print "2)Xml value",xmlValue,"Higher than upperBound taking maximum value",upperBound
+            print "\n2)Xml value",xmlValue,"Higher than upperBound taking maximum value",upperBound
             return_note ="\nThe scpecified value "+str(xmlValue)+" was higher than the maximum limit "+str(upperBound)+" changing to the maximum limit"
             return upperBound , return_note 
     else:
-        print "3)Xml value",xmlValue,"lover than lowerBound taking maximum value",lowerBound
+        print "\n3)Xml value",xmlValue,"lover than lowerBound taking maximum value",lowerBound
         return_note ="\nThe scpecified value "+str(xmlValue)+" was lower than the minimum limit "+str(lowerBound)+" changing to the maximum limit"
         return lowerBound, return_note
 
@@ -357,7 +356,7 @@ if __name__ == '__main__':
      <granularity>3</granularity>
      <distribution href="/distributions/linear" name="linear" />
      <!--Megabytes for memory -->
-      <startLoad>10asd0%</startLoad>
+      <startLoad>10%</startLoad>
       <stopLoad>1000</stopLoad>
       <emulator href="/emulators/stressapptest" name="lookbusy" />
       <emulator-params>
