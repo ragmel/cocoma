@@ -89,6 +89,7 @@ class emulatorMod(object):
     
     
     def __init__(self,emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg, stressValues,runNo):
+        def createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
         #emulationID,emulationLifetimeID,duration, stressValue,runNo
         self.emulationID = emulationID
         self.emulationLifetimeID = emulationLifetimeID
@@ -101,26 +102,18 @@ class emulatorMod(object):
         
         
         
-        print "Hello this is run_iperf: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo: ",emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo
+        print "Hello this is run_iperf: distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,duration:",distributionID,runNo,stressValues,emulatorArg["clientport"],emulatorArg["serverPort"],emulatorArg["udppackets"],emulatorArg["clientip"],emulatorArg["serverip"],duration
         
-        if resourceTypeDist.lower() == "net-server":
-            print "Net-Server selected"
-            print "distributionID,runNo,emulatorArg[port],emulatorArg[udppackets],duration\n",distributionID,runNo,emulatorArg["port"],emulatorArg["udppackets"],duration
-            
-            m = multiprocessing.Process(target = netServerLoad, args=(distributionID,runNo,emulatorArg["port"],emulatorArg["udppackets"],duration))
-            m.start()
-            print(m.is_alive())
-            m.join()
-        
-        if resourceTypeDist.lower() == "net-client":
-            print "Net-Client selected"
-            memMulti = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["port"],emulatorArg["udppackets"],emulatorArg["remoteip"],duration))
+        if resourceTypeDist.lower() == "net":
+            print "Net selected"                                     #(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,duration)
+            memMulti = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["clientport"],emulatorArg["serverPort"],emulatorArg["udppackets"],emulatorArg["clientip"],emulatorArg["serverip"],emulationID,duration))
             memMulti.start()
             print(memMulti.is_alive())
             memMulti.join()
             
         
 def netServerLoad(distributionID,runNo,netPort,netUdppackets,duration):
+            
             
             runIperfPidNo=0
             try:
@@ -161,7 +154,19 @@ def netServerLoad(distributionID,runNo,netPort,netUdppackets,duration):
             dbWriter(distributionID,runNo,message,executed)
                 
   
-def netClientLoad(distributionID,runNo,stressValues,netPort,udppackets,remoteIp,duration):
+def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,emulationID,duration):
+            
+            #check if we need/can to schedule server to run
+            if runNo == 0:
+                print "First run. Checking if can start the server..."
+                serverUri = "PYRO:scheduler.daemon@"+str(serverIP)+":51889"   
+                serverDaemon=Pyro4.Proxy(serverUri)
+                if serverDaemon.startIperfServer(emulationID,serverPort):
+                    print "Server has started! for duration of Emulation"
+                else :
+                    print "Unable to start iperf server on: "+str(serverIP)+":"+str(serverPort)+"\n NET distribution(-s) Failed"
+    
+    
             print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,netPort,udppackets,remoteIp,duration\n",distributionID,runNo,stressValues,netPort,udppackets,remoteIp,duration,"\n\n"
             bandwith =stressValues
             if udppackets ==1 and bandwith!=0:
@@ -227,26 +232,28 @@ def emulatorHelp():
     return """
     Emulator "iperf" can be used for following resources:
  
+<distributions> 
+   <name>NET_distro</name>
+     <startTime>0</startTime>
+     <!--duration in seconds -->
+     <duration>10</duration>
+     <granularity>1</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+    <!--cpu utilization distribution range-->
+      <startLoad>10</startLoad>
+      <stopLoad>10</stopLoad>
+      <emulator href="/emulators/iperf" name="iperf" />
+      
     <emulator-params>
         <!--Server/Client-->
-        <resourceType>NET-Server</resourceType>
-        <!--Port for server(5001 is default)-->
-        <port>5001</port>
-        <!--Use 1 or 0 to send udp packets-->
-        <udppackets>1<udppackets>
-    </emulator-params>
-    
-    
-    
-    <emulator-params>
-        <!--Server/Client-->
-        <resourceType>NET-Client</resourceType>
-        <!--Port for server(5001 is default)-->
-        <port>5001</port>
-        <ip>127.0.0.1</ip>
-        <!--Use 1 or 0 to send udp packets-->
+        <resourceType>NET</resourceType>
+        <serverip>10.55.168.166</serverip>
+        <clientip>10.55.168.167</clientip>
         <udppackets>1</udppackets>
+        <bandwith>0</bandwith>
     </emulator-params>
+  </distributions>
+
     
     
     """
@@ -263,7 +270,7 @@ def emulatorArgNames(Rtype):
     '''
     if Rtype.lower() == "net":
         
-        argNames={"port":{"upperBound":10000,"lowerBound":1},"udppackets":{"upperBound":1,"lowerBound":0},"remoteip":{"upperBound":10000,"lowerBound":1}}
+        argNames={"serverport":{"upperBound":10000,"lowerBound":0},"clientport":{"upperBound":10000,"lowerBound":0},"udppackets":{"upperBound":1,"lowerBound":0},"serverip":{"upperBound":10000,"lowerBound":1},"clientip":{"upperBound":1,"lowerBound":0},"bandwith":{"upperBound":10000,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
 

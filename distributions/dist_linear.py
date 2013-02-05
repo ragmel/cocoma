@@ -45,15 +45,15 @@ class distributionMod(object):
 
 def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
     
-    startLoad = int(distributionArg["startLoad"])
-    stopLoad = int(distributionArg["stopLoad"])
+    startLoad = int(distributionArg["startload"])
+    stopLoad = int(distributionArg["stopload"])
     
     print "hello this is dist linear"
     print "startLoad",startLoad
     print "stopLoad",stopLoad
     print "distributionGranularity",distributionGranularity
     
-    distributionGranularity_count=distributionGranularity
+    #distributionGranularity_count=distributionGranularity
     upperBoundary= int(distributionGranularity)-1
     #startTimesec = startTimesec
     duration = float(duration)

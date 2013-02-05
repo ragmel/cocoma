@@ -132,7 +132,11 @@ class schedulerDaemon(object):
         #    return  
 
 
-        
+    def executeRemoteCommand(self,commandString,duration=None):
+        print "executeRemoteCommand!!!"
+        def runI
+        self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID], name=str(emulationID)+"-logger interval-"+str(interval)+"sec.")
+     
         
     
     def timeConv(self,dbtimestamp):

@@ -17,25 +17,6 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-#Copyright 2012 SAP Ltd
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
-# This is part of the COCOMA framework
-#
-# COCOMA is a framework for COntrolled COntentious and MAlicious patterns
-#
-
 from xml.dom.minidom import parseString, Node
 import xml.dom.minidom
 import DistributionManager,sys,EmulationManager
@@ -176,22 +157,11 @@ def xmlParser(xmlData):
                 print "Distro Arg",a," arg Name: ", moduleArgs[a].lower()," arg Value: ",arg0
                 
                 distributionsLimitsDictValues = distroArgsLimitsDict[moduleArgs[a].lower()]
-                
-                #checking for percentage sign
-                if arg0[-1]=="%":
-                    #get total amount of memory devide by 100(to get mb per single percent) and multiply on the percentage in the document 
-                    print "Value is in %",distroArgsLimitsDict[moduleArgs[a].lower()]
-                    import psutil
-                    memReading=psutil.phymem_usage()
-                    percentageInMegabytes=((memReading.total/100)*int(arg0[:-1]))/1048576 
-                    print percentageInMegabytes
-                    checked_distroArgs,checkDistroNote = boundsCompare(percentageInMegabytes,distributionsLimitsDictValues)
-                
+                print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
 
-                else:
-                    checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)         
-                    print "checked_distroArgs,checkDistroNote",checked_distroArgs,checkDistroNote       
-                
+
+                checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)         
+                print "checked_distroArgs,checkDistroNote",checked_distroArgs,checkDistroNote       
                 distroArgsNotes.append(checkDistroNote)
                 distroArgs.update({moduleArgs[a].lower():checked_distroArgs})                
                 
@@ -200,7 +170,7 @@ def xmlParser(xmlData):
                 a+=1
                 #print a, moduleArgs[a]
             except Exception,e:
-                    logging.exception("Error getting distribution arguments. Check stress values of "+"\""+str(moduleArgs[a].lower())+"\"")
+                    logging.exception("error getting distribution arguments")
                     sys.exit(0)
                     #print e, "setting value to NULL"
                     #arg0="NULL"
@@ -229,6 +199,7 @@ def xmlParser(xmlData):
                 #emulatorArgDict={emulatorArgs[a]:arg0}
                 
                 emulatorLimitsDictValues = emulatorArgsLimitsDict[emulatorArgs[a].lower()]
+                print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())
                 checked_emuargs,check_note = boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())                
                 emulatorArg.update({emulatorArgs[a].lower():checked_emuargs})
                 emulatorArgNotes.append(check_note)
@@ -300,28 +271,28 @@ def xmlParser(xmlData):
 
 def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
     #ignoring IP address(variableName=emulatorArgs[a])
-    if  variableName == "remoteip":
+    if  variableName == "serverip" or variableName == "clientip":
         return_note ="\nOK"
         return xmlValue,return_note
-    
     
     upperBound=int(LimitsDictValues["upperBound"])
     lowerBound=int(LimitsDictValues["lowerBound"])
     xmlValue=int(xmlValue)
     
-    
     if xmlValue >= lowerBound:
         if xmlValue <= upperBound:
-            print "\n1)Xml value",xmlValue,"is within the bounds"
+            print "1 ",xmlValue,upperBound,lowerBound
             return_note ="\nOK"
             return xmlValue, return_note
             
         else:
-            print "\n2)Xml value",xmlValue,"Higher than upperBound taking maximum value",upperBound
+            print "Higher than upperBound taking maximum value"
+            print "2 ",xmlValue,upperBound,lowerBound
             return_note ="\nThe scpecified value "+str(xmlValue)+" was higher than the maximum limit "+str(upperBound)+" changing to the maximum limit"
             return upperBound , return_note 
     else:
-        print "\n3)Xml value",xmlValue,"lover than lowerBound taking maximum value",lowerBound
+        print "Lower than lowerBound taking minimum value"
+        print "3 ",xmlValue,upperBound,lowerBound
         return_note ="\nThe scpecified value "+str(xmlValue)+" was lower than the minimum limit "+str(lowerBound)+" changing to the maximum limit"
         return lowerBound, return_note
 
@@ -341,40 +312,46 @@ if __name__ == '__main__':
     #xmlFileReader(filename)
     xmlData='''
 <emulation>
-  <emuname>NETworkCLIent</emuname>
+  <emuname>NET_emu</emuname>
   <emuType>Mix</emuType>
-  <emuResourceType>NET</emuResourceType>
-  <emuStartTime>now</emuStartTime>
+  <emuresourceType>NET</emuresourceType>
+  <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emuStopTime>25</emuStopTime>
+  <emustopTime>15</emustopTime>
   
-    <distributions>
-     <name>Distro1</name>
-     <startTime>5</startTime>
+  <distributions> 
+   <name>NET_distro</name>
+     <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>30</duration>
-     <granularity>3</granularity>
+     <duration>10</duration>
+     <granularity>1</granularity>
      <distribution href="/distributions/linear" name="linear" />
-     <!--Megabytes for memory -->
-      <startLoad>10%</startLoad>
-      <stopLoad>1000</stopLoad>
-      <emulator href="/emulators/stressapptest" name="lookbusy" />
-      <emulator-params>
-        <resourceType>MEM</resourceType>
-    <!--time between iterations in usec (default 1000)-->
-    <memSleep>0</memSleep>
-      </emulator-params>
+    <!--cpu utilization distribution range-->
+      <startLoad>10</startLoad>
+      <stopLoad>10</stopLoad>
+      <emulator href="/emulators/iperf" name="iperf" />
+    <emulator-params>
+        <!--Server/Client-->
+        <resourceType>NET</resourceType>
+        <serverip>10.55.168.166</serverip>
+    <!--Leave "0" for default 5001 port -->
+    <serverport>0</serverport>
+        <clientip>10.55.168.167</clientip>
+    <!--Leave "0" for default 5001 port -->
+    <clientport>0</clientport>
+        <udppackets>1</udppackets>
+        <bandwith>0</bandwith>
+    </emulator-params>
   </distributions>
 
   <log>
       <!-- Use value "1" to enable logging(by default logging is off)  -->
-      <enable>1</enable>
+      <enable>0</enable>
       <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
       <frequency>3</frequency>
   </log>
   
 </emulation>
-
     
     
     '''

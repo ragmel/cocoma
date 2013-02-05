@@ -1,20 +1,20 @@
 <emulation>
-  <name>CPU_emu</name>
-  <emulationType>Mix</emulationType>
-  <resourceType>CPU</resourceType>
-  <startTime>now</startTime>
+  <emuname>CPU_emu</emuname>
+  <emuType>Mix</emuType>
+  <emuresourceType>CPU</emuresourceType>
+  <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <stopTime>250</stopTime>
+  <emustopTime>15</emustopTime>
   
   <distributions> 
    <name>CPU_distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>240</duration>
+     <duration>10</duration>
      <granularity>1</granularity>
      <distribution href="/distributions/linear" name="linear" />
 	<!--cpu utilization distribution range-->
-      <startLoad>95</startLoad>
+      <startLoad>10</startLoad>
       <stopLoad>95</stopLoad>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>

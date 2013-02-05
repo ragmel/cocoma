@@ -111,11 +111,6 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
     
         daemon=Pyro4.Proxy(uri)
         
-        #creating run for logger with probe interval of 2 seconds
-        #interval=2
-        #singleRunStartTime =runStartTime[0]
-        #daemon.createLoggerJob(singleRunStartTime,duration,interval,emulationID)
-        
         n=0
         for vals in stressValues:
             print "stressValues: ",vals
