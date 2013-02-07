@@ -88,8 +88,7 @@ except:
 class emulatorMod(object):
     
     
-    def __init__(self,emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg, stressValues,runNo):
-        def createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
+    def __init__(self,emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg, stressValues,runNo,emuDuration):
         #emulationID,emulationLifetimeID,duration, stressValue,runNo
         self.emulationID = emulationID
         self.emulationLifetimeID = emulationLifetimeID
@@ -99,25 +98,36 @@ class emulatorMod(object):
         self.runNo=runNo
         self.distributionID=distributionID
         
+        #injecting server value
+        try:
+            print emulatorArg["server"]
+        except:
+            emulatorArg.update({"server":0})
+            
+  
+ 
+        if resourceTypeDist.lower() == "net" and emulatorArg["server"]==0:
+                print "Net selected"                                     #(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,duration)
+                netClientProc = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["clientport"],emulatorArg["serverport"],emulatorArg["udppackets"],emulatorArg["clientip"],emulatorArg["serverip"],emulationID,emulatorArg,emuDuration,duration))
+                netClientProc.start()
+                print(netClientProc.is_alive())
+                netClientProc.join()
+                
         
-        
-        
-        print "Hello this is run_iperf: distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,duration:",distributionID,runNo,stressValues,emulatorArg["clientport"],emulatorArg["serverPort"],emulatorArg["udppackets"],emulatorArg["clientip"],emulatorArg["serverip"],duration
-        
-        if resourceTypeDist.lower() == "net":
-            print "Net selected"                                     #(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,duration)
-            memMulti = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["clientport"],emulatorArg["serverPort"],emulatorArg["udppackets"],emulatorArg["clientip"],emulatorArg["serverip"],emulationID,duration))
-            memMulti.start()
-            print(memMulti.is_alive())
-            memMulti.join()
+        elif emulatorArg["server"]==1:
+                print "Launching Server..."                                     #(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,duration)
+                netServerProc = multiprocessing.Process(target = netServerLoad, args=(distributionID,runNo,emulatorArg["serverport"],emulatorArg["udppackets"],emuDuration))
+                netServerProc.start()
+                print(netServerProc.is_alive())
+                netServerProc.join()
             
         
-def netServerLoad(distributionID,runNo,netPort,netUdppackets,duration):
+def netServerLoad(distributionID,runNo,netPort,netUdppackets,emuDuration):
             
             
             runIperfPidNo=0
             try:
-                print "\n\nthis is netServerLoad:\ndistributionID,runNo,netIp,netPort,netUdppackets,duration\n",distributionID,runNo,netPort,netUdppackets,duration,"\n\n"
+                print "\n\nthis is netServerLoad:\ndistributionID,runNo,netIp,netPort,netUdppackets,emuDuration\n",distributionID,runNo,netPort,netUdppackets,emuDuration,"\n\n"
                 
                 if netUdppackets ==1 :
                     try:
@@ -136,7 +146,7 @@ def netServerLoad(distributionID,runNo,netPort,netUdppackets,duration):
             except Exception, e:
                 "run_runIperf job exception: ", e
             
-            time.sleep(duration)
+            time.sleep(float(emuDuration))
             #catching failed runs
             if zombieBuster(runIperfPidNo):
                 print "Job failed, sending wait()."
@@ -154,28 +164,45 @@ def netServerLoad(distributionID,runNo,netPort,netUdppackets,duration):
             dbWriter(distributionID,runNo,message,executed)
                 
   
-def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,emulationID,duration):
+def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,emulationID,emulatorArg,emuDuration,duration):
             
             #check if we need/can to schedule server to run
-            if runNo == 0:
+            if runNo == str(0):
                 print "First run. Checking if can start the server..."
                 serverUri = "PYRO:scheduler.daemon@"+str(serverIP)+":51889"   
                 serverDaemon=Pyro4.Proxy(serverUri)
-                if serverDaemon.startIperfServer(emulationID,serverPort):
-                    print "Server has started! for duration of Emulation"
-                else :
+                
+                
+                fakeemulationLifetimeID=1
+                
+                fakeemulatorArg = emulatorArg
+                fakeemulatorArg.update({'server': 1})
+                fakeresourceTypeDist ="net"
+                fakestressValue = 1
+                fakeRunNo = 1 #must not be zero
+                emulator="iperf"
+                
+                
+                PROCNAME = "iperf -s"
+                serverJobStatus=serverDaemon.createCustomJob(emulationID,distributionID,fakeemulationLifetimeID,duration,emulator,fakeemulatorArg,fakeresourceTypeDist,fakestressValue,fakeRunNo,PROCNAME,emuDuration)
+                if serverJobStatus == 1:
+                    print "Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+":51889" +" job was created! for duration of Emulation"
+                    print "Started server for "+str(emuDuration)+" sec"
+                elif serverJobStatus == 2:
+                    print "Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+":51889" +" job already running"
+                elif serverJobStatus == 0:
                     print "Unable to start iperf server on: "+str(serverIP)+":"+str(serverPort)+"\n NET distribution(-s) Failed"
     
-    
-            print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,netPort,udppackets,remoteIp,duration\n",distributionID,runNo,stressValues,netPort,udppackets,remoteIp,duration,"\n\n"
+            time.sleep(5)
+            print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,emulationID,duration\n",distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,emulationID,duration,"\n\n"
             bandwith =stressValues
             if udppackets ==1 and bandwith!=0:
                 
                 try:
-                    runIperf = subprocess.Popen(["iperf","-c",str(remoteIp),"-p",str(netPort),"-b",str(bandwith)+"gb","-t",str(duration),"&"])
+                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"gb","-t",str(duration),"&"])
                     runIperfPidNo =runIperf.pid
                     
-                    print "Started Iperf on PID No: ",runIperfPidNo
+                    print "Started Iperf client on PID No: ",runIperfPidNo
                     print "falling a sleep for: ",duration
                     
                     time.sleep(duration)
@@ -203,7 +230,7 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,udppac
 
             else:
                 try:
-                    runIperf = subprocess.Popen(["iperf","-c",remoteIp,"-p",netPort,"-t",duration,"&"])
+                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-t",duration,"&"])
                     runIperfPidNo =runIperf.pid
                     
                     print "Started Iperf on PID No: ",runIperfPidNo
@@ -245,13 +272,17 @@ def emulatorHelp():
       <emulator href="/emulators/iperf" name="iperf" />
       
     <emulator-params>
-        <!--Server/Client-->
         <resourceType>NET</resourceType>
         <serverip>10.55.168.166</serverip>
+        <!--Leave "0" for default 5001 port -->
+        <serverport>0</serverport>
         <clientip>10.55.168.167</clientip>
+        <!--Leave "0" for default 5001 port -->
+        <clientport>0</clientport>
         <udppackets>1</udppackets>
         <bandwith>0</bandwith>
     </emulator-params>
+  
   </distributions>
 
     

@@ -718,7 +718,7 @@ def dataCheck(startTime,stopTime):
    
  
     
-    time_re = re.compile('\d{4}[-]\d{2}[-]\d{2}[T]\d{2}[:]\d{2}[:]\d{2}')
+    time_re = re.compile('\d{4}[-]\d{2}[-]\d{2}[T,t]\d{2}[:]\d{2}[:]\d{2}')
     
     
     if time_re.match(startTime): 

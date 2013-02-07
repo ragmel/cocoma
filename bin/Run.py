@@ -24,7 +24,7 @@ from threading import Thread
 
 
     
-def createRun(emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist, stressValue,runNo):
+def createRun(emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist, stressValue,runNo,emuDuration):
     
         try:
             HOMEPATH= os.environ['COCOMA']
@@ -64,7 +64,7 @@ def createRun(emulationID,distributionID,emulationLifetimeID,duration,emulator,e
         #1. Get required module loaded
         modhandleMy=loadEmulator(str(emulator))
         #2. Use this module for executing the stress   
-        newEmulatorSelect=modhandleMy(emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg,stressValue,runNo)
+        newEmulatorSelect=modhandleMy(emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg,stressValue,runNo,emuDuration)
         
 
 

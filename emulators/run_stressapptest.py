@@ -102,7 +102,7 @@ except:
 class emulatorMod(object):
     
     
-    def __init__(self,emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg, stressValues,runNo):
+    def __init__(self,emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg, stressValues,runNo,emuDuration):
         #emulationID,emulationLifetimeID,duration, stressValue,runNo
         self.emulationID = emulationID
         self.emulationLifetimeID = emulationLifetimeID

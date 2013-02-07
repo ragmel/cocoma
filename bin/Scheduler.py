@@ -28,7 +28,7 @@ import datetime as dt
 import Run
 import sqlite3 as sqlite
 #from __future__ import print_function
-import Pyro4, Logger
+import Pyro4, Logger,EmulationManager,DistributionManager
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_MISSED,EVENT_JOB_ERROR
 
 #perhaps needs to be set somewhere else
@@ -94,7 +94,7 @@ class schedulerDaemon(object):
     #    print "This is purgeAllJobs daemon"
     #    self.sched.shutdown(False, True, True)
     
-    def createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo):
+    def createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration):
         
         
         print "Hello this is Scheduler createJob()"
@@ -110,7 +110,7 @@ class schedulerDaemon(object):
             print "duration",duration
             print "runNo",runNo
             #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)     
-            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
+            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
             print sys.stdout
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             print valBack
@@ -127,16 +127,22 @@ class schedulerDaemon(object):
         
         self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID], name=str(emulationID)+"-logger interval-"+str(interval)+"sec.")
         return "Started logger"
-        #except Exception, e:
-        #    print "Could not start logger. Error: ",e
-        #    return  
+ 
 
 
-   # def executeRemoteCommand(self,commandString,duration=None):
-    #    print "executeRemoteCommand!!!"
-     #   def runI
-      #  self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID], name=str(emulationID)+"-logger interval-"+str(interval)+"sec.")
-     
+    def createCustomJob(self,emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,PROCNAME,emuDuration):
+        EmulationManager.checkPid(PROCNAME)
+        print "createCustomJob!!!"
+        distributionName= emulator+"customJob"
+        
+        if EmulationManager.checkPid(PROCNAME):
+            return 2
+        else:
+            try:
+                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(DistributionManager.timeConv(EmulationManager.emulationNow())))), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+distributionName+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
+                return 1
+            except:
+                return 0
         
     
     def timeConv(self,dbtimestamp):

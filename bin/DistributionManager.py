@@ -117,7 +117,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             try:
                 print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
                 print daemon.hello()
-                print daemon.createJob(emulationID,distributionID,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n))
+                print daemon.createJob(emulationID,distributionID,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),duration)
                 #lf,emulationID,emulationName,emulationLifetimeID,duration,emulator,resourceType,stressValue,runStartTime,runNo
                 
                 
@@ -373,4 +373,17 @@ def timestamp(date):
     return gmtTime
 
 if __name__ == "__main__":
-    distributionManager("asdf","sadf","cpu","linear","2013-08-30T20:03:04","2013-08-30T20:10:03", 3,10, 90)
+    emulationID=1
+    emulationLifetimeID=1
+    emulationName="klj"
+    distributionName="lk"
+    startTime="2013-08-30T20:03:04"
+    startTimeDistro=120
+    duration=100
+    emulator="iperf"
+    distributionGranularity=3
+    distributionType="linear"
+    resourceTypeDist="net"
+    distributionArg=[1]
+    emulatorArg=[1]
+    distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg)
