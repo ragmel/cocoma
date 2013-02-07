@@ -23,7 +23,7 @@
 import optparse,sys,Pyro4,os,ConfigParser
 import sqlite3 as sqlite
 #import argparse - new version of optparse
-import EmulationManager,XmlParser,DistributionManager,subprocess
+import EmulationManager,XmlParser,DistributionManager,subprocess,ccmshAPI
 
 
 Pyro4.config.HMAC_KEY='pRivAt3Key'
@@ -31,7 +31,7 @@ Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 def main():
     
-    uri ="PYRO:scheduler.daemon@localhost:51889"
+    uri ="PYRO:scheduler.daemon@"+str(ccmshAPI.getIP())+":51889"
     #perhaps needs to be setup somewhere else
     
     daemon=Pyro4.Proxy(uri)    
@@ -294,7 +294,8 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                         sys.exit(0)
                     
         if options.listJobs:
-            connectionCheck=daemonCheck()
+            print "+str(ccmshAPI.getIP())+", str(ccmshAPI.getIP())
+            connectionCheck=daemonCheck(str(ccmshAPI.getIP()))
             if  connectionCheck !=1:
                 sys.exit(1) 
                 
@@ -435,11 +436,11 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
         parser.print_help()
 
         
-def daemonCheck():
+def daemonCheck(IP_ADDR):
     '''
     Checking if Scheduler Daemon is started
     '''
-    uri ="PYRO:scheduler.daemon@localhost:51889"
+    uri ="PYRO:scheduler.daemon@"+str(IP_ADDR)+":51889"
     #perhaps needs to be setup somewhere else
     
     daemon=Pyro4.Proxy(uri)

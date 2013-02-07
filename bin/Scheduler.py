@@ -384,22 +384,39 @@ def job_listener(event):
             print "Writing to DB distributionID,runNo,message,executed:",distributionID,runNo,message,executed
             dbWriter(distributionID,runNo,message,executed)   
     
+def getifip(ifn):
+    import socket, fcntl, struct
+    sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(sck.fileno(),0x8915,struct.pack('256s', ifn[:15]))[20:24])
 
-
-def main():
+def main(IP_ADDR,PORT_ADDR):
     
     daemon=schedulerDaemon()
-    Pyro4.config.HOST="localhost"
+    Pyro4.config.HOST=IP_ADDR
     
     Pyro4.Daemon.serveSimple(
             {
                 daemon: "scheduler.daemon"
             },
-            port = 51889, ns=False)
+            port = PORT_ADDR, ns=False)
     
     #we start daemon locally
  
 if __name__=="__main__":
-    main()
+    #main()
+
+    PORT_ADDR=51889
+    try: 
+        if sys.argv[1] == "-h":
+            print "Use Scheduler <name of network interface> . Default network interface is eth0."
+        else:
+            print "Interface: ",sys.argv[1]
+            IP_ADDR=getifip(sys.argv[1])
+            main(IP_ADDR,PORT_ADDR)
+    except:
+        print "Interface: ","eth0"
+        IP_ADDR=getifip("eth0")
+        main(IP_ADDR,PORT_ADDR)
+
     
                        

@@ -271,7 +271,7 @@ def xmlParser(xmlData):
 
 def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
     #ignoring IP address(variableName=emulatorArgs[a])
-    if  variableName == "serverip" or variableName == "clientip":
+    if  variableName == "serverip" or variableName == "clientip" or variableName == "packettype":
         return_note ="\nOK"
         return xmlValue,return_note
     

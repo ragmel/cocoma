@@ -107,64 +107,22 @@ class emulatorMod(object):
   
  
         if resourceTypeDist.lower() == "net" and emulatorArg["server"]==0:
-                print "Net selected"                                     #(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,duration)
-                netClientProc = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["clientport"],emulatorArg["serverport"],emulatorArg["udppackets"],emulatorArg["clientip"],emulatorArg["serverip"],emulationID,emulatorArg,emuDuration,duration))
+                print "Net selected"                                     #(distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,duration)
+                netClientProc = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["clientport"],emulatorArg["serverport"],emulatorArg["packettype"],emulatorArg["clientip"],emulatorArg["serverip"],emulationID,emulatorArg,emuDuration,duration))
                 netClientProc.start()
                 print(netClientProc.is_alive())
                 netClientProc.join()
                 
         
         elif emulatorArg["server"]==1:
-                print "Launching Server..."                                     #(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,duration)
-                netServerProc = multiprocessing.Process(target = netServerLoad, args=(distributionID,runNo,emulatorArg["serverport"],emulatorArg["udppackets"],emuDuration))
+                print "Launching Server..."                                     #(distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,duration)
+                netServerProc = multiprocessing.Process(target = netServerLoad, args=(distributionID,runNo,emulatorArg["serverport"],emulatorArg["packettype"],emuDuration))
                 netServerProc.start()
                 print(netServerProc.is_alive())
                 netServerProc.join()
-            
-        
-def netServerLoad(distributionID,runNo,netPort,netUdppackets,emuDuration):
-            
-            
-            runIperfPidNo=0
-            try:
-                print "\n\nthis is netServerLoad:\ndistributionID,runNo,netIp,netPort,netUdppackets,emuDuration\n",distributionID,runNo,netPort,netUdppackets,emuDuration,"\n\n"
-                
-                if netUdppackets ==1 :
-                    try:
-                        runIperf = subprocess.Popen(["iperf","-s","-u", "-p",str(netPort),"&"])
-                    except Exception, e:
-                        print e
-                
-                    runIperfPidNo =runIperf.pid
-                    print "Started Iperf Server for UDP on PID No: ",runIperfPidNo
-                else:
-                    runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort),"&"])
-                    runIperfPidNo =runIperf.pid
-                    print "Started Iperf Server for TCP on PID No: ",runIperfPidNo
-        
-                
-            except Exception, e:
-                "run_runIperf job exception: ", e
-            
-            time.sleep(float(emuDuration))
-            #catching failed runs
-            if zombieBuster(runIperfPidNo):
-                print "Job failed, sending wait()."
-                runIperf.wait()
-                print "writing fail into DB..."
-                message="Fail"
-                executed="False"
-            else:
-                runIperf.terminate()
-            
-                print "writing success into DB..."
-                message="Success"
-                executed="True"
-                
-            dbWriter(distributionID,runNo,message,executed)
                 
   
-def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,emulationID,emulatorArg,emuDuration,duration):
+def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,emulationID,emulatorArg,emuDuration,duration):
             
             #check if we need/can to schedule server to run
             if runNo == str(0):
@@ -194,9 +152,9 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,udppac
                     print "Unable to start iperf server on: "+str(serverIP)+":"+str(serverPort)+"\n NET distribution(-s) Failed"
     
             time.sleep(5)
-            print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,emulationID,duration\n",distributionID,runNo,stressValues,clientPort,serverPort,udppackets,clientIp,serverIP,emulationID,duration,"\n\n"
+            print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,emulationID,duration\n",distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,emulationID,duration,"\n\n"
             bandwith =stressValues
-            if udppackets ==1 and bandwith!=0:
+            if packettype.lower() == "udp":
                 
                 try:
                     runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"gb","-t",str(duration),"&"])
@@ -252,6 +210,52 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,udppac
                     
                 except Exception, e:
                     print "run_Iperf job exception: ", e
+
+
+
+def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
+            
+            
+            runIperfPidNo=0
+            try:
+                print "\n\nthis is netServerLoad:\ndistributionID,runNo,netIp,netPort,netUdppackets,emuDuration\n",distributionID,runNo,netPort,packettype,emuDuration,"\n\n"
+                
+                if packettype.lower() =="udp" :
+                    try:
+                        runIperf = subprocess.Popen(["iperf","-s","-u", "-p",str(netPort),"&"])
+                    except Exception, e:
+                        print e
+                
+                    runIperfPidNo =runIperf.pid
+                    print "Started Iperf Server for UDP on PID No: ",runIperfPidNo
+                else:
+                    runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort),"&"])
+                    runIperfPidNo =runIperf.pid
+                    print "Started Iperf Server for TCP on PID No: ",runIperfPidNo
+        
+                
+            except Exception, e:
+                "run_runIperf job exception: ", e
+            
+            time.sleep(float(emuDuration))
+            #catching failed runs
+            if zombieBuster(runIperfPidNo):
+                print "Job failed, sending wait()."
+                runIperf.wait()
+                print "writing fail into DB..."
+                message="Fail"
+                executed="False"
+            else:
+                runIperf.terminate()
+            
+                print "writing success into DB..."
+                message="Success"
+                executed="True"
+                
+            dbWriter(distributionID,runNo,message,executed)
+
+
+
      
 
 def emulatorHelp():
@@ -279,7 +283,7 @@ def emulatorHelp():
         <clientip>10.55.168.167</clientip>
         <!--Leave "0" for default 5001 port -->
         <clientport>0</clientport>
-        <udppackets>1</udppackets>
+        <packettype>UDP</packettype>
         <bandwith>0</bandwith>
     </emulator-params>
   
@@ -301,7 +305,7 @@ def emulatorArgNames(Rtype):
     '''
     if Rtype.lower() == "net":
         
-        argNames={"serverport":{"upperBound":10000,"lowerBound":0},"clientport":{"upperBound":10000,"lowerBound":0},"udppackets":{"upperBound":1,"lowerBound":0},"serverip":{"upperBound":10000,"lowerBound":1},"clientip":{"upperBound":1,"lowerBound":0},"bandwith":{"upperBound":10000,"lowerBound":0}}
+        argNames={"serverport":{"upperBound":10000,"lowerBound":0},"clientport":{"upperBound":10000,"lowerBound":0},"packettype":{"upperBound":"udp","lowerBound":"tcp"},"serverip":{"upperBound":10000,"lowerBound":1},"clientip":{"upperBound":1,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
 

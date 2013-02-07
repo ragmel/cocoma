@@ -31,6 +31,7 @@ import xml.etree.ElementTree as ET
 
 PORT_ADDR=0
 IP_ADDR=0
+INTERFACE=""
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 
@@ -167,7 +168,7 @@ def get_emulation(name=""):
     
     
     scheduledJobsXml = ET.SubElement(emulation,'scheduledJobs')
-    uri ="PYRO:scheduler.daemon@localhost:51889"
+    uri ="PYRO:scheduler.daemon@"+str(IP_ADDR)+":51889"
     daemon=Pyro4.Proxy(uri)    
     
     #create active jobs list
@@ -853,7 +854,7 @@ def getifip(ifn):
 
 
 def startAPI(IP_ADDR,PORT_ADDR):
-    if ccmsh.daemonCheck() ==0:
+    if ccmsh.daemonCheck(IP_ADDR,PORT_ADDR) ==0:
         sys.exit(0)
 
 
@@ -865,16 +866,24 @@ def startAPI(IP_ADDR,PORT_ADDR):
     API_HOST=run(host=IP_ADDR, port=PORT_ADDR)
     print "API_HOST.host",API_HOST.host
     return IP_ADDR
+
+def getIP():
+    return IP_ADDR
+
+
 if __name__ == '__main__':
+
     PORT_ADDR=5050
     try: 
         if sys.argv[1] == "-h":
             print "Use ccmshAPI <name of network interface> . Default network interface is eth0."
         else:
+            INTERFACE = sys.argv[1]
             print "Interface: ",sys.argv[1]
             IP_ADDR=getifip(sys.argv[1])
             startAPI(IP_ADDR,PORT_ADDR)
     except:
+        INTERFACE ="eth0"
         print "Interface: ","eth0"
         IP_ADDR=getifip("eth0")
         startAPI(IP_ADDR,PORT_ADDR)
