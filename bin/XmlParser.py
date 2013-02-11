@@ -21,11 +21,12 @@ from xml.dom.minidom import parseString, Node
 import xml.dom.minidom
 import DistributionManager,sys,EmulationManager
 import logging
-logging.basicConfig(level=logging.DEBUG)
+
 
 def xmlReader(filename):
     
-    print "This is XML Parser"
+    logging.debug("This is XML Parser: xmlReader(filename)")
+    
     
     
     #open the xml file for reading:
@@ -39,7 +40,7 @@ def xmlReader(filename):
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
 def xmlParser(xmlData):
-    
+    logging.debug("This is XML Parser: xmlParser(xmlData)")
     emulationLogFrequency = "3"
     emulationLog="0"
     
@@ -65,11 +66,11 @@ def xmlParser(xmlData):
         
             emulationLogFrequency=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('frequency')[0].firstChild.data
         except Exception, e:
-            print "Setting emulationLogFrequency to default value of 3sec"
+            logging.debug("Setting emulationLogFrequency to default value of 3sec")
             
     
     except Exception, e:
-        print "Logging is Off"
+        logging.debug("XML Logging is Off")
     
     emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emutype')[0].firstChild.data
     startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustarttime')[0].firstChild.data
@@ -78,17 +79,17 @@ def xmlParser(xmlData):
      
     
     
-    print "##########################"
-    print "emulation name: ",emulationName
-    print "emulation type: ",emulationType
-    print "resource type: ",resourceTypeEmulation
-    print "start time: ",startTimeEmu
-    print "stop time: ",stopTimeEmu
-    print "##########################"
+    logging.debug( "##########################")
+    logging.debug("emulation name: "+str(emulationName))
+    logging.debug("emulation type: "+str(emulationType))
+    logging.debug("resource type: "+str(resourceTypeEmulation))
+    logging.debug("start time: "+str(startTimeEmu))
+    logging.debug("stop time: "+str(stopTimeEmu))
+    logging.debug("##########################")
     
     n=0
     for node in distributionsXml:
-        print "n: ",n
+        logging.debug("n: "+str(n))
         #Loading distribution type by module (linear, parabola, etc.)
         
         distribution = dom2.getElementsByTagName('distribution')[n]
@@ -105,7 +106,7 @@ def xmlParser(xmlData):
             moduleArgs=distroArgsLimitsDict.keys()
             
             
-            print "moduleArgs:",moduleArgs
+            logging.debug("moduleArgs:"+str(moduleArgs))
         except IOError, e:
             print "Unable to load module name \"",distrType,"\" error:"
             print e
@@ -118,16 +119,14 @@ def xmlParser(xmlData):
     
         emulator = dom2.getElementsByTagName('emulator')[n]
         emulatorType = emulator.attributes["name"].value
-        
-        
-        print "emulatorType,resourceTypeDist:",emulatorType,resourceTypeDist        
+            
         try:
-            print "trying to load emulatorType:",emulatorType
+            logging.debug("trying to load emulatorType:"+str(emulatorType))
             EmulatorModuleMethod=DistributionManager.loadEmulatorArgNames(emulatorType)
             #argNames={"fileQty":{"upperBound":10,"lowerBound":0}}
             emulatorArgsLimitsDict=EmulatorModuleMethod(resourceTypeDist)
             emulatorArgs=emulatorArgsLimitsDict.keys()
-            print "emulatorArgs:",emulatorArgs
+            logging.debug("emulatorArgs:"+str(emulatorArgs))
         except IOError, e:
             print "Unable to load module name \"",emulatorType,"\" error:"
             print e
@@ -146,7 +145,7 @@ def xmlParser(xmlData):
         Getting all the arguments for distribution
         ''' 
         distroArgsNotes=[]
-        print "moduleArgs",moduleArgs
+        logging.debug("moduleArgs"+str(moduleArgs))
         
         for args in moduleArgs:
             logging.debug("Inside distribution moduleArgs loop!")
@@ -154,14 +153,14 @@ def xmlParser(xmlData):
                
                 
                 arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(moduleArgs[a].lower())[0].firstChild.data
-                print "Distro Arg",a," arg Name: ", moduleArgs[a].lower()," arg Value: ",arg0
+                #print "Distro Arg",a," arg Name: ", moduleArgs[a].lower()," arg Value: ",arg0
                 
                 distributionsLimitsDictValues = distroArgsLimitsDict[moduleArgs[a].lower()]
-                print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
+                #print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
 
 
                 checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)         
-                print "checked_distroArgs,checkDistroNote",checked_distroArgs,checkDistroNote       
+                #print "checked_distroArgs,checkDistroNote",checked_distroArgs,checkDistroNote       
                 distroArgsNotes.append(checkDistroNote)
                 distroArgs.update({moduleArgs[a].lower():checked_distroArgs})                
                 
@@ -189,17 +188,16 @@ def xmlParser(xmlData):
         emulatorArgNotes=[]
         a=0
         #for things in moduleArgs:
-        print "emulatorArgs",emulatorArgs
+        logging.debug("emulatorArgs"+str(emulatorArgs))
         for args in emulatorArgs:
-            logging.debug("Inside emulatorArgs loop!")
             try:
-                print "emulatorArgs[a]",emulatorArgs[a].lower()
+                #print "emulatorArgs[a]",emulatorArgs[a].lower()
                 arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(emulatorArgs[a].lower())[0].firstChild.data
-                print "Emulator Arg",a," arg Name: ", emulatorArgs[a].lower()," arg Value: ",arg0
+                #print "Emulator Arg",a," arg Name: ", emulatorArgs[a].lower()," arg Value: ",arg0
                 #emulatorArgDict={emulatorArgs[a]:arg0}
                 
                 emulatorLimitsDictValues = emulatorArgsLimitsDict[emulatorArgs[a].lower()]
-                print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())
+                #print "boundsCompare(arg0,emulatorLimitsDictValues):",boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())
                 checked_emuargs,check_note = boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())                
                 emulatorArg.update({emulatorArgs[a].lower():checked_emuargs})
                 emulatorArgNotes.append(check_note)
@@ -217,7 +215,7 @@ def xmlParser(xmlData):
                 emulatorArg.append(arg0)
                 a= a+1
         
-        print "emulatorArg:",emulatorArg
+        logging.debug("emulatorArg:"+str(emulatorArg))
                     #a=a+1
         
         resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data 
@@ -241,36 +239,28 @@ def xmlParser(xmlData):
         
        
         
-        print "---->",distributionsName
-        print "start time: ",startTimeDistro
-        print "duration: ",durationDistro
-        print "granularity: ", granularity
-        print "distribution type: ",distrType
-        
-        #listing all available distribution parameters
-        
-        print "distroArgs",distroArgs
-                    
-        print "emulator:", emulatorName
-        print "resource type: ", resourceTypeDist
-        
-        #atr = dom2.documentElement.getAttributeNode('name').nodeValue
-        # print atr
-        #emulator = dom2.getElementsByTagName('emulator')[n].firstChild.data
+        #print "---->",distributionsName
+        #print "start time: ",startTimeDistro
+        #print "duration: ",durationDistro
+        #print "granularity: ", granularity
+        #print "distribution type: ",distrType
+                
         distroList.append(distroDict)
         n=n+1
-        # print "Distro ",n
-        #print durationDistro,  startTimeDistro, distribution,emulator 
         
         #    CPU-dis-1        Mix          1              3                        Mix               now         180       [{'distroArgs': {'startLoad': u'10', 'stopLoad': u'90'}, 'emulatorName': u'lookbusy', 'distrType': u'linear', 'resourceTypeDist': u'CPU', 'startTimeDistro': u'5', 'distributionsName': u'CPU-dis-1', 'durationDistro': u'170', 'emulatorArg': {'ncpus': u'0'}, 'granularity': u'10'}] 
                                                                                                                                             
-    print emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
+    logging.debug("XML Extracted Values:"+str(emulationName)+str(emulationType)+str(emulationLog)+str(emulationLogFrequency)+str(resourceTypeEmulation)+str(startTimeEmu)+str(stopTimeEmu)+str(distroList))
     
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
 
 def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
-    #ignoring IP address(variableName=emulatorArgs[a])
+    '''
+    Comparing XML variables with emulator or distribution set bounds.
+    NOTE: in future might be better moved to the wrapper modules
+    '''
+    
     if  variableName == "serverip" or variableName == "clientip" or variableName == "packettype":
         return_note ="\nOK"
         return xmlValue,return_note
@@ -281,30 +271,19 @@ def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
     
     if xmlValue >= lowerBound:
         if xmlValue <= upperBound:
-            print "1 ",xmlValue,upperBound,lowerBound
+            logging.debug( "1- All OK")#,xmlValue,upperBound,lowerBound
             return_note ="\nOK"
             return xmlValue, return_note
             
         else:
-            print "Higher than upperBound taking maximum value"
-            print "2 ",xmlValue,upperBound,lowerBound
+            logging.debug("2- Higher than upperBound taking maximum value")#,xmlValue,upperBound,lowerBound
             return_note ="\nThe scpecified value "+str(xmlValue)+" was higher than the maximum limit "+str(upperBound)+" changing to the maximum limit"
             return upperBound , return_note 
     else:
-        print "Lower than lowerBound taking minimum value"
-        print "3 ",xmlValue,upperBound,lowerBound
+        logging.debug("3- Lower than lowerBound taking minimum value")#,xmlValue,upperBound,lowerBound
         return_note ="\nThe scpecified value "+str(xmlValue)+" was lower than the minimum limit "+str(lowerBound)+" changing to the maximum limit"
         return lowerBound, return_note
 
-    
-def parse_tests(xmlStream):
-    dom2 = parseString(xmlStream)
-
-    testNameXml=dom2.getElementsByTagName('testName')[0].firstChild.data
-    ##emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
-    #emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('name')[0].firstChild.data
-    print "Filename: ",testNameXml
-    return testNameXml
 
 if __name__ == '__main__':
     
@@ -335,12 +314,11 @@ if __name__ == '__main__':
         <resourceType>NET</resourceType>
         <serverip>10.55.168.166</serverip>
     <!--Leave "0" for default 5001 port -->
-    <serverport>0</serverport>
+    <serverport>5001</serverport>
         <clientip>10.55.168.167</clientip>
     <!--Leave "0" for default 5001 port -->
-    <clientport>0</clientport>
-        <udppackets>1</udppackets>
-        <bandwith>0</bandwith>
+    <clientport>5001</clientport>
+        <packettype>UDP</packettype>
     </emulator-params>
   </distributions>
 
@@ -356,7 +334,7 @@ if __name__ == '__main__':
     
     '''
     
-    
+    logging.basicConfig(level=logging.DEBUG)
     xmlParser(xmlData)
     
     

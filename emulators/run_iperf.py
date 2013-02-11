@@ -70,7 +70,7 @@ IPERF_<long option name>, such as IPERF_BANDWIDTH.
 
 
 '''
-import math,time,multiprocessing
+import math,time,multiprocessing,logging
 import Pyro4,imp,time,sys,os,psutil
 import sqlite3 as sqlite
 import datetime as dt
@@ -306,7 +306,7 @@ def emulatorArgNames(Rtype):
     if Rtype.lower() == "net":
         
         argNames={"serverport":{"upperBound":10000,"lowerBound":0},"clientport":{"upperBound":10000,"lowerBound":0},"packettype":{"upperBound":"udp","lowerBound":"tcp"},"serverip":{"upperBound":10000,"lowerBound":1},"clientip":{"upperBound":1,"lowerBound":0}}
-        print "Use Arg's: ",argNames
+        logging.debug( "Use Arg's: "+str(argNames))
         return argNames
 
 

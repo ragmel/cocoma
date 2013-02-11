@@ -36,7 +36,8 @@ Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 
 def prettify(elem):
-    """Return a pretty-printed XML string for the Element.
+    """
+    Return a pretty-printed XML string for the Element.
     """
     
     
@@ -61,6 +62,9 @@ COCOMA ROOT
 '''
 @route('/', method ="GET")
 def get_root():
+    '''
+    Shows list of resources available at root location
+    '''
     #curl -k -i http://10.55.164.232:8050/
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     response.set_header('Accept', '*/*')
@@ -92,6 +96,11 @@ GET emulation
 @route('/emulations/', method ='GET')
 @route('/emulations', method ='GET')
 def get_emulations():
+    '''
+    Displays list of emulations that were created/scheduled
+    '''
+    
+    
     response.set_header('Allow', 'GET, HEAD, POST')
     response.set_header('Accept', '*/*')
     emuList=EmulationManager.getActiveEmulationList("all")#[{'State': 'active', 'ID': 11, 'Name': u'myMixEmu'}, {'State': 'active', 'ID': 12, 'Name': u'myMixEmu'}]
@@ -124,7 +133,9 @@ def get_emulations():
 @route('/emulations/<name>/', method='GET')
 @route('/emulations/<name>', method='GET')
 def get_emulation(name=""):
-    
+    '''
+    Display specific emulation details by name
+    '''
     #curl -k -i http:///10.55.164.232:8050/emulations/1
     
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
@@ -238,7 +249,9 @@ def get_emulation(name=""):
 @route('/emulators/', method='GET')
 @route('/emulators', method='GET')
 def get_emulators():
-    
+    '''
+    Display list of emulators
+    '''
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     response.set_header('Accept', '*/*')
@@ -249,9 +262,7 @@ def get_emulators():
     '''
     XML namespaces are used for providing uniquely named elements and attributes in an XML document.
     '''
-    
-    
-    
+     
     #building the XML we will return
     emulators = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulators'})
     #<items offset="0" total="2">
@@ -262,13 +273,10 @@ def get_emulators():
     for elem in emuList :
         emulator = ET.SubElement(items,'emulator', { 'href':'/emulators/'+str(elem),'name':str(elem)})
         
-        
-    
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
     lk = ET.SubElement(emulators, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
     
-    
-
+  
     return prettify(emulators)
 
 
@@ -277,6 +285,9 @@ def get_emulators():
 @route('/emulators/<name>/', method='GET')
 @route('/emulators/<name>', method='GET')
 def get_emulator(name=""):
+    '''
+    Display emulator by name
+    '''
     
     try:
         ET.register_namespace("test", "http://127.0.0.1/cocoma")
@@ -311,6 +322,9 @@ def get_emulator(name=""):
 @route('/distributions/', method='GET')
 @route('/distributions', method='GET')
 def get_distributions():
+    '''
+    List all available distributions
+    '''
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
@@ -347,6 +361,9 @@ def get_distributions():
 @route('/distributions/<name>/', method='GET')
 @route('/distributions/<name>', method='GET')
 def get_distribution(name=""):
+    '''
+    Display distribution by name
+    '''
     #curl -k -i http://10.55.164.232:8050/distributions/linear
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
@@ -385,6 +402,9 @@ tests repository
 @route('/tests/', method='GET')
 @route('/tests', method='GET')
 def get_tests():
+    '''
+    List all available tests in the "/tests" folder
+    '''
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
@@ -422,6 +442,9 @@ def get_tests():
 @route('/tests/<name>/', method='GET')
 @route('/tests/<name>', method='GET')
 def show_test(name=""):
+    '''
+    List particular test by name in the "/tests" folder
+    '''
     #curl -k -i http://10.55.164.232:8050/distributions/linear
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
@@ -461,6 +484,9 @@ def show_test(name=""):
 @route('/tests', method='POST')
 @route('/tests/', method='POST')
 def start_test():
+    '''
+    Execute an existing emulation XML from "/tests" folder
+    '''
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
@@ -559,6 +585,9 @@ def start_test():
 @route('/results', method='GET')
 @route('/results/', method='GET')
 def show_all_results():
+    '''
+    Show summary of emulations results
+    '''
     #curl -k -i http://10.55.164.232:8050/distributions/linear
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
@@ -594,6 +623,10 @@ def show_all_results():
 @route('/results/<name>/', method='GET')
 @route('/results/<name>', method='GET')
 def show_results(name=""):
+    '''
+    Show emulation results. The amount of total runs and the amount of failed runs.
+    '''
+    
     #curl -k -i http://10.55.164.232:8050/distributions/linear
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
@@ -671,6 +704,9 @@ def show_results(name=""):
 @route('/hello', method='OPTIONS')
 @route('/hello', method='GET')
 def api_status():
+    '''
+    Simpliest API responce to check if it is online
+    '''
     response.status = 200
     #response.headers['status'] = response.status#str(response.status_code())
     response.content_type = "application/vnd.cocoma+xml"
@@ -680,6 +716,9 @@ def api_status():
     return "Yes, Hello this is ccmshAPI." 
 
 def isStr(s):
+    '''
+    Checking if the variable is a string
+    '''
     try: 
         int(s)
         return False
@@ -694,6 +733,11 @@ Creating emulation
 @route('/emulations', method='POST')
 @route('/emulations/', method='POST')
 def create_emu():
+    '''
+    Create emulation by POSTing xml with required parameters
+    '''
+    
+    
     #http://10.55.164.232:8050/emulations
     
     xml_stream =request.files.data
@@ -714,12 +758,6 @@ def create_emu():
         
             
         (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlParser(xml_stream_body)
-
-    
-    
-    #return xml_stream
-    #parse xml stream
-    #(emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(xml_stream)
     
     #create emulation
     
@@ -758,7 +796,6 @@ def create_emu():
             for dnotes in items['distroArgsNotes']:
                     distroNotesStr+=str(dnotes)                
         
-            #notesStr=str(n)+")"+items['distroArgs']['emulatorArgNotes'][0]+"\n"
             
         
         emulationEmuNotesXml.text = emuNotesStr
@@ -781,37 +818,15 @@ def create_emu():
         return "Unable to create emulation please check data\n"+str(e)
 
 
-'''
-HTTP/1.1 201 Created
-Location: https://api.bonfire-project.eu/experiments/{{experiment_id}}
-Content-Type: application/vnd.bonfire+xml
-
-<?xml version="1.0" encoding="UTF-8"?>
-<experiment xmlns="http://api.bonfire-project.eu/doc/schemas/occi"
-            href="/experiments/{{experiment_id}}">
-  <name>My Experiment</name>
-  <description>Experiment description</description>
-  <walltime>7200</walltime>
-  <computes>
-    ...
-  </computes>
-  <storages>
-    ...
-  </storages>
-  <networks>
-    ...
-  </networks>
-  <link rel="parent" href="/" type="application/vnd.bonfire+xml" />
-</experiment>
-'''
-
-
-
 @route('/emulations/<ID>/', method='DELETE')
 @route('/emulations/<ID>', method='DELETE')
 def emulationDelete(ID=""):
     
     '''
+    Deleting specific emulation by ID number
+     
+    
+    
     DELETE /experiments/{{experiment_id}} HTTP/1.1
     Host: api.bonfire-project.eu
     Accept: */*
@@ -848,28 +863,25 @@ def emulationDelete(ID=""):
 
 
 def getifip(ifn):
+    '''
+    Provided network interface returns IP adress to bind on
+    '''
     import socket, fcntl, struct
     sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     return socket.inet_ntoa(fcntl.ioctl(sck.fileno(),0x8915,struct.pack('256s', ifn[:15]))[20:24])
 
 
 def startAPI(IP_ADDR,PORT_ADDR):
-    if ccmsh.daemonCheck(IP_ADDR,PORT_ADDR) ==0:
-        sys.exit(0)
+    if ccmsh.daemonCheck(IP_ADDR) ==0:
+        if ccmsh.daemonCheck("127.0.0.1") ==0:
+            print "\n---Check if Scheduler Daemon is started. Connection error---"
+            sys.exit(0)
+  
+    print"API IP address:",IP_ADDR
 
-
-    
-    print"IP address:",IP_ADDR
-    
-    
-    
     API_HOST=run(host=IP_ADDR, port=PORT_ADDR)
     print "API_HOST.host",API_HOST.host
     return IP_ADDR
-
-def getIP():
-    return IP_ADDR
-
 
 if __name__ == '__main__':
 

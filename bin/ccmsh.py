@@ -30,6 +30,10 @@ Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 
 def main():
+    '''
+    CLI module of COCOMA framework which defines key options available for local execution.
+    For full list of commands please use "ccmsh -h".
+    '''
     
     uri ="PYRO:scheduler.daemon@"+str(ccmshAPI.getIP())+":51889"
     #perhaps needs to be setup somewhere else
@@ -128,31 +132,6 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
         
         '''
         ################################
-        updateEmu
-        ###############################
-        
-        
-        if options.updateID and len(arguments) ==10:
-              
-            emulationID=arguments[0]
-            emulationName=arguments[1]
-            distributionType=arguments[2]
-            resourceType=arguments[3]
-            emulationType=arguments[4]
-            startTime=arguments[5]
-            stopTime=arguments[6]
-            distributionGranularity=arguments[7]
-            startLoad=arguments[8]
-            stopLoad=arguments[9]
-            print options
-            print arguments
-            EmulationManager.updateEmulation(emulationID,emulationName,distributionType,resourceType,emulationType,startTime,stopTime, distributionGranularity,startLoad, stopLoad)
-        
-        if options.updateID and len(arguments) !=10:
-            parser.print_help()
-        '''
-        '''
-        ################################
         serviceControl
         ###############################
         '''
@@ -187,28 +166,11 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
             if arguments[0] == "api":
                 EmulationManager.services_control("api","show"," ")
                   
-                
-                    
-                #2.check if pid is running
-                #3.execute os.system("kill "+str(procAPI.pid))
-                
-
-
-                    
+                     
         '''
         ################################
         listEmu
         ###############################
-        '''
-        '''          
-        if options.listActive:
-            EmulationManager.getEmulation("NULL","NULL",1,1)
-            sys.exit(1)
-         
-        if options.listInactive:
-            EmulationManager.getEmulation("NULL","NULL",1,0)
-            sys.exit(1)
-        
         '''
         
         if options.resAll:
@@ -314,25 +276,10 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                         print job
         
         '''
-        if options.listName:
-            EmulationManager.getEmulation(arguments[0],"NULL",0,"NULL")
-        
-                                
-        if options.listActive:
-            if arguments[0]=="all":
-                #TO-DO: List inactive values with 0 param
-                print "Listing all active values"
-                EmulationManager.getEmulation("NULL","NULL",0,1)
-        '''
-
-
-        '''
         ################################
         deleteEmu
         ###############################
         '''
-
-
                   
         if options.deleteID:
             #TO-DO: List inactive values with 0 param
@@ -352,9 +299,6 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
         listDistro
         ###############################
         '''
-
-
-
 
         if options.listAllDistro:
             if arguments[0].lower()=="all":
@@ -399,12 +343,9 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
         createEmu
         ###############################
         '''
-
-        
-              
+          
         if options.xml and not options.emuNow:  
-                #(emulationName, emulationType, resourceTypeEmulation, startTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
-                #print "CCMSH:",emulationName, emulationType, distroList
+                
                 (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
                 if startTimeEmu.lower() =="now":
                     startTimeEmu1 = EmulationManager.emulationNow()
@@ -412,33 +353,23 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                 else:
                     EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
                 
-                
-                #EmulationManager.dataCheck(startTime,stopTime)
-                #EmulationManager.distributionTypeCheck(distributionType)
-                #EmulationManager.DistributionArgCheck(distributionType,arg)
-                #EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
+    
         
         if options.emuNow and options.xml:
             print "Starting Now"
-            #just giving random value at the moment
-            
-            
             
             (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
             startTimeEmu = EmulationManager.emulationNow()
             
             EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
-            #(emulationName, distributionType, resourceType, emulationType, startTime0, stopTime0,emulator, distributionGranularity,arg) = XmlParser.xmlReader(arguments[0])
-            #EmulationManager.createEmulation(emulationName, distributionType, resourceType, emulationType, startTime, stopTime,emulator, distributionGranularity,arg)
             
-        
     else:
         parser.print_help()
 
         
 def daemonCheck(IP_ADDR):
     '''
-    Checking if Scheduler Daemon is started
+    Checking if Scheduler Daemon(bin/Scheduler.py is running. Returning "1" if true and "0" if not.
     '''
     uri ="PYRO:scheduler.daemon@"+str(IP_ADDR)+":51889"
     #perhaps needs to be setup somewhere else
@@ -452,10 +383,7 @@ def daemonCheck(IP_ADDR):
     
     except  Pyro4.errors.CommunicationError, e:
         
-        
         print e
-        print "\n---Check if Scheduler Daemon is started. Connection error---"
-        
         return (0)
         
     

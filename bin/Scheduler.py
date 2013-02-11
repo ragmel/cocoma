@@ -403,8 +403,7 @@ def main(IP_ADDR,PORT_ADDR):
     #we start daemon locally
  
 if __name__=="__main__":
-    #main()
-
+    
     PORT_ADDR=51889
     try: 
         if sys.argv[1] == "-h":
@@ -412,10 +411,12 @@ if __name__=="__main__":
         else:
             print "Interface: ",sys.argv[1]
             IP_ADDR=getifip(sys.argv[1])
+            os.environ['COCOMASCHEDIP'] = IP_ADDR
             main(IP_ADDR,PORT_ADDR)
     except:
-        print "Interface: ","eth0"
-        IP_ADDR=getifip("eth0")
+        print "Interface: ","lo"
+        IP_ADDR=getifip("lo")
+        os.environ['COCOMASCHEDIP'] = IP_ADDR
         main(IP_ADDR,PORT_ADDR)
 
     

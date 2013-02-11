@@ -306,6 +306,9 @@ def getEmulation(emulationName):
 
         
 def deleteEmulation(emulationID):
+    '''
+    Deleting specific emulation by ID number 
+    '''
     print "Hello this is deleteEmulation"
          
     distributionName=[]
