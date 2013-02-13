@@ -5,14 +5,14 @@
   <!--2014-02-02T10:10:10-->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>310</emustopTime>
+  <emustopTime>65</emustopTime>
   
   <distributions> 
-   <name>NET_distro</name>
+   <name>NET_distro_UDP</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>150</duration>
-     <granularity>10</granularity>
+     <duration>30</duration>
+     <granularity>5</granularity>
      <distribution href="/distributions/linear" name="linear" />
       <!-- UDP-set target bandwidth to MBytes per sec -->
       <!-- TCP-set number of MBytes to transmit (instead of -t) -->
@@ -26,16 +26,16 @@
 	<serverport>5001</serverport>
         <clientip>127.0.0.1</clientip>
 	<clientport>5001</clientport>
-        <packettype>TCP</packettype>
+        <packettype>UDP</packettype>
     </emulator-params>
   </distributions>
 
   <distributions> 
-   <name>NET_distro</name>
-     <startTime>150</startTime>
+   <name>NET_distro_TCP</name>
+     <startTime>30</startTime>
      <!--duration in seconds -->
-     <duration>150</duration>
-     <granularity>10</granularity>
+     <duration>30</duration>
+     <granularity>5</granularity>
      <distribution href="/distributions/linear" name="linear" />
       <!-- UDP-set target bandwidth to MBytes per sec -->
       <!-- TCP-set number of MBytes to transmit (instead of -t) -->

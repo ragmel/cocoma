@@ -21,12 +21,13 @@
 
 import sys, os, time,imp,re
 from signal import SIGTERM 
-
+import subprocess
 from datetime import datetime
 from apscheduler.scheduler import Scheduler 
 import datetime as dt
-import Run
+import Run,logging
 import sqlite3 as sqlite
+from subprocess import *
 #from __future__ import print_function
 import Pyro4, Logger,EmulationManager,DistributionManager
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_MISSED,EVENT_JOB_ERROR
@@ -127,11 +128,25 @@ class schedulerDaemon(object):
         
         self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID], name=str(emulationID)+"-logger interval-"+str(interval)+"sec.")
         return "Started logger"
+
+    def checkProcessRunning(self,PROCNAME):
+        print "Hello this is checkProcessRunning"
+        procTrace = subprocess.Popen("ps ax | grep -v grep | grep "+"\""+str(PROCNAME)+"\"",shell=True,stdout=PIPE).communicate()[0]
+        if procTrace:
+            pid = procTrace[0:5]
+            #program running
+            return pid
+        else:
+            #program not running
+            return False        
+        
+        
+        
  
 
 
     def createCustomJob(self,emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,PROCNAME,emuDuration):
-        EmulationManager.checkPid(PROCNAME)
+        
         print "createCustomJob!!!"
         distributionName= emulator+"customJob"
         
@@ -139,9 +154,11 @@ class schedulerDaemon(object):
             return 2
         else:
             try:
-                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(DistributionManager.timeConv(EmulationManager.emulationNow())))), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+distributionName+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
+                self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(DistributionManager.timeConv(EmulationManager.emulationNow(2))))), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+distributionName+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
                 return 1
-            except:
+            except Exception,e:
+                print "Error:",e
+                logging.debug("error")
                 return 0
         
     

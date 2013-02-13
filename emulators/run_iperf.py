@@ -124,40 +124,42 @@ class emulatorMod(object):
   
 def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,emulationID,emulatorArg,emuDuration,duration):
             
-            #check if we need/can to schedule server to run
+            
+            
+            #check if the iperf server process already running
+            PROCNAME = "iperf -s -p "+str(emulatorArg["serverport"])
+            print "First run. Checking if can start the server..."
+            serverUri = "PYRO:scheduler.daemon@"+str(serverIP)+":51889"   
+            serverDaemon=Pyro4.Proxy(serverUri)
+            
+            
+            fakeemulationLifetimeID=1
+            
+            fakeemulatorArg = emulatorArg
+            fakeemulatorArg.update({'server': 1})
+            fakeresourceTypeDist ="net"
+            fakestressValue = 1
+            fakeRunNo = 1 #must not be zero
+            emulator="iperf"
+            
+
+            serverJobStatus=serverDaemon.createCustomJob(emulationID,distributionID,fakeemulationLifetimeID,duration,emulator,fakeemulatorArg,fakeresourceTypeDist,fakestressValue,fakeRunNo,PROCNAME,emuDuration)
+            if serverJobStatus == 1:
+                print "!!!Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+":51889" +" job was created! for duration of Distribution"
+                print "!!!Started server for "+str(emuDuration)+" sec"
+            elif serverJobStatus == 2:
+                print "!!!Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+":51889" +" job already running"
+            elif serverJobStatus == 0:
+                print "!!!Unable to start iperf server on: "+str(serverIP)+":"+str(serverPort)+"\n NET distribution(-s) Failed"
+            
             if runNo == str(0):
-                print "First run. Checking if can start the server..."
-                serverUri = "PYRO:scheduler.daemon@"+str(serverIP)+":51889"   
-                serverDaemon=Pyro4.Proxy(serverUri)
-                
-                
-                fakeemulationLifetimeID=1
-                
-                fakeemulatorArg = emulatorArg
-                fakeemulatorArg.update({'server': 1})
-                fakeresourceTypeDist ="net"
-                fakestressValue = 1
-                fakeRunNo = 1 #must not be zero
-                emulator="iperf"
-                
-                
-                PROCNAME = "iperf -s"
-                serverJobStatus=serverDaemon.createCustomJob(emulationID,distributionID,fakeemulationLifetimeID,duration,emulator,fakeemulatorArg,fakeresourceTypeDist,fakestressValue,fakeRunNo,PROCNAME,emuDuration)
-                if serverJobStatus == 1:
-                    print "Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+":51889" +" job was created! for duration of Emulation"
-                    print "Started server for "+str(emuDuration)+" sec"
-                elif serverJobStatus == 2:
-                    print "Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+":51889" +" job already running"
-                elif serverJobStatus == 0:
-                    print "Unable to start iperf server on: "+str(serverIP)+":"+str(serverPort)+"\n NET distribution(-s) Failed"
-    
-            time.sleep(5)
+                time.sleep(2)
             print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,emulationID,duration\n",distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,emulationID,duration,"\n\n"
             bandwith =stressValues
             if packettype.lower() == "udp":
                 
                 try:
-                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"mb","-t",str(duration),"&"])
+                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"mb","-t",str(duration)])
                     runIperfPidNo =runIperf.pid
                     
                     print "Started Iperf client on PID No: ",runIperfPidNo
@@ -188,8 +190,8 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
             if packettype.lower() == "tcp":
                 
                 try:
-                    print "iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith)+"mb","&"
-                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith),"&"])
+                    print "iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith)+"mb"
+                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith)+"mb"])
                     runIperfPidNo =runIperf.pid
                     
                     print "Started Iperf client on PID No: ",runIperfPidNo
@@ -220,7 +222,7 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
 
             else:
                 try:
-                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-t",duration,"&"])
+                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-t",duration])
                     runIperfPidNo =runIperf.pid
                     
                     print "Started Iperf on PID No: ",runIperfPidNo
@@ -254,14 +256,14 @@ def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
                 
                 if packettype.lower() =="udp" :
                     try:
-                        runIperf = subprocess.Popen(["iperf","-s","-u", "-p",str(netPort),"&"])
+                        runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort)])
                     except Exception, e:
                         print e
                 
                     runIperfPidNo =runIperf.pid
                     print "Started Iperf Server for UDP on PID No: ",runIperfPidNo
                 else:
-                    runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort),"&"])
+                    runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort)])
                     runIperfPidNo =runIperf.pid
                     print "Started Iperf Server for TCP on PID No: ",runIperfPidNo
         

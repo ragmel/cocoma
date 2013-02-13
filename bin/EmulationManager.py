@@ -543,7 +543,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
     
     print "startTimeEmu: ",startTimeEmu.lower()
     if startTimeEmu.lower() == "now":
-        startTimeEmu = emulationNow()
+        startTimeEmu = emulationNow(2)
         print "Converted startTimeEmu11: ",startTimeEmu
     print "Converted startTimeEmu: ",startTimeEmu
     
@@ -810,11 +810,10 @@ def dateOverlapCheck(startTime, stopTime):
 def checkPid(PROCNAME):        
     #ps ax | grep -v grep | grep Scheduler.py
     #print "ps ax | grep -v grep | grep "+str(PROCNAME)
-    procTrace = subprocess.Popen("ps ax | grep -v grep | grep "+str(PROCNAME),shell=True,stdout=PIPE).communicate()[0]
+    procTrace = subprocess.Popen("ps ax | grep -v grep | grep "+"\""+str(PROCNAME)+"\"",shell=True,stdout=PIPE).communicate()[0]
     #print "procTrace: ",procTrace
     if procTrace:
         pid = procTrace[0:5]
-        #print "procTracePID: ",pid
         #program running
         return pid
     else:
@@ -931,12 +930,12 @@ def services_control(service,action,args):
             else:
                 print "API is not running" 
                     
-def emulationNow():
+def emulationNow(delay):
     print "EmulationManager.emulation.Now"
     #we are adding 5 seconds to compensate for incert
        
     timeNow = dt.now()
-    pyStartTimeIn5 = timeNow + datetime.timedelta(seconds=5)
+    pyStartTimeIn5 = timeNow + datetime.timedelta(seconds=int(delay))
     #pyStopTime=pyStartTimeIn5+ datetime.timedelta(minutes=int(duration))
     
     print "timeNow: ",timeNow

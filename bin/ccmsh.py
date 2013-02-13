@@ -347,7 +347,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                 
                 (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
                 if startTimeEmu.lower() =="now":
-                    startTimeEmu1 = EmulationManager.emulationNow()
+                    startTimeEmu1 = EmulationManager.emulationNow(2)
                     EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
                 else:
                     EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
@@ -358,7 +358,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
             print "Starting Now"
             
             (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(arguments[0])
-            startTimeEmu = EmulationManager.emulationNow()
+            startTimeEmu = EmulationManager.emulationNow(2)
             
             EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
             
