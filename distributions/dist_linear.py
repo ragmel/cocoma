@@ -98,8 +98,11 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
                 1. Distribution formula goes here
                 '''
                  
-                
+                #########TADA########
                 linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
+                
+                
+                
                 print "linearSterp",linearStep
                 linearStep=math.fabs((int(linearStep)))#making positive value
                 print "LINEAR STEP SHOULD BE THE SAME"
@@ -188,7 +191,7 @@ def argNames(Rtype):
         return argNames
     
     if Rtype.lower() == "net":
-        argNames={"startload":{"upperBound":10,"lowerBound":0},"stopload":{"upperBound":10,"lowerBound":0}}
+        argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}}
         print "Use Arg's: ",argNames," with net"
         return argNames
     

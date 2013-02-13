@@ -19,7 +19,7 @@
 #
 
 
-import Pyro4,imp,time,sys,os
+import Pyro4,imp,time,sys,os,EmulationManager
 import datetime as dt
 import sqlite3 as sqlite
 
@@ -107,7 +107,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         
         (stressValues,runStartTime)=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,runDuration, distributionGranularity,distributionArg,HOMEPATH)
         
-        uri ="PYRO:scheduler.daemon@localhost:51889"
+        uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":51889"
     
         daemon=Pyro4.Proxy(uri)
         

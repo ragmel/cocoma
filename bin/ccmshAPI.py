@@ -179,7 +179,7 @@ def get_emulation(name=""):
     
     
     scheduledJobsXml = ET.SubElement(emulation,'scheduledJobs')
-    uri ="PYRO:scheduler.daemon@"+str(IP_ADDR)+":51889"
+    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":51889"
     daemon=Pyro4.Proxy(uri)    
     
     #create active jobs list
@@ -872,8 +872,8 @@ def getifip(ifn):
 
 
 def startAPI(IP_ADDR,PORT_ADDR):
-    if ccmsh.daemonCheck(IP_ADDR) ==0:
-        if ccmsh.daemonCheck("127.0.0.1") ==0:
+
+    if ccmsh.daemonCheck() ==0:
             print "\n---Check if Scheduler Daemon is started. Connection error---"
             sys.exit(0)
   
@@ -893,11 +893,13 @@ if __name__ == '__main__':
             INTERFACE = sys.argv[1]
             print "Interface: ",sys.argv[1]
             IP_ADDR=getifip(sys.argv[1])
+            EmulationManager.writeInterfaceData(sys.argv[1],"apiinterface")
             startAPI(IP_ADDR,PORT_ADDR)
     except:
         INTERFACE ="eth0"
         print "Interface: ","eth0"
         IP_ADDR=getifip("eth0")
+        EmulationManager.writeInterfaceData("eth0","apiinterface")
         startAPI(IP_ADDR,PORT_ADDR)
         
     

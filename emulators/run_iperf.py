@@ -157,7 +157,39 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
             if packettype.lower() == "udp":
                 
                 try:
-                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"gb","-t",str(duration),"&"])
+                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"mb","-t",str(duration),"&"])
+                    runIperfPidNo =runIperf.pid
+                    
+                    print "Started Iperf client on PID No: ",runIperfPidNo
+                    print "falling a sleep for: ",duration
+                    
+                    time.sleep(duration)
+                    #catching failed runs
+                    if zombieBuster(runIperfPidNo):
+                        print "Job failed, sending wait()."
+                        runIperf.wait()
+                        message="Error in the emulator execution"
+                        executed="False"
+                        dbWriter(distributionID,runNo,message,executed)
+                        return False
+                    else:
+                        runIperf.terminate()
+                    
+                        print "writing success into DB..."
+                        message="Success"
+                        executed="True"
+                        dbWriter(distributionID,runNo,message,executed)
+                        return True
+        
+                except Exception, e:
+                    print "run_Iperf job exception: ", e
+            
+            
+            if packettype.lower() == "tcp":
+                
+                try:
+                    print "iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith)+"mb","&"
+                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith),"&"])
                     runIperfPidNo =runIperf.pid
                     
                     print "Started Iperf client on PID No: ",runIperfPidNo
@@ -346,6 +378,3 @@ def zombieBuster(PID_ID):
 if __name__ == '__main__':
     
     pass
-
-
-    

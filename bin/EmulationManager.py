@@ -22,7 +22,7 @@ import sqlite3 as sqlite
 import sys,re,os,subprocess,psutil
 import DistributionManager,ccmsh
 import Pyro4
-import datetime
+import datetime,ccmshAPI
 from datetime import datetime as dt
 from subprocess import *
 
@@ -156,21 +156,10 @@ def getEmulation(emulationName):
     print "Hello this is getEmulation by name"
     
     distroList=[]
-    """
-    distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,
-    "distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist}
-    
-    """
     distroArgs={}
     emulatorArg={}
     
-    """
-    #name,emutype,resourcetype,starttime
-    myMixEmu Mix Mix now [{'distroArgs': {'startLoad': u'11', 'stopLoad': u'91'}, 'emulatorName': u'lookbusy',
-    'distrType': u'linear', 'resourceTypeDist': u'CPU', 'startTimeDistro': u'0', 'distributionsName': u' myMixEmu-dis-1',
-     'durationDistro': u'120', 'emulatorArg': {'ncpus': u'0'}, 'granularity': u'10'}]
-    """
-    
+   
         
     try:
         if HOMEPATH:
@@ -361,7 +350,7 @@ def deleteEmulation(emulationID):
     print "Emulation ID: ", emulationID," was deleted from DB"
     
     #Now here we need to remove the emulation from the scheduler if exist
-    uri ="PYRO:scheduler.daemon@localhost:51889"
+    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":51889"
     daemon=Pyro4.Proxy(uri)
     try:
         for Names in distributionName:
@@ -408,7 +397,7 @@ def purgeAll():
     c.close()
     print "Everything was deleted in DB"
     
-    uri ="PYRO:scheduler.daemon@localhost:51889"
+    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":51889"
     daemon=Pyro4.Proxy(uri)
     try:
         print "Trying to delete jobs"
@@ -427,7 +416,7 @@ def purgeAll():
 def updateEmulation(emulationID,newEmulationName,newDistributionType,newResourceType,newEmulationType,newStartTime,newStopTime, newDistributionGranularity,arg):
     print "Hello this is updateEmulation"
     
-    uri ="PYRO:scheduler.daemon@localhost:51889"
+    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":51889"
     daemon=Pyro4.Proxy(uri)
     
     #1. Get all the values from the existing table
@@ -578,7 +567,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
             return "Distribution has date longer than emulation.Check distribution name: "+n["distributionsName"]
             sys.exit(0)
     
-    uri ="PYRO:scheduler.daemon@localhost:51889"
+    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":51889"
 
     daemon=Pyro4.Proxy(uri)
     try:
@@ -968,7 +957,61 @@ def emulationNow():
     #print "stopTime: ",stopTime
     
     return startTimeIn5
-   
+
+def writeInterfaceData(iface,column):
+    '''
+    Writes name of the interface into dedicated column in database
+    '''
+    try:
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+    
+        c = conn.cursor()
+        sqlStatement="UPDATE config SET "+str(column)+"='"+str(iface)+"'"
+        c.execute(sqlStatement)
+        conn.commit()
+        c.close()
+        return True
+    except sqlite.Error, e:
+        print "Error writing config to database %s:" % e.args[0]
+        print e
+        return False
+        
+def readIfaceIP(column):
+    '''
+    Gets interface name from database and retrieves IP adress for the service
+    '''
+    try:
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+        
+        c = conn.cursor()
+        
+        c.execute('SELECT '+str(column)+' FROM config')
+        
+        ifaceVal = c.fetchall()
+       
+        c.close()
+        
+    except sqlite.Error, e:
+        print "Error getting \"config\" table data %s:" % e.args[0]
+        print e
+        return False
+    
+    
+    if ifaceVal:
+        for row in ifaceVal:
+            iface=row[0]
+    
+    IP=ccmshAPI.getifip(str(iface))
+    
+    
+    return IP
+
     
 
 if __name__ == '__main__':

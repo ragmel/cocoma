@@ -61,7 +61,7 @@ class schedulerDaemon(object):
         sys.exit(0) 
     
     def hello(self):
-        greeting = "Hello, Yes this is schedulerDaemon. I am online send me some jobs!"
+        greeting = "Pong!"
         print greeting 
         return greeting
     
@@ -411,12 +411,15 @@ if __name__=="__main__":
         else:
             print "Interface: ",sys.argv[1]
             IP_ADDR=getifip(sys.argv[1])
-            os.environ['COCOMASCHEDIP'] = IP_ADDR
+            EmulationManager.writeInterfaceData(sys.argv[1],"schedinterface")
             main(IP_ADDR,PORT_ADDR)
     except:
-        print "Interface: ","lo"
-        IP_ADDR=getifip("lo")
-        os.environ['COCOMASCHEDIP'] = IP_ADDR
+
+        print "Interface: ","eth0"
+        EmulationManager.writeInterfaceData("eth0","schedinterface")
+        IP_ADDR=getifip("eth0")
+      
+
         main(IP_ADDR,PORT_ADDR)
 
     

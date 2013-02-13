@@ -1,0 +1,40 @@
+<emulation>
+  <emuname>NET_emu</emuname>
+  <emuType>Mix</emuType>
+  <emuresourceType>NET</emuresourceType>
+  <!--2014-02-02T10:10:10-->
+  <emustartTime>now</emustartTime>
+  <!--duration in seconds -->
+  <emustopTime>155</emustopTime>
+  
+  <distributions> 
+   <name>NET_distro</name>
+     <startTime>0</startTime>
+     <!--duration in seconds -->
+     <duration>150</duration>
+     <granularity>10</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+	<!--cpu utilization distribution range-->
+      <startLoad>100</startLoad>
+      <!-- set target bandwidth to bits per sec -->
+      <stopLoad>1000</stopLoad>
+      <emulator href="/emulators/iperf" name="iperf" />
+    <emulator-params>
+        <resourceType>NET</resourceType>
+        <serverip>10.55.164.223</serverip>
+	<!--Leave "0" for default 5001 port -->
+	<serverport>5001</serverport>
+        <clientip>127.0.0.1</clientip>
+	<clientport>5001</clientport>
+        <packettype>UDP</packettype>
+    </emulator-params>
+  </distributions>
+
+  <log>
+  	<!-- Use value "1" to enable logging(by default logging is off)  -->
+  	<enable>0</enable>
+  	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+  	<frequency>3</frequency>
+  </log>
+  
+</emulation>
