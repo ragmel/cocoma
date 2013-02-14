@@ -5,13 +5,13 @@
   <!--2014-02-02T10:10:10-->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>65</emustopTime>
+  <emustopTime>55</emustopTime>
   
   <distributions> 
    <name>NET_distro_UDP</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>30</duration>
+     <duration>25</duration>
      <granularity>5</granularity>
      <distribution href="/distributions/linear" name="linear" />
       <!-- UDP-set target bandwidth to MBytes per sec -->
@@ -21,7 +21,7 @@
       <emulator href="/emulators/iperf" name="iperf" />
     <emulator-params>
         <resourceType>NET</resourceType>
-        <serverip>10.55.164.223</serverip>
+        <serverip>10.55.168.101</serverip>
 	<!--Leave "0" for default 5001 port -->
 	<serverport>5001</serverport>
         <clientip>127.0.0.1</clientip>
@@ -32,9 +32,9 @@
 
   <distributions> 
    <name>NET_distro_TCP</name>
-     <startTime>30</startTime>
+     <startTime>25</startTime>
      <!--duration in seconds -->
-     <duration>30</duration>
+     <duration>25</duration>
      <granularity>5</granularity>
      <distribution href="/distributions/linear" name="linear" />
       <!-- UDP-set target bandwidth to MBytes per sec -->
@@ -44,7 +44,7 @@
       <emulator href="/emulators/iperf" name="iperf" />
     <emulator-params>
         <resourceType>NET</resourceType>
-        <serverip>10.55.164.223</serverip>
+        <serverip>10.55.168.101</serverip>
 	<!--Leave "0" for default 5001 port -->
 	<serverport>5001</serverport>
         <clientip>127.0.0.1</clientip>

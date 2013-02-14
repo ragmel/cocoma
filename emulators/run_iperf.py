@@ -256,7 +256,7 @@ def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
                 
                 if packettype.lower() =="udp" :
                     try:
-                        runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort)])
+                        runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort),"-u"])
                     except Exception, e:
                         print e
                 
@@ -271,7 +271,7 @@ def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
             except Exception, e:
                 "run_runIperf job exception: ", e
             
-            time.sleep(float(emuDuration))
+            time.sleep(float(emuDuration)+5)
             #catching failed runs
             if zombieBuster(runIperfPidNo):
                 print "Job failed, sending wait()."

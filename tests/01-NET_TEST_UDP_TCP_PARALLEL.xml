@@ -8,7 +8,30 @@
   <emustopTime>30</emustopTime>
   
   <distributions> 
-   <name>NET_TCP</name>
+   <name>NET_distro_UDP</name>
+     <startTime>0</startTime>
+     <!--duration in seconds -->
+     <duration>25</duration>
+     <granularity>5</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+      <!-- UDP-set target bandwidth to MBytes per sec -->
+      <!-- TCP-set number of MBytes to transmit (instead of -t) -->
+      <startLoad>10000</startLoad>
+      <stopLoad>100000</stopLoad>
+      <emulator href="/emulators/iperf" name="iperf" />
+    <emulator-params>
+        <resourceType>NET</resourceType>
+        <serverip>10.55.168.101</serverip>
+	<!--Leave "0" for default 5001 port -->
+	<serverport>5002</serverport>
+        <clientip>127.0.0.1</clientip>
+	<clientport>5001</clientport>
+        <packettype>UDP</packettype>
+    </emulator-params>
+  </distributions>
+
+  <distributions> 
+   <name>NET_distro_TCP</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
      <duration>25</duration>
@@ -29,6 +52,7 @@
         <packettype>TCP</packettype>
     </emulator-params>
   </distributions>
+
 
   <log>
   	<!-- Use value "1" to enable logging(by default logging is off)  -->
