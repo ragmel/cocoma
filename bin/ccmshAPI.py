@@ -498,7 +498,7 @@ def start_test():
     emulationID=""
     
     fileName_stream =request.files.data
-    fileName_stream_body =request.body.read()
+    fileName_stream_body =request.body
     
     
     
@@ -741,7 +741,7 @@ def create_emu():
     #http://10.55.164.232:8050/emulations
     
     xml_stream =request.files.data
-    xml_stream_body =request.body.read()
+    xml_stream_body =request.body
     
     if xml_stream:
         

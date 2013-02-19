@@ -84,7 +84,7 @@ class emulatorMod(object):
         
         
         print "Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo: ",emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo
-        
+        print "####### THIS IS A TEST 2 ########"
         if resourceTypeDist.lower() == "cpu":
             print "CPU load selected"
             #cpuLoad(stressValues,emulatorArg["ncpus"],duration)
@@ -96,14 +96,14 @@ class emulatorMod(object):
         
         if resourceTypeDist.lower() == "mem":
             print "MEM load selected"
-            memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memSleep"],duration))
+            memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memsleep"],duration))
             memMulti.start()
             print(memMulti.is_alive())
             memMulti.join()
         
         if resourceTypeDist.lower() == "mem%":
             print "MEM load selected"
-            memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memSleep"],duration))
+            memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memsleep"],duration))
             memMulti.start()
             print(memMulti.is_alive())
             memMulti.join()

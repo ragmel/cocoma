@@ -1,18 +1,18 @@
 <emulation>
-  <emulationName>Emu-CPU</emulationName>
-  <emulationType>Mix</emulationType>
-  <resourceType>Mix</resourceType>
+  <emuname>Emu-CPU</emuname>
+  <emuType>Mix</emuType>
+  <emuresourceType>Mix</emuresourceType>
   <!-- as startTime use the format '2012-11-26T17:28:00' or the keyword 'now' (no '' characters needed) -->
-  <startTime>now</startTime>
+  <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <stopTime>180</stopTime>
+  <emustopTime>25</emustopTime>
   
   <distributions>
      <name>CPU-dis-1</name>
      <startTime>5</startTime>
      <!--duration in seconds -->
-     <duration>170</duration>
-     <granularity>10</granularity>
+     <duration>15</duration>
+     <granularity>5</granularity>
      <distribution href="/distributions/linear" name="linear" />
 	<!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
@@ -22,7 +22,7 @@
         <!--more parameters will be added -->
         <resourceType>CPU</resourceType>
 	<!--Number of CPUs to keep busy (default: autodetected)-->
-	<ncpus>0</ncpus>
+	<ncpus>1</ncpus>
       </emulator-params>
   </distributions>
 

@@ -56,8 +56,8 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             #a={"aa":"AA","bb":"BB"}
             
             #for d in a:
-             #   print "name:",d
-              #  print "value",a[d]
+            #   print "name:",d
+            #  print "value",a[d]
             for d in distributionArg :
                 c.execute('INSERT INTO DistributionParameters (paramName,value,distributionID) VALUES (?, ?, ?)',[d,distributionArg[d],distributionID])
             distributionParametersID=c.lastrowid
@@ -91,10 +91,11 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         #make sure it is integer
         distributionGranularity = int(distributionGranularity)
          
-        
-        runDuration = int(duration)/distributionGranularity
-        print "Duration is seconds:"
-        print duration
+        # This has to be moved inside the dist_linear
+#        runDuration = int(duration)/distributionGranularity
+#        print "Duration is seconds:"
+#        print duration
+        duration = int(duration)
           
         '''
         1. Load the module according to Distribution Type to create runs
@@ -105,7 +106,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         #2. Use this module for calculation and run creation   
         #newCreateRuns=modhandleMy(emulationID,distributionName,emulationLifetimeID,startTimesec,runDuration, distributionGranularity,emulator,arg,HOMEPATH)
         
-        (stressValues,runStartTime)=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,runDuration, distributionGranularity,distributionArg,HOMEPATH)
+        (stressValues,runStartTime,runDurations)=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH)
         
         uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":51889"
     
@@ -115,9 +116,9 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         for vals in stressValues:
             print "stressValues: ",vals
             try:
-                print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
+                print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
                 print daemon.hello()
-                print daemon.createJob(emulationID,distributionID,distributionName,emulationLifetimeID,runDuration,emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),duration)
+                print daemon.createJob(emulationID,distributionID,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),runDurations[n])
                 #lf,emulationID,emulationName,emulationLifetimeID,duration,emulator,resourceType,stressValue,runStartTime,runNo
                 
                 
@@ -193,8 +194,8 @@ def loadDistribution(modName):
             modhandle = imp.load_source(modname, modfile)
             #finally:
                 # Since we may exit via an exception, close fp explicitly.
-              #  if fp:
-              #      fp.close()
+            #  if fp:
+            #      fp.close()
                 
             return modhandle.functionCount
 

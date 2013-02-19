@@ -69,8 +69,13 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     
     #run 1 at 0 time
     runStartTimeList.append(startTimesec)
-    stressValues.append(startLoad)
-    runDurations.append(runDuration)
+    stressValues.append(stopLoad)
+    runDurations.append(duration)
+    
+    print "This is time passed to scheduler:"
+    print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTimesec))
+    
+    
     
     if int(distributionGranularity)==1:
         return stressValues, runStartTimeList, runDurations
@@ -79,7 +84,13 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         runNo=int(1)
         
         #runStartTime=startTimesec+(duration*upperBoundary)
-        
+        # linearStep does not change, can be calculated just once
+        linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
+        print "linearSterp",linearStep
+        linearStep=math.fabs((int(linearStep)))#making positive value
+        linearStep=int(linearStep)
+        print "LINEAR STEP SHOULD BE THE SAME"
+        print linearStep
     
         linearStress=0
         while(upperBoundary !=runNo):
@@ -87,41 +98,33 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
                 print "Run No: "
                 print runNo
                 print "self.startTimesec",startTimesec
-                runStartTime=startTimesec+(runDuration*runNo)
+                #runStartTime=startTimesec+(runDuration*runNo)
                 
                 #delay of one sec
-                runStartTime =(runStartTime+(2*runNo))
+                #runStartTime =(runStartTime+(2*runNo))
                 
                 
-                runStartTimeList.append(runStartTime)
+                runStartTimeList.append(startTimesec)
                 print "This run start time: "
-                print runStartTime
+                print startTimesec
                 print "This is time passed to scheduler:"
-                print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
+                print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTimesec))
             
                 '''
                 1. Distribution formula goes here
-                '''
-                 
-                #########TADA########
-                linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
+                '''     
                 
                 
                 
-                print "linearSterp",linearStep
-                linearStep=math.fabs((int(linearStep)))#making positive value
-                print "LINEAR STEP SHOULD BE THE SAME"
-                print linearStep
-                
-                if startLoad < stopLoad:
-                    
-                    linearStress= (linearStep*int(runNo))+int(startLoad)
-                if startLoad > stopLoad:
-    
-                    linearStress= (linearStep*(upperBoundary-int(runNo)))+int(stopLoad)
-                
-                if startLoad == stopLoad:
-                    linearStress=startLoad
+#                if startLoad < stopLoad:
+#                    
+#                    linearStress= (linearStep*int(runNo))+int(startLoad)
+#                if startLoad > stopLoad:
+#    
+#                    linearStress= (linearStep*(upperBoundary-int(runNo)))+int(stopLoad)
+#                
+#                if startLoad == stopLoad:
+#                    linearStress=startLoad
                     
                 #make sure we return integer
                 linearStress=int(linearStress)
@@ -131,22 +134,32 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
                 
                 
                 
-                stressValues.append(linearStress)
+                stressValues.append(linearStep)
                 print "This run stress Value: "
                 print stressValues
                 
                 print "runStartTimeList",runStartTimeList
-                runDurations.append(runDuration) 
+                runDuration2 = duration - runDuration*runNo
+                runDurations.append(runDuration2) 
+                print "This are run durations: "
+                print runDurations
                 #increasing to next run            
                 runNo=int(runNo)+1
                 
             
                 
         #run last plus 2sec
-        runStartTimeList.append((startTimesec+runDuration*upperBoundary)+(int(upperBoundary*2)))
-        stressValues.append(stopLoad)
-        runDurations.append(runDuration)           
-                
+        #runStartTime = (startTimesec+runDuration*upperBoundary)+(int(upperBoundary*2))
+        #runStartTime = startTimesec+runDuration*upperBoundary
+        runStartTimeList.append(startTimesec)
+        print "This is time passed to scheduler:"
+        print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTimesec))
+        stressValues.append(linearStep)
+        runDurations.append(runDuration)
+        print "This run stress Value: "
+        print stressValues
+        print "This are run durations: "
+        print runDurations
             
         return stressValues, runStartTimeList, runDurations
     

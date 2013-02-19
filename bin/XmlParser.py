@@ -284,6 +284,10 @@ def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
         return_note ="\nThe scpecified value "+str(xmlValue)+" was lower than the minimum limit "+str(lowerBound)+" changing to the maximum limit"
         return lowerBound, return_note
 
+def parse_tests(filename):
+
+    "test"
+
 
 if __name__ == '__main__':
     

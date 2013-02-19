@@ -1,27 +1,27 @@
 <emulation>
-  <emulationName>Emu-RAM</emulationName>
-  <emulationType>Mix</emulationType>
-  <resourceType>Mix</resourceType>
+  <emuname>Emu-RAM</emuname>
+  <emuType>Mix</emuType>
+  <emuresourceType>Mix</emuresourceType>
   <!-- as startTime use the format '2012-11-26T17:28:00' or the keyword 'now' (no '' characters needed) -->
-  <startTime>now</startTime>
+  <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <stopTime>180</stopTime>
+  <emustopTime>25</emustopTime>
 
   <distributions>
      <name>MEM-dis-2</name>
      <startTime>5</startTime>
      <!--duration in seconds -->
-     <duration>170</duration>
-     <granularity>10</granularity>
-     <distribution href="/distributions/linear" name="linear" />
+     <duration>20</duration>
+     <granularity>5</granularity>
+     <distribution href="/distributions/linear_decr" name="linear_decr" />
      <!--Megabytes for memory -->
-      <startLoad>100</startLoad>
-      <stopLoad>1000</stopLoad>
+      <startLoad>1000</startLoad>
+      <stopLoad>100</stopLoad>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
         <resourceType>MEM</resourceType>
 	<!--time between iterations in usec (default 1000)-->
-	<memSleep>0</memSleep>
+	<memSleep>1</memSleep>
       </emulator-params>
   </distributions>
 
