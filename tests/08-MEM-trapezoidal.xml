@@ -5,15 +5,15 @@
   <!-- as startTime use the format '2012-11-26T17:28:00' or the keyword 'now' (no '' characters needed) -->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>240</emustopTime>
+  <emustopTime>120</emustopTime>
 
   <distributions>
-     <name>MEM-inc</name>
+     <name>MEM-arc</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
      <duration>120</duration>
      <granularity>4</granularity>
-     <distribution href="/distributions/linear_incr" name="linear_incr" />
+     <distribution href="/distributions/trapezoidal" name="trapezoidal" />
      <!--Megabytes for memory -->
       <startLoad>100</startLoad>
       <stopLoad>1500</stopLoad>
@@ -22,23 +22,6 @@
         <resourceType>MEM</resourceType>
 	<!--time between iterations in usec (default 1000)-->
 	<memSleep>0</memSleep>
-      </emulator-params>
-  </distributions>
-  <distributions>
-     <name>MEM-stable</name>
-     <startTime>121</startTime>
-     <!--duration in seconds -->
-     <duration>119</duration>
-     <granularity>1</granularity>
-     <distribution href="/distributions/linear_incr" name="linear_incr" />
-     <!--Megabytes for memory -->
-      <startLoad>1500</startLoad>
-      <stopLoad>1500</stopLoad>
-      <emulator href="/emulators/lookbusy" name="lookbusy" />
-      <emulator-params>
-        <resourceType>MEM</resourceType>
-        <!--time between iterations in usec (default 1000)-->
-        <memSleep>0</memSleep>
       </emulator-params>
   </distributions>
 

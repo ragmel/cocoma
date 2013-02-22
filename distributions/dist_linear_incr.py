@@ -17,13 +17,19 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-import math
-import Pyro4,imp,time,sys, psutil
-import sqlite3 as sqlite
-import datetime as dt
+#import math
+import Pyro4, time, psutil
+#import sqlite3 as sqlite
+#import datetime as dt
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 
+#lists for return
+stressValues = []        
+runStartTimeList=[]         
+runDurations = []
+
+MALLOC_LIMIT = 220
 
 class distributionMod(object):
     
@@ -33,11 +39,11 @@ class distributionMod(object):
         self.startLoad = distributionArg["startLoad"]
         self.stopLoad = distributionArg["stopLoad"]
         
-        distributionGranularity_count=distributionGranularity
+#        distributionGranularity_count=distributionGranularity
         #startTimesec = startTimesec
         duration = float(duration)
         
-        runNo=int(0)
+#        runNo=int(0)
         
         print "Hello this is dist_linear"
         print "emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH",emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH
@@ -48,35 +54,19 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     startLoad = int(distributionArg["startload"])
     stopLoad = int(distributionArg["stopload"])
     
-    print "hello this is dist linear"
+    print "hello this is dist linear incr"
     print "startLoad",startLoad
     print "stopLoad",stopLoad
     print "distributionGranularity",distributionGranularity
     
-    #distributionGranularity_count=distributionGranularity
-    upperBoundary= int(distributionGranularity)-1
-    #startTimesec = startTimesec
     duration = float(duration)
-    
-    #lists for return
-    stressValues = []        
-    runStartTimeList=[]         
-    runDurations = []
     runDuration = int(duration)/distributionGranularity
     runDuration = float(runDuration)
-    print "Duration is seconds:"
-    print runDuration
+    print "Duration is seconds:", runDuration
     
-    #run 1 at 0 time
-    runStartTimeList.append(startTimesec)
-    stressValues.append(startLoad)
-    runDurations.append(duration)
-    
-    print "This is time passed to scheduler:"
-    print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTimesec))
-    
-    
-    
+    # check for the start load value if it's higher than malloc limit
+    insertLoad(startLoad, startTimesec, duration)
+
     if int(distributionGranularity)==1:
         return stressValues, runStartTimeList, runDurations
     
@@ -85,85 +75,51 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         
         #runStartTime=startTimesec+(duration*upperBoundary)
         # linearStep does not change, can be calculated just once
-        linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
-        print "linearSterp",linearStep
-        linearStep=math.fabs((int(linearStep)))#making positive value
+        linearStep=((int(stopLoad)-int(startLoad))/(int(distributionGranularity)-1))
+
         linearStep=int(linearStep)
-        print "LINEAR STEP SHOULD BE THE SAME"
-        print linearStep
-    
-        linearStress=0
+
+        upperBoundary= int(distributionGranularity)-1
+
         while(upperBoundary !=runNo):
+            print "Run No: ", runNo
+            print "self.startTimesec",startTimesec
+            runStartTime=startTimesec+(runDuration*runNo)
+            runDuration2 = duration - runDuration*runNo
+
+            insertLoad(linearStep,runStartTime, runDuration2)
+
+            #increasing to next run            
+            runNo=int(runNo)+1
         
-                print "Run No: "
-                print runNo
-                print "self.startTimesec",startTimesec
-                runStartTime=startTimesec+(runDuration*runNo)
-                
-                #delay of one sec
-                #runStartTime =(runStartTime+(2*runNo))
-                
-                
-                runStartTimeList.append(runStartTime)
-                print "This run start time: "
-                print runStartTime
-                print "This is time passed to scheduler:"
-                print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
-            
-                '''
-                1. Distribution formula goes here
-                '''     
-                
-                
-                
-#                if startLoad < stopLoad:
-#                    
-#                    linearStress= (linearStep*int(runNo))+int(startLoad)
-#                if startLoad > stopLoad:
-#    
-#                    linearStress= (linearStep*(upperBoundary-int(runNo)))+int(stopLoad)
-#                
-#                if startLoad == stopLoad:
-#                    linearStress=startLoad
-                    
-                #make sure we return integer
-                #linearStress=int(linearStress)
-                print "LINEAR STRESS SHOULD CHANGE"
-                print linearStress
-                
-                
-                
-                
-                stressValues.append(linearStep)
-                print "This run stress Value: "
-                print stressValues
-                
-                print "runStartTimeList",runStartTimeList
-                runDuration2 = duration - runDuration*runNo
-                runDurations.append(runDuration2) 
-                print "This are run durations: "
-                print runDurations
-                #increasing to next run            
-                runNo=int(runNo)+1
-                
-            
-                
-        #run last plus 2sec
-        #runStartTime = (startTimesec+runDuration*upperBoundary)+(int(upperBoundary*2))
         runStartTime = startTimesec+runDuration*upperBoundary
-        runStartTimeList.append(runStartTime)
-        print "This is time passed to scheduler:"
-        print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
-        stressValues.append(linearStep)
-        runDurations.append(runDuration)
-        print "This run stress Value: "
-        print stressValues
-        print "This are run durations: "
-        print runDurations
+        
+        insertLoad(linearStep, runStartTime, runDuration)
+
+        print "This run stress Value: ", stressValues
+        print "This are run start time: ", runStartTimeList
+        print "This are run durations: ", runDurations
             
         return stressValues, runStartTimeList, runDurations
-    
-    
+
+def insertRun(stressValue, startTime, runRuration):
+    stressValues.append(stressValue)
+    runStartTimeList.append(startTime)
+    runDurations.append(runRuration)
+    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runRuration
+
+# this function checks if the load is higher than the malloc limit. In that cat creates smaller runs
+def insertLoad(load, startTime, duration):
+    if load > MALLOC_LIMIT:
+        div = int(load // MALLOC_LIMIT)
+        rest = load - (div * MALLOC_LIMIT)
+        for _ in range(0,div):
+            insertRun(MALLOC_LIMIT, startTime, duration)
+        if rest > 0:
+            insertRun(rest, startTime, duration)
+    else:
+        insertRun(load, startTime, duration)
+
 def distHelp():
     
     print "Linear Distribution How-To:"

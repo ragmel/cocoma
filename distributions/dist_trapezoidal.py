@@ -41,7 +41,7 @@ class distributionMod(object):
         
 #        distributionGranularity_count=distributionGranularity
         #startTimesec = startTimesec
-#        duration = float(duration)
+        duration = float(duration)
         
 #        runNo=int(0)
         
@@ -54,7 +54,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     startLoad = int(distributionArg["startload"])
     stopLoad = int(distributionArg["stopload"])
     
-    print "hello this is dist linear decr"
+    print "hello this is dist linear incr"
     print "startLoad",startLoad
     print "stopLoad",stopLoad
     print "distributionGranularity",distributionGranularity
@@ -65,7 +65,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     print "Duration is seconds:", runDuration
     
     # check for the start load value if it's higher than malloc limit
-    insertLoad(stopLoad, startTimesec, duration)
+    insertLoad(startLoad, startTimesec, duration)
 
     if int(distributionGranularity)==1:
         return stressValues, runStartTimeList, runDurations
@@ -75,7 +75,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         
         #runStartTime=startTimesec+(duration*upperBoundary)
         # linearStep does not change, can be calculated just once
-        linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
+        linearStep=((int(stopLoad)-int(startLoad))/(int(distributionGranularity)-1))
 
         linearStep=int(linearStep)
 
@@ -84,15 +84,17 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         while(upperBoundary !=runNo):
             print "Run No: ", runNo
             print "self.startTimesec",startTimesec
-
+            runStartTime=startTimesec+(runDuration*runNo)/2
             runDuration2 = duration - runDuration*runNo
-            
-            insertLoad(linearStep, startTimesec, runDuration2)
 
-            #increasing to next run       
+            insertLoad(linearStep,runStartTime, runDuration2)
+
+            #increasing to next run            
             runNo=int(runNo)+1
-
-        insertLoad(linearStep, startTimesec, runDuration)
+        
+        runStartTime = startTimesec+runDuration*upperBoundary/2
+        
+        insertLoad(linearStep, runStartTime, runDuration)
 
         print "This run stress Value: ", stressValues
         print "This are run start time: ", runStartTimeList

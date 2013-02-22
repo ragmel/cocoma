@@ -63,10 +63,11 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     runDuration = int(duration)/distributionGranularity
     runDuration = float(runDuration)
     print "Duration is seconds:", runDuration
-    
+    print "INITIAL Run"
     # check for the start load value if it's higher than malloc limit
     insertLoad(stopLoad, startTimesec, duration)
-
+    
+    
     if int(distributionGranularity)==1:
         return stressValues, runStartTimeList, runDurations
     
@@ -85,15 +86,28 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             print "Run No: ", runNo
             print "self.startTimesec",startTimesec
 
-            runDuration2 = duration - runDuration*runNo
+            runDuration2 = (duration - runDuration*runNo)/2
             
             insertLoad(linearStep, startTimesec, runDuration2)
 
+            # translating time to start load for increasing part of the shape. Adding the current startime, the duration of this run (runDuration2)
+            # and the runDuration which is the total duration divided by the granularity
+            translatedStartTimesec = startTimesec + duration - runDuration2
+            
+            insertLoad(linearStep, translatedStartTimesec, runDuration2)
             #increasing to next run       
             runNo=int(runNo)+1
 
-        insertLoad(linearStep, startTimesec, runDuration)
-
+        print "Final Run"
+        runDuration2 = (duration - runDuration*upperBoundary)/2
+        insertLoad(linearStep, startTimesec, runDuration2)
+        
+        # translating time to start load for increasing part of the shape. Adding the current startime, the duration of this run (runDuration2)
+        # and the runDuration which is the total duration divided by the granularity
+        translatedStartTimesec = startTimesec + duration - runDuration2
+        
+        insertLoad(linearStep, translatedStartTimesec, runDuration2)
+        
         print "This run stress Value: ", stressValues
         print "This are run start time: ", runStartTimeList
         print "This are run durations: ", runDurations
