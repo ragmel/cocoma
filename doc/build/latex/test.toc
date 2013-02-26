@@ -1,0 +1,6 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Contents}{3}{chapter.1}
+\contentsline {section}{\numberline {1.1}How to use it}{3}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}Subject Subtitle}{3}{subsection.1.1.1}
+\contentsline {subsection}{\numberline {1.1.2}Inline Markup}{3}{subsection.1.1.2}
+\contentsline {chapter}{\numberline {2}Indices and tables}{5}{chapter.2}
