@@ -110,8 +110,9 @@ class schedulerDaemon(object):
             print "stressValue",stressValue
             print "duration",duration
             print "runNo",runNo
-            #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)     
-            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
+            #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)  
+            runEndTimeStr=str(time.strftime("%H:%M:%S", time.gmtime(runStartTime+duration)))
+            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. End Time: "+runEndTimeStr)
             print sys.stdout
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             print valBack
