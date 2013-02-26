@@ -741,7 +741,7 @@ def create_emu():
     #http://10.55.164.232:8050/emulations
     
     xml_stream =request.files.data
-    xml_stream_body =request.body
+    xml_stream_body =request.body.read()
     
     if xml_stream:
         
@@ -880,22 +880,40 @@ def startAPI(IP_ADDR,PORT_ADDR):
     print"API IP address:",IP_ADDR
 
     API_HOST=run(host=IP_ADDR, port=PORT_ADDR)
-    print "API_HOST.host",API_HOST.host
     return IP_ADDR
 
 if __name__ == '__main__':
-
-    PORT_ADDR=5050
+    PORT_ADDR = 5050
+    #check if the interface specified
     try: 
         if sys.argv[1] == "-h":
-            print "Use ccmshAPI <name of network interface> . Default network interface is eth0."
-        else:
-            INTERFACE = sys.argv[1]
-            print "Interface: ",sys.argv[1]
-            IP_ADDR=getifip(sys.argv[1])
-            EmulationManager.writeInterfaceData(sys.argv[1],"apiinterface")
+            print "Use ccmshAPI -i <name of network interface> -p <port number>. Default network interface is eth0, port 5050."
+        
+        elif sys.argv[1] == "-i":
+            INTERFACE = sys.argv[2]
+            print "Interface: ",sys.argv[2]
+            IP_ADDR=getifip(sys.argv[2])
+            try:
+                if sys.argv[3] == "-p":
+                    PORT_ADDR = int(sys.argv[4])
+                else:
+                    print "Use ccmshAPI -i <name of network interface> -p <port number>. Default network interface is eth0, port 5050."
+            except:
+                
+                print "No port specified using 5050 as default"
+
+            #writing config to db
+            EmulationManager.writeInterfaceData(INTERFACE,"apiinterface")
+            #starting API module
             startAPI(IP_ADDR,PORT_ADDR)
-    except:
+
+        
+        
+        
+        else:    
+            print "Use ccmshAPI -i <name of network interface> -p <port number>. Default network interface is eth0, port 5050."
+    except Exception, e:
+        print "API exception error:",e
         INTERFACE ="eth0"
         print "Interface: ","eth0"
         IP_ADDR=getifip("eth0")

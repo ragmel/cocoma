@@ -43,6 +43,7 @@ def xmlParser(xmlData):
     logging.debug("This is XML Parser: xmlParser(xmlData)")
     emulationLogFrequency = "3"
     emulationLog="0"
+
     
     ##new##
     #normal values
