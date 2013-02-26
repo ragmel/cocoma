@@ -17,7 +17,7 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-#import math
+import math
 import Pyro4, time, psutil
 #import sqlite3 as sqlite
 #import datetime as dt
@@ -64,8 +64,12 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     runDuration = float(runDuration)
     print "Duration is seconds:", runDuration
     
+    runStartTime = startTimesec
     # check for the start load value if it's higher than malloc limit
-    insertLoad(startLoad, startTimesec, duration)
+    if startLoad < stopLoad:
+        insertLoad(startLoad, runStartTime, duration)
+    else:
+        insertLoad(stopLoad, runStartTime, duration)
 
     if int(distributionGranularity)==1:
         return stressValues, runStartTimeList, runDurations
@@ -76,15 +80,19 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         #runStartTime=startTimesec+(duration*upperBoundary)
         # linearStep does not change, can be calculated just once
         linearStep=((int(stopLoad)-int(startLoad))/(int(distributionGranularity)-1))
-
+        
+        linearStep=math.fabs(linearStep)#making positive value
         linearStep=int(linearStep)
-
+        
         upperBoundary= int(distributionGranularity)-1
 
         while(upperBoundary !=runNo):
             print "Run No: ", runNo
             print "self.startTimesec",startTimesec
-            runStartTime=startTimesec+(runDuration*runNo)
+            
+            if startLoad < stopLoad:
+                runStartTime=startTimesec+(runDuration*runNo)
+            
             runDuration2 = duration - runDuration*runNo
 
             insertLoad(linearStep,runStartTime, runDuration2)
@@ -92,7 +100,8 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             #increasing to next run            
             runNo=int(runNo)+1
         
-        runStartTime = startTimesec+runDuration*upperBoundary
+        if startLoad < stopLoad:
+            runStartTime = startTimesec+runDuration*upperBoundary
         
         insertLoad(linearStep, runStartTime, runDuration)
 
@@ -102,11 +111,11 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             
         return stressValues, runStartTimeList, runDurations
 
-def insertRun(stressValue, startTime, runRuration):
+def insertRun(stressValue, startTime, runDuration):
     stressValues.append(stressValue)
     runStartTimeList.append(startTime)
-    runDurations.append(runRuration)
-    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runRuration
+    runDurations.append(runDuration)
+    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runDuration
 
 # this function checks if the load is higher than the malloc limit. In that cat creates smaller runs
 def insertLoad(load, startTime, duration):

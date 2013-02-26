@@ -18,9 +18,9 @@
 #
 
 import math
-import Pyro4,imp,time,sys, psutil
-import sqlite3 as sqlite
-import datetime as dt
+import Pyro4,time, psutil
+#import sqlite3 as sqlite
+#import datetime as dt
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 
@@ -33,11 +33,11 @@ class distributionMod(object):
         self.startLoad = distributionArg["startLoad"]
         self.stopLoad = distributionArg["stopLoad"]
         
-        distributionGranularity_count=distributionGranularity
+#        distributionGranularity_count=distributionGranularity
         #startTimesec = startTimesec
         duration = float(duration)
         
-        runNo=int(0)
+#        runNo=int(0)
         
         print "Hello this is dist_linear"
         print "emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH",emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH

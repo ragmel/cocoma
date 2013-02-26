@@ -17,7 +17,7 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-#import math
+import math
 import Pyro4, time, psutil
 #import sqlite3 as sqlite
 #import datetime as dt
@@ -64,8 +64,12 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     runDuration = float(runDuration)
     print "Duration is seconds:", runDuration
     
+    runStartTime = startTimesec
     # check for the start load value if it's higher than malloc limit
-    insertLoad(startLoad, startTimesec, duration)
+    if startLoad < stopLoad:
+        insertLoad(startLoad, runStartTime, duration)
+    else:
+        insertLoad(stopLoad, runStartTime, duration)
 
     if int(distributionGranularity)==1:
         return stressValues, runStartTimeList, runDurations
@@ -77,6 +81,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         # linearStep does not change, can be calculated just once
         linearStep=((int(stopLoad)-int(startLoad))/(int(distributionGranularity)-1))
 
+        linearStep=math.fabs(linearStep)#making positive value
         linearStep=int(linearStep)
 
         upperBoundary= int(distributionGranularity)-1
@@ -84,18 +89,28 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         while(upperBoundary !=runNo):
             print "Run No: ", runNo
             print "self.startTimesec",startTimesec
-            runStartTime=startTimesec+(runDuration*runNo)/2
-            runDuration2 = duration - runDuration*runNo
+            
+            if startLoad < stopLoad:
+                runStartTime=startTimesec+(runDuration*runNo)/2
+                runDuration2 = duration - runDuration*runNo
+            else:
+                runDuration2 = (duration - runDuration*runNo)/2
+                translatedStartTimesec = startTimesec + duration - runDuration2
+                insertLoad(linearStep, translatedStartTimesec, runDuration2)
 
             insertLoad(linearStep,runStartTime, runDuration2)
 
             #increasing to next run            
             runNo=int(runNo)+1
         
-        runStartTime = startTimesec+runDuration*upperBoundary/2
+        print "Final Run"
+        if startLoad < stopLoad:
+            runStartTime = startTimesec+runDuration*upperBoundary/2
+            insertLoad(linearStep, runStartTime, runDuration)
+        else:
+            runDuration2 = (duration - runDuration*upperBoundary)/2
+            insertLoad(linearStep, runStartTime, runDuration2)
         
-        insertLoad(linearStep, runStartTime, runDuration)
-
         print "This run stress Value: ", stressValues
         print "This are run start time: ", runStartTimeList
         print "This are run durations: ", runDurations

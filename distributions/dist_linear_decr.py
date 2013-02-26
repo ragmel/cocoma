@@ -100,11 +100,11 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             
         return stressValues, runStartTimeList, runDurations
 
-def insertRun(stressValue, startTime, runRuration):
+def insertRun(stressValue, startTime, runDuration):
     stressValues.append(stressValue)
     runStartTimeList.append(startTime)
-    runDurations.append(runRuration)
-    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runRuration
+    runDurations.append(runDuration)
+    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runDuration
 
 # this function checks if the load is higher than the malloc limit. In that cat creates smaller runs
 def insertLoad(load, startTime, duration):

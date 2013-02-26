@@ -57,8 +57,7 @@ import Pyro4,imp,time,sys,os,psutil
 import sqlite3 as sqlite
 import datetime as dt
 import subprocess
-from signal import *
-from subprocess import *
+import signal
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
@@ -158,7 +157,8 @@ def memLoad(distributionID,runNo,memUtil,memSleep,duration):
                 message="Fail"
                 executed="False"
             else:
-                runLookbusy.terminate()
+                #runLookbusy.send_signal(signal.SIGINT) #check_output("exit 0", shell=True)
+                os.kill(runLookbusy.pid, signal.SIGINT)
             
                 print "writing success into DB..."
                 message="Success"

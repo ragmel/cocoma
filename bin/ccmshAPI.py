@@ -20,7 +20,7 @@
 
 
 
-from bottle import route, run,response,request,re
+from bottle import *
 import sys,os, time, Pyro4
 from datetime import datetime as dt
 import EmulationManager,ccmsh,DistributionManager,XmlParser

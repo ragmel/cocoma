@@ -8,15 +8,15 @@
   <emustopTime>120</emustopTime>
 
   <distributions>
-     <name>MEM-arc</name>
+     <name>MEM-trap</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
      <duration>120</duration>
      <granularity>4</granularity>
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
      <!--Megabytes for memory -->
-      <startLoad>100</startLoad>
-      <stopLoad>1500</stopLoad>
+      <startLoad>1000</startLoad>
+      <stopLoad>100</stopLoad>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
         <resourceType>MEM</resourceType>
