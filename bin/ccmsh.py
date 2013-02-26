@@ -138,18 +138,52 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 
             
         if options.startServices:
+            cliCommand=""
             if arguments[0] == "scheduler":
                 print "Starting ",arguments[0]
-                EmulationManager.services_control("scheduler","start"," ")
+                #generate CLI command
+                
+                try:
+                    n=1
+                    while n !=len(arguments):
+                        
+                        cliCommand =cliCommand+" "+arguments[n]+" "
+                        n+=1
+                except Exception,e :
+                    print "No additional arguments were supplied to scheduler:",e
+                    EmulationManager.services_control("scheduler","start"," ")
+                
+                EmulationManager.services_control("scheduler","start",cliCommand)
+                    
+                
+                
      
             if arguments[0] == "api":
-                #print arguments[1], arguments[0],
+                
+                print "Starting ",arguments[0]
+                #generate CLI command
+                
                 try:
-                    print "Starting ",arguments[0],"on interface ",arguments[1]
-                    EmulationManager.services_control("api","start",arguments[1])
-                except:
-                    print "Starting ",arguments[0],"on interface eth0"
-                    EmulationManager.services_control("api","start","eth0")
+                    n=1
+                    while n !=len(arguments):
+                        if n==2:
+                            cliCommand+=" -p "+arguments[n]
+                        
+                        if n==1:
+                            cliCommand = "-i "+arguments[n]
+                        
+                        n+=1
+                except Exception,e :
+                    print "No additional arguments were supplied to API:",e
+                    EmulationManager.services_control("api","start"," ")        
+                    
+                    
+                    
+                print "Starting ",arguments[0],cliCommand
+                EmulationManager.services_control("api","start",cliCommand)
+                
+                    
+            #EmulationManager.services_control("api","start","")
  
                     
         if options.stopServices:
