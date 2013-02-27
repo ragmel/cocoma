@@ -251,7 +251,8 @@ def xmlParser(xmlData):
         
         #    CPU-dis-1        Mix          1              3                        Mix               now         180       [{'distroArgs': {'startLoad': u'10', 'stopLoad': u'90'}, 'emulatorName': u'lookbusy', 'distrType': u'linear', 'resourceTypeDist': u'CPU', 'startTimeDistro': u'5', 'distributionsName': u'CPU-dis-1', 'durationDistro': u'170', 'emulatorArg': {'ncpus': u'0'}, 'granularity': u'10'}] 
                                                                                                                                             
-    logging.debug("XML Extracted Values:"+str(emulationName)+str(emulationType)+str(emulationLog)+str(emulationLogFrequency)+str(resourceTypeEmulation)+str(startTimeEmu)+str(stopTimeEmu)+str(distroList))
+    logging.debug("XML Extracted Values: "+str(emulationName)+" "+str(emulationType)+" "+str(emulationLog)+" "+str(emulationLogFrequency)+" "+str(resourceTypeEmulation)+" "+str(startTimeEmu)+" "+str(stopTimeEmu)+" "+str(distroList))
+    
     
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
@@ -285,10 +286,6 @@ def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
         return_note ="\nThe scpecified value "+str(xmlValue)+" was lower than the minimum limit "+str(lowerBound)+" changing to the maximum limit"
         return lowerBound, return_note
 
-def parse_tests(filename):
-
-    "test"
-
 
 if __name__ == '__main__':
     
@@ -296,15 +293,15 @@ if __name__ == '__main__':
     #xmlFileReader(filename)
     xmlData='''
 <emulation>
-  <emuname>NET_emu</emuname>
+  <emuname>CPU_emu</emuname>
   <emuType>Mix</emuType>
-  <emuresourceType>NET</emuresourceType>
+  <emuresourceType>CPU</emuresourceType>
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>15</emustopTime>
+  <emustopTime>60</emustopTime>
   
   <distributions> 
-   <name>NET_distro</name>
+   <name>CPU_distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
      <duration>10</duration>
@@ -312,29 +309,65 @@ if __name__ == '__main__':
      <distribution href="/distributions/linear" name="linear" />
     <!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
-      <stopLoad>10</stopLoad>
-      <emulator href="/emulators/iperf" name="iperf" />
-    <emulator-params>
-        <!--Server/Client-->
-        <resourceType>NET</resourceType>
-        <serverip>10.55.168.166</serverip>
-    <!--Leave "0" for default 5001 port -->
-    <serverport>5001</serverport>
-        <clientip>10.55.168.167</clientip>
-    <!--Leave "0" for default 5001 port -->
-    <clientport>5001</clientport>
-        <packettype>UDP</packettype>
-    </emulator-params>
+      <stopLoad>95</stopLoad>
+      <emulator href="/emulators/lookbusy" name="lookbusy" />
+      <emulator-params>
+        <!--more parameters will be added -->
+        <resourceType>CPU</resourceType>
+    <!--Number of CPUs to keep busy (default: autodetected)-->
+    <ncpus>0</ncpus>
+      </emulator-params>
+  </distributions>
+
+  <distributions> 
+   <name>CPU_distro-2</name>
+     <startTime>0</startTime>
+     <!--duration in seconds -->
+     <duration>10</duration>
+     <granularity>1</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+    <!--cpu utilization distribution range-->
+      <startLoad>10</startLoad>
+      <stopLoad>95</stopLoad>
+      <emulator href="/emulators/lookbusy" name="lookbusy" />
+      <emulator-params>
+        <!--more parameters will be added -->
+        <resourceType>CPU</resourceType>
+    <!--Number of CPUs to keep busy (default: autodetected)-->
+    <ncpus>0</ncpus>
+
+
+      </emulator-params>
+  </distributions>
+
+  <distributions> 
+   <name>CPU_distro3</name>
+     <startTime>50</startTime>
+     <!--duration in seconds -->
+     <duration>10</duration>
+     <granularity>1</granularity>
+     <distribution href="/distributions/linear" name="linear" />
+    <!--cpu utilization distribution range-->
+      <startLoad>10</startLoad>
+      <stopLoad>95</stopLoad>
+      <emulator href="/emulators/lookbusy" name="lookbusy" />
+      <emulator-params>
+        <!--more parameters will be added -->
+        <resourceType>CPU</resourceType>
+    <!--Number of CPUs to keep busy (default: autodetected)-->
+    <ncpus>0</ncpus>
+      </emulator-params>
   </distributions>
 
   <log>
       <!-- Use value "1" to enable logging(by default logging is off)  -->
-      <enable>0</enable>
+      <enable>1</enable>
       <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
       <frequency>3</frequency>
   </log>
   
 </emulation>
+
     
     
     '''
