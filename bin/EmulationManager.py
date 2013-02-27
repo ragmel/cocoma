@@ -555,6 +555,17 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
     except Exception, e:
         return "error check the dates:"+str(startTimeEmu)+"\n"+str(e)
     
+    try:
+        
+        result,lclmessage = checkDistroOverlap(startTimeEmu,distroList)
+        if result==True:
+            return lclmessage
+        
+        
+    except Exception,e:
+        return "Error: Check the xml format unable to process the distributions times",str(e)
+        
+    
     
     # 3. We add end to emulationLifetime date by the longest distribution
     emulationLifetimeEndTime =int(stopTimeEmu)
@@ -929,6 +940,40 @@ def services_control(service,action,args):
                 sys.exit(1)
             else:
                 print "API is not running" 
+                
+def checkDistroOverlap(startTimeEmu,distroList):
+    '''
+    1) Get all the parameters from XML parser
+    2) Check if distributions have overlapping time frames
+    3) If so check if have the same resource and are within available resource bounds  
+    '''
+    n= len(distroList)
+    m=0
+    match=0
+    for item in distroList:
+        compareStartTimeNext=int(item["startTimeDistro"])
+        compareEndTime = int(item["startTimeDistro"])+int(item["durationDistro"]) 
+        
+
+        while n!=m:
+            compareStartTimeNext=int(distroList[m]["startTimeDistro"])
+            #compareEndTimeNext = int(distroList[m]["startTimeDistro"])+int(distroList[m]["durationDistro"])
+            
+            if compareStartTimeNext<compareEndTime:
+                if item["resourceTypeDist"] == distroList[m]["resourceTypeDist"]:
+                    match+=1
+            
+            #we will always have at least one match with itself        
+            if match >1:
+                #print "Distributions Overlap: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]
+                return True,"Distributions Overlap: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]
+                
+            m+=1
+    if match ==1:
+        return False,"OK"
+            
+
+        
                     
 def emulationNow(delay):
     print "EmulationManager.emulation.Now"
