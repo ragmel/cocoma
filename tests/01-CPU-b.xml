@@ -1,13 +1,13 @@
 <emulation>
-  <name>Emu-CPU-RAM-IO</name>
-  <emulationType>Mix</emulationType>
-  <resourceType>Mix</resourceType>
-  <startTime>now</startTime>
+  <emuname>CPU_emu</emuname>
+  <emuType>Mix</emuType>
+  <emuresourceType>CPU</emuresourceType>
+  <emustartTime>2014-02-27T11:01:33</emustartTime>
   <!--duration in seconds -->
-  <stopTime>180</stopTime>
+  <emustopTime>180</emustopTime>
   
   <distributions>
-	< name>CPU-dis-1b</name>
+	<name>CPU-dis-1b</name>
      <startTime>5</startTime>
      <!--duration in seconds -->
      <duration>30</duration>
