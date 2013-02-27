@@ -20,7 +20,7 @@
 
 
 
-from bottle import *
+from bottle import route, run,response,request,re
 import sys,os, time, Pyro4
 from datetime import datetime as dt
 import EmulationManager,ccmsh,DistributionManager,XmlParser
@@ -132,7 +132,7 @@ def get_emulations():
 
 @route('/emulations/<name>/', method='GET')
 @route('/emulations/<name>', method='GET')
-def get_emulation(name=""):
+def get_emulation_details(name=""):
     '''
     Display specific emulation details by name
     '''
@@ -144,12 +144,17 @@ def get_emulation(name=""):
     
     try:
         (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(name)
+    
     except Exception,e:
             
         response.status = 404
-        return "<error>Emulation ID:"+name+" not found. Error:"+str(e)+"</error>"
+        return "<error>Emulation Name: "+name+" not found. Error:"+str(e)+"</error>"
         
-
+    print "Creating Response xml"
+    #[{'emulatorName': u'lookbusy', 'distroArgs': {u'startload': u'10', u'stopload': u'95'}, 
+    #'distrType': u'linear', 'resourceTypeDist': u'cpu', 'distributionsID': 1, 'startTimeDistro': u'0',
+    # 'distributionsName': u'CPU_distro', 'durationDistro': u'10',
+    # 'emulatorArg': {u'ncpus': u'0'}, 'granularity': 1}]
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     
     #building the XML we will return
@@ -159,19 +164,19 @@ def get_emulation(name=""):
     idXml.text = str(emulationID)
     #<emulationName>myMixEmu</emulationName>
     emulationNameXml =ET.SubElement(emulation,'emulationName')
-    emulationNameXml.text = emulationName
+    emulationNameXml.text = str(emulationName)
     
     #<emulationType>Mix</emulationType>
     emulationTypeXml =ET.SubElement(emulation,'emulationType')
-    emulationTypeXml.text = emulationType
+    emulationTypeXml.text = str(emulationType)
     
     #<resourceType>Mix</resourceType>
     resourceTypeXml =ET.SubElement(emulation,'resourceType')
-    resourceTypeXml.text = resourceTypeEmulation
+    resourceTypeXml.text = str(resourceTypeEmulation)
         
     #<startTime>now</startTime>
     startTimeEmuXml =ET.SubElement(emulation,'startTime')
-    startTimeEmuXml.text = startTimeEmu    
+    startTimeEmuXml.text = str(startTimeEmu)    
     
     #<stopTime>now+180</stopTime>
     stopTimeEmuXml =ET.SubElement(emulation,'stopTime')
@@ -192,31 +197,34 @@ def get_emulation(name=""):
                 print 
                 jobXml.text=str(job)
                 n+=1
-            else:
-                jobXml = ET.SubElement(scheduledJobsXml,"jobsempty")
-                jobXml.text="No jobs are scheduled/Or scheduler is offline"
+        if n==1:
+            jobXml = ET.SubElement(scheduledJobsXml,"jobsempty")
+            jobXml.text="No jobs are scheduled"
     
     except Exception,e :
-            print e
+            jobXml = ET.SubElement(scheduledJobsXml,"jobsempty")
+            jobXml.text="Scheduler error/Or scheduler is off-line"
             jobXml = ET.SubElement(scheduledJobsXml,"error")
-            jobXml.text=e
+            jobXml.text=str(e)
     
-    
-    #create distributions list
-    for distro in distroList :
-        #<distributions ID="1" name="myMixEmu-dis-1" >
-        distributionsXml = ET.SubElement(emulation,'distributions', { 'ID':str(distro['distributionsID']),'name':distro['distributionsName']})
-        
-        startTimeDistroXml=ET.SubElement(distributionsXml,'startTime')
-        startTimeDistroXml.text = str(distro['startTimeDistro'])
-        
-        durationDistroXml=ET.SubElement(distributionsXml,'duration')
-        durationDistroXml.text = str(distro['durationDistro'])
-        
-        distroArgs = distro['distroArgs']
-        for distroArg in distroArgs:
-            distroArgXml =ET.SubElement(distributionsXml,distroArg) 
-            distroArgXml.text = str(distroArgs[distroArg])
+    try:
+        #create distributions list
+        for distro in distroList :
+            #<distributions ID="1" name="myMixEmu-dis-1" >
+            distributionsXml = ET.SubElement(emulation,'distributions', { 'ID':str(distro['distributionsID']),'name':distro['distributionsName']})
+            
+            startTimeDistroXml=ET.SubElement(distributionsXml,'startTime')
+            startTimeDistroXml.text = str(distro['startTimeDistro'])
+            
+            durationDistroXml=ET.SubElement(distributionsXml,'duration')
+            durationDistroXml.text = str(distro['durationDistro'])
+            
+            distroArgs = distro['distroArgs']
+            for distroArg in distroArgs:
+                distroArgXml =ET.SubElement(distributionsXml,distroArg) 
+                distroArgXml.text = str(distroArgs[distroArg])
+    except Exception,e:
+        print "Distro list error",e
         
         
         #<distribution href="/distributions/geometric" name="geometric" />
@@ -243,7 +251,7 @@ def get_emulation(name=""):
     lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
     
     
-
+    
     return prettify(emulation)    
 
 @route('/emulators/', method='GET')
@@ -498,14 +506,15 @@ def start_test():
     emulationID=""
     
     fileName_stream =request.files.data
-    fileName_stream_body =request.body
+    fileName_stream_body =request.body.read()
     
     
     
     
     if fileName_stream:
         try:
-            filename=HOMEPATH+"/tests/"+XmlParser.parse_tests(fileName_stream)
+            filename=HOMEPATH+"/tests/"+str(fileName_stream_body)
+            #check if file exists maybe?
         except Exception,e:
             print e
             response.status = 400
@@ -517,7 +526,7 @@ def start_test():
 
             (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(filename)
             if startTimeEmu.lower() =="now":
-                startTimeEmu = EmulationManager.emulationNow()
+                startTimeEmu = EmulationManager.emulationNow(2)
                 emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
             else:
                 
@@ -531,7 +540,8 @@ def start_test():
         print "xml_stream_body:\n",fileName_stream_body
         
         try:   
-            filename=HOMEPATH+"/tests/"+XmlParser.parse_tests(fileName_stream_body)
+            filename=HOMEPATH+"/tests/"+str(fileName_stream_body)
+            #check if file exists maybe?
         except Exception,e:
             print e
             response.status = 400
@@ -542,7 +552,7 @@ def start_test():
 
             (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList) = XmlParser.xmlReader(filename)
             if startTimeEmu.lower() =="now":
-                startTimeEmu = EmulationManager.emulationNow()
+                startTimeEmu = EmulationManager.emulationNow(2)
                 emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
             else:
                 emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
