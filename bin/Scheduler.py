@@ -50,9 +50,13 @@ class schedulerDaemon(object):
         self.recoverySchedulerDaemon()
 
     def listJobs(self):
-        print "sending list of jobs"
+        
         if self.sched.get_jobs():
+            print "sending list of jobs"
             return self.sched.get_jobs()
+        else:
+            print "No jobs to send"
+            return []
     
         
        
