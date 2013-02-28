@@ -105,7 +105,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         modhandleMy=loadDistribution(distributionType)
         #2. Use this module for calculation and run creation   
         #newCreateRuns=modhandleMy(emulationID,distributionName,emulationLifetimeID,startTimesec,runDuration, distributionGranularity,emulator,arg,HOMEPATH)
-        
+        #,startTimesec,duration, distributionGranularity,distributionArg,
         (stressValues,runStartTime,runDurations)=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH)
         
         uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":51889"

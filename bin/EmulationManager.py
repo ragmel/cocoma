@@ -20,11 +20,12 @@
 
 import sqlite3 as sqlite
 import sys,re,os,subprocess,psutil
-import DistributionManager,ccmsh
+import DistributionManager,ccmsh,XmlParser
 import Pyro4
 import datetime,ccmshAPI
 from datetime import datetime as dt
 from subprocess import *
+import logging
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
@@ -563,7 +564,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
         
         
     except Exception,e:
-        return "Error: Check the xml format unable to process the distributions times",str(e)
+        return "Error: Check the sent XML format unable to process the distributions times",str(e)
         
     
     
@@ -947,32 +948,101 @@ def checkDistroOverlap(startTimeEmu,distroList):
     2) Check if distributions have overlapping time frames
     3) If so check if have the same resource and are within available resource bounds  
     '''
-    n= len(distroList)
-    m=0
-    match=0
+    n= len(distroList) 
+    k=0
     for item in distroList:
-        compareStartTimeNext=int(item["startTimeDistro"])
+        compareStartTime=int(item["startTimeDistro"])
         compareEndTime = int(item["startTimeDistro"])+int(item["durationDistro"]) 
         
-
+        m=0
         while n!=m:
             compareStartTimeNext=int(distroList[m]["startTimeDistro"])
+            compareEndTimeNext=int(compareStartTimeNext)+int(distroList[m]["durationDistro"])
             #compareEndTimeNext = int(distroList[m]["startTimeDistro"])+int(distroList[m]["durationDistro"])
             
-            if compareStartTimeNext<compareEndTime:
-                if item["resourceTypeDist"] == distroList[m]["resourceTypeDist"]:
-                    match+=1
-            
-            #we will always have at least one match with itself        
-            if match >1:
+            #if item is not itself
+            if m!=k:
+                #if the time intersects
+                
+                if compareStartTime<compareEndTimeNext and compareEndTime > compareStartTimeNext :
+                    
+                    #if they both are using the same resource
+                    if item["resourceTypeDist"] == distroList[m]["resourceTypeDist"]:
+                        '''
+                        1)Now load "dist_["resourceTypeDist"]" module first with parameters from one distribution then with 
+                          parameters from other distribution
+                        2)Check if start time of runs intersects with other runs and when it does check the workload 
+                        '''
+                        #loading distro
+                        #HOMEPATH+"/distributions/dist_"+modName+".py"
+                        distroCountModule=DistributionManager.loadDistribution(item["distrType"])
+                        #<MEM, CPU, IO, NET> = argNames={"startload":{"upperBound":freeMem,"lowerBound":50,},"stopload":{"upperBound":freeMem,"lowerBound":50}}
+                        distroArgNamesMod=DistributionManager.loadDistributionArgNames(item["distrType"])
+                        distroArgsLimitsDict=distroArgNamesMod(item["resourceTypeDist"])
+                        #dictionary with args
+                        moduleArgs=distroArgsLimitsDict.keys()
+                        
+                        #"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,
+                        #"distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist,
+                        #"emulatorArgNotes":emulatorArgNotes,"distroArgsNotes":distroArgsNotes
+                        
+                        #getting run values of one distribution and conflicting one(not all parameters are being used)
+                        #(emulationID="",emulationName="",emulationLifetimeID="",compareStartTime,int(item["durationDistro"]), int(item["granularity"]),item["distroArgs"],HOMEPATH
+                        stressValues1,runStartTime1,runDurations1=distroCountModule(None,None,None,compareStartTime,int(item["durationDistro"]), int(item["granularity"]),item["distroArgs"],HOMEPATH)
+                        stressValues2,runStartTime2,runDurations2=distroCountModule(None,None,None,compareStartTimeNext,int(distroList[m]["durationDistro"]), int(distroList[m]["granularity"]),distroList[m]["distroArgs"],HOMEPATH)
+                        
+                        #check which runs overlap
+                        distroRunsLen1=len(runStartTime1)
+                        distroRunsLen2=len(runStartTime2)
+                        c1=0
+                        c2=0
+                        while c1!=distroRunsLen1:
+                            while c2!=distroRunsLen2:
+                                compareEndTime1=runStartTime1[c1]+runDurations1[c1]
+                                compareStartTime2=runStartTime2[c2]
+                                if compareStartTime2<compareEndTime1:
+                                    #overlapping runs found check commutative workload
+                                    combinedWorkload=int(stressValues1[c1])+int(stressValues2[c2])
+                                        
+                                    #function to compare argument bounds 
+                                    a=0                    
+                                    for args in moduleArgs:
+                                        
+                                        try:
+                                            #startload
+                                            arg0 = moduleArgs[a].lower()
+                                            
+                                            #dict: {'lowerBound': 0, 'upperBound': 100}
+                                            distributionsLimitsDictValues = distroArgsLimitsDict[arg0]
+                                            #print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
+                            
+                                            #xmlValue,LimitsDictValues,variableName = None
+                                            checked_distroArgs,checkDistroNote = XmlParser.boundsCompare(combinedWorkload,distributionsLimitsDictValues,arg0)         
+                                            
+                                            if checkDistroNote !="\nOK":
+                                                
+                                                return True,"Distributions resources Out of Bounds: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]+". The specified value "+str(combinedWorkload)+" was higher than the maximum limit "+str(checked_distroArgs)
+                                                sys.exit(0)           
+                                            
+                                            a+=1
+                                            
+                                        except Exception,e:
+                                                logging.exception("error getting distribution arguments")
+                                                sys.exit(0)
+                                
+                                
+                                c2+=1
+                            c1+=1
+                            
+                
                 #print "Distributions Overlap: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]
-                return True,"Distributions Overlap: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]
                 
             m+=1
-    if match ==1:
-        return False,"OK"
-            
-
+    
+        k+=1
+    
+    #if no problem has been found
+    return False,"OK"    
         
                     
 def emulationNow(delay):
