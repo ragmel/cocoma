@@ -1126,7 +1126,24 @@ def readIfaceIP(column):
     
     return IP
 
+def logToFile(elementName,filename,level):
+    #file writing logger
+    fileLogger=logging.getLogger(elementName)
+    fileLogger.setLevel(logging.DEBUG)
+    fileHandler= logging.FileHandler(filename)
+    fileLoggerFormatter=logging.Formatter ('%(asctime)s;%(name)s;%(levelname)s;%(message)s',datefmt='%m/%d/%Y %H:%M:%S')
+    fileHandler.setFormatter(fileLoggerFormatter)
+    fileLogger.addHandler(fileHandler)
+    return fileLogger
     
+def logToCli(elementName,level):
+    cliHandler = logging.StreamHandler()
+    cliLogger=logging.getLogger(elementName)
+    cliLogger.setLevel(logging.DEBUG)
+    cliLoggerFormatter=logging.Formatter ('%(asctime)s - [%(name)s] - %(levelname)s - %(message)s',datefmt='%m/%d/%Y %H:%M:%S')
+    cliHandler.setFormatter(cliLoggerFormatter)    
+    cliLogger.addHandler(cliHandler)
+    return cliLogger    
 
 if __name__ == '__main__':
     

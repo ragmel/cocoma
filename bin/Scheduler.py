@@ -32,12 +32,30 @@ from subprocess import *
 import Pyro4, Logger,EmulationManager,DistributionManager
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_MISSED,EVENT_JOB_ERROR
 
+
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 try:
     HOMEPATH= os.environ['COCOMA']
+    
 except:
     print "no $COCOMA environmental variable set"
+    
+LOG_FILE_NAME=HOMEPATH+"/logs/logfile"+str(EmulationManager.emulationNow(2))+".csv"
+LOG_LEVEL=logging.DEBUG
+#Creating log handlers
+schedFileLogger=EmulationManager.logToFile("SCHEDULER",LOG_FILE_NAME,LOG_LEVEL)
+schedCliLogger=EmulationManager.logToCli("[SCHEDULER]",LOG_LEVEL)
+
+#schedCliLogger.info("SCHEDULER STARTED")
+#schedFileLogger.info("SCHEDULER STARTED")
+
+#schedFileLogger.debug("")
+#schedFileLogger.info("")
+
+
+
+
 
 class schedulerDaemon(object):
     
@@ -50,33 +68,35 @@ class schedulerDaemon(object):
         self.recoverySchedulerDaemon()
 
     def listJobs(self):
-        
+        schedFileLogger.debug("-> listJobs(self)")
         if self.sched.get_jobs():
-            print "sending list of jobs"
+            schedFileLogger.debug("sending list of jobs")
             return self.sched.get_jobs()
         else:
-            print "No jobs to send"
+            schedFileLogger.debug("No jobs to send")
             return []
     
         
        
     def stopSchedulerDaemon(self):
+        schedFileLogger.debug("-> stopSchedulerDaemon(self)")
         print "stopping Daemon"
         sys.exit(1)   
         sys.exit(0) 
     
     def hello(self):
+        schedFileLogger.debug("-> hello(self)") 
         greeting = "Pong!"
-        print greeting 
+        schedFileLogger.debug(greeting)
         return greeting
     
     def deleteJobs(self,emulationID,distribitionName):
-        print "This is deleteJobs"
+        schedFileLogger.debug("-> deleteJobs(self,emulationID,distribitionName)")
         #stringify
         emulationID =str(emulationID)
         distribitionName=str(distribitionName)
         
-        print "Looking for job name:", emulationID+"-"+distribitionName
+        schedFileLogger.debug("Looking for job name:", emulationID+"-"+distribitionName)
         
         if emulationID=="all":
             print "Jobs deleted:"
@@ -102,22 +122,23 @@ class schedulerDaemon(object):
     def createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration):
         
         
-        print "Hello this is Scheduler createJob()"
+        schedFileLogger.debug("-> createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration)")
         
         
         try:
-            print "Job added with:\n StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
+            schedFileLogger.debug("Job added with: StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))))
             
-            print "emulationID ",emulationID
-            print "emulationLifetimeID",emulationLifetimeID
-            print "distributionName", distributionName
-            print "stressValue",stressValue
-            print "duration",duration
-            print "runNo",runNo
+            schedFileLogger.debug("emulationID "+str(emulationID))
+            schedFileLogger.debug("emulationLifetimeID"+str(emulationLifetimeID))
+            schedFileLogger.debug("distributionName"+str(distributionName))
+            schedFileLogger.debug("stressValue"+str(stressValue))
+            schedFileLogger.debug("duration"+str(duration))
+            schedFileLogger.debug("runNo"+str(runNo))
+            
             #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)  
             runEndTimeStr=str(time.strftime("%H:%M:%S", time.gmtime(runStartTime+duration)))
             self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. End Time: "+runEndTimeStr)
-            print sys.stdout
+            schedFileLogger.debug(str(sys.stdout))
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             print valBack
             return valBack
@@ -127,15 +148,17 @@ class schedulerDaemon(object):
 
         
     def createLoggerJob(self,singleRunStartTime,duration,interval,emulationID):
-        print "Hello this is createLoggerJob"
+        schedFileLogger.debug("-> createLoggerJob(self,singleRunStartTime,duration,interval,emulationID)")
         interval=int(interval)
         
         
         self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID], name=str(emulationID)+"-logger interval-"+str(interval)+"sec.")
+        schedFileLogger.debug("Logger has been scheduled")
         return "Started logger"
 
     def checkProcessRunning(self,PROCNAME):
-        print "Hello this is checkProcessRunning"
+        schedFileLogger.debug("-> checkProcessRunning(self,PROCNAME)")
+        schedFileLogger.debug("Looking for:"+str(PROCNAME)) 
         procTrace = subprocess.Popen("ps ax | grep -v grep | grep "+"\""+str(PROCNAME)+"\"",shell=True,stdout=PIPE).communicate()[0]
         if procTrace:
             pid = procTrace[0:5]
@@ -145,14 +168,10 @@ class schedulerDaemon(object):
             #program not running
             return False        
         
-        
-        
- 
-
 
     def createCustomJob(self,emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,PROCNAME,emuDuration):
         
-        print "createCustomJob!!!"
+        schedFileLogger.debug("-> createCustomJob(self,emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,PROCNAME,emuDuration)")
         distributionName= emulator+"customJob"
         
         if EmulationManager.checkPid(PROCNAME):
@@ -168,7 +187,7 @@ class schedulerDaemon(object):
         
     
     def timeConv(self,dbtimestamp):
-        print "this is timeConv!!!"
+        schedFileLogger.debug("-> timeConv(self,dbtimestamp). Converting date from DB to python date dt")
         Year = int(dbtimestamp[0:4])
         Month = int(dbtimestamp[4+1:7])
         Day = int(dbtimestamp[7+1:10])
@@ -189,12 +208,13 @@ class schedulerDaemon(object):
 
     #convert date to seconds
     def timestamp(self,date):
-        print"This is timestamp"
+        schedFileLogger.debug("-> timestamp(self,date) converting python date to seconds")
         print date
         gmtTime = time.mktime(date.timetuple())#+3600
         return gmtTime
 
     def recoverySchedulerDaemon(self):
+        schedFileLogger.debug("-> recoverySchedulerDaemon(self)")
         os.system("clear")
         print'''
       ___  _____  ___  _____  __  __    __       
@@ -205,7 +225,7 @@ class schedulerDaemon(object):
         
         
         '''
-        
+        schedFileLogger.debug("HOMEPATH:"+str(HOMEPATH))
         
         print "Recovering list of emulations"
     
@@ -219,6 +239,7 @@ class schedulerDaemon(object):
         try:
             if HOMEPATH:
                 print "DB location path:", HOMEPATH+'/data/cocoma.sqlite'
+                schedFileLogger.debug("DB location path:"+HOMEPATH+"/data/cocoma.sqlite")
                 conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
             else:
                 conn = sqlite.connect('./data/cocoma.sqlite')
@@ -296,7 +317,7 @@ class schedulerDaemon(object):
                                     runNo = row[2]
                                             
                                     
-                                    print "Job added with:\n StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
+                                    print "Job added with: StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
                 
                                     print "emulationID ",emulationID
                                     print "emulationLifetimeID",emulationLifetimeID
@@ -332,6 +353,7 @@ class schedulerDaemon(object):
         ca.close()
     
 def dbWriter(distributionID,runNo,message,executed):
+        schedFileLogger.debug("-> dbWriter(distributionID,runNo,message,executed)")
         #connecting to the DB and storing parameters
         try:
             if HOMEPATH:
@@ -367,6 +389,7 @@ def dbWriter(distributionID,runNo,message,executed):
                 conn.close()
             
 def job_listener(event):
+    schedFileLogger.debug("-> job_listener(event)")
     
     if str(event.exception) !="None":
         
@@ -407,12 +430,13 @@ def job_listener(event):
             dbWriter(distributionID,runNo,message,executed)   
     
 def getifip(ifn):
+    schedFileLogger.debug("-> getifip(ifn)")
     import socket, fcntl, struct
     sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     return socket.inet_ntoa(fcntl.ioctl(sck.fileno(),0x8915,struct.pack('256s', ifn[:15]))[20:24])
 
 def main(IP_ADDR,PORT_ADDR):
-    
+    schedFileLogger.debug("-> main(IP_ADDR,PORT_ADDR)")
     daemon=schedulerDaemon()
     Pyro4.config.HOST=IP_ADDR
     

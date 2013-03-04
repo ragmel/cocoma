@@ -69,7 +69,7 @@ def main():
     
     
     serviceControl = optparse.OptionGroup(parser, 'Services Control')
-    serviceControl.add_option('--start', action='store_true', default=False,dest='startServices',help='[scheduler][api] start services')
+    serviceControl.add_option('--start', action='store_true', default=False,dest='startServices',help='[scheduler][api] followed by interface and port to start services. Example: ccmsh --start api eth1 2020')
     serviceControl.add_option('--stop', action='store_true', default=False,dest='stopServices',help='[scheduler][api] stop services')
     serviceControl.add_option('--show', action='store_true', default=False,dest='showServices',help='[scheduler][api] show services')
     serviceControl.add_option('-v','--version', action='store_true', default=False,dest='version',help='Display version info')
