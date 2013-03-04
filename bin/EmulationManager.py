@@ -1020,7 +1020,7 @@ def checkDistroOverlap(startTimeEmu,distroList):
                                             checked_distroArgs,checkDistroNote = XmlParser.boundsCompare(combinedWorkload,distributionsLimitsDictValues,arg0)         
                                             
                                             if checkDistroNote !="\nOK":
-                                                
+                                                print "Distributions resources Out of Bounds: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]+". The specified value "+str(combinedWorkload)+" was higher than the maximum limit "+str(checked_distroArgs)
                                                 return True,"Distributions resources Out of Bounds: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]+". The specified value "+str(combinedWorkload)+" was higher than the maximum limit "+str(checked_distroArgs)
                                                 sys.exit(0)           
                                             
