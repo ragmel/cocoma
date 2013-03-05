@@ -22,10 +22,24 @@ import xml.dom.minidom
 import DistributionManager,sys,EmulationManager
 import logging
 
+def loggerSet():
+    xmlLogger = logging.getLogger("")
+    LOG_LEVEL=logging.INFO
+    xmlLogger=EmulationManager.logToFile("XML Parser",LOG_LEVEL)
+    LogLevel=EmulationManager.readLogLevel("coreloglevel")
+    if LogLevel=="info":
+        LOG_LEVEL=logging.INFO
+    if LogLevel=="debug":
+        LOG_LEVEL=logging.DEBUG
+    else:
+        LOG_LEVEL=logging.INFO
+    
+    xmlLogger=EmulationManager.logToFile("XML Parser",LOG_LEVEL)
+    return xmlLogger
 
 def xmlReader(filename):
-    
-    logging.debug("This is XML Parser: xmlReader(filename)")
+    xmlLogger=loggerSet()
+    xmlLogger.debug("This is XML Parser: xmlReader(filename)")
     
     
     
@@ -40,7 +54,8 @@ def xmlReader(filename):
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
 def xmlParser(xmlData):
-    logging.debug("This is XML Parser: xmlParser(xmlData)")
+    xmlLogger=loggerSet()
+    xmlLogger.debug("This is XML Parser: xmlParser(xmlData)")
     emulationLogFrequency = "3"
     emulationLog="0"
 
@@ -64,14 +79,24 @@ def xmlParser(xmlData):
         emulationLog=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('enable')[0].firstChild.data
         
         try:
-        
             emulationLogFrequency=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('frequency')[0].firstChild.data
         except Exception, e:
-            logging.debug("Setting emulationLogFrequency to default value of 3sec")
+            xmlLogger.debug("Setting emulationLogFrequency to default value of 3sec")
+        
+        try:
+            emulationLogLevel=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('loglevel')[0].firstChild.data
+            if emulationLogLevel.lower()== "debug":
+                emulationLogLevel = logging.DEBUG
+            else:
+                emulationLogLevel = logging.INFO
+                xmlLogger.debug("Setting emulationLogLevel to default value of INFO")
+        except Exception, e:
+            xmlLogger.debug("Setting emulationLogLevel to default value of INFO")
+            emulationLogLevel = logging.INFO
             
     
     except Exception, e:
-        logging.debug("XML Logging is Off")
+        xmlLogger.debug("XML Logging is Off")
     
     emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emutype')[0].firstChild.data
     startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustarttime')[0].firstChild.data
@@ -80,17 +105,17 @@ def xmlParser(xmlData):
      
     
     
-    logging.debug( "##########################")
-    logging.debug("emulation name: "+str(emulationName))
-    logging.debug("emulation type: "+str(emulationType))
-    logging.debug("resource type: "+str(resourceTypeEmulation))
-    logging.debug("start time: "+str(startTimeEmu))
-    logging.debug("stop time: "+str(stopTimeEmu))
-    logging.debug("##########################")
+    xmlLogger.debug( "##########################")
+    xmlLogger.debug("emulation name: "+str(emulationName))
+    xmlLogger.debug("emulation type: "+str(emulationType))
+    xmlLogger.debug("resource type: "+str(resourceTypeEmulation))
+    xmlLogger.debug("start time: "+str(startTimeEmu))
+    xmlLogger.debug("stop time: "+str(stopTimeEmu))
+    xmlLogger.debug("##########################")
     
     n=0
     for node in distributionsXml:
-        logging.debug("n: "+str(n))
+        xmlLogger.debug("n: "+str(n))
         #Loading distribution type by module (linear, parabola, etc.)
         
         distribution = dom2.getElementsByTagName('distribution')[n]
@@ -107,7 +132,7 @@ def xmlParser(xmlData):
             moduleArgs=distroArgsLimitsDict.keys()
             
             
-            logging.debug("moduleArgs:"+str(moduleArgs))
+            xmlLogger.debug("moduleArgs:"+str(moduleArgs))
         except IOError, e:
             print "Unable to load module name \"",distrType,"\" error:"
             print e
@@ -122,12 +147,12 @@ def xmlParser(xmlData):
         emulatorType = emulator.attributes["name"].value
             
         try:
-            logging.debug("trying to load emulatorType:"+str(emulatorType))
+            xmlLogger.debug("trying to load emulatorType:"+str(emulatorType))
             EmulatorModuleMethod=DistributionManager.loadEmulatorArgNames(emulatorType)
             #argNames={"fileQty":{"upperBound":10,"lowerBound":0}}
             emulatorArgsLimitsDict=EmulatorModuleMethod(resourceTypeDist)
             emulatorArgs=emulatorArgsLimitsDict.keys()
-            logging.debug("emulatorArgs:"+str(emulatorArgs))
+            xmlLogger.debug("emulatorArgs:"+str(emulatorArgs))
         except IOError, e:
             print "Unable to load module name \"",emulatorType,"\" error:"
             print e
@@ -146,10 +171,10 @@ def xmlParser(xmlData):
         Getting all the arguments for distribution
         ''' 
         distroArgsNotes=[]
-        logging.debug("moduleArgs"+str(moduleArgs))
+        xmlLogger.debug("moduleArgs"+str(moduleArgs))
         
         for args in moduleArgs:
-            logging.debug("Inside distribution moduleArgs loop!")
+            xmlLogger.debug("Inside distribution moduleArgs loop!")
             try:
                
                 
@@ -170,7 +195,7 @@ def xmlParser(xmlData):
                 a+=1
                 #print a, moduleArgs[a]
             except Exception,e:
-                    logging.exception("error getting distribution arguments")
+                    xmlLogger.exception("error getting distribution arguments")
                     sys.exit(0)
                     #print e, "setting value to NULL"
                     #arg0="NULL"
@@ -189,7 +214,7 @@ def xmlParser(xmlData):
         emulatorArgNotes=[]
         a=0
         #for things in moduleArgs:
-        logging.debug("emulatorArgs"+str(emulatorArgs))
+        xmlLogger.debug("emulatorArgs"+str(emulatorArgs))
         for args in emulatorArgs:
             try:
                 #print "emulatorArgs[a]",emulatorArgs[a].lower()
@@ -208,7 +233,7 @@ def xmlParser(xmlData):
                 #print a, moduleArgs[a]
             except Exception, e:
                 print e
-                logging.exception("Not all emulator arguments are in use, setting Value of "+str(emulatorArgs[a].lower())+" to NULL")
+                xmlLogger.exception("Not all emulator arguments are in use, setting Value of "+str(emulatorArgs[a].lower())+" to NULL")
                     #arg0="NULL"
                     #print arg0
                     #arg.append(arg0)
@@ -216,7 +241,7 @@ def xmlParser(xmlData):
                 emulatorArg.append(arg0)
                 a= a+1
         
-        logging.debug("emulatorArg:"+str(emulatorArg))
+        xmlLogger.debug("emulatorArg:"+str(emulatorArg))
                     #a=a+1
         
         resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data 
@@ -251,13 +276,14 @@ def xmlParser(xmlData):
         
         #    CPU-dis-1        Mix          1              3                        Mix               now         180       [{'distroArgs': {'startLoad': u'10', 'stopLoad': u'90'}, 'emulatorName': u'lookbusy', 'distrType': u'linear', 'resourceTypeDist': u'CPU', 'startTimeDistro': u'5', 'distributionsName': u'CPU-dis-1', 'durationDistro': u'170', 'emulatorArg': {'ncpus': u'0'}, 'granularity': u'10'}] 
                                                                                                                                             
-    logging.debug("XML Extracted Values: "+str(emulationName)+" "+str(emulationType)+" "+str(emulationLog)+" "+str(emulationLogFrequency)+" "+str(resourceTypeEmulation)+" "+str(startTimeEmu)+" "+str(stopTimeEmu)+" "+str(distroList))
+    xmlLogger.debug("XML Extracted Values: "+str(emulationName)+" "+str(emulationType)+" "+str(emulationLog)+" "+str(emulationLogFrequency)+" "+str(resourceTypeEmulation)+" "+str(startTimeEmu)+" "+str(stopTimeEmu)+" "+str(distroList))
     
     
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
 
 def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
+    xmlLogger=loggerSet()
     '''
     Comparing XML variables with emulator or distribution set bounds.
     NOTE: in future might be better moved to the wrapper modules
@@ -273,16 +299,16 @@ def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
     
     if xmlValue >= lowerBound:
         if xmlValue <= upperBound:
-            logging.debug( "1- All OK")#,xmlValue,upperBound,lowerBound
+            xmlLogger.debug( "1- All OK")#,xmlValue,upperBound,lowerBound
             return_note ="\nOK"
             return xmlValue, return_note
             
         else:
-            logging.debug("2- Higher than upperBound taking maximum value")#,xmlValue,upperBound,lowerBound
+            xmlLogger.debug("2- Higher than upperBound taking maximum value")#,xmlValue,upperBound,lowerBound
             return_note ="\nThe scpecified value "+str(xmlValue)+" was higher than the maximum limit "+str(upperBound)+" changing to the maximum limit"
             return upperBound , return_note 
     else:
-        logging.debug("3- Lower than lowerBound taking minimum value")#,xmlValue,upperBound,lowerBound
+        xmlLogger.debug("3- Lower than lowerBound taking minimum value")#,xmlValue,upperBound,lowerBound
         return_note ="\nThe scpecified value "+str(xmlValue)+" was lower than the minimum limit "+str(lowerBound)+" changing to the maximum limit"
         return lowerBound, return_note
 
@@ -372,7 +398,7 @@ if __name__ == '__main__':
     
     '''
     
-    logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(level=logging.DEBUG)
     xmlParser(xmlData)
     
     

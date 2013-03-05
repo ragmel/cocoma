@@ -1126,41 +1126,53 @@ def readIfaceIP(column):
     
     return IP
 
-def logToFile(elementName,filename,level):
-    #file writing logger
+def readLogLevel(column):
+    '''
+    Gets log level name from database 
+    '''
+    try:
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+        
+        c = conn.cursor()
+        
+        c.execute('SELECT '+str(column)+' FROM config')
+        
+        logLevel = c.fetchall()
+       
+        c.close()
+        return logLevel
+        
+    except sqlite.Error, e:
+        print "Error getting \"config\" table data %s:" % e.args[0]
+        print e
+        return False
+
+
+
+def logToFile(elementName,level,filename=None):
+    #file writing handler
     fileLogger=logging.getLogger(elementName)
-    fileLogger.setLevel(logging.DEBUG)
-    fileHandler= logging.FileHandler(filename)
+    fileLogger.setLevel(level)
+    if filename == None:
+        fileHandler= logging.FileHandler(HOMEPATH+"/logs/COCOMAlogfile.csv")
+    else:
+        fileHandler= logging.FileHandler(filename)
     fileLoggerFormatter=logging.Formatter ('%(asctime)s;%(name)s;%(levelname)s;%(message)s',datefmt='%m/%d/%Y %H:%M:%S')
     fileHandler.setFormatter(fileLoggerFormatter)
     fileLogger.addHandler(fileHandler)
-    return fileLogger
     
-def logToCli(elementName,level):
+    #cli writing handler
+    cliLoggerFormatter=logging.Formatter ('%(asctime)s - [%(name)s] - %(levelname)s : %(message)s',datefmt='%m/%d/%Y %H:%M:%S')
     cliHandler = logging.StreamHandler()
-    cliLogger=logging.getLogger(elementName)
-    cliLogger.setLevel(logging.DEBUG)
-    cliLoggerFormatter=logging.Formatter ('%(asctime)s - [%(name)s] - %(levelname)s - %(message)s',datefmt='%m/%d/%Y %H:%M:%S')
-    cliHandler.setFormatter(cliLoggerFormatter)    
-    cliLogger.addHandler(cliHandler)
-    return cliLogger    
+    cliHandler.setFormatter(cliLoggerFormatter)
+    fileLogger.addHandler(cliHandler)
+    return fileLogger 
 
 if __name__ == '__main__':
-    
-    
-    #emulationName = "mytest"
-    #emulationType = "Malicious"
-    #resourceType = "CPU"
-    #startTime = "2012-09-10T15:30:00"
-    
-    #stopTime= "2013-09-10T19:59:00"
-    #dateOverlapCheck(startTime, stopTime)
-    #distributionGranularity = 10
-    #distributionType = "linear"
-    #startLoad = 20
-    #stopLoad = 100
-    #print getEmulationList()
-    #getEmulation(2)
+
     getActiveEmulationList()
     
     pass

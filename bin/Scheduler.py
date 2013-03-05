@@ -32,30 +32,8 @@ from subprocess import *
 import Pyro4, Logger,EmulationManager,DistributionManager
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_MISSED,EVENT_JOB_ERROR
 
-
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
-try:
-    HOMEPATH= os.environ['COCOMA']
-    
-except:
-    print "no $COCOMA environmental variable set"
-    
-LOG_FILE_NAME=HOMEPATH+"/logs/logfile"+str(EmulationManager.emulationNow(2))+".csv"
-LOG_LEVEL=logging.DEBUG
-#Creating log handlers
-schedFileLogger=EmulationManager.logToFile("SCHEDULER",LOG_FILE_NAME,LOG_LEVEL)
-schedCliLogger=EmulationManager.logToCli("[SCHEDULER]",LOG_LEVEL)
-
-#schedCliLogger.info("SCHEDULER STARTED")
-#schedFileLogger.info("SCHEDULER STARTED")
-
-#schedFileLogger.debug("")
-#schedFileLogger.info("")
-
-
-
-
 
 class schedulerDaemon(object):
     
@@ -80,7 +58,7 @@ class schedulerDaemon(object):
        
     def stopSchedulerDaemon(self):
         schedFileLogger.debug("-> stopSchedulerDaemon(self)")
-        print "stopping Daemon"
+        schedFileLogger.info("stopping Daemon")
         sys.exit(1)   
         sys.exit(0) 
     
@@ -96,28 +74,24 @@ class schedulerDaemon(object):
         emulationID =str(emulationID)
         distribitionName=str(distribitionName)
         
-        schedFileLogger.debug("Looking for job name:", emulationID+"-"+distribitionName)
+        schedFileLogger.debug("Looking for job name:"+emulationID+"-"+distribitionName)
         
         if emulationID=="all":
-            print "Jobs deleted:"
+            schedFileLogger.info("Jobs deleted:")
             for job in self.sched.get_jobs():
                 self.sched.unschedule_job(job)
-                print job.name
+                schedFileLogger.info(str(job.name))
                 
         else:
             for job in self.sched.get_jobs():
                 ID_params=re.split(r"-",job.name)
                 if str(ID_params[0]) == emulationID :
                     self.sched.unschedule_job(job)
-                    print "Job: "+job.name
-                    print "Deleted"
+                    schedFileLogger.info( "Job: "+job.name+" Deleted")
+                    
                 
                 else:
-                    print "These jobs remains: "+job.name
-        
-    #def purgeAllJobs(self):
-    #    print "This is purgeAllJobs daemon"
-    #    self.sched.shutdown(False, True, True)
+                    schedFileLogger.info( "These jobs remain: "+job.name)
     
     def createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration):
         
@@ -129,21 +103,24 @@ class schedulerDaemon(object):
             schedFileLogger.debug("Job added with: StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))))
             
             schedFileLogger.debug("emulationID "+str(emulationID))
-            schedFileLogger.debug("emulationLifetimeID"+str(emulationLifetimeID))
-            schedFileLogger.debug("distributionName"+str(distributionName))
-            schedFileLogger.debug("stressValue"+str(stressValue))
-            schedFileLogger.debug("duration"+str(duration))
-            schedFileLogger.debug("runNo"+str(runNo))
+            schedFileLogger.debug("emulationLifetimeID "+str(emulationLifetimeID))
+            schedFileLogger.debug("distributionName "+str(distributionName))
+            schedFileLogger.debug("stressValue "+str(stressValue))
+            schedFileLogger.debug("duration "+str(duration))
+            schedFileLogger.debug("runNo "+str(runNo))
             
             #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)  
             runEndTimeStr=str(time.strftime("%H:%M:%S", time.gmtime(runStartTime+duration)))
             self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. End Time: "+runEndTimeStr)
             schedFileLogger.debug(str(sys.stdout))
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
-            print valBack
+            schedFileLogger.debug("Return: "+str(valBack))
             return valBack
-        except :    
-            print "Scheduler createJob(): error creating Job "
+        except Exception, e:
+            schedFileLogger.debug("Values:"+str(emulationID)+"-"+str(distributionID)+"-"+str(distributionName)+"-"+str(emulationLifetimeID)+"-"+str(duration)+"-"+str(emulator)+"-"+str(emulatorArg)+"-"+str(resourceTypeDist)+"-"+str(stressValue)+"-"+str(runStartTime)+"-"+str(runNo)+"-"+str(emuDuration))
+            schedFileLogger.error("Scheduler createJob(): error creating Job check dates")
+            schedFileLogger.exception(str(e))
+              
             return "Scheduler createJob(): error creating Job check dates "
 
         
@@ -179,10 +156,12 @@ class schedulerDaemon(object):
         else:
             try:
                 self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(DistributionManager.timeConv(EmulationManager.emulationNow(2))))), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+distributionName+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
+                schedFileLogger.info("Created Custom Job: "+str(emulationID)+distributionName+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
                 return 1
             except Exception,e:
-                print "Error:",e
-                logging.debug("error")
+                schedFileLogger.debug("Values:"+str(emulationID)+"-"+str(distributionID)+"-"+str(distributionName)+"-"+str(emulationLifetimeID)+"-"+str(duration)+"-"+str(emulator)+"-"+str(emulatorArg)+"-"+str(resourceTypeDist)+"-"+str(stressValue)+"-"+str(runNo)+"-"+str(emuDuration))
+                schedFileLogger.error("Scheduler reateCustomJob(): error creating Job check values")
+                schedFileLogger.exception(str(e))
                 return 0
         
     
@@ -201,21 +180,21 @@ class schedulerDaemon(object):
             pytime=dt.datetime(Year,Month,Day,Hour,Min,Sec)
             return pytime
         
-        except ValueError:
-            print "Date incorrect use YYYY-MM-DDTHH:MM:SS format"
+        except ValueError,e:
+            schedFileLogger.debug("Values:"+str(dbtimestamp))
+            schedFileLogger.error("Date incorrect use YYYY-MM-DDTHH:MM:SS format")
+            schedFileLogger.exception(str(e))
             sys.exit(0) 
 
 
     #convert date to seconds
     def timestamp(self,date):
         schedFileLogger.debug("-> timestamp(self,date) converting python date to seconds")
-        print date
         gmtTime = time.mktime(date.timetuple())#+3600
         return gmtTime
 
     def recoverySchedulerDaemon(self):
         schedFileLogger.debug("-> recoverySchedulerDaemon(self)")
-        os.system("clear")
         print'''
       ___  _____  ___  _____  __  __    __       
      / __)(  _  )/ __)(  _  )(  \/  )  /__\     
@@ -227,7 +206,7 @@ class schedulerDaemon(object):
         '''
         schedFileLogger.debug("HOMEPATH:"+str(HOMEPATH))
         
-        print "Recovering list of emulations"
+        schedFileLogger.debug("Checking if there are any Emulations in DB scheduled in future that needs to be added to scheduler")
     
         '''
         1. Get current timestamp
@@ -238,7 +217,6 @@ class schedulerDaemon(object):
     
         try:
             if HOMEPATH:
-                print "DB location path:", HOMEPATH+'/data/cocoma.sqlite'
                 schedFileLogger.debug("DB location path:"+HOMEPATH+"/data/cocoma.sqlite")
                 conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
             else:
@@ -255,7 +233,7 @@ class schedulerDaemon(object):
             #if a
             if emulationLifetimeFetch:
                 for row in emulationLifetimeFetch:
-                    print row
+                    #print row
                     startTime= row[0]
                     emulationID = row[1]
                     emulationLifetimeID = row[2]
@@ -263,12 +241,7 @@ class schedulerDaemon(object):
                     #Compare starting times and re-launch 
                     #TO-DO: We can recover some individual runs if the emulation lifetime end date is still in future
                     if self.timestamp(self.timeConv(startTime))>self.timestamp(dt.datetime.now()):
-                        print "DB Start time in seconds"
-                        print self.timestamp(self.timeConv(startTime))
-                        print "Current time in seconds"
-                        print self.timestamp(dt.datetime.now())
-                        
-                        
+                        schedFileLogger.info("Recovery Emulation found. ID: "+str(emulationID))
                         #If active emulation is found starting logger
                         #2sec interval
                         c.execute('SELECT logging,logFrequency FROM emulation WHERE emulationID=?',[str(emulationID)])
@@ -299,31 +272,25 @@ class schedulerDaemon(object):
                                 resourceType=items[2]
                                 resourceTypeDist=resourceType#not100%
                                 emulatorArg.update({paramName:value})
-                            print "emulatorArg@ ",emulatorArg
-                                
-                            #EmulatorParameters.emulatorArg {'memSleep': u'100'} distroID
-                            
-    
+
                             ca.execute('SELECT stressValue,runStartTime,runNo FROM runLog WHERE distributionID =?',[str(distributionID)])
                             runLogFetch = ca.fetchall()
-                            print runLogFetch
+                            #print runLogFetch
             
                             if runLogFetch:
-                                print "run log has values"
                                 for row in runLogFetch:
-                                    print row
+                                    #print row
                                     stressValue = row[0]
                                     runStartTime = float(row[1])
                                     runNo = row[2]
-                                            
-                                    
-                                    print "Job added with: StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
+
+                                    #print "Job added with: StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
                 
-                                    print "emulationID ",emulationID
-                                    print "emulationLifetimeID",emulationLifetimeID
-                                    print "stressValue",stressValue
-                                    print "duration",duration
-                                    print "runNo",runNo
+                                    #print "emulationID ",emulationID
+                                    #print "emulationLifetimeID",emulationLifetimeID
+                                    #print "stressValue",stressValue
+                                    #print "duration",duration
+                                    #print "runNo",runNo
                                     #
                                     #                       8           MEM-dis-1              8             10     lookbusy {'memSleep': u'100'}      MEM              64         1359680491.0   3
                                     self.createJob(emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo)
@@ -332,7 +299,7 @@ class schedulerDaemon(object):
                                 
                                 
                     else:
-                            print "No Active EmulationLifetime Runs were found to recover(1)"
+                            schedFileLogger.debug("No Active EmulationLifetime Runs were found to recover(1)")
                             # setting the emulation as inactive if the start date is in the past
                             c.execute('UPDATE emulation SET active=0 WHERE emulationID=?',[emulationID])
                             conn.commit()
@@ -340,14 +307,13 @@ class schedulerDaemon(object):
                             
                 
             else:
-                print "No Emulations were found to recover(2)" 
+                schedFileLogger.debug("No Emulations were found to recover(2)") 
                 
     
-        except sqlite.Error, e:
-            print "Could not retrieve SQL for startTime,emulationID FROM emulationLifetime "
-            print "Error %s:" % e.args[0]
-            print e
-            sys.exit(1)    
+        except Exception, e:
+            schedFileLogger.warning("Could not recover Emulations")
+            schedFileLogger.exception(str(e))            
+            #sys.exit(1)    
     
         c.close()
         ca.close()
@@ -370,7 +336,7 @@ def dbWriter(distributionID,runNo,message,executed):
             if runLogFetch:
                 for row in runLogFetch:
                     if row[0]=="False":
-                        print "Job already failed"
+                        schedFileLogger.warning("Job already marked as failed. Run No:"+str(runNo))
             
             # 2. Populate "emulation"
             else:
@@ -380,8 +346,9 @@ def dbWriter(distributionID,runNo,message,executed):
             #c.close()
             
         except sqlite.Error, e:
-            print "Error %s:" % e.args[0]
-            print e
+            schedFileLogger.debug("Values: "+str(distributionID)+"-"+str(runNo)+"-"+str(message)+"-"+str(executed))
+            schedFileLogger.error("Unable to connect to DB")
+            schedFileLogger.exception(str(e))
             sys.exit(1)    
         
         finally:
@@ -393,40 +360,35 @@ def job_listener(event):
     
     if str(event.exception) !="None":
         
-        
-        print '\n'+str(event.job.name)+'The job crashed :(\n'
-        print "event.retval: ",event.retval
-        print "event.exception: ",event.exception
-        print "event.traceback: ",event.traceback.j
-        print "event.scheduled_run_time: ",event.scheduled_run_time
-        print "event.SchedulerEvent: ",event.SchedulerEvent
+        #possible job options 
+        #print '\n'+str(event.job.name)+'The job crashed :(\n'
+        #print "event.retval: ",event.retval
+        #print "event.exception: ",event.exception
+        #print "event.traceback: ",event.traceback.j
+        #print "event.scheduled_run_time: ",event.scheduled_run_time
+        #print "event.SchedulerEvent: ",event.SchedulerEvent
         executed="False"
         message="Job crashed by scheduler"
         loggerSearch=re.search("logger", str(event.job.name))
-        print "Logger Search result: ",loggerSearch
+
         if not loggerSearch:
             paramsArray=re.split(r"-",str(event.job.name))
             distributionID=paramsArray[1]
-            runNo=paramsArray[2]
-            print "Writing to DB distributionID,runNo,message,executed:",distributionID,runNo,message,executed
+            runNo=paramsArray[2]   
+            schedFileLogger.warn("Job: "+str(event.job.name)+" -crashed by scheduler execution")
             dbWriter(distributionID,runNo,message,executed)
             
         
     else:
         
-        
-        print 'Positive event.exception: ',event.exception
-        print '\nThe job'+str(event.job.name)+' worked :)\n'
         executed="True"
         message="Job launched by scheduler"
         loggerSearch=re.search("logger", str(event.job.name))
-        print "Logger Search result: ",loggerSearch
         if not loggerSearch:
-            
             paramsArray=re.split(r"-",str(event.job.name))
             distributionID=paramsArray[1]
             runNo=paramsArray[2]
-            print "Writing to DB distributionID,runNo,message,executed:",distributionID,runNo,message,executed
+            schedFileLogger.info("Job: "+str(event.job.name)+" -executed successfully by scheduler")
             dbWriter(distributionID,runNo,message,executed)   
     
 def getifip(ifn):
@@ -436,6 +398,7 @@ def getifip(ifn):
     return socket.inet_ntoa(fcntl.ioctl(sck.fileno(),0x8915,struct.pack('256s', ifn[:15]))[20:24])
 
 def main(IP_ADDR,PORT_ADDR):
+    
     schedFileLogger.debug("-> main(IP_ADDR,PORT_ADDR)")
     daemon=schedulerDaemon()
     Pyro4.config.HOST=IP_ADDR
@@ -449,24 +412,57 @@ def main(IP_ADDR,PORT_ADDR):
     #we start daemon locally
  
 if __name__=="__main__":
+    schedFileLogger = logging.getLogger("")
+    LOG_LEVEL=logging.INFO
+    #1st setting logger
+    #schedFileLogger.debug("")
+    #schedFileLogger.info("")
+    #schedFileLogger.error("")
+    #schedFileLogger.warn("")
+    try:
+        if sys.argv[1] == "debug":
+            LOG_LEVEL=logging.DEBUG
+    except Exception, e:
+        print""
+    try:
+        if sys.argv[2] == "debug":
+            LOG_LEVEL=logging.DEBUG
+            
+    except Exception, e:
+        print""    
     
+    #Creating log handlers
+    schedFileLogger=EmulationManager.logToFile("SCHEDULER",LOG_LEVEL)
+    #Setting environmental variable    
+    try:
+        HOMEPATH= os.environ['COCOMA']
+        
+    except:
+        schedFileLogger.error("no $COCOMA environmental variable set")
+
+    
+    
+    schedFileLogger.debug("### Scheduler Start in DEBUG mode###")
     PORT_ADDR=51889
     try: 
         if sys.argv[1] == "-h":
             print "Use Scheduler <name of network interface> . Default network interface is eth0."
+
         else:
-            print "Interface: ",sys.argv[1]
+            schedFileLogger.info("Interface: "+str(sys.argv[1]))
             IP_ADDR=getifip(sys.argv[1])
             EmulationManager.writeInterfaceData(sys.argv[1],"schedinterface")
-            main(IP_ADDR,PORT_ADDR)
-    except:
+            
+    except Exception, e:
 
-        print "Interface: ","eth0"
+        schedFileLogger.info("Interface: eth0")
         EmulationManager.writeInterfaceData("eth0","schedinterface")
         IP_ADDR=getifip("eth0")
       
 
-        main(IP_ADDR,PORT_ADDR)
+    
+        
+    main(IP_ADDR,PORT_ADDR)
 
     
                        
