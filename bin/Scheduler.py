@@ -421,16 +421,22 @@ if __name__=="__main__":
     #schedFileLogger.warn("")
     try:
         if sys.argv[1] == "debug":
+            #Writing log level to DB
             LOG_LEVEL=logging.DEBUG
     except Exception, e:
         print""
     try:
         if sys.argv[2] == "debug":
+            
             LOG_LEVEL=logging.DEBUG
             
     except Exception, e:
         print""    
     
+    if LOG_LEVEL == 10:
+        EmulationManager.writeInterfaceData("debug","coreloglevel")
+    if LOG_LEVEL == 20:
+        EmulationManager.writeInterfaceData("info","coreloglevel")
     #Creating log handlers
     schedFileLogger=EmulationManager.logToFile("SCHEDULER",LOG_LEVEL)
     #Setting environmental variable    

@@ -1140,16 +1140,22 @@ def readLogLevel(column):
         
         c.execute('SELECT '+str(column)+' FROM config')
         
-        logLevel = c.fetchall()
+        logLevelList = c.fetchall()
        
         c.close()
-        return logLevel
+        
         
     except sqlite.Error, e:
         print "Error getting \"config\" table data %s:" % e.args[0]
         print e
         return False
-
+    
+    if logLevelList:
+        for row in logLevelList:
+            logLevel=row[0]
+    
+    return logLevel
+        
 
 
 def logToFile(elementName,level,filename=None):
