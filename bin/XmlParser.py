@@ -16,31 +16,18 @@
 #
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
-
+import __builtin__
 from xml.dom.minidom import parseString, Node
 import xml.dom.minidom
 import DistributionManager,sys,EmulationManager
 import logging
 
-def loggerSet():
-    
-    LOG_LEVEL=logging.INFO
-    
-    LogLevel=EmulationManager.readLogLevel("coreloglevel")
-    if LogLevel=="info":
-        LOG_LEVEL=logging.INFO
-    if LogLevel=="debug":
-        LOG_LEVEL=logging.DEBUG
-    else:
-        LOG_LEVEL=logging.INFO
-    
-    xmlLogger=EmulationManager.logToFile("XML Parser",LOG_LEVEL)
-    return xmlLogger
+#declare global variable for reference 
+xmlLogger = None
+emuLoggerXML =None
+
 
 def xmlReader(filename):
-    xmlLogger=loggerSet()
-    xmlLogger.debug("###This is XML Parser: xmlReader(filename)")
-    
     
     fileObj = open(filename,'r')
     #convert to string:
@@ -52,7 +39,15 @@ def xmlReader(filename):
     return emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
 
 def xmlParser(xmlData):
-    xmlLogger=loggerSet()
+    #general log creator
+    global xmlLogger
+    if xmlLogger is None:
+        #initialize logger
+        xmlLogger=EmulationManager.loggerSet("XML Parser")
+    
+
+    
+    
     xmlLogger.debug("###This is XML Parser: xmlParser(xmlData)")
     emulationLogFrequency = "3"
     emulationLog="0"
@@ -78,16 +73,11 @@ def xmlParser(xmlData):
         
         try:
             emulationLogLevel=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('loglevel')[0].firstChild.data
-            if emulationLogLevel.lower()== "debug":
-                emulationLogLevel = logging.DEBUG
-            else:
-                emulationLogLevel = logging.INFO
-                #xmlLogger.debug("Setting emulationLogLevel to default value of INFO")
+            if emulationLogLevel.lower()!= "debug":
+                emulationLogLevel = "info"
         except Exception, e:
-            #xmlLogger.debug("Setting emulationLogLevel to default value of INFO")
-            emulationLogLevel = logging.INFO
-            
-    
+            emulationLogLevel = "info"
+
     except Exception, e:
         xmlLogger.debug("XML Logging is Off")
     

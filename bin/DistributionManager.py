@@ -76,13 +76,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             print "Error %s:" % e.args[0]
             print e
             sys.exit(1)                        
- 
-            
-            
-            
-            
-            
-            
+  
                         
         startTime= timeConv(startTime)
         startTimesec=timestamp(startTime)+float(startTimeDistro)
@@ -104,8 +98,6 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         #1. Get required module loaded
         modhandleMy=loadDistribution(distributionType)
         #2. Use this module for calculation and run creation   
-        #newCreateRuns=modhandleMy(emulationID,distributionName,emulationLifetimeID,startTimesec,runDuration, distributionGranularity,emulator,arg,HOMEPATH)
-        #,startTimesec,duration, distributionGranularity,distributionArg,
         (stressValues,runStartTime,runDurations)=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH)
         
         uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":51889"
@@ -119,11 +111,8 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
                 print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
                 print daemon.hello()
                 print daemon.createJob(emulationID,distributionID,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),runDurations[n])
-                #lf,emulationID,emulationName,emulationLifetimeID,duration,emulator,resourceType,stressValue,runStartTime,runNo
-                
                 
                 #adding values to the table for recovery
-                
                 try:
                     if HOMEPATH:
                         print
@@ -182,21 +171,7 @@ def loadDistribution(modName):
                 modfile = "./distributions/dist_"+modName+".py"
                 modname = "dist_"+modName
                 
-            #modhandle = imp.load_source(modname, modfile)
-            #print modhandle
-            
-            #fp, pathname, description = imp.find_module(modname)
-            
-            
-            #print fp, pathname, description
-            #try:
-                #modhandle = imp.load_module(modname, fp, pathname, description)
-            modhandle = imp.load_source(modname, modfile)
-            #finally:
-                # Since we may exit via an exception, close fp explicitly.
-            #  if fp:
-            #      fp.close()
-                
+            modhandle = imp.load_source(modname, modfile)    
             return modhandle.functionCount
 
 def loadDistributionHelp(modName):
@@ -211,7 +186,7 @@ def loadDistributionHelp(modName):
                 modname = "dist_"+modName
                 
             modhandle = imp.load_source(modname, modfile)
-            print modhandle
+            #print modhandle
                       
                 
             return modhandle.distHelp   
@@ -228,7 +203,7 @@ def loadDistributionArgNames(modName):
                 modname = "dist_"+modName
                 
             modhandle = imp.load_source(modname, modfile)
-            print modhandle
+            #print modhandle
                         
                 
             return modhandle.argNames  

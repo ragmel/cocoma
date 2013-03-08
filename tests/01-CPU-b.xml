@@ -8,7 +8,7 @@
   
   <distributions>
 	<name>CPU-dis-1b</name>
-     <startTime>35</startTime>
+     <startTime>0</startTime>
      <!--duration in seconds -->
      <duration>31</duration>
      <granularity>3</granularity>
@@ -47,7 +47,7 @@
   </distributions>
     <distributions>
 	<name>CPU-dis-3b</name>
-     <startTime>31</startTime>
+     <startTime>66</startTime>
      <!--duration in seconds -->
      <duration>30</duration>
      <granularity>4</granularity>

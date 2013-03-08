@@ -27,6 +27,7 @@ from datetime import datetime as dt
 from subprocess import *
 import logging
 
+emuLoggerEM = None
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 try:
@@ -98,10 +99,7 @@ def getActiveEmulationList(name):
                 failedRunsInfo=[]
                     
                 startTimeDBsec= DistributionManager.timestamp(DistributionManager.timeConv(row[0]))
-                #we already have it in sec
-                #stopTimeDBsec = DistributionManager.timestamp(DistributionManager.timeConv(row[1]))
                 stopTimeDBsec=startTimeDBsec+float(row[1])
-
 
                 c.execute('SELECT emulationID,emulationName FROM emulation WHERE emulationID=?',[str(row[2])])
                 emunameFetch = c.fetchall()
@@ -121,9 +119,6 @@ def getActiveEmulationList(name):
                             runsExecuted=runsExecuted+1
                             
                             
-                            
- 
-                
                 if stopTimeDBsec > dtNowSec:
                     print "Emulation ID: "+str(row[2])+" is active"
                     for items in emunameFetch:
@@ -139,7 +134,6 @@ def getActiveEmulationList(name):
             print "no emulations exists" 
             
         #[{'State': 'active', 'ID': 11, 'Name': u'myMixEmu'}, {'State': 'active', 'ID': 12, 'Name': u'myMixEmu'}]
-        #print activeEmu
         return activeEmu
         
         
@@ -177,9 +171,6 @@ def getEmulation(emulationName):
         else:
             raise sqlite.Error("Emulation "+str(emulationName)+" not found")
             
-            
-            
-       
         
         #EMULATION & EMULATION LIFETIME
         c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType,emulationLifetime.startTime,emulationLifetime.stopTime
@@ -257,31 +248,8 @@ def getEmulation(emulationName):
                     print emulatorArg
                     
         #saving single distribution elements to dictionary
-                distroDict={"distributionsID":distributions[0], "distributionsName":distributions[1],"startTimeDistro":distributions[2],"durationDistro":distributions[3],"granularity":distributions[4],"distrType":distributions[5],"emulatorName":distributions[6],"resourceTypeDist":resourceTypeDist,"emulatorArg":emulatorArg,"distroArgs":distroArgs}
-                
-                    
+                distroDict={"distributionsID":distributions[0], "distributionsName":distributions[1],"startTimeDistro":distributions[2],"durationDistro":distributions[3],"granularity":distributions[4],"distrType":distributions[5],"emulatorName":distributions[6],"resourceTypeDist":resourceTypeDist,"emulatorArg":emulatorArg,"distroArgs":distroArgs}                    
                 distroList.append(distroDict)
-        '''
-        print"distroDict:"
-        print distroDict
-        print "distroList:"
-        print distroList
-        
-        
-        
-        print "emulationTable:"
-        print emulationTable
-        
-        print "distributionTable:"
-        print distributionTable
-        
-        print "distroParamsTable:"
-        print distroParamsTable
-        
-        print "emuParamsTable:"
-        print emuParamsTable
-        '''
-
         
         c.close()
         print emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
@@ -329,10 +297,7 @@ def deleteEmulation(emulationID):
             print "Emulation ID: "+str(emulationID)+" does not exists" 
             return "Emulation ID: "+str(emulationID)+" does not exists"
             sys.exit(1)
-        
-        
-        
-
+ 
         c.execute('DELETE FROM distribution WHERE emulationID=?',[str(emulationID)])
         c.execute('DELETE FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
         c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
@@ -537,16 +502,10 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
     
 
 def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList):
-                    
-    print "Hello this is createEmulation"
-
     #data checks
-    
     print "startTimeEmu: ",startTimeEmu.lower()
     if startTimeEmu.lower() == "now":
         startTimeEmu = emulationNow(2)
-        print "Converted startTimeEmu11: ",startTimeEmu
-    print "Converted startTimeEmu: ",startTimeEmu
     
     try:
         check= dataCheck(startTimeEmu,float(stopTimeEmu))
@@ -562,20 +521,14 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
         if result==True:
             return lclmessage
         
-        
     except Exception,e:
-        return "Error: Check the sent XML format unable to process the distributions times",str(e)
-        
-    
+        return "Error: Check the sent XML format unable to process the distributions times",str(e) 
     
     # 3. We add end to emulationLifetime date by the longest distribution
     emulationLifetimeEndTime =int(stopTimeEmu)
     for n in distroList:
-        print "Distrolist n: ",n
         compareEndTime = int(n["startTimeDistro"])+int(n["durationDistro"]) 
-        print "compareEndTime",compareEndTime
         if compareEndTime > emulationLifetimeEndTime:
-            print "Distribution has date longer than emulation.Check distribution name: "+n["distributionsName"]
             return "Distribution has date longer than emulation.Check distribution name: "+n["distributionsName"]
             sys.exit(0)
     
@@ -585,18 +538,8 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
     try:
         print daemon.hello()
     except  Pyro4.errors.CommunicationError, e:
-            print e
-            print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---\n"
             return "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---\n"
             sys.exit(0)
-            
-
-
-
-
-    
-    #TO-DO: we need to check here if there is another emulation scheduled for the same time and if the date is in the future
-    #dateCheck(startTime,stopTime)
 
     #connecting to the DB and storing parameters
     try:
@@ -616,36 +559,9 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
         # 2. We populate "emulationLifetime" table  
         c.execute('INSERT INTO emulationLifetime (startTime,stopTime,emulationID) VALUES (?,?,?)', [startTimeEmu,stopTimeEmu,emulationID])
         emulationLifetimeID = c.lastrowid
-        
-
-        
-        print "longest time: ",emulationLifetimeEndTime
-        
         c.execute('UPDATE emulationLifetime SET stopTime=? WHERE emulationLifetimeID =?',(emulationLifetimeEndTime,emulationLifetimeID))
         c.execute('UPDATE emulation SET emulationLifetimeID=? WHERE emulationID=?',(emulationLifetimeID,emulationID))    
         
-        # 4. Adding missing distribution ID
-        #c.execute('UPDATE DistributionParameters SET distributionID=? WHERE distributionParametersID =?',(distributionID,distributionParametersID))
-        
-        
-        
-        #6. Update emulation with LifetimeID
-        
-        #c.execute('UPDATE emulation SET emulationLifetimeID=? WHERE emulationID =?',(emulationLifetimeID,emulationID))
-        
-        
-                
-        
-        
-        #c.execute("SELECT * FROM emulation WHERE emulationID='"+str(emulationID)+"'")
-        print "Entry created with emulation ID", emulationID
-        
-       # emulationEntry= c.fetchall()
-       # for row in emulationEntry: 
-        #    print "emulationID:",row[0],"emulationName:", row[1],"emulationType:", row[2],"resourceType:", row[3],"emulator:",row[4], "distributionID:",row[5],"emulationLifetimeID:",row[6] ,"active:",row[7]
-        
-        #dataCheck(startTime,stopTime)
-        #distributionTypeCheck(distributionType)
         conn.commit()
         '''
         {'emulatorName': u'stressapptest', 'distrType': u'linear', 'distrinutionsName': u' myMixEmu-dis-1',
@@ -671,24 +587,25 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
             emulatorArg=n["emulatorArg"]
             
             #print "sending to DM these: ",emulationID,emulationLifetimeID,emulationName,distributionName,startTime,duration,emulator, distributionGranularity,distributionType,arg
-        
- 
-
-            
             DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg)
             
             
         #emulationID,emulationLifetimeID,emulationName,distributionName,startTime,stopTime,emulator, distributionGranularity,distributionType,arg
             c.close()
     except sqlite.Error, e:
-        print "SQL Error %s:" % e.args[0]
         print e
         return "SQL error:",e
         sys.exit(1)
-    
+        
+    #emulation log creator
+    global emuLoggerEM
+    if emuLoggerEM is None:
+        emuLoggerEM=loggerSet("Emulation Manager",str(emulationID)+"-"+str(emulationName)+".csv")     
+     
+    emuLoggerEM.info("##Emulation "+str(returnEmulationName))    
+    emuLoggerEM.debug("Emulation Parameters:"+str(emulationID)+"-"+str(emulationLifetimeID)+"-"+str(emulationName)+"-"+str(startTime)+"-"+str(emulator)+"-"+str(emulatorArg))
+    emuLoggerEM.debug("Distribution Parameters:"+str(distroList))
     return returnEmulationName
-
-    
 
 def distributionTypeCheck(distributionType):
     #check if distribution type available in the framework
@@ -697,30 +614,12 @@ def distributionTypeCheck(distributionType):
     for distName in distroList:
         if distributionType==distName:
             n=1
-            print "Match: ",distName
+            
     if n==0:
             print "Distribution ",distributionType," does not exist"
             sys.exit(0)
-    
-#def DistributionArgCheck(distributionType,arg):
-#    
-#    distrMod = DistributionManager.loadDistributionArgQty(distributionType)
-#    distrArgQty=distrMod()
-#    ncount=0
-#    for param in arg:
-#        if param != "NULL":
-#            ncount +=1
-#    if ncount < distrArgQty:
-#        print "Error: Arguments given: ",ncount,"\n",distributionType," distribution instnace require ",distrArgQty," arguments." 
-#        sys.exit(0)
-    
-    
-    
-
+      
 def dataCheck(startTime,stopTime):
-    print "Hello this is dataCheck"
-   
- 
     
     time_re = re.compile('\d{4}[-]\d{2}[-]\d{2}[T,t]\d{2}[:]\d{2}[:]\d{2}')
     
@@ -739,8 +638,7 @@ def dataCheck(startTime,stopTime):
     
 
    
-def dateOverlapCheck(startTime, stopTime):
-    print "Hello this is dateOverlapCheck" 
+def dateOverlapCheck(startTime, stopTime): 
     startTimeSec = DistributionManager.timestamp(DistributionManager.timeConv(startTime))
     stopTimeSec = startTimeSec+float(stopTime)
     #print startTimeSec
@@ -780,20 +678,20 @@ def dateOverlapCheck(startTime, stopTime):
                 stopTimeDBsec = startTimeDBsec+float(row[1])
                 
                 if startTimeSec >= startTimeDBsec and startTimeSec <= stopTimeDBsec:
-                    print "Emulation already exist for this date change the date(1)"
+                    #print "Emulation already exist for this date change the date(1)"
                     
                     n= "Emulation already exist for this date change the date(1)"
                 
                     
                     
                 if stopTimeSec >= startTimeDBsec and stopTimeSec <= stopTimeDBsec:
-                    print "Emulation already exist for this date change the date(2)"
+                    #print "Emulation already exist for this date change the date(2)"
                     n= "Emulation already exist for this date change the date(2)"
                     
                     
                 
                 if startTimeSec <= startTimeDBsec and stopTimeSec >= stopTimeDBsec:
-                    print "Emulation already exist for this date change the date(3)"
+                    #print "Emulation already exist for this date change the date(3)"
                     
                     n= "Emulation already exist for this date change the date(3)"
                     
@@ -1165,7 +1063,7 @@ def logToFile(elementName,level,filename=None):
     if filename == None:
         fileHandler= logging.FileHandler(HOMEPATH+"/logs/COCOMAlogfile.csv")
     else:
-        fileHandler= logging.FileHandler(filename)
+        fileHandler= logging.FileHandler(HOMEPATH+"/logs/"+str(filename))
     fileLoggerFormatter=logging.Formatter ('%(asctime)s;%(name)s;%(levelname)s;%(message)s',datefmt='%m/%d/%Y %H:%M:%S')
     fileHandler.setFormatter(fileLoggerFormatter)
     fileLogger.addHandler(fileHandler)
@@ -1176,6 +1074,23 @@ def logToFile(elementName,level,filename=None):
     cliHandler.setFormatter(cliLoggerFormatter)
     fileLogger.addHandler(cliHandler)
     return fileLogger 
+
+
+def loggerSet(loggerName,filename=None):
+    
+    LOG_LEVEL=logging.INFO
+    
+    LogLevel=readLogLevel("coreloglevel")
+    if LogLevel=="info":
+        LOG_LEVEL=logging.INFO
+    if LogLevel=="debug":
+        LOG_LEVEL=logging.DEBUG
+    else:
+        LOG_LEVEL=logging.INFO
+    
+    initLogger=logToFile(loggerName,LOG_LEVEL,filename)
+    return initLogger
+
 
 if __name__ == '__main__':
 

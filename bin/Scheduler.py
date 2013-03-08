@@ -18,7 +18,7 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-
+import __builtin__
 import sys, os, time,imp,re
 from signal import SIGTERM 
 import subprocess

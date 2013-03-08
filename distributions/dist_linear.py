@@ -173,7 +173,7 @@ def argNames(Rtype):
     if Rtype.lower() == "cpu":
         
         argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}}
-        print "Use Arg's: ",argNames," with cpu"
+        #print "Use Arg's: ",argNames," with cpu"
         return argNames
    
     #get free amount of memory and set it to upper bound
@@ -183,22 +183,22 @@ def argNames(Rtype):
         
         freeMem =memReading.free/1048576
         freeMemPercent=memReading.percent
-        print "free mem for border:",freeMem
-        print "free mem for border %:",freeMemPercent
+        #print "free mem for border:",freeMem
+        #print "free mem for border %:",freeMemPercent
         
 
         argNames={"startload":{"upperBound":freeMem,"lowerBound":50,},"stopload":{"upperBound":freeMem,"lowerBound":50}}
-        print "Use Arg's: ",argNames," with mem"
+        #print "Use Arg's: ",argNames," with mem"
         return argNames
         
     if Rtype.lower() == "io":
         argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}}
-        print "Use Arg's: ",argNames," with io"
+        #print "Use Arg's: ",argNames," with io"
         return argNames
     
     if Rtype.lower() == "net":
         argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}}
-        print "Use Arg's: ",argNames," with net"
+        #print "Use Arg's: ",argNames," with net"
         return argNames
     
 
