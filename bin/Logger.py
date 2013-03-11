@@ -19,12 +19,12 @@
 #
 
 import psutil,sys,os,time
-from datetime import datetime
+from datetime import datetime as dt
 
 
 
 
-def loadMon(duration,interval,emulationName):
+def loadMon(duration,interval,emulationID,emulationName,emuStartTime):
     try:
         HOMEPATH= os.environ['COCOMA']
     except:
@@ -39,7 +39,7 @@ def loadMon(duration,interval,emulationName):
     iterationsNo=int(duration)/int(interval)
    
     try:
-        f = open(HOMEPATH+'/logs/log_emuID'+str(emulationName)+"_"+str(datetime.now())+'.csv', 'a')    
+        f = open(HOMEPATH+"/logs/"+str(emulationID)+"-"+str(emulationName)+"-res"+"_"+str(emuStartTime)+".csv", 'a')    
         f.write(emulationName+";\nCountdown;Time;CPU(%);MEM(%);IOread(bytes);IOwrite(bytes);NET(bytes_sent)\n")
         #start time
         initTime=time.time()
@@ -53,8 +53,9 @@ def loadMon(duration,interval,emulationName):
 
             #print (emulationName+";\nTime;CPU(%);MEM(%);IOread(bytes);IOwrite(bytes);NET(bytes_sent)\n"+str(time.time())+";"+CPU+";"+MEM+";"+IOr+";"+IOw+";"+NET)
             probeTime=time.time()-initTime
+            timeStamp=dt.now()
             
-            f.write(str(int(probeTime))+";"+str(time.time())+";"+CPU+";"+MEM+";"+IOr+";"+IOw+";"+NET+"\n")
+            f.write(str(int(probeTime))+";"+str(timeStamp.strftime("%Y-%m-%d %H:%M:%S"))+";"+CPU+";"+MEM+";"+IOr+";"+IOw+";"+NET+"\n")
 
             iterationsNo=iterationsNo-1
     except Exception,e:

@@ -93,7 +93,7 @@ class schedulerDaemon(object):
                 else:
                     schedFileLogger.info( "These jobs remain: "+job.name)
     
-    def createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration):
+    def createJob(self,emulationID,emulationName,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration):
         
         
         schedFileLogger.debug("-> createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration)")
@@ -111,7 +111,7 @@ class schedulerDaemon(object):
             
             #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)  
             runEndTimeStr=str(time.strftime("%H:%M:%S", time.gmtime(runStartTime+duration)))
-            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. End Time: "+runEndTimeStr)
+            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+"-"+str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. End Time: "+runEndTimeStr)
             schedFileLogger.debug(str(sys.stdout))
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             schedFileLogger.debug("Return: "+str(valBack))
@@ -124,12 +124,12 @@ class schedulerDaemon(object):
             return "Scheduler createJob(): error creating Job check dates "
 
         
-    def createLoggerJob(self,singleRunStartTime,duration,interval,emulationID):
+    def createLoggerJob(self,singleRunStartTime,duration,interval,emulationID,emulationName,emuStartTime):
         schedFileLogger.debug("-> createLoggerJob(self,singleRunStartTime,duration,interval,emulationID)")
         interval=int(interval)
         
         
-        self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID], name=str(emulationID)+"-logger interval-"+str(interval)+"sec.")
+        self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID,emulationName,emuStartTime], name=str(emulationID)+"-"+str(emulationName)+"-logger interval-"+str(interval)+"sec.")
         schedFileLogger.debug("Logger has been scheduled")
         return "Started logger"
 

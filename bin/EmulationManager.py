@@ -26,6 +26,7 @@ import datetime,ccmshAPI
 from datetime import datetime as dt
 from subprocess import *
 import logging
+from logging import handlers
 
 emuLoggerEM = None
 #perhaps needs to be set somewhere else
@@ -501,7 +502,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
     
     
 
-def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList):
+def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData):
     #data checks
     print "startTimeEmu: ",startTimeEmu.lower()
     if startTimeEmu.lower() == "now":
@@ -551,7 +552,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
         c = conn.cursor()
                 
         # 1. Populate "emulation"
-        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active,logging,logFrequency) VALUES (?, ?, ?, ?, ?, ?)', [emulationName,emulationType,resourceTypeEmulation,1,emulationLog,emulationLogFrequency])
+        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active,logging,logFrequency,logLevel) VALUES (?, ?, ?, ?, ?, ?, ?)', [emulationName,emulationType,resourceTypeEmulation,1,emulationLog,emulationLogFrequency,emulationLogLevel])
         emulationID = c.lastrowid
         returnEmulationName=(str(emulationID)+"-"+emulationName)
         c.execute('UPDATE emulation SET emulationName=? WHERE emulationID =?',(str(emulationID)+"-"+emulationName,emulationID))
@@ -571,7 +572,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
             #creating run for logger with probe interval of 2 seconds
             interval=int(emulationLogFrequency)
             singleRunStartTime =DistributionManager.timestamp(DistributionManager.timeConv(startTimeEmu))
-            daemon.createLoggerJob(singleRunStartTime,emulationLifetimeEndTime,interval,emulationID)       
+            daemon.createLoggerJob(singleRunStartTime,emulationLifetimeEndTime,interval,emulationID,emulationName,startTimeEmu)       
         
         for n in distroList:
             emulator=n["emulatorName"]
@@ -600,11 +601,19 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
     #emulation log creator
     global emuLoggerEM
     if emuLoggerEM is None:
-        emuLoggerEM=loggerSet("Emulation Manager",str(emulationID)+"-"+str(emulationName)+".csv")     
+        emuLoggerEM=loggerSet("Emulation Manager",str(emulationID)+"-"+str(emulationName)+"-syslog"+"_"+str(startTimeEmu)+".csv")     
      
     emuLoggerEM.info("##Emulation "+str(returnEmulationName))    
     emuLoggerEM.debug("Emulation Parameters:"+str(emulationID)+"-"+str(emulationLifetimeID)+"-"+str(emulationName)+"-"+str(startTime)+"-"+str(emulator)+"-"+str(emulatorArg))
     emuLoggerEM.debug("Distribution Parameters:"+str(distroList))
+    #create log file with XML data
+    try:
+        f = open(HOMEPATH+"/logs/"+str(emulationID)+"-"+str(emulationName)+"-config"+"_"+str(startTime)+".xml", 'a')    
+        f.write(xmlData)
+        f.closed
+    except Exception,e:
+        emuLoggerEM.error("Unable to create config log file."+str(e))
+    
     return returnEmulationName
 
 def distributionTypeCheck(distributionType):
@@ -1035,14 +1044,10 @@ def readLogLevel(column):
             conn = sqlite.connect('./data/cocoma.sqlite')
         
         c = conn.cursor()
-        
         c.execute('SELECT '+str(column)+' FROM config')
-        
         logLevelList = c.fetchall()
-       
         c.close()
-        
-        
+                
     except sqlite.Error, e:
         print "Error getting \"config\" table data %s:" % e.args[0]
         print e
@@ -1061,7 +1066,9 @@ def logToFile(elementName,level,filename=None):
     fileLogger=logging.getLogger(elementName)
     fileLogger.setLevel(level)
     if filename == None:
-        fileHandler= logging.FileHandler(HOMEPATH+"/logs/COCOMAlogfile.csv")
+        #setting log rotation for 10 files each up to 10000000 bytes (10MB)
+        fileHandler = handlers.RotatingFileHandler(HOMEPATH+"/logs/COCOMAlogfile.csv",'a', 10000000, 10)
+        # deprecated#fileHandler= logging.FileHandler()
     else:
         fileHandler= logging.FileHandler(HOMEPATH+"/logs/"+str(filename))
     fileLoggerFormatter=logging.Formatter ('%(asctime)s;%(name)s;%(levelname)s;%(message)s',datefmt='%m/%d/%Y %H:%M:%S')
