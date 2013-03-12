@@ -879,37 +879,19 @@ def get_logs_list():
     """
     Show "emulation" and "system"
     """    
-    ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     response.set_header('Accept', '*/*')
-    response.set_header('Allow', 'GET, HEAD, POST')     
+    response.set_header('Allow', 'GET, HEAD') 
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
     
-    testsList=DistributionManager.listTests("all")
-    '''
-    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
-    '''
+    logs = ET.Element('logs', { 'href':'/logs'})
+    lk = ET.SubElement(logs, 'link', {'rel':'emulations', 'href':'/logs/emulations', 'type':'application/vnd.bonfire+xml'})
+    lk = ET.SubElement(logs, 'link', {'rel':'system', 'href':'/logs/system', 'type':'application/vnd.bonfire+xml'})
+    lk = ET.SubElement(logs, 'link', {'rel':'system', 'href':'/', 'type':'application/vnd.bonfire+xml'})
 
-    #building the XML we will return
-    tests = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/tests'})
-    #<items offset="0" total="2">
-    items =ET.SubElement(tests,'items', { 'offset':'0','total':str(len(testsList))})
-    
-    #<distribution href="/emulations/1" name="Emu1"/>
-    
-    for elem in testsList :
-        test = ET.SubElement(items,'test', { 'href':'/tests/'+str(elem),'name':str(elem)})
-        
-        
-    
-    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
-    lk = ET.SubElement(tests, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
-    
-    
     
 
-    return prettify(tests)
-
-
+    return prettify(logs)
 
 
 
@@ -922,7 +904,8 @@ def get_emu_logs_list():
     response.set_header('Accept', '*/*')
     response.set_header('Allow', 'GET, HEAD')     
     
-    fileLogList = glob.glob("*-res_*-*-*T*:*:*.csv")
+    os.chdir(HOMEPATH+"/logs/")
+    fileLogList = glob.glob("*-res_*-*-*:*:*.csv")
     '''
     XML namespaces are used for providing uniquely named elements and attributes in an XML document.
     '''
@@ -933,9 +916,9 @@ def get_emu_logs_list():
     items =ET.SubElement(emulationLog,'items', { 'offset':'0','total':str(len(fileLogList))})
     
     #<distribution href="/emulations/1" name="Emu1"/>
-    
+    print fileLogList
     for elem in fileLogList :
-        test = ET.SubElement(items,'emulationLog', { 'href':'/logs/emulations/'+str(elem),'name':str(elem)})
+        test = ET.SubElement(items,'emulationLog', { 'href':'/logs/emulations/'+str(elem)[:-28],'name':str(elem)[:-28]})
         
         
     
@@ -981,22 +964,17 @@ def zip_files(fileName_wo_zip):
     zipFilename="log-"+str(fileName_wo_zip)+".zip"
     dirPath=HOMEPATH+"/logs/"
     zfilename=dirPath+zipFilename    
-    try:
-        #if zip file already exists we just serve it, if not we generate new
-        with open(zfilename) as f: pass    
-    
-    except IOError:
-        os.chdir(dirPath)
-        fileZipList = glob.glob(str(fileName_wo_zip)+"*")
+    os.chdir(dirPath)
+    fileZipList = glob.glob(str(fileName_wo_zip)+"*")
 
-        if fileZipList:
-            zf = zipfile.ZipFile(zfilename, 'w')
-            for f in fileZipList:
-                zf.write(dirPath + f, f)
-            zf.close()
-        else:
-            response.status = 400
-            return "<error>Emulation Log: "+str(zipFilename)+" not found.</error>"
+    if fileZipList:
+        zf = zipfile.ZipFile(zfilename, 'w')
+        for f in fileZipList:
+            zf.write(dirPath + f, f)
+        zf.close()
+    else:
+        response.status = 400
+        return "<error>Emulation Log: "+str(zipFilename)+" not found.</error>"
 
     return static_file(zipFilename, root=dirPath, download=zipFilename)
 
@@ -1044,10 +1022,7 @@ if __name__ == '__main__':
             EmulationManager.writeInterfaceData(INTERFACE,"apiinterface")
             #starting API module
             startAPI(IP_ADDR,PORT_ADDR)
-
-        
-        
-        
+     
         else:    
             print "Use ccmshAPI -i <name of network interface> -p <port number>. Default network interface is eth0, port 5050."
     except Exception, e:
