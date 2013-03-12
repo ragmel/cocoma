@@ -498,9 +498,7 @@ def updateEmulation(emulationID,newEmulationName,newDistributionType,newResource
         
     c.close()
     
-
-    
-    
+  
 
 def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData):
     #data checks

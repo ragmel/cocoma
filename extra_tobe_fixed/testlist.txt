@@ -1,0 +1,89 @@
+Testing Checklist:
+
+CLI:
+Usage: ccmsh [options]
+
+Options:
+  -h, --help       show this help message and exit
+
+  List existing emulations:
+    -l, --list     [emulationName]  List of emulations by ID or all
+    -r, --results  [emulationName] [all]  List of emulation results
+    --list-jobs    [all] List of all active Jobs running on Scheduler daemon
+
+  List available distributions:
+    -i, --dist     [all] or [name] List of all available distributions
+
+  List available emulators:
+    -e, --emu      [all] or [name]  List of all available emulators
+
+  Create new emulations:
+    -x, --xml      [file.xml] enter name XML document
+    -n, --now      [-x filename] plus [-n] emulation starts immediately
+
+  Delete emulations:
+    -d, --delete   [emulationID] Deletes full emulation
+    --purge        [all] clears everything in DB. !!USE WITH CAUTION!!
+
+  Services Control:
+    --start        [scheduler][api] followed by interface and port to start
+                   services. Example: ccmsh --start api eth1 2020
+    --stop         [scheduler][api] stop services
+    --show         [scheduler][api] show services
+    -v, --version  Display version info
+=================================++++==============================================
+0. Check Help and Version info
+1. Start Scheduler:
+ a) Different interface (lo, bogus)
+ b) Switch log level to debug
+ c) Switch log level to debug + Different interface (lo, bogus)
+ d) Show/Shutdown
+
+2. Start API :
+ a) Different interface (lo, bogus)
+ b) Different interface (lo, bogus) + port
+ c) Show/Shutdown
+
+3. Create new emulations:
+ a) -x, --xml      [file.xml] enter name XML document
+ b) -n, --now      [-x filename] plus [-n] emulation starts immediately
+
+4. List existing emulations:
+ a) -l, --list     [emulationName]  List of emulations by ID or all
+ b) -r, --results  [emulationName] [all]  List of emulation results
+ c) --list-jobs    [all] List of all active Jobs running on Scheduler daemon
+
+5. List available distributions/emulators:
+ a) -i, --dist     [all] or [name] List of all available distributions
+ b) -e, --emu      [all] or [name]  List of all available emulators
+
+6. Delete emulations:
+ a) -d, --delete   [emulationID] Deletes full emulation
+ b) --purge        [all] clears everything in DB. !!USE WITH CAUTION!!
+
+API (preferably using ruby scripts for restfully):
+<?xml version="1.0" ?>
+<root href="/">
+  <version>0.1.1</version>
+  <timestamp>1363081682.59</timestamp>
+  <link href="/emulations" rel="emulations" type="application/vnd.bonfire+xml"/>
+  <link href="/emulators" rel="emulators" type="application/vnd.bonfire+xml"/>
+  <link href="/distributions" rel="distributions" type="application/vnd.bonfire+xml"/>
+  <link href="/tests" rel="tests" type="application/vnd.bonfire+xml"/>
+  <link href="/results" rel="results" type="application/vnd.bonfire+xml"/>
+</root>
+=================================++++==============================================
+
+1. Create Emulation:
+ a) Using xml post
+ b) Using test name
+ c) Send data with errors to check reply in error handling
+
+2.List Emulators/Distributions/Tests/Results
+  
+
+
+
+
+
+

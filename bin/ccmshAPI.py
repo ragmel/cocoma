@@ -21,12 +21,14 @@
 
 
 from bottle import route, run,response,request,re
-import sys,os, time, Pyro4
+from bottle import static_file
+import sys,os, time, Pyro4, glob
 from datetime import datetime as dt
 import EmulationManager,ccmsh,DistributionManager,XmlParser
 from json import dumps
 from xml.etree import ElementTree
 from xml.dom import minidom
+import zipfile
 import xml.etree.ElementTree as ET
 
 PORT_ADDR=0
@@ -424,9 +426,7 @@ def get_tests():
     '''
     XML namespaces are used for providing uniquely named elements and attributes in an XML document.
     '''
-    
-    
-    
+
     #building the XML we will return
     tests = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/tests'})
     #<items offset="0" total="2">
@@ -866,10 +866,139 @@ def emulationDelete(ID=""):
         #print e
         #return error
         return "Unable to delete emulation please check data\n"+str(e)
+
+
+'''
+#######
+Creating logging system
+#######
+'''
+@route('/logs/', method='GET')
+@route('/logs', method='GET')
+def get_logs_list():
+    """
+    Show "emulation" and "system"
+    """    
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD, POST')     
+    
+    testsList=DistributionManager.listTests("all")
+    '''
+    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
+    '''
+
+    #building the XML we will return
+    tests = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/tests'})
+    #<items offset="0" total="2">
+    items =ET.SubElement(tests,'items', { 'offset':'0','total':str(len(testsList))})
+    
+    #<distribution href="/emulations/1" name="Emu1"/>
+    
+    for elem in testsList :
+        test = ET.SubElement(items,'test', { 'href':'/tests/'+str(elem),'name':str(elem)})
+        
+        
+    
+    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk = ET.SubElement(tests, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
     
     
     
 
+    return prettify(tests)
+
+
+
+
+
+@route('/logs/emulations/', method='GET')
+@route('/logs/emulations', method='GET')
+def get_emu_logs_list():
+ 
+    ET.register_namespace("emulationLog", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD')     
+    
+    fileLogList = glob.glob("*-res_*-*-*T*:*:*.csv")
+    '''
+    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
+    '''
+
+    #building the XML we will return
+    emulationLog = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/logs/emulations'})
+    #<items offset="0" total="2">
+    items =ET.SubElement(emulationLog,'items', { 'offset':'0','total':str(len(fileLogList))})
+    
+    #<distribution href="/emulations/1" name="Emu1"/>
+    
+    for elem in fileLogList :
+        test = ET.SubElement(items,'emulationLog', { 'href':'/logs/emulations/'+str(elem),'name':str(elem)})
+        
+        
+    
+    #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
+    lk = ET.SubElement(emulationLog, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    lk = ET.SubElement(emulationLog, 'link', {'rel':'parent', 'href':'/logs', 'type':'application/vnd.bonfire+xml'})
+    
+    
+    
+
+    return prettify(emulationLog)
+
+
+
+@route('/logs/emulations/<logName>/', method='GET')
+@route('/logs/emulations/<logName>', method='GET')
+def get_emu_logs(logName=''):
+    """
+    Retrieve Zipped logs by emulation name
+    """
+    response.set_header('Allow', 'GET, HEAD')
+    response.set_header('Accept', '*/*')
+    response.set_header('Content-Type', 'application/zip')
+    response.set_header('Cache-Control', 'no-cache')
+    
+    return zip_files(logName)
+
+
+@route('/logs/system/', method='GET')
+@route('/logs/system', method='GET')
+def get_system_logs():
+    """
+    Retrieve Zipped system logs by emulation name
+    """
+    response.set_header('Allow', 'GET, HEAD')
+    response.set_header('Accept', '*/*')
+    response.set_header('Content-Type', 'application/zip')
+    response.set_header('Cache-Control', 'no-cache')
+    
+    return zip_files("COCOMAlogfile")
+
+def zip_files(fileName_wo_zip):
+    zipFilename="log-"+str(fileName_wo_zip)+".zip"
+    dirPath=HOMEPATH+"/logs/"
+    zfilename=dirPath+zipFilename    
+    try:
+        #if zip file already exists we just serve it, if not we generate new
+        with open(zfilename) as f: pass    
+    
+    except IOError:
+        os.chdir(dirPath)
+        fileZipList = glob.glob(str(fileName_wo_zip)+"*")
+
+        if fileZipList:
+            zf = zipfile.ZipFile(zfilename, 'w')
+            for f in fileZipList:
+                zf.write(dirPath + f, f)
+            zf.close()
+        else:
+            response.status = 400
+            return "<error>Emulation Log: "+str(zipFilename)+" not found.</error>"
+
+    return static_file(zipFilename, root=dirPath, download=zipFilename)
 
 def getifip(ifn):
     '''
