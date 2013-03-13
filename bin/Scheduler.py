@@ -431,6 +431,14 @@ if __name__=="__main__":
             LOG_LEVEL=logging.DEBUG
             
     except Exception, e:
+        print""
+    
+    try:
+        if sys.argv[3] == "debug":
+            
+            LOG_LEVEL=logging.DEBUG
+            
+    except Exception, e:
         print""    
     
     if LOG_LEVEL == 10:
@@ -449,21 +457,26 @@ if __name__=="__main__":
     
     
     schedFileLogger.debug("### Scheduler Start in DEBUG mode###")
-    PORT_ADDR=51889
+    
     try: 
         if sys.argv[1] == "-h":
-            print "Use Scheduler <name of network interface> . Default network interface is eth0."
+            print "[interface][port][loglevel] Use Scheduler <name of network interface> . Default network interface is eth0."
 
         else:
             schedFileLogger.info("Interface: "+str(sys.argv[1]))
             IP_ADDR=getifip(sys.argv[1])
             EmulationManager.writeInterfaceData(sys.argv[1],"schedinterface")
-            
+            try:
+                if sys.argv[2]:
+                    PORT_ADDR=int(sys.argv[2])
+            except:
+                PORT_ADDR=51889
     except Exception, e:
-
-        schedFileLogger.info("Interface: eth0")
+        
+        schedFileLogger.info("Interface: eth0, port:51889")
         EmulationManager.writeInterfaceData("eth0","schedinterface")
         IP_ADDR=getifip("eth0")
+        PORT_ADDR=51889
       
 
     
