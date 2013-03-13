@@ -404,7 +404,8 @@ def daemonCheck():
     '''
     Checking if Scheduler Daemon(bin/Scheduler.py is running. Returning "1" if true and "0" if not.
     '''
-    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":51889"
+    
+    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":"+str(EmulationManager.readLogLevel("schedport"))
     #perhaps needs to be setup somewhere else
     
     daemon=Pyro4.Proxy(uri)
@@ -418,18 +419,7 @@ def daemonCheck():
         
         print e
 
-        print "\n---Unable to find Scheduler on remote IP. Trying localhost---"
-        try:
-            daemon=Pyro4.Proxy(uri)
-            print daemon.hello()
-            return(1)
-        except  Pyro4.errors.CommunicationError, e:
-            print "\n---Unable to find Scheduler on localhost---"
-            return (0)
-        
-
-
-    
+        print "\n---Unable to find Scheduler on remote IP.---"
     
 
 if __name__ == '__main__':

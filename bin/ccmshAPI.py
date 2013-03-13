@@ -83,6 +83,7 @@ def get_root():
     lk = ET.SubElement(root, 'link', {'rel':'distributions', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'tests', 'href':'/tests', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'results', 'href':'/results', 'type':'application/vnd.bonfire+xml'})
+    lk = ET.SubElement(root, 'link', {'rel':'logs', 'href':'/logs', 'type':'application/vnd.bonfire+xml'})
     
 
     return prettify(root)

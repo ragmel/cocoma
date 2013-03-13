@@ -754,7 +754,7 @@ def services_control(service,action,args):
                 else:
                     try:
                         HOMEPATH= os.environ['COCOMA']
-                        sout=open(HOMEPATH+"/logs/cocoma_scheduler.out","wb")
+                        sout=open(HOMEPATH+"/logs/COCOMAlogfile_Scheduler_sout.txt","wb")
                         
                         procSched = subprocess.Popen(HOMEPATH+"/bin/Scheduler.py "+args,shell=True,stdout=sout,stderr=sout)
                         procSched.stdout
@@ -784,7 +784,7 @@ def services_control(service,action,args):
                 else:
                     try:
                         HOMEPATH= os.environ['COCOMA']
-                        aout=open(HOMEPATH+"/logs/cocoma_api.out","wb")
+                        aout=open(HOMEPATH+"/logs/COCOMAlogfile_API_sout.txt","wb")
                         print "args",args
                         ccmshAPI = subprocess.Popen(HOMEPATH+"/bin/ccmshAPI.py "+args,shell=True,stdout=aout,stderr=aout)
                         apiPidNo =ccmshAPI.pid
@@ -798,18 +798,22 @@ def services_control(service,action,args):
         
         if service == "scheduler":
                 service ="Scheduler.py"
-                runner = checkPid(service)
+                if checkPid(service) ==False: 
+                    print "Scheduler is not running"
+                    sys.exit(1)
+                while checkPid(service) !=False:
+                    runner= checkPid(service)
  
                 
-                if runner!=False:
-                    print "Killing Scheduler on PID: ", runner
+                    if runner!=False:
+                        print "Killing Scheduler on PID: ", runner
                     
-                    os.kill(int(runner), 9)
+                        os.kill(int(runner), 9)
  
-                    sys.exit(1)
-                else:
-                    print "ERROR: Scheduler is not running start it first"
-                    sys.exit(1)                
+                        
+                    else:
+                        print "Scheduler is not running"
+                        sys.exit(1)                
                 
                 
             

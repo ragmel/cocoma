@@ -466,15 +466,19 @@ if __name__=="__main__":
             schedFileLogger.info("Interface: "+str(sys.argv[1]))
             IP_ADDR=getifip(sys.argv[1])
             EmulationManager.writeInterfaceData(sys.argv[1],"schedinterface")
+            
             try:
                 if sys.argv[2]:
                     PORT_ADDR=int(sys.argv[2])
+                    EmulationManager.writeInterfaceData(sys.argv[2],"schedport")
             except:
                 PORT_ADDR=51889
+                EmulationManager.writeInterfaceData("51889","schedport")
     except Exception, e:
         
         schedFileLogger.info("Interface: eth0, port:51889")
         EmulationManager.writeInterfaceData("eth0","schedinterface")
+        EmulationManager.writeInterfaceData("51889","schedport")
         IP_ADDR=getifip("eth0")
         PORT_ADDR=51889
       
