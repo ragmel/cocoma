@@ -888,7 +888,7 @@ def get_logs_list():
     logs = ET.Element('logs', { 'href':'/logs'})
     lk = ET.SubElement(logs, 'link', {'rel':'emulations', 'href':'/logs/emulations', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(logs, 'link', {'rel':'system', 'href':'/logs/system', 'type':'application/vnd.bonfire+xml'})
-    lk = ET.SubElement(logs, 'link', {'rel':'system', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+    #lk = ET.SubElement(logs, 'link', {'rel':'system', 'href':'/', 'type':'application/vnd.bonfire+xml'})
 
     
 

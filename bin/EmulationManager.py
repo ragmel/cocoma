@@ -601,7 +601,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
     if emuLoggerEM is None:
         emuLoggerEM=loggerSet("Emulation Manager",str(emulationID)+"-"+str(emulationName)+"-syslog"+"_"+str(startTimeEmu)+".csv")     
      
-    emuLoggerEM.info("##Emulation "+str(returnEmulationName))    
+    emuLoggerEM.info("##Emulation "+str(returnEmulationName)+" created")    
     emuLoggerEM.debug("Emulation Parameters:"+str(emulationID)+"-"+str(emulationLifetimeID)+"-"+str(emulationName)+"-"+str(startTime)+"-"+str(emulator)+"-"+str(emulatorArg))
     emuLoggerEM.debug("Distribution Parameters:"+str(distroList))
     #create log file with XML data

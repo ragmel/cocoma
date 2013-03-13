@@ -24,8 +24,6 @@ import logging
 
 #declare global variable for reference 
 xmlLogger = None
-emuLoggerXML =None
-
 
 def xmlReader(filename):
     
@@ -79,7 +77,8 @@ def xmlParser(xmlData):
             emulationLogLevel = "info"
 
     except Exception, e:
-        xmlLogger.debug("XML Logging is Off")
+        emulationLogLevel = "info"
+        xmlLogger.debug("Setting ligging to INFO")
     
     emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emutype')[0].firstChild.data
     startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustarttime')[0].firstChild.data

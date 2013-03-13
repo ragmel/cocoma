@@ -120,14 +120,14 @@ class emulatorMod(object):
         
         if resourceTypeDist.lower() == "mem":
             print "MEM load selected"
-            memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memThreads"],duration))
+            memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memthreads"],duration))
             memMulti.start()
             print(memMulti.is_alive())
             memMulti.join()
 
         if resourceTypeDist.lower() == "io":
             print "IO load selected"
-            ioMulti = multiprocessing.Process(target = ioLoad, args=(distributionID,runNo,stressValues,emulatorArg["fileQty"],emulatorArg["memThreads"],duration))
+            ioMulti = multiprocessing.Process(target = ioLoad, args=(distributionID,runNo,stressValues,emulatorArg["fileqty"],emulatorArg["memthreads"],duration))
             ioMulti.start()
             print(ioMulti.is_alive())
             ioMulti.join()

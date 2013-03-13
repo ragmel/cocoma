@@ -378,13 +378,14 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
         '''
           
         if options.xml and not options.emuNow:  
-                
-                (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(arguments[0])
-                if startTimeEmu.lower() =="now":
-                    startTimeEmu1 = EmulationManager.emulationNow(2)
-                    EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
-                else:
-                    EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                if daemonCheck()!=False:
+                    
+                    (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(arguments[0])
+                    if startTimeEmu.lower() =="now":
+                        startTimeEmu1 = EmulationManager.emulationNow(2)
+                        EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                    else:
+                        EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
                 
     
         
@@ -420,6 +421,7 @@ def daemonCheck():
         print e
 
         print "\n---Unable to find Scheduler on remote IP.---"
+        return False
     
 
 if __name__ == '__main__':
