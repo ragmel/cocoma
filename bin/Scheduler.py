@@ -478,7 +478,7 @@ if __name__=="__main__":
         
         schedFileLogger.info("Interface: eth0, port:51889")
         EmulationManager.writeInterfaceData("eth0","schedinterface")
-        EmulationManager.writeInterfaceData("51889","schedport")
+        EmulationManager.writeInterfaceData("51889","schedport" )
         IP_ADDR=getifip("eth0")
         PORT_ADDR=51889
       
