@@ -388,7 +388,7 @@ def job_listener(event):
             paramsArray=re.split(r"-",str(event.job.name))
             distributionID=paramsArray[1]
             runNo=paramsArray[2]
-            schedFileLogger.info("Job: "+str(event.job.name)+" -executed successfully by scheduler")
+            schedFileLogger.info("Job: "+str(event.job.name)+" -executed successfully by scheduler ")
             dbWriter(distributionID,runNo,message,executed)   
     
 def getifip(ifn):

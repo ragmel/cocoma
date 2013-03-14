@@ -908,7 +908,7 @@ def get_emu_logs_list():
     os.chdir(HOMEPATH+"/logs/")
     fileLogList = glob.glob("*-res_*-*-*:*:*.csv")
     '''
-    XML namespaces are used for providing uniquely named elements and attributes in an XML document.
+    XML namespaces are used for providing uniquely named elements and attributes in an XML document. 
     '''
 
     #building the XML we will return
