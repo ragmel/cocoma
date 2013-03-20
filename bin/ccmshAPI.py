@@ -178,11 +178,11 @@ def get_emulation_details(name=""):
     resourceTypeXml.text = str(resourceTypeEmulation)
         
     #<startTime>now</startTime>
-    startTimeEmuXml =ET.SubElement(emulation,'startTime')
+    startTimeEmuXml =ET.SubElement(emulation,'emuStartTime')
     startTimeEmuXml.text = str(startTimeEmu)    
     
     #<stopTime>now+180</stopTime>
-    stopTimeEmuXml =ET.SubElement(emulation,'stopTime')
+    stopTimeEmuXml =ET.SubElement(emulation,'emuStopTime')
     stopTimeEmuXml.text = str(stopTimeEmu)
     
     
@@ -218,6 +218,9 @@ def get_emulation_details(name=""):
             
             startTimeDistroXml=ET.SubElement(distributionsXml,'startTime')
             startTimeDistroXml.text = str(distro['startTimeDistro'])
+            
+            startTimeDistroXml=ET.SubElement(distributionsXml,'granularity')
+            startTimeDistroXml.text = str(distro['granularity'])
             
             durationDistroXml=ET.SubElement(distributionsXml,'duration')
             durationDistroXml.text = str(distro['durationDistro'])

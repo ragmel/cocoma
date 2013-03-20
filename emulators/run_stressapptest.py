@@ -193,8 +193,8 @@ def memLoad(distributionID,runNo,memSize,memThreads,duration):
         
     dbWriter(distributionID,runNo,message,executed)
     time.sleep(duration)            
-
-def ioLoad(distributionID,runNo,memSize,fileQty,memThreads,duration):
+           
+def ioLoad(distributionID,runNo,fileQty,memSize,memThreads,duration):
     runStressapptestPidNo=0
             
     try:
@@ -304,7 +304,7 @@ def emulatorHelp():
     XML Block Example: 
     <emulator-params>
         <resourceType>IO</resourceType>
-        <fileQty>3</fileQty>
+        <memSize>100</memSize>
         <memThreads>0</memThreads>
     </emulator-params>
     
@@ -327,7 +327,7 @@ def emulatorArgNames(Rtype):
         return argNames
     
     if Rtype.lower() == "io":
-        argNames={"fileqty":{"upperBound":10,"lowerBound":0},"memthreads":{"upperBound":10,"lowerBound":0}}
+        argNames={"memsize":{"upperBound":99999,"lowerBound":50},"memthreads":{"upperBound":10,"lowerBound":0}}
         print "Use Arg's: ",argNames
         return argNames
 

@@ -49,7 +49,7 @@ def main():
     
     #listEmu.add_option('--list-active', action='store_true', default=False,dest='listActive', help='List of active emulations')
     #listEmu.add_option('--list-inactive', action='store_true', default=False,dest='listInactive', help='List of inactive emulations')
-    listEmu.add_option('--list-jobs', action='store_true', default=False,dest='listJobs', help='[all] List of all active Jobs running on Scheduler daemon')
+    listEmu.add_option('-j', '--list-jobs', action='store_true', default=False,dest='listJobs', help='[all] List of all active Jobs running on Scheduler daemon')
         
     
     createEmu = optparse.OptionGroup(parser, 'Create new emulations')

@@ -273,10 +273,7 @@ def deleteEmulation(emulationID):
     distributionName=[]
     
     try:
-        if HOMEPATH:
-            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-        else:
-            conn = sqlite.connect('./data/cocoma.sqlite')
+        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
         c = conn.cursor()
         c.execute('SELECT distributionID,distributionName FROM distribution WHERE emulationID=?',[str(emulationID)])
                 
@@ -293,28 +290,60 @@ def deleteEmulation(emulationID):
                 c.execute('DELETE FROM DistributionParameters WHERE distributionID=?',[str(distributionID)])
                 c.execute('DELETE FROM EmulatorParameters WHERE distributionID=?',[str(distributionID)])
                 c.execute('DELETE FROM runLog WHERE distributionID=?',[str(distributionID)])
+            
+            c.execute('DELETE FROM distribution WHERE emulationID=?',[str(emulationID)])
+            c.execute('DELETE FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
+            c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
+            
+            conn.commit()
+            c.close()
+            print "Emulation ID: ", emulationID," was deleted from DB"
                 
         else:
-            print "Emulation ID: "+str(emulationID)+" does not exists" 
-            return "Emulation ID: "+str(emulationID)+" does not exists"
-            sys.exit(1)
- 
-        c.execute('DELETE FROM distribution WHERE emulationID=?',[str(emulationID)])
-        c.execute('DELETE FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
-        c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
-        #c.execute('DELETE FROM runLog WHERE distributionID=?',[str(distributionID)])
+            print "Emulation ID: "+str(emulationID)+" does not exists looking for name" 
+            c.execute('SELECT emulationID FROM emulation WHERE emulationName=?',[str(emulationID)])
+            emulationIDfetch = c.fetchall()
+            print emulationIDfetch
+            for row in emulationIDfetch:
+                emulationID = row[0]
+            c.execute('SELECT distributionID,distributionName FROM distribution WHERE emulationID=?',[str(emulationID)])
+                    
+            distributionIDfetch = c.fetchall()
+            
+            #getting list of distributions for emulation
+            if distributionIDfetch:
+                for row in distributionIDfetch:
+                    distributionID= row[0]
+                    distributionName.append(row[1])
+                    
+                    #deleting distribution related data
+                    c.execute('DELETE FROM DistributionParameters WHERE distributionID=?',[str(distributionID)])
+                    c.execute('DELETE FROM EmulatorParameters WHERE distributionID=?',[str(distributionID)])
+                    c.execute('DELETE FROM runLog WHERE distributionID=?',[str(distributionID)])
+                
+                c.execute('DELETE FROM distribution WHERE emulationID=?',[str(emulationID)])
+                c.execute('DELETE FROM emulationLifetime WHERE emulationID=?',[str(emulationID)])
+                c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
+                    
+            else:
+                print "Emulation Name: "+str(emulationID)+" does not exists too" 
+                return "Emulation Name: "+str(emulationID)+" does not exists"
+                sys.exit(1)
+            
+            conn.commit()
+            c.close()
+            print "Emulation Name: ", emulationID," was deleted from DB"
         
-        
-        conn.commit()
+
     except sqlite.Error, e:
-        print "Could not delete emulationID: ",emulationID
+        print "Could not delete emulation: ",emulationID
         print "Error %s:" % e.args[0]
         print e
         return "Database error: "+str(e)
         sys.exit(1)
         
-    c.close()
-    print "Emulation ID: ", emulationID," was deleted from DB"
+    
+    
     
     #Now here we need to remove the emulation from the scheduler if exist
     uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":51889"
