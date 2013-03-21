@@ -214,8 +214,12 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                 
                 for elem in emuList :
                     failedRunsInfo=elem["failedRunsInfo"]
-                    
-                    print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
+                    totalFailedRuns = int(elem["runsTotal"])-int(elem["runsExecuted"])
+                    #check if the emulation was completed already
+                    if str(elem["State"]) == "inactive":
+                        print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(totalFailedRuns)
+                    else:
+                        print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo)) 
                     
                     if failedRunsInfo:
                         print "###Failed Runs Info###"
@@ -226,15 +230,20 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                             
                             print "Stress Value: ", Runs["stressValue"]
                             print "Error Message: ", Runs["message"]
+                            
 
             else:
                 try:
                     emuList=EmulationManager.getActiveEmulationList(arguments[0])
                     for elem in emuList :
                         failedRunsInfo=elem["failedRunsInfo"]
-                    
-                    print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
-                    
+                        totalFailedRuns = int(elem["runsTotal"])-int(elem["runsExecuted"])
+                        #check if the emulation was completed already
+                        if str(elem["State"]) == "inactive":
+                            print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(totalFailedRuns)
+                        else:
+                            print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo)) 
+                        
                     if failedRunsInfo:
                         print "###Failed Runs Info###"
                         for Runs in failedRunsInfo:
@@ -260,8 +269,12 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                 
                 for elem in emuList :
                     failedRunsInfo=elem["failedRunsInfo"]
-                    
-                    print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
+                    totalFailedRuns = int(elem["runsTotal"])-int(elem["runsExecuted"])
+                    #check if the emulation was completed already
+                    if str(elem["State"]) == "inactive":
+                        print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(totalFailedRuns)
+                    else:
+                        print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo)) 
                     
                     if failedRunsInfo:
                         print "###Failed Runs Info###"

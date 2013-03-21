@@ -110,8 +110,8 @@ class schedulerDaemon(object):
             schedFileLogger.debug("runNo "+str(runNo))
             
             #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)  
-            runEndTimeStr=str(time.strftime("%H:%M:%S", time.gmtime(runStartTime+duration)))
-            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+"-"+str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. End Time: "+runEndTimeStr)
+            runEndTimeStr=str(time.strftime("%H:%M:%S", time.gmtime(runStartTime+float(duration))))
+            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. End Time: "+runEndTimeStr)
             schedFileLogger.debug(str(sys.stdout))
             valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
             schedFileLogger.debug("Return: "+str(valBack))
@@ -236,8 +236,11 @@ class schedulerDaemon(object):
                     #print row
                     startTime= row[0]
                     emulationID = row[1]
+                    c.execute('SELECT emulationName FROM emulation WHERE emulationID=?',[str(emulationID)])
+                    emulationNameArray = c.fetchall()
+                    emulationName = emulationNameArray[0][0]
+                    emuDuration = int(row[3])     
                     emulationLifetimeID = row[2]
-                    duration= int(row[3])
                     #Compare starting times and re-launch 
                     #TO-DO: We can recover some individual runs if the emulation lifetime end date is still in future
                     if self.timestamp(self.timeConv(startTime))>self.timestamp(dt.datetime.now()):
@@ -250,8 +253,8 @@ class schedulerDaemon(object):
                         for row in emulationLogging:
                             
                             if str(row[0]) =="1":
-                                interval=int(row[1])
-                                self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(self.timeConv(startTime)))), args=[duration,interval,emulationID], name=str(emulationID)+"-logger interval-"+str(interval)+"sec.")
+                                interval=int(row[1])                                                                                                                                                                              
+                                self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(self.timeConv(startTime)))), args=[emuDuration,interval,emulationID], name=str(emulationID)+"-"+str(emulationName)+"-logger interval-"+str(interval)+"sec.")
                         
                         #If active emulation is found. Getting info from active emulation to restore runs 
                         ca.execute('SELECT distributionID,distributionName,duration,emulator FROM distribution WHERE emulationID=?',[str(emulationID)])
@@ -259,7 +262,6 @@ class schedulerDaemon(object):
                         for items in distroParamsFetch:
                             distributionID =items[0]
                             distributionName=items[1]
-                            duration=items[2]
                             emulator=items[3]
     
                             emulatorArg={}
@@ -273,7 +275,7 @@ class schedulerDaemon(object):
                                 resourceTypeDist=resourceType#not100%
                                 emulatorArg.update({paramName:value})
 
-                            ca.execute('SELECT stressValue,runStartTime,runNo FROM runLog WHERE distributionID =?',[str(distributionID)])
+                            ca.execute('SELECT stressValue,runStartTime,runNo,runDuration FROM runLog WHERE distributionID =?',[str(distributionID)])
                             runLogFetch = ca.fetchall()
                             #print runLogFetch
             
@@ -283,17 +285,11 @@ class schedulerDaemon(object):
                                     stressValue = row[0]
                                     runStartTime = float(row[1])
                                     runNo = row[2]
+                                    duration=row[3]
 
-                                    #print "Job added with: StartTime:",time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
-                
-                                    #print "emulationID ",emulationID
-                                    #print "emulationLifetimeID",emulationLifetimeID
-                                    #print "stressValue",stressValue
-                                    #print "duration",duration
-                                    #print "runNo",runNo
-                                    #
                                     #                       8           MEM-dis-1              8             10     lookbusy {'memSleep': u'100'}      MEM              64         1359680491.0   3
-                                    self.createJob(emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo)
+                                    #createJob(self,emulationID,emulationName,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration                       
+                                    self.createJob(emulationID,emulationName,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration)
                                     
 
                                 

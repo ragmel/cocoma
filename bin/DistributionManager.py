@@ -110,7 +110,9 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             try:
                 print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
                 print daemon.hello()
-                print daemon.createJob(emulationID,emulationName,distributionID,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),runDurations[n])
+                #Sending emulation name already including ID stamp
+                emulationNameID =str(emulationID)+"-"+str(emulationName)
+                print daemon.createJob(emulationID,emulationNameID,distributionID,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),runDurations[n])
                 
                 #adding values to the table for recovery
                 try:
@@ -123,7 +125,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
                     c = conn.cursor()
                         
                     # 1. We populate "distribution" table :stressValue,runStartTime,runNo     
-                    c.execute('INSERT INTO runLog (stressValue, runStartTime,runNo,distributionID) VALUES (?, ?, ?, ?)', [vals, runStartTime[n],str(n),distributionID])
+                    c.execute('INSERT INTO runLog (stressValue, runStartTime,runNo,distributionID, runDuration) VALUES (?, ?, ?, ?,?)', [vals, runStartTime[n],str(n),distributionID,runDurations[n]])
                 
                                     
                     conn.commit()

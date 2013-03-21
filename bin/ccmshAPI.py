@@ -387,18 +387,14 @@ def get_distribution(name=""):
     
     try:
         helpMod=DistributionManager.loadDistributionHelp(name)
-        argMod=DistributionManager.loadDistributionArgNames(name)
+        
     
         distributionXml = ET.Element('distribution', { 'xmlns':'http://127.0.0.1/cocoma','href':'/distributions/'+str(name)})
     
         distroHelpXml=ET.SubElement(distributionXml,'info')
-        distroHelpXml.text = str(helpMod())    
-    
-        distroArgXml=ET.SubElement(distributionXml,'arguments')
-        distroArgXml.text = str(argMod())    
+        distroHelpXml.text = str(helpMod())        
     
         lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
-        #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
         lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
     
     
@@ -656,8 +652,6 @@ def show_results(name=""):
         for elem in emuList :
             failedRunsInfo=elem["failedRunsInfo"]
             
-            print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
-            
             resultsEmulation = ET.Element('results', { 'xmlns':'http://127.0.0.1/cocoma','href':'/results/'+str(elem["Name"])})
             
             emuName= ET.SubElement(resultsEmulation,'emulationName')
@@ -670,7 +664,14 @@ def show_results(name=""):
             executedRuns.text=str(elem["runsExecuted"])
             
             failedRuns=ET.SubElement(resultsEmulation,'failedRuns')
-            failedRuns.text=str(len(failedRunsInfo))
+            
+            #checking if emulation was already executed
+            if str(elem["State"]) == "inactive":
+                totalFailedRuns = int(elem["runsTotal"])-int(elem["runsExecuted"])
+                failedRuns.text=str(totalFailedRuns)
+            else:
+                failedRuns.text=str(len(failedRunsInfo))
+            
             
             
             emuState= ET.SubElement(resultsEmulation,'emuState')

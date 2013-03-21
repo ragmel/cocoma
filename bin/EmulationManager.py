@@ -61,10 +61,6 @@ def getActiveEmulationList(name):
     
     activeEmu=[]
     dtNowSec = DistributionManager.timestamp(dt.now())
-    print "dt.now():",dt.now()
-    print "dtNow:",dtNowSec
-    
-    
     
     try:
         if HOMEPATH:
@@ -92,8 +88,6 @@ def getActiveEmulationList(name):
         emulationLifetimeFetch = c.fetchall()
         
         if emulationLifetimeFetch:
-
-            print "emulation Found"
             for row in emulationLifetimeFetch:
                 runsTotal=0
                 runsExecuted=0
@@ -121,31 +115,25 @@ def getActiveEmulationList(name):
                             
                             
                 if stopTimeDBsec > dtNowSec:
-                    print "Emulation ID: "+str(row[2])+" is active"
                     for items in emunameFetch:
-                        
                         activeEmu.append({"ID":items[0],"Name":items[1],"State":"active","runsTotal":runsTotal,"runsExecuted":runsExecuted,"failedRunsInfo":failedRunsInfo})
                 else:
-                    print "Emulation ID: "+str(row[2])+" is inactive"
                     for items in emunameFetch:
                         
                         activeEmu.append({"ID":items[0],"Name":items[1],"State":"inactive","runsTotal":runsTotal,"runsExecuted":runsExecuted,"failedRunsInfo":failedRunsInfo})                    
  
-        else:
-            print "no emulations exists" 
-            
+        
+        c.close()
         #[{'State': 'active', 'ID': 11, 'Name': u'myMixEmu'}, {'State': 'active', 'ID': 12, 'Name': u'myMixEmu'}]
         return activeEmu
-        
-        
-        
+   
     except sqlite.Error, e:
         print "dateOverlapCheck() SQL Error %s:" % e.args[0]
         print e
         return "<error>str(e)</error>"
         sys.exit(1)
     
-    c.close()
+    
     
 
 def getEmulation(emulationName):

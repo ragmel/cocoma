@@ -10,8 +10,8 @@
    <name>CPU_distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>10</duration>
-     <granularity>1</granularity>
+     <duration>15</duration>
+     <granularity>3</granularity>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
 	<!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
