@@ -28,8 +28,8 @@ import EmulationManager,ccmsh,DistributionManager,XmlParser
 from json import dumps
 from xml.etree import ElementTree
 from xml.dom import minidom
-import zipfile
 import xml.etree.ElementTree as ET
+import zipfile
 
 PORT_ADDR=0
 IP_ADDR=0
@@ -315,6 +315,7 @@ def get_emulator(name=""):
     
         emulatorHelpXml=ET.SubElement(emulatorXml,'info')
         emulatorHelpXml.text = str(helpMod())    
+
     
         #distroArgXml=ET.SubElement(distributionXml,'arguments')
         #distroArgXml.text = str(argMod())    

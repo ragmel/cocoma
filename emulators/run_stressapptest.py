@@ -91,6 +91,7 @@ import datetime as dt
 import subprocess
 from signal import *
 from subprocess import *
+import random
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
@@ -115,19 +116,19 @@ class emulatorMod(object):
         
         
         
-        print "Hello this is run_stressapptest: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo: ",emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo
+        #print "Hello this is run_stressapptest: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo: ",emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo
 
         
         if resourceTypeDist.lower() == "mem":
-            print "MEM load selected"
+            #print "MEM load selected"
             memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memthreads"],duration))
             memMulti.start()
             print(memMulti.is_alive())
             memMulti.join()
 
         if resourceTypeDist.lower() == "io":
-            print "IO load selected"
-            ioMulti = multiprocessing.Process(target = ioLoad, args=(distributionID,runNo,stressValues,emulatorArg["fileqty"],emulatorArg["memthreads"],duration))
+            #print "IO load selected"
+            ioMulti = multiprocessing.Process(target = ioLoad, args=(distributionID,runNo,stressValues,emulatorArg["memsize"],emulatorArg["memthreads"],duration))
             ioMulti.start()
             print(ioMulti.is_alive())
             ioMulti.join()
@@ -145,11 +146,11 @@ def memLoad(distributionID,runNo,memSize,memThreads,duration):
     runStressapptestPidNo=0
             
     try:
-        print "\n\nthis is mem load:memSize,memThreads,duration",memSize,memThreads,duration,"\n\n"
+        #print "\n\nthis is mem load:memSize,memThreads,duration",memSize,memThreads,duration,"\n\n"
         
         if int(memThreads) ==0 :
             cmd="stressapptest "+" -M "+str(memSize)+" -s "+str(duration)+"&"
-            print cmd
+            #print cmd
             #runStressapptest = subprocess.Popen(["stressapptest", "-M",memSize,"-s",duration])
             
             runStressapptest=os.system(cmd)
@@ -161,7 +162,7 @@ def memLoad(distributionID,runNo,memSize,memThreads,duration):
         else:
             cmd="stressapptest "+" -M "+str(memSize)+" -i "+str(memThreads)+" -s "+str(duration)+"&"
             
-            print cmd
+            #print cmd
             
             #runStressapptest = subprocess.Popen(["stressapptest","-M",memSize,"-i",memThreads,"-s",duration])
             
@@ -170,24 +171,24 @@ def memLoad(distributionID,runNo,memSize,memThreads,duration):
             #runStressapptestPidNo =runStressapptest.pid
             runStressapptestPidNo =pidFinder("stressapptest")
             
-            print "Started Stressapptest on PID No: ",runStressapptestPidNo
+            #print "Started Stressapptest on PID No: ",runStressapptestPidNo
     
             
     except Exception, e:
-        "run_Stressapptest job memLoad exception: ", e
+        return "run_Stressapptest job memLoad exception: ", e
         
    
         
     #catching failed runs
     
     if zombieBuster(runStressapptestPidNo):
-        print "Job failed, sending wait()."
+        #print "Job failed, sending wait()."
         runStressapptest.wait()
-        print "writing fail into DB..."
+        #print "writing fail into DB..."
         message="Fail"
         executed="False"
     else:
-        print "writing success into DB..."
+        #print "writing success into DB..."
         message="Success"
         executed="True"
         
@@ -198,16 +199,16 @@ def ioLoad(distributionID,runNo,fileQty,memSize,memThreads,duration):
     runStressapptestPidNo=0
             
     try:
-        print "\n\nthis is ioLoad load:memSize,fileQty,duration,memThreads",memSize,fileQty,duration,memThreads,"\n\n"
+        #print "\n\nthis is ioLoad load:memSize,fileQty,duration,memThreads",memSize,fileQty,duration,memThreads,"\n\n"
             
         if int(fileQty) ==0 and int(memThreads) != 0 :
             #print "\n\n\n\n!!!!zer_o!!!!!\n\n\n\n"
             
-            cmd="stressapptest "+" -M "+str(memSize)+" -i "+str(memThreads)+" -f /tmp/stressapptestFile1"+" -s "+str(duration)+"&"
-            print cmd
+            cmd="stressapptest "+" -M "+str(memSize)+" -i "+str(memThreads)+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))+" -s "+str(duration)+"&"
+            #print cmd
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
-            print "Started Stressapptest on PID No: ",runStressapptestPidNo
+            #print "Started Stressapptest on PID No: ",runStressapptestPidNo
         
         elif int(fileQty) !=0 and int(memThreads) == 0 :
             #print "\n\n\n\n!!!!one!!!!!\n\n\n\n"
@@ -217,15 +218,15 @@ def ioLoad(distributionID,runNo,fileQty,memSize,memThreads,duration):
             fileQty=int(fileQty)
     
             while fileQty !=0:
-                fileStr=fileStr+" -f /tmp/stressapptestFile"+str(fileQty)
+                fileStr=fileStr+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))
                 fileQty =fileQty-1            
-            print "fileStr: ",fileStr
+            #print "fileStr: ",fileStr
             
             cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -s "+str(duration)+" --stop_on_errors&"
-            print cmd
+            #print cmd
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
-            print "Started Stressapptest on PID No: ",runStressapptestPidNo
+            #print "Started Stressapptest on PID No: ",runStressapptestPidNo
     
     
     
@@ -233,14 +234,14 @@ def ioLoad(distributionID,runNo,fileQty,memSize,memThreads,duration):
         elif int(fileQty) == 0 and int(memThreads) == 0 :
             #print "\n\n\n\n!!!!two!!!!!\n\n\n\n"
     
-            cmd="stressapptest "+" -M "+str(memSize)+" -f /tmp/stressapptestFile1"+" -s "+str(duration)+" --stop_on_errors&"
-            print cmd
+            cmd="stressapptest "+" -M "+str(memSize)+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))+" -s "+str(duration)+" --stop_on_errors&"
+            #print cmd
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
-            print "Started Stressapptest on PID No: ",runStressapptestPidNo
+            #print "Started Stressapptest on PID No: ",runStressapptestPidNo
             
         elif int(memThreads) !=0 and int(fileQty) !=0 :
-            #print "\n\n\n\n!!!!else!!!!!\n\n\n\n"
+            print "\n\n\n\n!!!!else!!!!!\n\n\n\n"
         
             
             fileStr=""
@@ -250,15 +251,15 @@ def ioLoad(distributionID,runNo,fileQty,memSize,memThreads,duration):
             
             
             while fileQty !=0:
-                fileStr=fileStr+" -f /tmp/stressapptestFile"+str(fileQty)
+                fileStr=fileStr+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))
                 fileQty =fileQty-1
                 
-            print "fileStr: ",fileStr
+            #print "fileStr: ",fileStr
             cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -i "+str(memThreads)+" -s "+str(duration)+" --stop_on_errors&"
-            print cmd
+            #print cmd
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
-            print "Started Stressapptest on PID No: ",runStressapptestPidNo    
+            #print "Started Stressapptest on PID No: ",runStressapptestPidNo    
 
     except Exception, e:
         "run_Stressapptest job memLoad exception: ", e
@@ -268,13 +269,13 @@ def ioLoad(distributionID,runNo,fileQty,memSize,memThreads,duration):
     #catching failed runs
     
     if zombieBuster(runStressapptestPidNo):
-        print "Job failed, sending wait()."
+        #print "Job failed, sending wait()."
         runStressapptest.wait()
-        print "writing fail into DB..."
+        #print "writing fail into DB..."
         message="Fail"
         executed="False"
     else:
-        print "writing success into DB..."
+        #print "writing success into DB..."
         message="Success"
         executed="True"
         
@@ -287,7 +288,7 @@ def emulatorHelp():
     return """
     Emulator "stressapptest" can be used for following resources:
     
-    Memory(MEM) with parameters:
+    Continuously writing into Memory(MEM) workload with parameters:
         memThreads - number of memory invert threads to run (default number of cpu's)
       
 
@@ -298,8 +299,10 @@ def emulatorHelp():
     </emulator-params>
     
     
-    Input Output(IO) and Memory with parameters:
-        fileQty - number of files to write simultaneously( default is one file)
+    Continuously write files on disk(IO) using fixed amount of memory with parameters:
+        memSize - Size of memory to use in Mb
+        memThreads - number of memory invert threads to run (default number of cpu's)
+        
     
     XML Block Example: 
     <emulator-params>
@@ -323,12 +326,12 @@ def emulatorArgNames(Rtype):
     
     if Rtype.lower() == "mem":
         argNames={"memthreads":{"upperBound":10,"lowerBound":0}}
-        print "Use Arg's: ",argNames
+        #print "Use Arg's: ",argNames
         return argNames
     
     if Rtype.lower() == "io":
         argNames={"memsize":{"upperBound":99999,"lowerBound":50},"memthreads":{"upperBound":10,"lowerBound":0}}
-        print "Use Arg's: ",argNames
+        #print "Use Arg's: ",argNames
         return argNames
 
 
@@ -357,7 +360,7 @@ def zombieBuster(PID_ID):
 
     #catching failed runs
     p = psutil.Process(PID_ID)
-    print "Process name: ",p.name,"\nProcess status: ",p.status
+    #print "Process name: ",p.name,"\nProcess status: ",p.status
     if str(p.status) =="zombie":
         return True
     else:
@@ -367,10 +370,6 @@ def zombieBuster(PID_ID):
 
 if __name__ == '__main__':
 
-    
-    
-    
-    
     pass
 
 

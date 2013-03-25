@@ -82,41 +82,33 @@ class emulatorMod(object):
         
         
         
-        print "Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo: ",emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo
-        print "####### THIS IS A TEST 2 ########"
+        #print "Hello this is run_lookbusy: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo: ",emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo
+        #print "####### THIS IS A TEST 2 ########"
         if resourceTypeDist.lower() == "cpu":
-            print "CPU load selected"
+            #print "CPU load selected"
             #cpuLoad(stressValues,emulatorArg["ncpus"],duration)
             
             m = multiprocessing.Process(target = cpuLoad, args=(distributionID,runNo,stressValues,emulatorArg["ncpus"],duration))
             m.start()
-            print(m.is_alive())
+            #print(m.is_alive())
             m.join()
         
         if resourceTypeDist.lower() == "mem":
-            print "MEM load selected"
+            #print "MEM load selected"
             memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memsleep"],duration))
             memMulti.start()
-            print(memMulti.is_alive())
-            memMulti.join()
-        
-        if resourceTypeDist.lower() == "mem%":
-            print "MEM load selected"
-            memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memsleep"],duration))
-            memMulti.start()
-            print(memMulti.is_alive())
+            #print(memMulti.is_alive())
             memMulti.join()
             
             #memLoad(stressValues[0],stressValues[1],duration)
         
         if resourceTypeDist.lower() == "io":
-            print "I/O load selected"
-            print "vals"
-            print stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration
-
-            ioMulti = multiprocessing.Process(target = ioLoad, args=(self.distributionID,self.runNo,stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration))
+            #print "I/O load selected"
+            #print "vals"
+            #print stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration
+            ioMulti = multiprocessing.Process(target = ioLoad, args=(self.distributionID,self.runNo,stressValues,emulatorArg["ioblocksize"],emulatorArg["iosleep"],duration))
             ioMulti.start()
-            print(ioMulti.is_alive())
+            #print(ioMulti.is_alive())
             ioMulti.join()
             
             
@@ -131,7 +123,7 @@ def memLoad(distributionID,runNo,memUtil,memSleep,duration):
             #memUtil,memSleep,duration= str(memUtil),str(memSleep),str(duration)
             runLookbusyPidNo=0
             try:
-                print "\n\nthis is mem load:memUtil,memSleep,duration",memUtil,memSleep,duration,"\n\n"
+                #print "\n\nthis is mem load:memUtil,memSleep,duration",memUtil,memSleep,duration,"\n\n"
                 
                 if memSleep ==0 :
                     
@@ -142,36 +134,33 @@ def memLoad(distributionID,runNo,memUtil,memSleep,duration):
                 else:
                     runLookbusy = subprocess.Popen(["lookbusy", "-c","0","-m",str(memUtil)+"MB","-M",str(memSleep),"&"])
                     runLookbusyPidNo =runLookbusy.pid
-                    print "Started lookbusy on PID No: ",runLookbusyPidNo
+                    #print "Started lookbusy on PID No: ",runLookbusyPidNo
         
                 
             except Exception, e:
-                "run_lookbusy job memLoad exception: ", e
+                return "run_lookbusy job memLoad exception: ", e
             
             time.sleep(duration)
             #catching failed runs
             if zombieBuster(runLookbusyPidNo):
-                print "Job failed, sending wait()."
+                #print "Job failed, sending wait()."
                 runLookbusy.wait()
-                print "writing fail into DB..."
+                #print "writing fail into DB..."
                 message="Fail"
                 executed="False"
             else:
                 #runLookbusy.send_signal(signal.SIGINT) #check_output("exit 0", shell=True)
                 os.kill(runLookbusy.pid, signal.SIGINT)
             
-                print "writing success into DB..."
+                #print "writing success into DB..."
                 message="Success"
                 executed="True"
                 
             dbWriter(distributionID,runNo,message,executed)
                 
-#stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration        
+#stressValues,emulatorArg["ioBlockSize"],emulatorArg["ioSleep"],duration   
 def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
-            #ioUtil,ioBlockSize,ioSleep,duration = str(ioUtil),str(ioBlockSize),str(ioSleep),str(duration)
-        
-            print "this is io load"
-
+            print "IO Executed"
             if ioSleep ==0 or ioSleep =="0":
                 try:
                     runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioBlockSize)+"MB"])
@@ -194,7 +183,7 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
                     else:
                         runLookbusy.terminate()
                     
-                        print "writing success into DB..."
+                        #print "writing success into DB..."
                         message="Success"
                         executed="True"
                         dbWriter(distributionID,runNo,message,executed)
@@ -205,10 +194,12 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
                         
                 except Exception, e:
                     print "run_lookbusy job ioLoad exception: ", e
+                    
 
             else:
                 try:
-                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioBlockSize)+"MB","-D",ioSleep])
+                    print "executing:", "lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioBlockSize)+"MB","-D",ioSleep
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioBlockSize)+"MB","-D",str(ioSleep)])
                     runLookbusyPidNo =runLookbusy.pid
                     
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
@@ -236,16 +227,16 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
 
 def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
     #cpuUtil,ncpus,duration = str(cpuUtil),str(ncpus),str(duration)
-    print "\n\ncpuUtil,ncpus,duration",cpuUtil,ncpus,duration,"\n\n"
+    #print "\n\ncpuUtil,ncpus,duration",cpuUtil,ncpus,duration,"\n\n"
 
     if str(ncpus) =="0" :
-        print "run_lookbusy executing this ncpus=", ncpus
+        #print "run_lookbusy executing this ncpus=", ncpus
         try:
-            print "Running with these parameters: "+"lookbusy-c "+str(cpuUtil)
+            # print "Running with these parameters: "+"lookbusy-c "+str(cpuUtil)
             runLookbusy = subprocess.Popen(["lookbusy", "-c",str(cpuUtil),"&"])
-            print runLookbusy.stdout
+            #print runLookbusy.stdout
             runLookbusyPidNo =runLookbusy.pid
-            print "Started lookbusy on PID No: ",runLookbusyPidNo
+            #print "Started lookbusy on PID No: ",runLookbusyPidNo
             
             
 
@@ -255,21 +246,21 @@ def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
     
         
     else:
-        print "Running with these parameters: "+"lookbusy-c "+str(cpuUtil)+"-n "+str(ncpus)
-        print "run_lookbusy executing this ncpus=", ncpus
+        #print "Running with these parameters: "+"lookbusy-c "+str(cpuUtil)+"-n "+str(ncpus)
+        #print "run_lookbusy executing this ncpus=", ncpus
         runLookbusy = subprocess.Popen(["lookbusy", "-c",str(cpuUtil),"-n",str(ncpus),"&"])
         runLookbusy.stdout
         runLookbusyPidNo =runLookbusy.pid
-        print "Started lookbusy on PID No: ",runLookbusyPidNo
+        #print "Started lookbusy on PID No: ",runLookbusyPidNo
 
     
-    print "sleep:", duration
+    #print "sleep:", duration
     time.sleep(duration)
     #catching failed runs
     if zombieBuster(runLookbusyPidNo):
-        print "Job failed, sending wait()."
+        #print "Job failed, sending wait()."
         runLookbusy.wait()
-        print "writing fail into DB..."
+        #print "writing fail into DB..."
            
         message="Error in the emulator execution"
         executed="False"
@@ -277,7 +268,7 @@ def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
     else:
         runLookbusy.terminate()
     
-        print "writing success into DB..."
+        #print "writing success into DB..."
         message="Success"
         executed="True"
         dbWriter(distributionID,runNo,message,executed)
@@ -287,14 +278,14 @@ def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
 def emulatorHelp():
 
     return """
-    Emulator "lookbusy" can be used for following resources:
-    1)CPU with parameters:
+    Emulator lookbusy can be used for following resources:
+    1)Loads CPU with parameters:
       ncpus - Number of CPUs to keep busy (default: autodetected)
       
-    2)Memory(MEM) with parameters:
+    2)Loads Memory(MEM) with parameters:
       memSleep - Time to sleep between iterations, in usec (default 1000)
       
-    3)IO with parameters:
+    3)Changing size of files to use during IO with parameters:
       ioBlockSize - Size of blocks to use for I/O in MB
       ioSleep - Time to sleep between iterations, in msec (default 100)
     
@@ -359,7 +350,7 @@ def zombieBuster(PID_ID):
 
     #catching failed runs
     p = psutil.Process(PID_ID)
-    print "Process name: ",p.name,"\nProcess status: ",p.status
+    #print "Process name: ",p.name,"\nProcess status: ",p.status
     if str(p.status) =="zombie":
         return True
     else:
@@ -374,11 +365,11 @@ if __name__ == '__main__':
         ncpus ="b"
         m = multiprocessing.Process(target = cpuLoad, args=("50","0",10))
         m.start()
-        print(m.is_alive())
+        #print(m.is_alive())
         m.join()
     except Exception, e:
         print "run_lookbusy job main exception: ", e
-    #cpuLoad("50","0",10)
+    
     
     
     

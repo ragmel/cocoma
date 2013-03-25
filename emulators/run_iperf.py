@@ -71,6 +71,9 @@ IPERF_<long option name>, such as IPERF_BANDWIDTH.
 
 '''
 import math,time,multiprocessing,logging
+from xml.etree import ElementTree
+from xml.dom import minidom
+import xml.etree.ElementTree as ET
 import Pyro4,imp,time,sys,os,psutil
 import sqlite3 as sqlite
 import datetime as dt
@@ -107,18 +110,18 @@ class emulatorMod(object):
   
  
         if resourceTypeDist.lower() == "net" and emulatorArg["server"]==0:
-                print "Net selected"                                     #(distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,duration)
+                #print "Net selected"                                     #(distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,duration)
                 netClientProc = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["clientport"],emulatorArg["serverport"],emulatorArg["packettype"],emulatorArg["clientip"],emulatorArg["serverip"],emulationID,emulatorArg,emuDuration,duration))
                 netClientProc.start()
-                print(netClientProc.is_alive())
+                #print(netClientProc.is_alive())
                 netClientProc.join()
                 
         
         elif emulatorArg["server"]==1:
-                print "Launching Server..."                                     #(distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,duration)
+                #print "Launching Server..."                                     #(distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,duration)
                 netServerProc = multiprocessing.Process(target = netServerLoad, args=(distributionID,runNo,emulatorArg["serverport"],emulatorArg["packettype"],emuDuration))
                 netServerProc.start()
-                print(netServerProc.is_alive())
+                #print(netServerProc.is_alive())
                 netServerProc.join()
                 
   
@@ -128,7 +131,7 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
             
             #check if the iperf server process already running
             PROCNAME = "iperf -s -p "+str(emulatorArg["serverport"])
-            print "First run. Checking if can start the server..."
+            #print "First run. Checking if can start the server..."
             serverUri = "PYRO:scheduler.daemon@"+str(serverIP)+":51889"   
             serverDaemon=Pyro4.Proxy(serverUri)
             
@@ -162,13 +165,13 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
                     runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"mb","-t",str(duration)])
                     runIperfPidNo =runIperf.pid
                     
-                    print "Started Iperf client on PID No: ",runIperfPidNo
-                    print "falling a sleep for: ",duration
+                    #print "Started Iperf client on PID No: ",runIperfPidNo
+                    #print "falling a sleep for: ",duration
                     
                     time.sleep(duration)
                     #catching failed runs
                     if zombieBuster(runIperfPidNo):
-                        print "Job failed, sending wait()."
+                        #print "Job failed, sending wait()."
                         runIperf.wait()
                         message="Error in the emulator execution"
                         executed="False"
@@ -177,7 +180,7 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
                     else:
                         runIperf.terminate()
                     
-                        print "writing success into DB..."
+                        #print "writing success into DB..."
                         message="Success"
                         executed="True"
                         dbWriter(distributionID,runNo,message,executed)
@@ -190,12 +193,12 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
             if packettype.lower() == "tcp":
                 
                 try:
-                    print "iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith)+"mb"
+                    #print "iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith)+"mb"
                     runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith)+"mb"])
                     runIperfPidNo =runIperf.pid
                     
-                    print "Started Iperf client on PID No: ",runIperfPidNo
-                    print "falling a sleep for: ",duration
+                    #print "Started Iperf client on PID No: ",runIperfPidNo
+                    #print "falling a sleep for: ",duration
                     
                     time.sleep(duration)
                     #catching failed runs
@@ -209,7 +212,7 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
                     else:
                         runIperf.terminate()
                     
-                        print "writing success into DB..."
+                        #print "writing success into DB..."
                         message="Success"
                         executed="True"
                         dbWriter(distributionID,runNo,message,executed)
@@ -225,19 +228,19 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
                     runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-t",duration])
                     runIperfPidNo =runIperf.pid
                     
-                    print "Started Iperf on PID No: ",runIperfPidNo
+                    #print "Started Iperf on PID No: ",runIperfPidNo
                     #catching failed runs
                     if zombieBuster(runIperfPidNo):
-                        print "Job failed, sending wait()."
+                        #print "Job failed, sending wait()."
                         runIperf.wait()
-                        print "writing fail into DB..."
+                        #print "writing fail into DB..."
                         message="Error in the emulator execution"
                         executed="False"
                         dbWriter(distributionID,runNo,message,executed)
                     else:
                         runIperf.terminate()
                     
-                        print "writing success into DB..."
+                        #print "writing success into DB..."
                         message="Success"
                         executed="True"
                         dbWriter(distributionID,runNo,message,executed)
@@ -252,7 +255,7 @@ def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
             
             runIperfPidNo=0
             try:
-                print "\n\nthis is netServerLoad:\ndistributionID,runNo,netIp,netPort,netUdppackets,emuDuration\n",distributionID,runNo,netPort,packettype,emuDuration,"\n\n"
+                #print "\n\nthis is netServerLoad:\ndistributionID,runNo,netIp,netPort,netUdppackets,emuDuration\n",distributionID,runNo,netPort,packettype,emuDuration,"\n\n"
                 
                 if packettype.lower() =="udp" :
                     try:
@@ -261,11 +264,11 @@ def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
                         print e
                 
                     runIperfPidNo =runIperf.pid
-                    print "Started Iperf Server for UDP on PID No: ",runIperfPidNo
+                    #print "Started Iperf Server for UDP on PID No: ",runIperfPidNo
                 else:
                     runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort)])
                     runIperfPidNo =runIperf.pid
-                    print "Started Iperf Server for TCP on PID No: ",runIperfPidNo
+                    #print "Started Iperf Server for TCP on PID No: ",runIperfPidNo
         
                 
             except Exception, e:
@@ -274,15 +277,15 @@ def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
             time.sleep(float(emuDuration)+5)
             #catching failed runs
             if zombieBuster(runIperfPidNo):
-                print "Job failed, sending wait()."
+                #print "Job failed, sending wait()."
                 runIperf.wait()
-                print "writing fail into DB..."
+                #print "writing fail into DB..."
                 message="Fail"
                 executed="False"
             else:
                 runIperf.terminate()
             
-                print "writing success into DB..."
+                #print "writing success into DB..."
                 message="Success"
                 executed="True"
                 
@@ -290,24 +293,28 @@ def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
 
 
 
-     
-
 def emulatorHelp():
 
-    return """
-    Emulator "iperf" can be used for following resources:
- 
-<distributions> 
-   <name>NET_distro</name>
+
+
+    plainText= """
+ Iperf emulator is used to generate workload over network between two COCOMA VM's - Client and Server. Emulation parameters (XML document) which include IP addresses 
+of Client and Server COCOMA are sent to Client VM. Client VM then connects to Server VM starts Iperf in server mode ready to accept packages.
+ Two types of packets can be selected within distribution UDP or TCP. In case of UDP packets we are changing bandwidth load in "mb". In case of TCP we vary size of the 
+transmitted packet per run.
+
+1) UDP setup example:   
+<distributions>
+     <name>NET_distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
      <duration>10</duration>
      <granularity>1</granularity>
      <distribution href="/distributions/linear" name="linear" />
-    <!--cpu utilization distribution range-->
-      <startLoad>10</startLoad>
-      <stopLoad>10</stopLoad>
-      <emulator href="/emulators/iperf" name="iperf" />
+     <!--network bandwidth utilizationrange-->
+     <startLoad>10</startLoad>
+     <stopLoad>10</stopLoad>
+     <emulator href="/emulators/iperf" name="iperf" />
       
     <emulator-params>
         <resourceType>NET</resourceType>
@@ -317,15 +324,13 @@ def emulatorHelp():
         <clientip>10.55.168.167</clientip>
         <!--Leave "0" for default 5001 port -->
         <clientport>0</clientport>
+        <!--if TCP is needed just change "UDP" to "TCP"-->
         <packettype>UDP</packettype>
-        <bandwith>0</bandwith>
     </emulator-params>
   
   </distributions>
-
-    
-    
-    """
+  """
+    return plainText
     
 '''
 here we specify how many arguments emulator instance require to run properly
@@ -369,13 +374,11 @@ def zombieBuster(PID_ID):
 
     #catching failed runs
     p = psutil.Process(PID_ID)
-    print "Process name: ",p.name,"\nProcess status: ",p.status
+    #print "Process name: ",p.name,"\nProcess status: ",p.status
     if str(p.status) =="zombie":
         return True
     else:
         return False
-
-
 
 if __name__ == '__main__':
     

@@ -1,35 +1,36 @@
 <emulation>
-  <emuname>Emu-RAM</emuname>
+  <emuname>MEM_EMU</emuname>
   <emuType>Mix</emuType>
-  <emuresourceType>Mix</emuresourceType>
-  <!-- as startTime use the format '2012-11-26T17:28:00' or the keyword 'now' (no '' characters needed) -->
+  <emuresourceType>MEM</emuresourceType>
+  <!--date format: 2014-10-10T10:10:10 -->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>30</emustopTime>
-
-  <distributions>
-     <name>MEM-inc</name>
+  <emustopTime>60</emustopTime>
+  
+  <distributions >
+     <name>MEM_Distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>30</duration>
-     <granularity>1</granularity>
+     <duration>60</duration>
+     <granularity>5</granularity>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
      <!--Megabytes for memory -->
-      <startLoad>700</startLoad>
-      <stopLoad>700</stopLoad>
+      <startLoad>100</startLoad>
+      <stopLoad>1000</stopLoad>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
         <resourceType>MEM</resourceType>
-	<!--time between iterations in usec (default 1000)-->
-	<memSleep>0</memSleep>
+	    <!--time between iterations in usec (default 1000)-->	
+		<memSleep>0</memSleep>
       </emulator-params>
   </distributions>
 
   <log>
   	<!-- Use value "1" to enable logging(by default logging is off)  -->
-  	<enable>1</enable>
+  	<enable>0</enable>
   	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
   	<frequency>3</frequency>
+  	<logLevel>debug</logLevel>
   </log>
 
 </emulation>

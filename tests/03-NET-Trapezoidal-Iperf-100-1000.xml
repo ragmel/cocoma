@@ -5,28 +5,28 @@
   <!--2014-02-02T10:10:10-->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>30</emustopTime>
+  <emustopTime>60</emustopTime>
   
   <distributions> 
-   <name>NET_TCP</name>
+   <name>NET_distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>25</duration>
+     <duration>60</duration>
      <granularity>5</granularity>
-     <distribution href="/distributions/linear" name="linear" />
-      <!-- UDP-set target bandwidth to MBytes per sec -->
-      <!-- TCP-set number of MBytes to transmit (instead of -t) -->
-      <startLoad>10000</startLoad>
-      <stopLoad>100000</stopLoad>
+     <distribution href="/distributions/trapezoidal" name="trapezoidal" />
+	<!--cpu utilization distribution range-->
+      <startLoad>100</startLoad>
+      <!-- set target bandwidth to bits per sec -->
+      <stopLoad>1000</stopLoad>
       <emulator href="/emulators/iperf" name="iperf" />
     <emulator-params>
         <resourceType>NET</resourceType>
-        <serverip>10.55.168.101</serverip>
+        <serverip>10.55.164.223</serverip>
 	<!--Leave "0" for default 5001 port -->
 	<serverport>5001</serverport>
         <clientip>127.0.0.1</clientip>
 	<clientport>5001</clientport>
-        <packettype>TCP</packettype>
+        <packettype>UDP</packettype>
     </emulator-params>
   </distributions>
 

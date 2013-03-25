@@ -1,0 +1,42 @@
+<emulation>
+  <emuname>IO_EMU</emuname>
+  <emuType>Mix</emuType>
+  <emuresourceType>IO</emuresourceType>
+  <!--date format: 2014-10-10T10:10:10 -->
+  <emustartTime>now</emustartTime>
+  <!--duration in seconds -->
+  <emustopTime>60</emustopTime>
+  
+  <distributions>
+   
+   <name>IO_Distro</name>
+     <startTime>0</startTime>
+     <!--duration in seconds -->
+     <duration>60</duration>
+     <granularity>5</granularity>
+     <distribution href="/distributions/linear_incr" name="linear_incr" />
+      <!--amount of files to spawn -->
+      <startLoad>1</startLoad>
+      <stopLoad>10</stopLoad>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      
+      <emulator-params>
+        <!--more parameters will be added -->
+        <resourceType>IO</resourceType>
+	    <!--Size of memory-->
+	    <memSize>100</memSize>
+	    <!--Number of threads-->
+	    <memThreads>0</memThreads>
+      </emulator-params>
+      
+  </distributions>
+
+  <log>
+  	<!-- Use value "1" to enable logging(by default logging is off)  -->
+  	<enable>1</enable>
+  	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+  	<frequency>3</frequency>
+  	<logLevel>debug</logLevel>
+  </log>
+  
+</emulation>
