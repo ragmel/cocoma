@@ -18,7 +18,7 @@
 #
 import __builtin__
 from xml.dom.minidom import parseString, Node
-import xml.dom.minidom
+import xml.dom.minidom,psutil
 import DistributionManager,sys,EmulationManager
 import logging
 
@@ -42,18 +42,22 @@ def xmlParser(xmlData):
     if xmlLogger is None:
         #initialize logger
         xmlLogger=EmulationManager.loggerSet("XML Parser")
-    
 
-    
-    
     xmlLogger.debug("###This is XML Parser: xmlParser(xmlData)")
     emulationLogFrequency = "3"
     emulationLog="0"
 
     #normal values
-    dom1 = parseString(xmlData)
-    #lower case values
-    dom2 = parseString(xmlData.lower())
+    try:
+        dom1 = parseString(xmlData)
+        
+        #lower case values
+        dom2 = parseString(xmlData.lower())
+    except Exception,e:
+        xmlLogger.exception("XML input Error:"+str(e))
+        return "<error>XML input Error:"+str(e)+"</error>"
+        
+        
     distroList = []
     distributionsXml=dom2.getElementsByTagName('distributions')
     #emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
@@ -66,8 +70,8 @@ def xmlParser(xmlData):
         try:
             emulationLogFrequency=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('frequency')[0].firstChild.data
         except Exception, e:
-            print e
-            #xmlLogger.debug("Setting emulationLogFrequency to default value of 3sec")
+            if int(emulationLog)==1:
+                xmlLogger.debug("Log frequency not set in XML setting to 3s")
         
         try:
             emulationLogLevel=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('loglevel')[0].firstChild.data
@@ -80,10 +84,14 @@ def xmlParser(xmlData):
         emulationLogLevel = "info"
         xmlLogger.debug("Setting ligging to INFO")
     
-    emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emutype')[0].firstChild.data
-    startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustarttime')[0].firstChild.data
-    resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuresourcetype')[0].firstChild.data
-    stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustoptime')[0].firstChild.data
+    try:
+        emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emutype')[0].firstChild.data
+        startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustarttime')[0].firstChild.data
+        resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuresourcetype')[0].firstChild.data
+        stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustoptime')[0].firstChild.data
+    except Exception,e:
+        xmlLogger.exception("XML input Error:"+str(e))
+        return "<error>XML input Error:"+str(e)+"</error>"
      
     
     
@@ -101,8 +109,12 @@ def xmlParser(xmlData):
         distrType = distribution.attributes["name"].value
         
         #getting resource type of distribution CPU,IO,MEM or NET
-        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data
-                            
+        try:
+            resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data
+        except Exception,e:
+            xmlLogger.exception("XML input Error:"+str(e))
+            return "<error>XML input Error:"+str(e)+"</error>"
+
         try:
             moduleMethod=DistributionManager.loadDistributionArgNames(distrType)
             
@@ -131,9 +143,13 @@ def xmlParser(xmlData):
         
         
         #get things inside "distributions"
-        startTimeDistro = dom2.getElementsByTagName('distributions')[n].getElementsByTagName('starttime')[0].firstChild.data
-        durationDistro = dom2.getElementsByTagName('duration')[n].firstChild.data
-        granularity= dom2.getElementsByTagName('granularity')[n].firstChild.data
+        try:
+            startTimeDistro = dom2.getElementsByTagName('distributions')[n].getElementsByTagName('starttime')[0].firstChild.data
+            durationDistro = dom2.getElementsByTagName('duration')[n].firstChild.data
+            granularity= dom2.getElementsByTagName('granularity')[n].firstChild.data
+        except Exception,e:
+            xmlLogger.exception("XML input Error:"+str(e))
+            return "<error>XML input Error:"+str(e)+"</error>"
          
         distroArgs={}
         a=0
@@ -146,17 +162,23 @@ def xmlParser(xmlData):
             
             try:    
                 arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(moduleArgs[a].lower())[0].firstChild.data
+                
+                #if data given in percentage for memory converting it to real values
+                if resourceTypeDist.lower()=="mem":
+                    if str(arg0[-1])=="%":
+                        memReading=psutil.phymem_usage()
+                        allMemoryPc =(memReading.total/1048576.00)/100.00
+                        arg0=int(str(arg0[:-1]))*allMemoryPc
+                        
                 distributionsLimitsDictValues = distroArgsLimitsDict[moduleArgs[a].lower()]
-                checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)                
+                checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)               
                 distroArgsNotes.append(checkDistroNote)
                 distroArgs.update({moduleArgs[a].lower():checked_distroArgs})                
                 a+=1
                
             except Exception,e:
-                    xmlLogger.exception("error getting distribution arguments")
-                    sys.exit(0)
-                    arg0="NULL"
-                    a= a+1
+                    xmlLogger.exception("Distribution argument specified in XML does not exist in distribution module \""+str(resourceTypeDist)+"\" section: "+str(e))
+                    return "<error>Distribution argument specified in XML does not exist in distribution module \""+str(resourceTypeDist)+"\" section: "+str(e)+"</error>"
         '''
         getting all the arguments for emulator
         '''
@@ -175,16 +197,17 @@ def xmlParser(xmlData):
                 a+=1
                 
             except Exception, e:
-                print e
-                xmlLogger.exception("Not all emulator arguments are in use, setting Value of "+str(emulatorArgs[a].lower())+" to NULL")
-                arg0="NULL"
-                emulatorArg.append(arg0)
-                a= a+1
+                    xmlLogger.exception("Emulator argument specified in XML does not exist in emulator module \""+str(resourceTypeDist)+"\" section: "+str(e))
+                    return "<error>Emulator argument specified in XML does not exist in emulator module \""+str(resourceTypeDist)+"\" section: "+str(e)+"</error>"
         
-        resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data 
-        distributionsName=dom1.getElementsByTagName('distributions')[n].getElementsByTagName('name')[0].firstChild.data     
-        emulator = dom1.getElementsByTagName('emulator')[n]
-        emulatorName = emulator.attributes["name"].value
+        try:
+            resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data 
+            distributionsName=dom1.getElementsByTagName('distributions')[n].getElementsByTagName('name')[0].firstChild.data     
+            emulator = dom1.getElementsByTagName('emulator')[n]
+            emulatorName = emulator.attributes["name"].value
+        except Exception,e:
+            xmlLogger.exception("XML input Error:"+str(e))
+            return "<error>XML input Error:"+str(e)+"</error>"
         
         #add every emulation in the dictionary
         distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,"distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist,"emulatorArgNotes":emulatorArgNotes,"distroArgsNotes":distroArgsNotes}
@@ -211,6 +234,7 @@ def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
     
     upperBound=int(LimitsDictValues["upperBound"])
     lowerBound=int(LimitsDictValues["lowerBound"])
+
     xmlValue=int(xmlValue)
     
     if xmlValue >= lowerBound:
@@ -232,79 +256,40 @@ if __name__ == '__main__':
     """
     xmlData='''
 <emulation>
-  <emuname>CPU_emu</emuname>
+  <emuname>MEM_EMU</emuname>
   <emuType>Mix</emuType>
-  <emuresourceType>CPU</emuresourceType>
+  <emuresourceType>MEM</emuresourceType>
+  <!--date format: 2014-10-10T10:10:10 -->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
   <emustopTime>60</emustopTime>
   
-  <distributions> 
-   <name>CPU_distro</name>
+  <distributions >
+     <name>MEM_Distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>10</duration>
-     <granularity>1</granularity>
-     <distribution href="/distributions/linear" name="linear" />
-    <!--cpu utilization distribution range-->
-      <startLoad>10</startLoad>
-      <stopLoad>95</stopLoad>
+     <duration>60</duration>
+     <granularity>5</granularity>
+     <distribution href="/distributions/linear_incr" name="linear_incr" />
+     <!--Megabytes for memory -->
+      <startLoad>100</startLoad>
+      <stopLoad>1000</stopLoad>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
-        <!--more parameters will be added -->
-        <resourceType>CPU</resourceType>
-    <!--Number of CPUs to keep busy (default: autodetected)-->
-    <ncpus>0</ncpus>
-      </emulator-params>
-  </distributions>
-
-  <distributions> 
-   <name>CPU_distro-2</name>
-     <startTime>0</startTime>
-     <!--duration in seconds -->
-     <duration>10</duration>
-     <granularity>1</granularity>
-     <distribution href="/distributions/linear" name="linear" />
-    <!--cpu utilization distribution range-->
-      <startLoad>10</startLoad>
-      <stopLoad>95</stopLoad>
-      <emulator href="/emulators/lookbusy" name="lookbusy" />
-      <emulator-params>
-        <!--more parameters will be added -->
-        <resourceType>CPU</resourceType>
-    <!--Number of CPUs to keep busy (default: autodetected)-->
-    <ncpus>0</ncpus>
-
-
-      </emulator-params>
-  </distributions>
-
-  <distributions> 
-   <name>CPU_distro3</name>
-     <startTime>50</startTime>
-     <!--duration in seconds -->
-     <duration>10</duration>
-     <granularity>1</granularity>
-     <distribution href="/distributions/linear" name="linear" />
-    <!--cpu utilization distribution range-->
-      <startLoad>10</startLoad>
-      <stopLoad>95</stopLoad>
-      <emulator href="/emulators/lookbusy" name="lookbusy" />
-      <emulator-params>
-        <!--more parameters will be added -->
-        <resourceType>CPU</resourceType>
-    <!--Number of CPUs to keep busy (default: autodetected)-->
-    <ncpus>0</ncpus>
+        <resourceType>MEM</resourceType>
+        <!--time between iterations in usec (default 1000)-->    
+        <memSleep>0</memSleep>
       </emulator-params>
   </distributions>
 
   <log>
       <!-- Use value "1" to enable logging(by default logging is off)  -->
-      <enable>1</enable>
+      <enable>0</enable>
       <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
       <frequency>3</frequency>
+      <logLevel>debug</logLevel>
   </log>
-  
+
 </emulation>
 
     

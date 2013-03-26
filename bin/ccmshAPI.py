@@ -771,8 +771,12 @@ def create_emu():
             
     else:    
         print "Body data detected:\n",xml_stream_body
-        
-        (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlParser(xml_stream_body)
+        try:
+            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlParser(xml_stream_body)
+        except Exception,e:
+            response.status = 400
+            return XmlParser.xmlParser(xml_stream_body)
+            
     
     #create emulation
     

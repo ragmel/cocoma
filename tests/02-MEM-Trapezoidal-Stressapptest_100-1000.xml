@@ -27,9 +27,9 @@
 
   <log>
   	<!-- Use value "1" to enable logging(by default logging is off)  -->
-  	<enable>0</enable>
+  	<enable>1</enable>
   	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
-  	<frequency>3</frequency>
+  	
   	<logLevel>debug</logLevel>
   </log>
 

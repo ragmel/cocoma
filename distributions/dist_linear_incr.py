@@ -153,19 +153,14 @@ def argNames(Rtype):
         argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}}
         print "Use Arg's: ",argNames," with cpu"
         return argNames
-   
-    #get free amount of memory and set it to upper bound
+
+    #get total amount of memory and set it to upper bound
     if Rtype.lower() == "mem":
         
         memReading=psutil.phymem_usage()
-        
-        freeMem =memReading.free/1048576
-        freeMemPercent=memReading.percent
-        print "free mem for border:",freeMem
-        print "free mem for border %:",freeMemPercent
-        
+        allMemory =memReading.total/1048576
 
-        argNames={"startload":{"upperBound":freeMem,"lowerBound":50,},"stopload":{"upperBound":freeMem,"lowerBound":50}}
+        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}}
         print "Use Arg's: ",argNames," with mem"
         return argNames
         
