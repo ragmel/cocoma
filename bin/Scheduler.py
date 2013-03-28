@@ -111,27 +111,34 @@ class schedulerDaemon(object):
             
             #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)  
             runEndTimeStr=str(time.strftime("%H:%M:%S", time.gmtime(runStartTime+float(duration))))
-            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. End Time: "+runEndTimeStr)
+            jobName = str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. End Time: "+runEndTimeStr
+            self.sched.add_date_job(Run.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=jobName)
             schedFileLogger.debug(str(sys.stdout))
-            valBack=str(("Job: "+str(emulationID)+"-"+distributionName+" with run No: "+str(runNo)+" start date "+str(runStartTime)+" created"))
-            schedFileLogger.debug("Return: "+str(valBack))
+            valBack=str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec."+"Start Time: "+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)))+" End Time: "+runEndTimeStr
+            schedFileLogger.debug("Scheduler Return: "+valBack)
             return valBack
         except Exception, e:
             schedFileLogger.debug("Values:"+str(emulationID)+"-"+str(distributionID)+"-"+str(distributionName)+"-"+str(emulationLifetimeID)+"-"+str(duration)+"-"+str(emulator)+"-"+str(emulatorArg)+"-"+str(resourceTypeDist)+"-"+str(stressValue)+"-"+str(runStartTime)+"-"+str(runNo)+"-"+str(emuDuration))
             schedFileLogger.error("Scheduler createJob(): error creating Job check dates")
-            schedFileLogger.exception(str(e))
-              
-            return "Scheduler createJob(): error creating Job check dates "
+            schedFileLogger.exception(str(e))  
+            return "Scheduler createJob(): error creating Job check dates ",+str(e)
 
         
     def createLoggerJob(self,singleRunStartTime,duration,interval,emulationID,emulationName,emuStartTime):
         schedFileLogger.debug("-> createLoggerJob(self,singleRunStartTime,duration,interval,emulationID)")
         interval=int(interval)
         
-        
-        self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID,emulationName,emuStartTime], name=str(emulationID)+"-"+str(emulationName)+"-logger interval-"+str(interval)+"sec.")
-        schedFileLogger.debug("Logger has been scheduled")
-        return "Started logger"
+        loggetJobName=str(emulationID)+"-"+str(emulationName)+"-logger interval-"+str(interval)+"sec."
+        try:
+            self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID,emulationName,emuStartTime], name=loggetJobName)
+            schedFileLogger.debug("Started logger:"+loggetJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime))))
+            return "Started logger:"+loggetJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)))
+        except Exception,e :
+            valReturn="Error starting logger:"+loggetJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)))
+            schedFileLogger.debug(valReturn)
+            schedFileLogger.error("Scheduler createLoggerJob(): error creating Job ")
+            schedFileLogger.exception(str(e))
+            return valReturn+" Error:"+str(e)
 
     def checkProcessRunning(self,PROCNAME):
         schedFileLogger.debug("-> checkProcessRunning(self,PROCNAME)")

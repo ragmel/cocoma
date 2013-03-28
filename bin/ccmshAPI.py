@@ -187,7 +187,7 @@ def get_emulation_details(name=""):
     
     
     scheduledJobsXml = ET.SubElement(emulation,'scheduledJobs')
-    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":51889"
+    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":"+str(EmulationManager.readLogLevel("schedport"))
     daemon=Pyro4.Proxy(uri)    
     
     #create active jobs list

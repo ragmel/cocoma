@@ -127,12 +127,12 @@ class emulatorMod(object):
   
 def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packettype,clientIp,serverIP,emulationID,emulatorArg,emuDuration,duration):
             
-            
+            daemonPort=str(readLogLevel("schedport"))
             
             #check if the iperf server process already running
             PROCNAME = "iperf -s -p "+str(emulatorArg["serverport"])
             #print "First run. Checking if can start the server..."
-            serverUri = "PYRO:scheduler.daemon@"+str(serverIP)+":51889"   
+            serverUri = "PYRO:scheduler.daemon@"+str(serverIP)+":"+daemonPort
             serverDaemon=Pyro4.Proxy(serverUri)
             
             
@@ -148,10 +148,10 @@ def netClientLoad(distributionID,runNo,stressValues,clientPort,serverPort,packet
 
             serverJobStatus=serverDaemon.createCustomJob(emulationID,distributionID,fakeemulationLifetimeID,duration,emulator,fakeemulatorArg,fakeresourceTypeDist,fakestressValue,fakeRunNo,PROCNAME,emuDuration)
             if serverJobStatus == 1:
-                print "!!!Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+":51889" +" job was created! for duration of Distribution"
+                print "!!!Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+daemonPort +" job was created! for duration of Distribution"
                 print "!!!Started server for "+str(emuDuration)+" sec"
             elif serverJobStatus == 2:
-                print "!!!Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+":51889" +" job already running"
+                print "!!!Server "+ "PYRO:scheduler.daemon@"+str(serverIP)+daemonPort +" job already running"
             elif serverJobStatus == 0:
                 print "!!!Unable to start iperf server on: "+str(serverIP)+":"+str(serverPort)+"\n NET distribution(-s) Failed"
             
@@ -368,6 +368,33 @@ def dbWriter(distributionID,runNo,message,executed):
             print "Error %s:" % e.args[0]
             print e
             sys.exit(1)             
+
+
+def readLogLevel(column):
+    '''
+    Gets log level name from database 
+    '''
+    try:
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+        
+        c = conn.cursor()
+        c.execute('SELECT '+str(column)+' FROM config')
+        logLevelList = c.fetchall()
+        c.close()
+                
+    except sqlite.Error, e:
+        print "Error getting \"config\" table data %s:" % e.args[0]
+        print e
+        return False
+    
+    if logLevelList:
+        for row in logLevelList:
+            logLevel=row[0]
+    
+    return logLevel
 
 
 def zombieBuster(PID_ID):

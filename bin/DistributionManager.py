@@ -25,12 +25,20 @@ import sqlite3 as sqlite
 
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
+distLoggerDM=None
+
 try:
     HOMEPATH= os.environ['COCOMA']
 except:
     print "no $COCOMA environmental variable set"    
 
 def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg):   
+        
+        #emulation run log record initiation
+        global distLoggerDM
+        if distLoggerDM is None:
+            distLoggerDM=EmulationManager.loggerSet("Distriburion Manager",str(emulationID)+"-"+str(emulationName)+"-syslog"+"_"+str(startTime)+".csv")
+
         print "this is distributionManager"
             
         try:
@@ -53,11 +61,6 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             print "emulatorArg:",emulatorArg
             
             #2. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
-            #a={"aa":"AA","bb":"BB"}
-            
-            #for d in a:
-            #   print "name:",d
-            #  print "value",a[d]
             for d in distributionArg :
                 c.execute('INSERT INTO DistributionParameters (paramName,value,distributionID) VALUES (?, ?, ?)',[d,distributionArg[d],distributionID])
             distributionParametersID=c.lastrowid
@@ -100,7 +103,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         #2. Use this module for calculation and run creation   
         (stressValues,runStartTime,runDurations)=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH)
         
-        uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":51889"
+        uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":"+str(EmulationManager.readLogLevel("schedport"))
     
         daemon=Pyro4.Proxy(uri)
         
@@ -112,7 +115,12 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
                 print daemon.hello()
                 #Sending emulation name already including ID stamp
                 emulationNameID =str(emulationID)+"-"+str(emulationName)
-                print daemon.createJob(emulationID,emulationNameID,distributionID,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),runDurations[n])
+                
+                schedulerReply = str(daemon.createJob(emulationID,emulationNameID,distributionID,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),runDurations[n]))
+                
+
+                distLoggerDM.info("Scheduler reply: "+schedulerReply)
+                
                 
                 #adding values to the table for recovery
                 try:
@@ -189,8 +197,7 @@ def loadDistributionHelp(modName):
                 
             modhandle = imp.load_source(modname, modfile)
             #print modhandle
-                      
-                
+          
             return modhandle.distHelp   
         
 def loadDistributionArgNames(modName):
@@ -205,14 +212,8 @@ def loadDistributionArgNames(modName):
                 modname = "dist_"+modName
                 
             modhandle = imp.load_source(modname, modfile)
-            #print modhandle
-                        
-                
+            #print modhandle             
             return modhandle.argNames  
-
-
-   
-
 
 def listDistributions(name):
     
@@ -254,11 +255,6 @@ def listTests(name):
         return testsList 
     else:
         print "Display XML content"
-        #and return XML
-
-
-
-    
     
 def listEmulators(name):
     
@@ -303,8 +299,6 @@ def loadEmulatorArgNames(modName):
         
     return modhandle.emulatorArgNames
 
-
-
 def loadEmulatorHelp(modName):
     '''
     We are Loading module by file name. File name will be determined by emulator type (i.e. stressapptest)
@@ -319,11 +313,6 @@ def loadEmulatorHelp(modName):
     modhandle = imp.load_source(modname, modfile)
         
     return modhandle.emulatorHelp
-
-
-
-
-
 
 def timeConv(dbtimestamp):
         #print "this is timeConv!!!"
@@ -345,8 +334,7 @@ def timeConv(dbtimestamp):
             
 #convert date to seconds
 def timestamp(date):
-    #print"This is timestamp"
-    #print date
+
     gmtTime = time.mktime(date.timetuple())#+3600
     return gmtTime
 

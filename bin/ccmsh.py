@@ -35,7 +35,7 @@ def main():
     For full list of commands please use "ccmsh -h".
     '''
     
-    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":51889"
+    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":"+str(EmulationManager.readLogLevel("schedport"))
     #perhaps needs to be setup somewhere else
     
     daemon=Pyro4.Proxy(uri)    

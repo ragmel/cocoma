@@ -334,7 +334,7 @@ def deleteEmulation(emulationID):
     
     
     #Now here we need to remove the emulation from the scheduler if exist
-    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":51889"
+    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":"+str(readLogLevel("schedport"))
     daemon=Pyro4.Proxy(uri)
     try:
         for Names in distributionName:
@@ -379,16 +379,18 @@ def purgeAll():
         sys.exit(1)
         
     c.close()
-    print "Everything was deleted in DB"
+    print "Deleting all DB entries"
     
-    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":51889"
+    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":"+str(readLogLevel("schedport"))
     daemon=Pyro4.Proxy(uri)
     try:
-        print "Trying to delete jobs"
+        print "Deleting all jobs"
         daemon.deleteJobs("all", "all")
     except Exception, e:
         print "Scheduler is not reachable: ",e
-        
+    print "Removing all log files"
+    delLogsCmd ="rm "+HOMEPATH+"/logs/*" 
+    os.system(delLogsCmd)
     
     
     #Now here we need to remove the emulation from the scheduler
@@ -400,7 +402,7 @@ def purgeAll():
 def updateEmulation(emulationID,newEmulationName,newDistributionType,newResourceType,newEmulationType,newStartTime,newStopTime, newDistributionGranularity,arg):
     print "Hello this is updateEmulation"
     
-    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":51889"
+    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":"+str(readLogLevel("schedport"))
     daemon=Pyro4.Proxy(uri)
     
     #1. Get all the values from the existing table
@@ -548,7 +550,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
             return "Distribution has date longer than emulation.Check distribution name: "+n["distributionsName"]
             sys.exit(0)
     
-    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":51889"
+    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":"+str(readLogLevel("schedport"))
 
     daemon=Pyro4.Proxy(uri)
     try:
@@ -558,6 +560,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
             sys.exit(0)
 
     #connecting to the DB and storing parameters
+    loggerJobReply="No logger scheduled"
     try:
         if HOMEPATH:
             conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
@@ -587,7 +590,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
             #creating run for logger with probe interval of 2 seconds
             interval=int(emulationLogFrequency)
             singleRunStartTime =DistributionManager.timestamp(DistributionManager.timeConv(startTimeEmu))
-            daemon.createLoggerJob(singleRunStartTime,emulationLifetimeEndTime,interval,emulationID,emulationName,startTimeEmu)       
+            loggerJobReply=daemon.createLoggerJob(singleRunStartTime,emulationLifetimeEndTime,interval,emulationID,emulationName,startTimeEmu)       
         
         for n in distroList:
             emulator=n["emulatorName"]
@@ -618,7 +621,8 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
     if emuLoggerEM is None:
         emuLoggerEM=loggerSet("Emulation Manager",str(emulationID)+"-"+str(emulationName)+"-syslog"+"_"+str(startTimeEmu)+".csv")     
      
-    emuLoggerEM.info("##Emulation "+str(returnEmulationName)+" created")    
+    emuLoggerEM.info("##Emulation "+str(returnEmulationName)+" created")   
+    emuLoggerEM.info(loggerJobReply) 
     emuLoggerEM.debug("Emulation Parameters:"+str(emulationID)+"-"+str(emulationLifetimeID)+"-"+str(emulationName)+"-"+str(startTime)+"-"+str(emulator)+"-"+str(emulatorArg))
     emuLoggerEM.debug("Distribution Parameters:"+str(distroList))
     #create log file with XML data
