@@ -121,7 +121,7 @@ class schedulerDaemon(object):
             schedFileLogger.debug("Values:"+str(emulationID)+"-"+str(distributionID)+"-"+str(distributionName)+"-"+str(emulationLifetimeID)+"-"+str(duration)+"-"+str(emulator)+"-"+str(emulatorArg)+"-"+str(resourceTypeDist)+"-"+str(stressValue)+"-"+str(runStartTime)+"-"+str(runNo)+"-"+str(emuDuration))
             schedFileLogger.error("Scheduler createJob(): error creating Job check dates")
             schedFileLogger.exception(str(e))  
-            return "Scheduler createJob(): error creating Job check dates ",+str(e)
+            return "Scheduler createJob(): error creating Job check dates "+str(e)
 
         
     def createLoggerJob(self,singleRunStartTime,duration,interval,emulationID,emulationName,emuStartTime):
@@ -197,7 +197,7 @@ class schedulerDaemon(object):
     #convert date to seconds
     def timestamp(self,date):
         schedFileLogger.debug("-> timestamp(self,date) converting python date to seconds")
-        gmtTime = time.mktime(date.timetuple())#+3600
+        gmtTime = time.mktime(date.timetuple())+3600
         return gmtTime
 
     def recoverySchedulerDaemon(self):

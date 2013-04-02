@@ -256,7 +256,6 @@ def deleteEmulation(emulationID):
     '''
     Deleting specific emulation by ID number 
     '''
-    print "Hello this is deleteEmulation"
          
     distributionName=[]
     
@@ -270,7 +269,7 @@ def deleteEmulation(emulationID):
         #getting list of distributions for emulation
         if distributionIDfetch:
             for row in distributionIDfetch:
-                print row
+                
                 distributionID= row[0]
                 distributionName.append(row[1])
                 
@@ -288,10 +287,10 @@ def deleteEmulation(emulationID):
             print "Emulation ID: ", emulationID," was deleted from DB"
                 
         else:
-            print "Emulation ID: "+str(emulationID)+" does not exists looking for name" 
+            #print "Emulation ID: "+str(emulationID)+" does not exists looking for name" 
             c.execute('SELECT emulationID FROM emulation WHERE emulationName=?',[str(emulationID)])
             emulationIDfetch = c.fetchall()
-            print emulationIDfetch
+
             for row in emulationIDfetch:
                 emulationID = row[0]
             c.execute('SELECT distributionID,distributionName FROM distribution WHERE emulationID=?',[str(emulationID)])
@@ -314,8 +313,8 @@ def deleteEmulation(emulationID):
                 c.execute('DELETE FROM emulation WHERE emulationID=?',[str(emulationID)])
                     
             else:
-                print "Emulation Name: "+str(emulationID)+" does not exists too" 
-                return "Emulation Name: "+str(emulationID)+" does not exists"
+                print "Emulation Name or ID \""+str(emulationID)+"\" does not exists" 
+                return "Emulation Name or ID: "+str(emulationID)+" does not exists" 
                 sys.exit(1)
             
             conn.commit()

@@ -79,8 +79,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             print "Error %s:" % e.args[0]
             print e
             sys.exit(1)                        
-  
-                        
+               
         startTime= timeConv(startTime)
         startTimesec=timestamp(startTime)+float(startTimeDistro)
         print "startTime:",startTime
@@ -119,7 +118,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
                 schedulerReply = str(daemon.createJob(emulationID,emulationNameID,distributionID,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),runDurations[n]))
                 
 
-                distLoggerDM.info("Scheduler reply: "+schedulerReply)
+                distLoggerDM.info("Scheduler reply: "+str(schedulerReply))
                 
                 
                 #adding values to the table for recovery
@@ -218,7 +217,6 @@ def loadDistributionArgNames(modName):
 def listDistributions(name):
     
     distroList=[]
-    print "This is listDistro\n"
     if name.lower()=="all":
         if HOMEPATH:
             path=HOMEPATH+"/distributions/"  # root folder of project
@@ -259,7 +257,6 @@ def listTests(name):
 def listEmulators(name):
     
     emulatorList=[]
-    print "This is listEmulators\n"
     if name.lower()=="all":
         if HOMEPATH:
             path=HOMEPATH+"/emulators/"  # root folder of project
@@ -335,7 +332,7 @@ def timeConv(dbtimestamp):
 #convert date to seconds
 def timestamp(date):
 
-    gmtTime = time.mktime(date.timetuple())#+3600
+    gmtTime = time.mktime(date.timetuple())+3600
     return gmtTime
 
 if __name__ == "__main__":
