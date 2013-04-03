@@ -46,36 +46,35 @@ def main():
     #paragraph of help text to print after option help
     epilog= "Copyright 2012-2013 SAP Ltd"
     #A paragraph of text giving a brief overview of your program
-    description="""COCOMA is a toolkit for generating COntrolled COntentious and MAlicious patterns for multi-tenant systems."""
+    description="""COCOMA is a toolkit for generating COntrolled COntentious and MAlicious patterns in multi-tenant environment."""
     parser = optparse.OptionParser(usage=usage,epilog=epilog,description=description)
     
     parser.add_option('-v','--version', action='store_true', default=False,dest='version',help='show version information')
     
     
-    listEmu = optparse.OptionGroup(parser, 'List existing emulations')
-    listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='[emulationName]  List of emulations by ID or all')
-    listEmu.add_option('-r', '--results', action='store_true', default=False,dest='resAll',help='[emulationName] [all]  List of emulation results')
-    listEmu.add_option('-j', '--list-jobs', action='store_true', default=False,dest='listJobs', help='[all] List of all active Jobs running on Scheduler daemon')
+    listEmu = optparse.OptionGroup(parser, 'List existing resources')
+    listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='list all emulations or specific emulation by name')
+    listEmu.add_option('-r', '--results', action='store_true', default=False,dest='resAll',help='list all emulations results or specific emulation results by name')
+    listEmu.add_option('-j', '--list-jobs', action='store_true', default=False,dest='listJobs', help='List of all scheduled jobs')
         
     createEmu = optparse.OptionGroup(parser, 'Create new emulations')
-    createEmu.add_option('-x', '--xml', action='store_true', dest='xml',default=False, help='[file.xml] enter name XML document')
-    createEmu.add_option('-n', '--now', action='store_true', dest='emuNow',default=False, help='[-x filename] plus [-n] emulation starts immediately')
+    createEmu.add_option('-x', '--xml', action='store_true', dest='xml',default=False, help='provide path to XML file with emulation details')
+    createEmu.add_option('-n', '--now', action='store_true', dest='emuNow',default=False, help='add to the "-x" argument to override emulation start date and execute test immediately')
         
     deleteEmu = optparse.OptionGroup(parser, 'Delete emulations')
-    deleteEmu.add_option('-d', '--delete', action='store_true',default=False, dest='deleteID', help='[emulationID] Deletes full emulation')
-    deleteEmu.add_option('-p','--purge', action='store_true',default=False, dest='purge_all', help='[all] clears everything in DB. !!USE WITH CAUTION!!')
+    deleteEmu.add_option('-d', '--delete', action='store_true',default=False, dest='deleteID', help='delete emulation by name')
+    deleteEmu.add_option('-p','--purge', action='store_true',default=False, dest='purge_all', help='wipes all DB entries, removes all scheduled jobs and log files')
     
     listDistro = optparse.OptionGroup(parser, 'List available distributions')  
-    listDistro.add_option('-i', '--dist', action='store_true', default=False,dest='listAllDistro',help='[all] or [name] List of all available distributions')
+    listDistro.add_option('-i', '--dist', action='store_true', default=False,dest='listAllDistro',help='lists all available distributions and gives distribution details by name')
         
     serviceControl = optparse.OptionGroup(parser, 'Services Control')
-    serviceControl.add_option('--start', action='store_true', default=False,dest='startServices',help='[scheduler][api] followed by interface and port to start services. Example: ccmsh --start api eth1 2020')
-    serviceControl.add_option('--stop', action='store_true', default=False,dest='stopServices',help='[scheduler][api] stop services')
-    serviceControl.add_option('--show', action='store_true', default=False,dest='showServices',help='[scheduler][api] show services')
-    #serviceControl.add_option('-v','--version', action='store_true', default=False,dest='version',help='Display version info')
-    
+    serviceControl.add_option('--start', action='store_true', default=False,dest='startServices',help='launch Scheduler or API daemon. Additionally you can specify interface and port. Example: "ccmsh --start api eth0 2020"')
+    serviceControl.add_option('--stop', action='store_true', default=False,dest='stopServices',help='stop Scheduler or API daemon')
+    serviceControl.add_option('--show', action='store_true', default=False,dest='showServices',help='show OS information on Scheduler or API daemon')
+        
     listEmulator = optparse.OptionGroup(parser, 'List available emulators')  
-    listEmulator.add_option('-e', '--emu', action='store_true', default=False,dest='listAllEmulators',help='[all] or [name]  List of all available emulators')
+    listEmulator.add_option('-e', '--emu', action='store_true', default=False,dest='listAllEmulators',help='lists all available emulators and gives emulator details by name')
     
         
     parser.add_option_group(listEmu)
@@ -83,7 +82,6 @@ def main():
     parser.add_option_group(listEmulator)
     parser.add_option_group(createEmu)
     parser.add_option_group(deleteEmu)
-    #parser.add_option_group(updateEmu)
     parser.add_option_group(serviceControl)
        
 
