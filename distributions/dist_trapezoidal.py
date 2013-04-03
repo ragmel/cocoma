@@ -29,7 +29,6 @@ stressValues = []
 runStartTimeList=[]         
 runDurations = []
 
-MALLOC_LIMIT = 220
 
 class distributionMod(object):
     
@@ -38,7 +37,7 @@ class distributionMod(object):
         
         self.startLoad = distributionArg["startLoad"]
         self.stopLoad = distributionArg["stopLoad"]
-        
+        self.MALLOC_LIMIT = distributionArg["malloclimit"]
 #        distributionGranularity_count=distributionGranularity
         #startTimesec = startTimesec
         duration = float(duration)
@@ -53,6 +52,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     
     startLoad = int(distributionArg["startload"])
     stopLoad = int(distributionArg["stopload"])
+    MALLOC_LIMIT = int(distributionArg["malloclimit"])
     
     print "hello this is dist linear incr"
     print "startLoad",startLoad
@@ -67,9 +67,9 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     runStartTime = startTimesec
     # check for the start load value if it's higher than malloc limit
     if startLoad < stopLoad:
-        insertLoad(startLoad, runStartTime, duration)
+        insertLoad(startLoad, runStartTime, duration, MALLOC_LIMIT)
     else:
-        insertLoad(stopLoad, runStartTime, duration)
+        insertLoad(stopLoad, runStartTime, duration, MALLOC_LIMIT)
 
     if int(distributionGranularity)==1:
         return stressValues, runStartTimeList, runDurations
@@ -98,7 +98,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
                 translatedStartTimesec = startTimesec + duration - runDuration2
                 insertLoad(linearStep, translatedStartTimesec, runDuration2)
 
-            insertLoad(linearStep,runStartTime, runDuration2)
+            insertLoad(linearStep,runStartTime, runDuration2, MALLOC_LIMIT)
 
             #increasing to next run            
             runNo=int(runNo)+1
@@ -123,13 +123,13 @@ def insertRun(stressValue, startTime, runRuration):
     runDurations.append(runRuration)
     print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runRuration
 
-# this function checks if the load is higher than the malloc limit. In that cat creates smaller runs
-def insertLoad(load, startTime, duration):
-    if load > MALLOC_LIMIT:
-        div = int(load // MALLOC_LIMIT)
-        rest = load - (div * MALLOC_LIMIT)
+# this function checks if the load is higher than the malloc limit. In that case creates smaller runs
+def insertLoad(load, startTime, duration, mallocLimit):
+    if load > mallocLimit:
+        div = int(load // mallocLimit)
+        rest = load - (div * mallocLimit)
         for _ in range(0,div):
-            insertRun(MALLOC_LIMIT, startTime, duration)
+            insertRun(mallocLimit, startTime, duration)
         if rest > 0:
             insertRun(rest, startTime, duration)
     else:
@@ -164,14 +164,9 @@ def argNames(Rtype):
     if Rtype.lower() == "mem":
         
         memReading=psutil.phymem_usage()
-        
-        freeMem =memReading.free/1048576
-        freeMemPercent=memReading.percent
-        print "free mem for border:",freeMem
-        print "free mem for border %:",freeMemPercent
-        
+        allMemory =memReading.total/1048576
 
-        argNames={"startload":{"upperBound":freeMem,"lowerBound":50,},"stopload":{"upperBound":freeMem,"lowerBound":50}}
+        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}}
         print "Use Arg's: ",argNames," with mem"
         return argNames
         

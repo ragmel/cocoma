@@ -21,7 +21,7 @@
 
 
 from bottle import route, run,response,request,re
-from bottle import static_file
+from bottle import *
 import sys,os, time, Pyro4, glob
 from datetime import datetime as dt
 import EmulationManager,ccmsh,DistributionManager,XmlParser

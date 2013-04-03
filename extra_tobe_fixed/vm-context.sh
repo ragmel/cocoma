@@ -28,40 +28,6 @@ do_start () {
 		sleep 1
 	done
 
-	#if [ -f /etc/default/bonfire ]; then
-	#	FELIX_HOME=/usr/local/EIS/felix-framework-4.0.2
-	#	source /etc/default/bonfire
-
-	#	zoo_ip=`echo $ZOOKEEPER`
-	#	if [ "$zoo_ip" == "" ]; then
-	#		zoo_ip=`ipshow`
-	#	fi 
-	#	sed -i "s:zookeeper.host.*:zookeeper.host=$zoo_ip:" $FELIX_HOME/load/org.apache.cxf.dosgi.discovery.zookeeper.cfg
-		
-	#fi
-
-	#EIS_HOME=/usr/local/EIS
-
-	#if [ -f $EIS_HOME/bundle/EISInstance* ]; then
-	#	if [ -f $EIS_HOME/bundle/org.apache.felix.gogo.shell-0.10.0.jar ]; then
-	#		mv $EIS_HOME/bundle/org.apache.felix.gogo.shell-0.10.0.jar $EIS_HOME/eis-bundles/
-	#	fi
-	#	if [ `ps -fe | grep "java -jar ./bin/felix.jar" | grep -v -c grep` == 0 ]; then
-	#		timestamp=$(date +%Y%m%d_%H%M%S)
-	#		cd $EIS_HOME/felix-framework-4.0.2/
-	#		exec java -jar ./bin/felix.jar >> /var/log/felix_$timestamp.log 2>&1 &
-	#	fi
-	#fi
-
-	#if [ -f $EIS_HOME/bundle/EISLoadBalancer* ]; then
-        #        if [ `ps -fe | grep zookeeper | grep -v -c grep` == 0 ]; then
-        #                timestamp=$(date +%Y%m%d_%H%M%S)
-        #                cd /root/zookeeper-3.3.4
-        #                mkdir -p /tmp/zookeeper
-        #                ./bin/zkServer.sh start
-        #        fi
-        #fi
-	
 	. /etc/profile
 	
 	if [ `ps -fe | grep Scheduler.py | grep -v -c grep` == 0 ]; then	
@@ -79,7 +45,6 @@ case "$1" in
 	do_start
 	;;
   stop)
-	#sed -i "s:ZOOKEEPER.*::g" /etc/default/bonfire
 	. /etc/profile	
 
 	ccmsh --stop scheduler >> /var/log/ccmsh.log 2>&1
