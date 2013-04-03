@@ -870,16 +870,38 @@ def services_control(service,action,args):
                 sys.exit(1)
             else:
                 print "API is not running" 
-                
-def checkDistroOverlap(startTimeEmu,distroList):
+
+def checkDistroOverlap2(startTimeEmu,distroList):
+    '''
+    1) Get all distributions of the same resource
+    2) Create a list of time overlapping ones
+    3) Create list of all their runs properties(times and resources)
+    4) Create list of time overlapping runs
+    5) Sum all overlapping runs stress load
+   distroList= [{'durationDistro': u'60', 'distrType': u'trapezoidal', 'granularity': u'5', 'startTimeDistro': u'0', 'emulatorArg': {'memsleep': 0}, 'emulatorArgNotes': ['\nOK'], 'emulatorName': u'lookbusy', 'resourceTypeDist': u'mem', 'distroArgs': {'startload': 100, 'stopload': 1000}, 'distroArgsNotes': ['\nOK', '\nOK'], 'distributionsName': u'MEM_Distro'}]
+
+    '''
+    
+    
+    #creating arrays to sort distributions
+    netArr=[]
+    cpuArr=[]
+    ioArr=[]
+    memArr=[]
+    
+
+    
     '''
     1) Get all the parameters from XML parser
     2) Check if distributions have overlapping time frames
     3) If so check if have the same resource and are within available resource bounds  
     '''
+    #[{'durationDistro': u'60', 'distrType': u'trapezoidal', 'granularity': u'5', 'startTimeDistro': u'0', 'emulatorArg': {'memsleep': 0}, 'emulatorArgNotes': ['\nOK'], 'emulatorName': u'lookbusy', 'resourceTypeDist': u'mem', 'distroArgs': {'startload': 100, 'stopload': 1000}, 'distroArgsNotes': ['\nOK', '\nOK'], 'distributionsName': u'MEM_Distro'}]
+
     n= len(distroList) 
     k=0
     for item in distroList:
+        
         compareStartTime=int(item["startTimeDistro"])
         compareEndTime = int(item["startTimeDistro"])+int(item["durationDistro"]) 
         
@@ -887,7 +909,204 @@ def checkDistroOverlap(startTimeEmu,distroList):
         while n!=m:
             compareStartTimeNext=int(distroList[m]["startTimeDistro"])
             compareEndTimeNext=int(compareStartTimeNext)+int(distroList[m]["durationDistro"])
-            #compareEndTimeNext = int(distroList[m]["startTimeDistro"])+int(distroList[m]["durationDistro"])
+            
+            #if item is not itself
+            if m!=k:
+                #if the time intersects
+                
+                if compareStartTime<compareEndTimeNext and compareEndTime > compareStartTimeNext :
+                    
+                    #if they both are using the same resource
+                    if item["resourceTypeDist"] == distroList[m]["resourceTypeDist"]:
+                        
+        
+                        if item["resourceTypeDis"] =="mem":
+                            memArr.add(distroList[m])
+                            #if last element
+                            if n==m:
+                                memArr.add(item)
+                                
+                        if item["resourceTypeDis"] =="io":
+                            ioArr.add(distroList[m])
+                            if n==m:
+                                memArr.add(item)
+                            
+                        if item["resourceTypeDis"] =="net":
+                            netArr.add(distroList[m])
+                            if n==m:
+                                memArr.add(item)
+                                
+                        if item["resourceTypeDis"] =="cpu":
+                            cpuArr.add(distroList[m])
+                            if n==m:
+                                memArr.add(item)
+                        
+                        
+    #if array has more than two elements check the time overlap
+    if len(ioArr)>1:
+        #load distro module
+        #get times and stress values of every run in every distribution
+        #check if runs overlap form overlapping runs value array
+        #sum all values in the array
+        
+    elif len(memArr)>1:
+    
+    elif len(cpuArr)>1:
+    
+    elif len(netArr)>1:
+    
+    else:
+        #single items only in the array, no conflicts possible
+        return False,"OK"                
+                        
+    def runOverlapCheck(distroArray):
+        #[{'durationDistro': u'60', 'distrType': u'trapezoidal', 'granularity': u'5', 'startTimeDistro': u'0', 'emulatorArg': {'memsleep': 0}, 'emulatorArgNotes': ['\nOK'],
+        #l 'emulatorName': u'lookbusy', 'resourceTypeDist': u'mem', 'distroArgs': {'startload': 100, 'stopload': 1000}, 'distroArgsNotes': ['\nOK', '\nOK'], 'distributionsName': u'MEM_Distro'}]
+        #loading distro
+        #HOMEPATH+"/distributions/dist_"+modName+".py"
+        
+        while item in distroArray:
+        distroCountModule=DistributionManager.loadDistribution(item["distrType"])
+        #<MEM, CPU, IO, NET> = argNames={"startload":{"upperBound":freeMem,"lowerBound":50,},"stopload":{"upperBound":freeMem,"lowerBound":50}}
+        distroArgNamesMod=DistributionManager.loadDistributionArgNames(distroArray[0]["distrType"])
+        distroArgsLimitsDict=distroArgNamesMod(distroArray[0]["resourceTypeDist"])
+        #dictionary with args
+        moduleArgs=distroArgsLimitsDict.keys()
+        stressValues1,runStartTime1,runDurations1=distroCountModule(None,None,None,compareStartTime,int(distroArray[0]["durationDistro"]), int(distroArray[0]["granularity"]),distroArray[0]["distroArgs"],HOMEPATH)
+                            '''
+                        1)Now load "dist_["resourceTypeDist"]" module first with parameters from one distribution then with 
+                          parameters from other distribution
+                        2)Check if start time of runs intersects with other runs and when it does check the workload 
+                        '''
+                        #loading distro
+                        #HOMEPATH+"/distributions/dist_"+modName+".py"
+                        distroCountModule=DistributionManager.loadDistribution(item["distrType"])
+                        #<MEM, CPU, IO, NET> = argNames={"startload":{"upperBound":freeMem,"lowerBound":50,},"stopload":{"upperBound":freeMem,"lowerBound":50}}
+                        distroArgNamesMod=DistributionManager.loadDistributionArgNames(item["distrType"])
+                        distroArgsLimitsDict=distroArgNamesMod(item["resourceTypeDist"])
+                        #dictionary with args
+                        moduleArgs=distroArgsLimitsDict.keys()
+                        
+                        #"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,
+                        #"distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist,
+                        #"emulatorArgNotes":emulatorArgNotes,"distroArgsNotes":distroArgsNotes
+                        
+                        #getting run values of one distribution and conflicting one(not all parameters are being used)
+                        #(emulationID="",emulationName="",emulationLifetimeID="",compareStartTime,int(item["durationDistro"]), int(item["granularity"]),item["distroArgs"],HOMEPATH
+                        stressValues1,runStartTime1,runDurations1=distroCountModule(None,None,None,compareStartTime,int(item["durationDistro"]), int(item["granularity"]),item["distroArgs"],HOMEPATH)
+                        stressValues2,runStartTime2,runDurations2=distroCountModule(None,None,None,compareStartTimeNext,int(distroList[m]["durationDistro"]), int(distroList[m]["granularity"]),distroList[m]["distroArgs"],HOMEPATH)
+                        
+                        #check which runs overlap
+                        distroRunsLen1=len(runStartTime1)
+                        distroRunsLen2=len(runStartTime2)
+                        c1=0
+                        c2=0
+                        while c1!=distroRunsLen1:
+                            while c2!=distroRunsLen2:
+                                compareEndTime1=runStartTime1[c1]+runDurations1[c1]
+                                compareStartTime2=runStartTime2[c2]
+                                if compareStartTime2<compareEndTime1:
+                                    #overlapping runs found check commutative workload
+                                    combinedWorkload=int(stressValues1[c1])+int(stressValues2[c2])
+                                        
+                                    #function to compare argument bounds 
+                                    a=0                    
+                                    for args in moduleArgs:
+                                        
+                                        try:
+                                            #startload
+                                            arg0 = moduleArgs[a].lower()
+                                            
+                                            #dict: {'lowerBound': 0, 'upperBound': 100}
+                                            distributionsLimitsDictValues = distroArgsLimitsDict[arg0]
+                                            #print "boundsCompare(arg0,distributionsLimitsDictValues):",boundsCompare(arg0,distributionsLimitsDictValues)
+                            
+                                            #xmlValue,LimitsDictValues,variableName = None
+                                            checked_distroArgs,checkDistroNote = XmlParser.boundsCompare(combinedWorkload,distributionsLimitsDictValues,arg0)         
+                                            
+                                            if checkDistroNote !="\nOK":
+                                                print "Distributions resources Out of Bounds: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]+". The specified value "+str(combinedWorkload)+" was higher than the maximum limit "+str(checked_distroArgs)
+                                                return True,"Distributions resources Out of Bounds: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]+". The specified value "+str(combinedWorkload)+" was higher than the maximum limit "+str(checked_distroArgs)
+                                                sys.exit(0)           
+                                            
+                                            a+=1
+                                            
+                                        except Exception,e:
+                                                logging.exception("error getting distribution arguments")
+                                                sys.exit(0)
+                                
+                                
+                                c2+=1
+                            c1+=1
+                            
+                
+                #print "Distributions Overlap: "+item["distributionsName"]+" and "+distroList[m]["distributionsName"]
+                
+            m+=1
+    
+        k+=1
+    
+    #if no problem has been found
+    return False,"OK"    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    #1. Get required module loaded
+    
+    modhandleMy=DistributionManager.loadDistribution(distributionType)
+    #2. Use this module for calculation and run creation   
+    (stressValues,runStartTime,runDurations)=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH)
+    
+    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":"+str(EmulationManager.readLogLevel("schedport"))
+
+    daemon=Pyro4.Proxy(uri)
+    
+    n=0
+    for vals in stressValues:
+        print "stressValues: ",vals
+        try:
+            print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
+            print daemon.hello()
+            #Sending emulation name already including ID stamp
+            emulationNameID =str(emulationID)+"-"+str(emulationName)
+            
+            schedulerReply = str(daemon.createJob(emulationID,emulationNameID,distributionID,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),runDurations[n]))
+            
+
+            distLoggerDM.info("Scheduler reply: "+str(schedulerReply))
+    
+                    
+def checkDistroOverlap(startTimeEmu,distroList):
+    '''
+    1) Get all the parameters from XML parser
+    2) Check if distributions have overlapping time frames
+    3) If so check if have the same resource and are within available resource bounds  
+    '''
+    #[{'durationDistro': u'60', 'distrType': u'trapezoidal', 'granularity': u'5', 'startTimeDistro': u'0', 'emulatorArg': {'memsleep': 0}, 'emulatorArgNotes': ['\nOK'], 'emulatorName': u'lookbusy', 'resourceTypeDist': u'mem', 'distroArgs': {'startload': 100, 'stopload': 1000}, 'distroArgsNotes': ['\nOK', '\nOK'], 'distributionsName': u'MEM_Distro'}]
+
+    n= len(distroList) 
+    k=0
+    for item in distroList:
+        
+        compareStartTime=int(item["startTimeDistro"])
+        compareEndTime = int(item["startTimeDistro"])+int(item["durationDistro"]) 
+        
+        m=0
+        while n!=m:
+            compareStartTimeNext=int(distroList[m]["startTimeDistro"])
+            compareEndTimeNext=int(compareStartTimeNext)+int(distroList[m]["durationDistro"])
             
             #if item is not itself
             if m!=k:
@@ -929,8 +1148,9 @@ def checkDistroOverlap(startTimeEmu,distroList):
                             while c2!=distroRunsLen2:
                                 compareEndTime1=runStartTime1[c1]+runDurations1[c1]
                                 compareStartTime2=runStartTime2[c2]
-                                if compareStartTime2<compareEndTime1:
+                                if compareStartTime2<compareEndTime1 and compareEndTime1>compareStartTime2:
                                     #overlapping runs found check commutative workload
+                                    #adding to the value list
                                     combinedWorkload=int(stressValues1[c1])+int(stressValues2[c2])
                                         
                                     #function to compare argument bounds 
