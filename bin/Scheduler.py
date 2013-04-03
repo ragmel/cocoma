@@ -17,11 +17,10 @@
 #
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
-
-import __builtin__
+import struct,fcntl
 import sys, os, time,imp,re
 from signal import SIGTERM 
-import subprocess
+import subprocess,socket
 from datetime import datetime
 from apscheduler.scheduler import Scheduler 
 import datetime as dt
@@ -396,7 +395,6 @@ def job_listener(event):
     
 def getifip(ifn):
     schedFileLogger.debug("-> getifip(ifn)")
-    import socket, fcntl, struct
     sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     return socket.inet_ntoa(fcntl.ioctl(sck.fileno(),0x8915,struct.pack('256s', ifn[:15]))[20:24])
 
@@ -466,9 +464,14 @@ if __name__=="__main__":
             print "[interface][port][loglevel] Use Scheduler <name of network interface> . Default network interface is eth0."
 
         else:
-            schedFileLogger.info("Interface: "+str(sys.argv[1]))
-            IP_ADDR=getifip(sys.argv[1])
-            EmulationManager.writeInterfaceData(sys.argv[1],"schedinterface")
+            try:
+                schedFileLogger.info("Interface: "+str(sys.argv[1]))
+                IP_ADDR=getifip(sys.argv[1])
+                EmulationManager.writeInterfaceData(sys.argv[1],"schedinterface")
+            except:
+                IP_ADDR=getifip("eth0")
+                EmulationManager.writeInterfaceData("eth0","schedinterface")
+                
             
             try:
                 if sys.argv[2]:
@@ -487,8 +490,11 @@ if __name__=="__main__":
       
 
     
+    try:    
+        main(IP_ADDR,PORT_ADDR)
+    except socket.error:
+        print "Unable to start Scheduler port already in use"
         
-    main(IP_ADDR,PORT_ADDR)
 
     
                        
