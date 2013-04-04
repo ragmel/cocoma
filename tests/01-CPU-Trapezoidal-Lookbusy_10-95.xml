@@ -13,8 +13,8 @@
      <startTime>0</startTime>
      <!--duration in seconds -->
      <duration>60</duration>
-     <granularity>5</granularity>
-     <distribution href="/distributions/trapezoidal" name="trapezoidal" />
+     <granularity>20</granularity>
+     <distribution href="/distributions/linear" name="linear" />
 	  <!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
       <stopLoad>95</stopLoad>
@@ -33,7 +33,7 @@
   	<!-- Use value "1" to enable logging(by default logging is off)  -->
   	<enable>1</enable>
   	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
-  	<frequency>3</frequency>
+  	<frequency>1</frequency>
   	<logLevel>debug</logLevel>
   </log>
   

@@ -104,10 +104,10 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             runStartTime = startTimesec+runDuration*upperBoundary
         
         insertLoad(linearStep, runStartTime, runDuration, MALLOC_LIMIT)
-
-        print "This run stress Value: ", stressValues
-        print "This are run start time: ", runStartTimeList
-        print "This are run durations: ", runDurations
+        
+        print "These are run stress Values:", stressValues
+        print "These are run start times:", runStartTimeList
+        print "These are run durations:", runDurations
             
         return stressValues, runStartTimeList, runDurations
 

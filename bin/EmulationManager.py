@@ -137,7 +137,7 @@ def getActiveEmulationList(name):
     
 
 def getEmulation(emulationName):
-    print "Hello this is getEmulation by name"
+    #print "Hello this is getEmulation by name"
     
     distroList=[]
     distroArgs={}
@@ -227,21 +227,21 @@ def getEmulation(emulationName):
                 emuParamsTable = c.fetchall()                
                 emulatorArg={}
                 for emuParams in emuParamsTable:
-                    print "emuParams"
+                    #print "emuParams"
                     print emuParams
                     
                     resourceTypeDist =emuParams[0]
                     
                     emulatorArg.update({emuParams[1]:emuParams[2]})
-                    print"emulatorArg"
-                    print emulatorArg
+                    #print"emulatorArg"
+                    #print emulatorArg
                     
         #saving single distribution elements to dictionary
                 distroDict={"distributionsID":distributions[0], "distributionsName":distributions[1],"startTimeDistro":distributions[2],"durationDistro":distributions[3],"granularity":distributions[4],"distrType":distributions[5],"emulatorName":distributions[6],"resourceTypeDist":resourceTypeDist,"emulatorArg":emulatorArg,"distroArgs":distroArgs}                    
                 distroList.append(distroDict)
         
         c.close()
-        print emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
+        #print emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList
         return (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)
 
     except sqlite.Error, e:
@@ -344,7 +344,7 @@ def deleteEmulation(emulationID):
     return "success"
     
 def purgeAll():
-    print "Hello this is purgeAll"
+    #print "Hello this is purgeAll"
      
     
     try:
@@ -390,147 +390,21 @@ def purgeAll():
     print "Removing all log files"
     delLogsCmd ="rm "+HOMEPATH+"/logs/*" 
     os.system(delLogsCmd)
-    
-    
-    #Now here we need to remove the emulation from the scheduler
-    #uri ="PYRO:scheduler.daemon@localhost:51889"
-    #daemon=Pyro4.Proxy(uri)
-    # we need to remove jobs somehow too
-    
-#TO-DO: logic needs to be updated 
-def updateEmulation(emulationID,newEmulationName,newDistributionType,newResourceType,newEmulationType,newStartTime,newStopTime, newDistributionGranularity,arg):
-    print "Hello this is updateEmulation"
-    
-    uri ="PYRO:scheduler.daemon@"+str(readIfaceIP("schedinterface"))+":"+str(readLogLevel("schedport"))
-    daemon=Pyro4.Proxy(uri)
-    
-    #1. Get all the values from the existing table
-    try:
-        if HOMEPATH:
-            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-        else:
-            conn = sqlite.connect('./data/cocoma.sqlite')
-            
-        c = conn.cursor()
-        
-        if emulationID !="NULL":
-            #c.execute("SELECT * FROM emulation WHERE emulationID='"+str(emulationID)+"'")
-            print "DB entries for emulation ID", emulationID
-            c.execute("""SELECT emulation.emulationID,emulation.emulationName, emulation.emulationType, emulation.resourceType, emulation.active, 
-                         distribution.distributionGranularity,distribution.distributionType,
-                         emulationLifetime.startTime,emulationLifetime.stopTime,emulationLifetime.emulationLifetimeID,distribution.distributionID 
-                         FROM emulation, distribution,emulationLifetime,DistributionParameters
-                         WHERE emulation.emulationID=? and emulation.distributionID = distribution.distributionID and
-                         emulationLifetime.emulationID = emulation.emulationID and 
-                         DistributionParameters.distributionID=distribution.distributionID"""
-                         ,[emulationID])
-            
-            emulationTable = c.fetchall()
-        
-        if emulationTable:
-                      
-        
-            for row in emulationTable:
-                print "row:",row
-                print "------->\nemulation.emulationID",row[0],"\nemulation.emulationName",row[1], "\nemulation.emulationType",row[2], "\nemulation.resourceType",row[3],"\nemulation.active",row[4],"\ndistribution.distributionGranularity",row[5],"\ndistribution.distributionType",row[6],"\nDistributionParameters.startLoad",row[7],"\nDistributionParameters.stopLoad",row[8], "\nemulationLifetime.startTime",row[9],"\nemulationLifetime.stopTime",row[10]
-                
-                emulationID=row[0]
-                emulationName=row[1]
-                emulationType=row[2]
-                resourceType=row[3]
-                active=row[4]
-                distributionGranularity=row[5]
-                distributionType=row[6]
-                startTime=row[7]
-                stopTime=row[8]
-                emulationLifetimeID =row[10]
-                distributionID= row[11]
-                
-                #Deleting existing jobs at scheduler
-                daemon.deleteJobs(emulationID, emulationName)
-                
-                #2. Check and assign which changes were made
-                if newEmulationName != "NULL":
-                    
-                
-                    emulationName = newEmulationName
-                    c.execute('UPDATE emulation SET emulationName=? WHERE emulationID =?',(emulationName,emulationID))
-                    conn.commit()
-                    
-                if newEmulationType != "NULL":
-                    emulationType = newEmulationType
-                    c.execute('UPDATE emulation SET emulationType=? WHERE emulationID =?',(emulationType,emulationID))
-                    conn.commit()
-                    
-                if newResourceType != "NULL":
-                    resourceType = newResourceType
-                    c.execute('UPDATE emulation SET resourceType=? WHERE emulationID =?',(resourceType,emulationID))
-                    conn.commit()
-                    
-                if newDistributionType != "NULL":
-                    distributionType = newDistributionType
-                    c.execute('UPDATE distribution SET distributionType=? WHERE distributionID =?',(distributionType,distributionID))
-                    conn.commit()
-                    
-                if newStartTime != "NULL":
-                    startTime = newStartTime
-                    c.execute('UPDATE emulationLifetime SET startTime=? WHERE emulationLifetimeID =?',(startTime,emulationLifetimeID))
-                    conn.commit()
-                    
-                if newStopTime != "NULL":
-                    stopTime = newStopTime
-                    c.execute('UPDATE emulationLifetime SET stopTime=? WHERE emulationLifetimeID =?',(stopTime,emulationLifetimeID))
-                
-                if newDistributionGranularity != "NULL":
-                    distributionGranularity = newDistributionGranularity
-                    c.execute('UPDATE distribution SET distributionGranularity=? WHERE distributionID =?',(distributionGranularity,distributionID))
-                    conn.commit()
-                ncount=0
-                for arguments in arg:
-                    c.execute('UPDATE DistributionParameters SET arg'+str(ncount)+'=? WHERE distributionID =?',(arguments,distributionID))
-                    conn.commit()
-                    
-         
-            
-            
-                #3. Deleting existing runLog
-                c.execute('DELETE FROM runLog WHERE emulationLifetimeID=?',[str(emulationLifetimeID)])
-                
-                dataCheck(startTime,stopTime)
-                conn.commit()
-                                                
-                #4. Create new runLog
-                DistributionManager.distributionManager(emulationID,emulationLifetimeID,emulationName,startTime,stopTime, distributionGranularity,distributionType,arg)   
-                
-                
-                
-        else:
-            print "emulation ID: \"",emulationID,"\" does not exists"
-        
-        
-        conn.commit()
-    except sqlite.Error, e:
-        print "Error getting emulation list %s:" % e.args[0]
-        print e
-        sys.exit(1)
-        
-    c.close()
-    
-  
 
 def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData):
     #data checks
-    print "startTimeEmu: ",startTimeEmu.lower()
+    #print "startTimeEmu: ",startTimeEmu.lower()
     if startTimeEmu.lower() == "now":
         startTimeEmu = emulationNow(2)
     
     try:
         check= dataCheck(startTimeEmu,float(stopTimeEmu))
         if check != "success":
-            return "error check the dates:"+str(check)
+            
+            raise Exception('Another emulation already exists in this time frame')
             
     except Exception, e:
-        return "error check the dates:"+str(startTimeEmu)+"\n"+str(e)
+        return "Check the dates:"+str(startTimeEmu)+"\n"+str(e)
     
     try:
         
@@ -553,7 +427,7 @@ def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequen
 
     daemon=Pyro4.Proxy(uri)
     try:
-        print daemon.hello()
+        daemon.hello()
     except  Pyro4.errors.CommunicationError, e:
             return "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---\n"
             sys.exit(0)
@@ -653,7 +527,7 @@ def dataCheck(startTime,stopTime):
     
     if time_re.match(startTime): 
     #and time_re.match(stopTime) :
-        print "date is correct"
+        #print "date is correct"
         #checking the date overlap
         return dateOverlapCheck(startTime, stopTime)
     else:
@@ -672,8 +546,8 @@ def dateOverlapCheck(startTime, stopTime):
     #print stopTimeSec
     
     dtNowSec = DistributionManager.timestamp(dt.now())
-    print "dt.now():",dt.now()
-    print "dtNow:",dtNowSec
+    #print "dt.now():",dt.now()
+    #print "dtNow:",dtNowSec
     
     if startTimeSec <= dtNowSec or stopTimeSec <= dtNowSec:
         print "Error: Dates cannot be in the past"
@@ -687,11 +561,7 @@ def dateOverlapCheck(startTime, stopTime):
      
     n= "1"
     try:
-        if HOMEPATH:
-            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-        else:
-            conn = sqlite.connect('./data/cocoma.sqlite')
-            
+        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
         c = conn.cursor()
     
         c.execute('SELECT startTime, stopTime FROM emulationLifetime')
@@ -725,11 +595,8 @@ def dateOverlapCheck(startTime, stopTime):
                     
                 
         else:
-            print "db is empty any date is OK" 
-        
+            pass    
         conn.commit()
-        
-        
         c.close()
     except sqlite.Error, e:
         print "dateOverlapCheck() SQL Error %s:" % e.args[0]
@@ -760,7 +627,7 @@ def checkPid(PROCNAME):
 def services_control(service,action,args):
     if action == "start":
             HOMEPATH= os.environ['COCOMA']
-            print "Homepath", HOMEPATH
+            #print "Homepath", HOMEPATH
             if service == "scheduler".lower():
                 #converting to our format
                 service = "Scheduler.py"
@@ -805,7 +672,7 @@ def services_control(service,action,args):
                     try:
                         HOMEPATH= os.environ['COCOMA']
                         aout=open(HOMEPATH+"/logs/COCOMAlogfile_API_sout.txt","wb")
-                        print "args",args
+                        #print "args",args
                         ccmshAPI = subprocess.Popen(HOMEPATH+"/bin/ccmshAPI.py "+args,shell=True,stdout=aout,stderr=aout)
                         apiPidNo =ccmshAPI.pid
                         print "Started API on PID No: ",apiPidNo
@@ -870,7 +737,7 @@ def services_control(service,action,args):
                 sys.exit(1)
             else:
                 print "API is not running" 
-
+"""
 def checkDistroOverlap2(startTimeEmu,distroList):
     '''
     1) Get all distributions of the same resource
@@ -972,7 +839,9 @@ def checkDistroOverlap2(startTimeEmu,distroList):
         distroArgsLimitsDict=distroArgNamesMod(distroArray[0]["resourceTypeDist"])
         #dictionary with args
         moduleArgs=distroArgsLimitsDict.keys()
-        stressValues1,runStartTime1,runDurations1=distroCountModule(None,None,None,compareStartTime,int(distroArray[0]["durationDistro"]), int(distroArray[0]["granularity"]),distroArray[0]["distroArgs"],HOMEPATH)
+        stressValues1,runStartTime1,runDurations1=distroCountModule(None,None,None,compareStartTime,int(item["durationDistro"]), int(item["granularity"]),item["distroArgs"],HOMEPATH)
+        
+        
                             '''
                         1)Now load "dist_["resourceTypeDist"]" module first with parameters from one distribution then with 
                           parameters from other distribution
@@ -1052,15 +921,6 @@ def checkDistroOverlap2(startTimeEmu,distroList):
 
 
 
-
-
-
-
-
-
-
-
-
     
     
     #1. Get required module loaded
@@ -1087,7 +947,7 @@ def checkDistroOverlap2(startTimeEmu,distroList):
 
             distLoggerDM.info("Scheduler reply: "+str(schedulerReply))
     
-                    
+"""                   
 def checkDistroOverlap(startTimeEmu,distroList):
     '''
     1) Get all the parameters from XML parser
@@ -1195,28 +1055,28 @@ def checkDistroOverlap(startTimeEmu,distroList):
         
                     
 def emulationNow(delay):
-    print "EmulationManager.emulation.Now"
+    #print "EmulationManager.emulation.Now"
     #we are adding 5 seconds to compensate for incert
        
     timeNow = dt.now()
     pyStartTimeIn5 = timeNow + datetime.timedelta(seconds=int(delay))
     #pyStopTime=pyStartTimeIn5+ datetime.timedelta(minutes=int(duration))
     
-    print "timeNow: ",timeNow
-    print "startTimeIn5: ",pyStartTimeIn5
+    #print "timeNow: ",timeNow
+    #print "startTimeIn5: ",pyStartTimeIn5
     #print "stopTime: ",pyStopTime
     
     #converting "2012-10-23 11:40:20.866356" to "2012-10-23T11:40:20"
     def timeFix(pydate):
-        print "this is timeConv!!!"
+        #print "this is timeConv!!!"
         Date = str(pydate)
         dateNorm =Date[0:10]+"T"+Date[11:19]
-        print "dateNorm: ", dateNorm
+        #print "dateNorm: ", dateNorm
         return dateNorm 
     
     startTimeIn5 = timeFix(pyStartTimeIn5)
     #stopTime = timeFix(pyStopTime)
-    print "startTimeIn5: ",startTimeIn5
+    #print "startTimeIn5: ",startTimeIn5
     #print "stopTime: ",stopTime
     
     return startTimeIn5
@@ -1226,11 +1086,7 @@ def writeInterfaceData(iface,column):
     Writes name of the interface into dedicated column in database
     '''
     try:
-        if HOMEPATH:
-            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-        else:
-            conn = sqlite.connect('./data/cocoma.sqlite')
-    
+        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
         c = conn.cursor()
         sqlStatement="UPDATE config SET "+str(column)+"='"+str(iface)+"'"
         c.execute(sqlStatement)
@@ -1247,11 +1103,7 @@ def readIfaceIP(column):
     Gets interface name from database and retrieves IP adress for the service
     '''
     try:
-        if HOMEPATH:
-            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-        else:
-            conn = sqlite.connect('./data/cocoma.sqlite')
-        
+        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
         c = conn.cursor()
         
         c.execute('SELECT '+str(column)+' FROM config')
@@ -1310,18 +1162,23 @@ def logToFile(elementName,level,filename=None):
     if filename == None:
         #setting log rotation for 10 files each up to 10000000 bytes (10MB)
         fileHandler = handlers.RotatingFileHandler(HOMEPATH+"/logs/COCOMAlogfile.csv",'a', 10000000, 10)
-        # deprecated#fileHandler= logging.FileHandler()
+        fileLoggerFormatter=logging.Formatter ('%(asctime)s;%(name)s;%(levelname)s;%(message)s',datefmt='%m/%d/%Y %H:%M:%S')
+        fileHandler.setFormatter(fileLoggerFormatter)
+        fileLogger.addHandler(fileHandler)
+        
+        #cli writing handler
+        #cliLoggerFormatter=logging.Formatter ('%(asctime)s - [%(name)s] - %(levelname)s : %(message)s',datefmt='%m/%d/%Y %H:%M:%S')
+        #cliHandler = logging.StreamHandler()
+        #cliHandler.setFormatter(cliLoggerFormatter)
+        #fileLogger.addHandler(cliHandler)
+    
     else:
         fileHandler= logging.FileHandler(HOMEPATH+"/logs/"+str(filename))
-    fileLoggerFormatter=logging.Formatter ('%(asctime)s;%(name)s;%(levelname)s;%(message)s',datefmt='%m/%d/%Y %H:%M:%S')
-    fileHandler.setFormatter(fileLoggerFormatter)
-    fileLogger.addHandler(fileHandler)
+        
+        fileLoggerFormatter=logging.Formatter ('%(asctime)s;%(name)s;%(levelname)s;%(message)s',datefmt='%m/%d/%Y %H:%M:%S')
+        fileHandler.setFormatter(fileLoggerFormatter)
+        fileLogger.addHandler(fileHandler)
     
-    #cli writing handler
-    cliLoggerFormatter=logging.Formatter ('%(asctime)s - [%(name)s] - %(levelname)s : %(message)s',datefmt='%m/%d/%Y %H:%M:%S')
-    cliHandler = logging.StreamHandler()
-    cliHandler.setFormatter(cliLoggerFormatter)
-    fileLogger.addHandler(cliHandler)
     return fileLogger 
 
 

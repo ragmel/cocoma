@@ -24,10 +24,11 @@ import optparse,sys,Pyro4,os,ConfigParser
 import sqlite3 as sqlite
 #import argparse - new version of optparlse
 import EmulationManager,XmlParser,DistributionManager,subprocess,ccmshAPI
-
+import logging
 
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 
+logging.basicConfig(level=logging.INFO)
 
 def main():
     '''
@@ -434,11 +435,14 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                         (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(arguments[0])
                         if startTimeEmu.lower() =="now":
                             startTimeEmu1 = EmulationManager.emulationNow(2)
-                            EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                            print EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
                         else:
-                            EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                            print EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
                     except Exception, e:
-                        print "Unable to use this file. Error:"+str(e)
+                        logging.exception("Problem description:")
+                        logging.error("Unable to use this file.Error:"+str(e)) 
+                        
+                        
                         
            
             else:
@@ -451,7 +455,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
         (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(arguments[0])
         startTimeEmu = EmulationManager.emulationNow(2)
         
-        EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+        print EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
         
     #else:
         #parser.print_help()

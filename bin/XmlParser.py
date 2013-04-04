@@ -41,6 +41,12 @@ def xmlParser(xmlData):
     global xmlLogger
     if xmlLogger is None:
         #initialize logger
+        levelStr=str(EmulationManager.readLogLevel("coreloglevel"))
+        if levelStr=="info":
+            level=logging.INFO
+        if levelStr=="debug":
+            level=logging.DEBUG
+        #xmlLogger=EmulationManager.logToFile("XML Parser",level)
         xmlLogger=EmulationManager.loggerSet("XML Parser")
 
     xmlLogger.debug("###This is XML Parser: xmlParser(xmlData)")
@@ -82,7 +88,7 @@ def xmlParser(xmlData):
 
     except Exception, e:
         emulationLogLevel = "info"
-        xmlLogger.debug("Setting ligging to INFO")
+        xmlLogger.debug("Setting logging to INFO")
     
     try:
         emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emutype')[0].firstChild.data

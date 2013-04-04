@@ -39,15 +39,10 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         if distLoggerDM is None:
             distLoggerDM=EmulationManager.loggerSet("Distriburion Manager",str(emulationID)+"-"+str(emulationName)+"-syslog"+"_"+str(startTime)+".csv")
 
-        print "this is distributionManager"
+        #print "this is distributionManager"
             
         try:
-            if HOMEPATH:
-                print
-                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-            else:
-                conn = sqlite.connect('./data/cocoma.sqlite')
-            
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
             c = conn.cursor()
                 
             # 1. We populate "distribution" table      
@@ -57,8 +52,8 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
             '''
             {'startLoad': u'10', 'stopLoad': u'90'}
             '''
-            print "distributionArg:", distributionArg
-            print "emulatorArg:",emulatorArg
+            #print "distributionArg:", distributionArg
+            #print "emulatorArg:",emulatorArg
             
             #2. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
             for d in distributionArg :
@@ -82,7 +77,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
                
         startTime= timeConv(startTime)
         startTimesec=timestamp(startTime)+float(startTimeDistro)
-        print "startTime:",startTime
+        #print "startTime:",startTime
         
         #make sure it is integer
         distributionGranularity = int(distributionGranularity)
@@ -108,10 +103,10 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
         
         n=0
         for vals in stressValues:
-            print "stressValues: ",vals
+            #print "stressValues: ",vals
             try:
-                print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
-                print daemon.hello()
+                #print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
+                daemon.hello()
                 #Sending emulation name already including ID stamp
                 emulationNameID =str(emulationID)+"-"+str(emulationName)
                 
@@ -123,12 +118,7 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
                 
                 #adding values to the table for recovery
                 try:
-                    if HOMEPATH:
-                        print
-                        conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                    else:
-                        conn = sqlite.connect('./data/cocoma.sqlite')
-                    
+                    conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
                     c = conn.cursor()
                         
                     # 1. We populate "distribution" table :stressValue,runStartTime,runNo     
@@ -150,19 +140,6 @@ def distributionManager(emulationID,emulationLifetimeID,emulationName,distributi
                 print e
                 print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
         
-                
-        try:
-          
-            print daemon.hello()
-            for job in daemon.listJobs():
-                print job
-
-        except  Pyro4.errors.CommunicationError, e:
-            print e
-            print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
-            print "list of jobs:"
-
-
 
 '''
 ###############################
@@ -237,7 +214,7 @@ def listDistributions(name):
 def listTests(name):
     
     testsList=[]
-    print "This is listTests\n"
+    #print "This is listTests\n"
     if name.lower()=="all":
         if HOMEPATH:
             path=HOMEPATH+"/tests/"  # root folder of project
@@ -331,8 +308,7 @@ def timeConv(dbtimestamp):
             
 #convert date to seconds
 def timestamp(date):
-
-    gmtTime = time.mktime(date.timetuple())+3600
+    gmtTime=(date-dt.datetime(1970,1,1)).total_seconds()
     return gmtTime
 
 if __name__ == "__main__":

@@ -5,14 +5,14 @@
   <!--date format: 2014-10-10T10:10:10 -->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>60</emustopTime>
+  <emustopTime>120</emustopTime>
   
   <distributions>  
    <name>CPU_Distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>60</duration>
-     <granularity>5</granularity>
+     <duration>120</duration>
+     <granularity>24</granularity>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
 	  <!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
@@ -31,7 +31,7 @@
   	<!-- Use value "1" to enable logging(by default logging is off)  -->
   	<enable>1</enable>
   	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
-  	<frequency>3</frequency>
+  	<frequency>1</frequency>
   	<logLevel>debug</logLevel>
   </log>
   
