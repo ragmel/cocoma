@@ -1,4 +1,4 @@
-#Copyright 2012 SAP Ltd
+#Copyright 2012-2013 SAP Ltd
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -191,7 +191,8 @@ def memLoad(distributionID,runNo,memSize,memThreads,duration):
         #print "writing success into DB..."
         message="Success"
         executed="True"
-        
+    ###write to log###
+    #str(emulationID)+"-"+str(emulationName)+"-syslog"+"_"+str(startTimeEmu)+".csv"    
     dbWriter(distributionID,runNo,message,executed)
     time.sleep(duration)            
            
