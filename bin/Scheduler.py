@@ -421,13 +421,13 @@ if __name__=="__main__":
     #schedFileLogger.error("")
     #schedFileLogger.warn("")
     try:
-        if sys.argv[1] == "debug":
+        if sys.argv[1].lower() == "debug":
             #Writing log level to DB
             LOG_LEVEL=logging.DEBUG
     except Exception, e:
         print""
     try:
-        if sys.argv[2] == "debug":
+        if sys.argv[2].lower() == "debug":
             
             LOG_LEVEL=logging.DEBUG
             
@@ -435,7 +435,7 @@ if __name__=="__main__":
         print""
     
     try:
-        if sys.argv[3] == "debug":
+        if sys.argv[3].lower() == "debug":
             
             LOG_LEVEL=logging.DEBUG
             
