@@ -55,10 +55,10 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     stopLoad = int(distributionArg["stopload"])
     
     # we check that the resource type is mem, if not we give malloc limit a value 1000000, because is not used for the other resource types
+    MALLOC_LIMIT = 1000000
     if RESTYPE == "MEM":
         MALLOC_LIMIT = int(distributionArg["malloclimit"])
-    else:
-        MALLOC_LIMIT = 1000000
+
     
 #    print "hello this is dist linear incr"
 #    print "startLoad",startLoad
