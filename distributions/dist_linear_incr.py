@@ -29,6 +29,7 @@ stressValues = []
 runStartTimeList=[]         
 runDurations = []
 
+RESTYPE = "null"
 
 class distributionMod(object):
     
@@ -43,26 +44,31 @@ class distributionMod(object):
         duration = float(duration)
         
 #        runNo=int(0)
-        
-        print "Hello this is dist_linear"
-        print "emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH",emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH
+
+#        print "Hello this is dist_linear"
+#        print "emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH",emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH
         
 
 def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
     
     startLoad = int(distributionArg["startload"])
     stopLoad = int(distributionArg["stopload"])
-    MALLOC_LIMIT = int(distributionArg["malloclimit"])
     
-    print "hello this is dist linear incr"
-    print "startLoad",startLoad
-    print "stopLoad",stopLoad
-    print "distributionGranularity",distributionGranularity
+    # we check that the resource type is mem, if not we give malloc limit a value 1000000, because is not used for the other resource types
+    if RESTYPE == "MEM":
+        MALLOC_LIMIT = int(distributionArg["malloclimit"])
+    else:
+        MALLOC_LIMIT = 1000000
+    
+#    print "hello this is dist linear incr"
+#    print "startLoad",startLoad
+#    print "stopLoad",stopLoad
+#    print "distributionGranularity",distributionGranularity
     
     duration = float(duration)
     runDuration = int(duration)/distributionGranularity
     runDuration = float(runDuration)
-    print "Duration is seconds:", runDuration
+#    print "Duration is seconds:", runDuration
     
     runStartTime = startTimesec
     # check for the start load value if it's higher than malloc limit
@@ -105,10 +111,10 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         
         insertLoad(linearStep, runStartTime, runDuration, MALLOC_LIMIT)
         
-        print "These are run stress Values:", stressValues
-        print "These are run start times:", runStartTimeList
-        print "These are run durations:", runDurations
-            
+#        print "These are run stress Values:", stressValues
+#        print "These are run start times:", runStartTimeList
+#        print "These are run durations:", runDurations
+          
         return stressValues, runStartTimeList, runDurations
 
 def insertRun(stressValue, startTime, runDuration):
@@ -119,7 +125,8 @@ def insertRun(stressValue, startTime, runDuration):
 
 # this function checks if the load is higher than the malloc limit. In that case creates smaller runs
 def insertLoad(load, startTime, duration, mallocLimit):
-    if load > mallocLimit:
+    # if not a resource tyme MEM we just insert it
+    if load > mallocLimit and RESTYPE == "MEM":
         div = int(load // mallocLimit)
         rest = load - (div * mallocLimit)
         for _ in range(0,div):
@@ -151,7 +158,8 @@ def argNames(Rtype):
     if Rtype.lower() == "cpu":
         
         argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}}
-        print "Use Arg's: ",argNames," with cpu"
+        RESTYPE = "CPU"
+#        print "Use Arg's: ",argNames," with cpu"
         return argNames
 
     #get total amount of memory and set it to upper bound
@@ -161,17 +169,20 @@ def argNames(Rtype):
         allMemory =memReading.total/1048576
 
         argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}}
-        print "Use Arg's: ",argNames," with mem"
+        RESTYPE = "MEM"
+#        print "Use Arg's: ",argNames," with mem"
         return argNames
         
     if Rtype.lower() == "io":
         argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}}
-        print "Use Arg's: ",argNames," with io"
+        RESTYPE = "IO"
+#        print "Use Arg's: ",argNames," with io"
         return argNames
     
     if Rtype.lower() == "net":
         argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}}
-        print "Use Arg's: ",argNames," with net"
+        RESTYPE = "NET"
+#        print "Use Arg's: ",argNames," with net"
         return argNames
     
 
