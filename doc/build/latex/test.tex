@@ -13,7 +13,7 @@
 
 
 \title{COCOMA Documentation}
-\date{February 14, 2013}
+\date{April 05, 2013}
 \release{1}
 \author{Sergej Svorobej}
 \newcommand{\sphinxlogo}{}
@@ -132,41 +132,456 @@ correlate metrics of the emulated environment with the test results.
 
 \section{How to use it}
 \label{01_how_to_use_it:how-to-use-it}\label{01_how_to_use_it::doc}
-That has a paragraph about a main subject and is set when the `='
-is at least the same length of the title itself.
+In order to use COCOMA framework experimenter creates an emulation using XML language(see below Examples section). Emulation should contain all the neccessary information
+about duration, magnitude and required resource usage. Once XML document is received by COCOMA, the framework will automatically schedule and execute
+required workload on the chosen resource(-s) such as CPU, IO, Memory and/or Network.
 
 
-\subsection{Subject Subtitle}
-\label{01_how_to_use_it:subject-subtitle}
-Subtitles are set with `-` and are required to have the same length
-of the subttitle itself, just like titles.
+\subsection{Installation}
+\label{01_how_to_use_it:installation}
+The framework is designed to run on GNU/Linux and released in \emph{.deb} package only.
+Once you have downloaded latest COCOMA version install it by running:
 
-Lists can be unnumbered like:
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} dpkg \PYGZhy{}i cocoma\PYGZus{}X.X\PYGZhy{}X\PYGZus{}all.deb
+\end{Verbatim}
+
+The application will be installed to folder \emph{``/usr/share/pyshared/cocoma''}. All the additional required programs and libraries will be downloaded and installed on the fly if missing.
+To check check if it was installed correctly run:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} ccmsh \PYGZhy{}v
+\end{Verbatim}
+
+
+\subsection{Starting Components}
+\label{01_how_to_use_it:starting-components}
+To avail full functionality of COCOMA two daemons need to be started:
 \begin{itemize}
 \item {} 
-Item Foo
+Scheduler daemon (mandatory)
 
 \item {} 
-Item Bar
+API Daemon (optional if REST API functionality is required)
 
 \end{itemize}
 
-Or automatically numbered:
-\begin{enumerate}
-\item {} 
-Item 1
+\textbf{Scheduler daemon} - runs in the background and executes workload with differential parameters at the time defined in the emulation properties.
+to start scheduler use command:
 
-\item {} 
-Item 2
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} ccmsh \PYGZhy{}\PYGZhy{}start scheduler
+\end{Verbatim}
 
-\end{enumerate}
+Default network interface is \emph{eth0}, port \emph{51889} you can change that by adding required interface name and port number at the end:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} ccmsh \PYGZhy{}\PYGZhy{}start scheduler wlan0 5180
+\end{Verbatim}
+
+If more detailed output information is needed \emph{Scheduler} also can be started in \emph{DEBUG} mode:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} ccmsh \PYGZhy{}\PYGZhy{}start scheduler wlan0 5180 debug
+\end{Verbatim}
+
+\emph{Note: Scheduler needs to be running otherwise nothing will work. Always start it first!!}
+
+\textbf{API daemon} - represents RESTfull web API which exposes COCOMA resources for use over the network. It follows the same startup pattern as the Scheduler:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} ccmsh \PYGZhy{}\PYGZhy{}start api
+\end{Verbatim}
+
+By default web API will try to start using \emph{eth0} network interface on port \emph{5050}, but it can be changed by supplying own parameters:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} ccmsh \PYGZhy{}\PYGZhy{}start api wlan0 3030
+\end{Verbatim}
+
+The log level will be always same as the \emph{Scheduler}.
 
 
-\subsection{Inline Markup}
-\label{01_how_to_use_it:inline-markup}
+\subsection{Command Line Arguments}
+\label{01_how_to_use_it:command-line-arguments}
+The COCOMA \textbf{ccmsh} command line interface has several options:
+\index{ccmsh command line option!-h, --help show this help message and exit}\index{-h, --help show this help message and exit!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-h}\pysigline{\bfcode{-h}\code{}\code{,~}\bfcode{--help}\code{~show~this~help~message~and~exit}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-v, --version show version information}\index{-v, --version show version information!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-v}\pysigline{\bfcode{-v}\code{}\code{,~}\bfcode{--version}\code{~show~version~information}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-l, --list list all emulations or specific emulation by name}\index{-l, --list list all emulations or specific emulation by name!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-l}\pysigline{\bfcode{-l}\code{}\code{,~}\bfcode{--list}\code{~list~all~emulations~or~specific~emulation~by~name}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-r, --results list all emulations results or specific emulation results by name}\index{-r, --results list all emulations results or specific emulation results by name!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-r}\pysigline{\bfcode{-r}\code{}\code{,~}\bfcode{--results}\code{~list~all~emulations~results~or~specific~emulation~results~by~name}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-j, --list-jobs list of all scheduled jobs}\index{-j, --list-jobs list of all scheduled jobs!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-j}\pysigline{\bfcode{-j}\code{}\code{,~}\bfcode{--list-jobs}\code{~list~of~all~scheduled~jobs}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-i, --dist lists all available distributions and gives distributiondetails by name}\index{-i, --dist lists all available distributions and gives distributiondetails by name!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-i}\pysigline{\bfcode{-i}\code{}\code{,~}\bfcode{--dist}\code{~lists~all~available~distributions~and~gives~distributiondetails~by~name}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-e, --emu lists all available emulators and gives emulator details by name}\index{-e, --emu lists all available emulators and gives emulator details by name!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-e}\pysigline{\bfcode{-e}\code{}\code{,~}\bfcode{--emu}\code{~lists~all~available~emulators~and~gives~emulator~details~by~name}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-x, --xml provide path to XML file with emulation details}\index{-x, --xml provide path to XML file with emulation details!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-x}\pysigline{\bfcode{-x}\code{}\code{,~}\bfcode{--xml}\code{~provide~path~to~XML~file~with~emulation~details}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-n, --now add to the "-x" argument to override emulation start date and execute test immediately}\index{-n, --now add to the "-x" argument to override emulation start date and execute test immediately!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-n}\pysigline{\bfcode{-n}\code{}\code{,~}\bfcode{--now}\code{~add~to~the~''-x''~argument~to~override~emulation~start~date~and~execute~test~immediately}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-d, --delete delete emulation by name}\index{-d, --delete delete emulation by name!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-d}\pysigline{\bfcode{-d}\code{}\code{,~}\bfcode{--delete}\code{~delete~emulation~by~name}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!-p, --purge wipes all DB entries, removes all scheduled jobs and log files}\index{-p, --purge wipes all DB entries, removes all scheduled jobs and log files!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh-p}\pysigline{\bfcode{-p}\code{}\code{,~}\bfcode{--purge}\code{~wipes~all~DB~entries,~removes~all~scheduled~jobs~and~log~files}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!--start launch Scheduler or API daemon}\index{--start launch Scheduler or API daemon!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh--start}\pysigline{\bfcode{--start}\code{~launch~Scheduler~or~API~daemon}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!--stop stop Scheduler or API daemon}\index{--stop stop Scheduler or API daemon!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh--stop}\pysigline{\bfcode{--stop}\code{~stop~Scheduler~or~API~daemon}}
+\end{fulllineitems}
+
+\index{ccmsh command line option!--show show OS information on Scheduler or API daemon}\index{--show show OS information on Scheduler or API daemon!ccmsh command line option}
+
+\begin{fulllineitems}
+\phantomsection\label{01_how_to_use_it:cmdoption-ccmsh--show}\pysigline{\bfcode{--show}\code{~show~OS~information~on~Scheduler~or~API~daemon}}
+\end{fulllineitems}
+
+
+
+\subsection{REST API Description}
+\label{01_how_to_use_it:rest-api-description}
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{n+nt}{\PYGZlt{}emulation}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}Emu\PYGZhy{}CPU\PYGZhy{}RAM\PYGZhy{}IO\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}emulationType}\PYG{n+nt}{\PYGZgt{}}Mix\PYG{n+nt}{\PYGZlt{}/emulationType\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}Mix\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}now\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+  \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}stopTime}\PYG{n+nt}{\PYGZgt{}}180\PYG{n+nt}{\PYGZlt{}/stopTime\PYGZgt{}}
+
+  \PYG{n+nt}{\PYGZlt{}distributions}\PYG{n+nt}{\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}Distro1\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}5\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+     \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}duration}\PYG{n+nt}{\PYGZgt{}}30\PYG{n+nt}{\PYGZlt{}/duration\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}granularity}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/granularity\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+   \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{cpu utilization distribution range}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+      \PYG{n+nt}{\PYGZlt{}startLoad}\PYG{n+nt}{\PYGZgt{}}90\PYG{n+nt}{\PYGZlt{}/startLoad\PYGZgt{}}
+      \PYG{n+nt}{\PYGZlt{}stopLoad}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/stopLoad\PYGZgt{}}
+      \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/stressapptest\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+      \PYG{n+nt}{\PYGZlt{}emulator\PYGZhy{}params}\PYG{n+nt}{\PYGZgt{}}
+        \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{more parameters will be added }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+        \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+   \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{Number of CPUs to keep busy (default: autodetected)}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+   \PYG{n+nt}{\PYGZlt{}ncpus}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/ncpus\PYGZgt{}}
+
+      \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
+
+   \PYG{n+nt}{\PYGZlt{}distributions}\PYG{n+nt}{\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}Distro2\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}5\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+     \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}duration}\PYG{n+nt}{\PYGZgt{}}30\PYG{n+nt}{\PYGZlt{}/duration\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}granularity}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/granularity\PYGZgt{}}
+     \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+   \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{cpu utilization distribution range}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+      \PYG{n+nt}{\PYGZlt{}startLoad}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/startLoad\PYGZgt{}}
+      \PYG{n+nt}{\PYGZlt{}stopLoad}\PYG{n+nt}{\PYGZgt{}}90\PYG{n+nt}{\PYGZlt{}/stopLoad\PYGZgt{}}
+      \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/stressapptest\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+      \PYG{n+nt}{\PYGZlt{}emulator\PYGZhy{}params}\PYG{n+nt}{\PYGZgt{}}
+        \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{more parameters will be added }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+        \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+   \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{Number of CPUs to keep busy (default: autodetected)}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+   \PYG{n+nt}{\PYGZlt{}ncpus}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/ncpus\PYGZgt{}}
+
+      \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
+
+  \PYG{n+nt}{\PYGZlt{}log}\PYG{n+nt}{\PYGZgt{}}
+   \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use value \PYGZdq{}1\PYGZdq{} to enable logging(by default logging is off)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+   \PYG{n+nt}{\PYGZlt{}enable}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/enable\PYGZgt{}}
+   \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use seconds for setting probe intervals(if logging is enabled default is 3sec)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+   \PYG{n+nt}{\PYGZlt{}frequency}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/frequency\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}/log\PYGZgt{}}
+
+\PYG{n+nt}{\PYGZlt{}/emulation\PYGZgt{}}
+\end{Verbatim}
+
+
+\section{Single Distribution: CLI Examples}
+\label{02_cli_examples:single-distribution-cli-examples}\label{02_cli_examples::doc}
+blah
+
+
+\subsection{CPU}
+\label{02_cli_examples:cpu}
+blah
+
+
+\subsection{I/O}
+\label{02_cli_examples:i-o}
 Words can have \emph{emphasis in italics} or be \textbf{bold} and you can
 define code samples with back quotes, like when you talk about a
 command: \code{sudo} gives you super user powers!
+
+
+\subsection{Memory}
+\label{02_cli_examples:memory}
+blah
+
+
+\subsection{Network}
+\label{02_cli_examples:network}
+blah
+
+This is an example on how to link images:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+         \PYG{n+nt}{\PYGZlt{}emulation}\PYG{n+nt}{\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuname}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}emu\PYG{n+nt}{\PYGZlt{}/emuname\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuType}\PYG{n+nt}{\PYGZgt{}}Mix\PYG{n+nt}{\PYGZlt{}/emuType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuresourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/emuresourceType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustartTime}\PYG{n+nt}{\PYGZgt{}}now\PYG{n+nt}{\PYGZlt{}/emustartTime\PYGZgt{}}
+           \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustopTime}\PYG{n+nt}{\PYGZgt{}}15\PYG{n+nt}{\PYGZlt{}/emustopTime\PYGZgt{}}
+
+           \PYG{n+nt}{\PYGZlt{}distributions}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}distro\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}duration}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/duration\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}granularity}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/granularity\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{cpu utilization distribution range}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startLoad}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/startLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}stopLoad}\PYG{n+nt}{\PYGZgt{}}95\PYG{n+nt}{\PYGZlt{}/stopLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/lookbusy\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator\PYGZhy{}params}\PYG{n+nt}{\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{more parameters will be added }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{Number of CPUs to keep busy (default: autodetected)}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}ncpus}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/ncpus\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
+
+          \PYG{n+nt}{\PYGZlt{}log}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use value \PYGZdq{}1\PYGZdq{} to enable logging(by default logging is off)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}enable}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/enable\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use seconds for setting probe intervals(if logging is enabled default is 3sec)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}frequency}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/frequency\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/log\PYGZgt{}}
+         \PYG{n+nt}{\PYGZlt{}/emulation\PYGZgt{}}
+\end{Verbatim}
+
+
+\section{Single Distribution: REST Examples}
+\label{03_rest_examples::doc}\label{03_rest_examples:single-distribution-rest-examples}
+blah
+
+
+\subsection{CPU}
+\label{03_rest_examples:cpu}
+blah
+
+
+\subsection{I/O}
+\label{03_rest_examples:i-o}
+Words can have \emph{emphasis in italics} or be \textbf{bold} and you can
+define code samples with back quotes, like when you talk about a
+command: \code{sudo} gives you super user powers!
+
+
+\subsection{Memory}
+\label{03_rest_examples:memory}
+blah
+
+blah
+
+
+\subsection{Network}
+\label{03_rest_examples:network}
+blah
+
+This is an example on how to link images:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+         \PYG{n+nt}{\PYGZlt{}emulation}\PYG{n+nt}{\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuname}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}emu\PYG{n+nt}{\PYGZlt{}/emuname\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuType}\PYG{n+nt}{\PYGZgt{}}Mix\PYG{n+nt}{\PYGZlt{}/emuType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuresourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/emuresourceType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustartTime}\PYG{n+nt}{\PYGZgt{}}now\PYG{n+nt}{\PYGZlt{}/emustartTime\PYGZgt{}}
+           \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustopTime}\PYG{n+nt}{\PYGZgt{}}15\PYG{n+nt}{\PYGZlt{}/emustopTime\PYGZgt{}}
+
+           \PYG{n+nt}{\PYGZlt{}distributions}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}distro\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}duration}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/duration\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}granularity}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/granularity\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{cpu utilization distribution range}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startLoad}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/startLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}stopLoad}\PYG{n+nt}{\PYGZgt{}}95\PYG{n+nt}{\PYGZlt{}/stopLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/lookbusy\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator\PYGZhy{}params}\PYG{n+nt}{\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{more parameters will be added }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{Number of CPUs to keep busy (default: autodetected)}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}ncpus}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/ncpus\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
+
+          \PYG{n+nt}{\PYGZlt{}log}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use value \PYGZdq{}1\PYGZdq{} to enable logging(by default logging is off)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}enable}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/enable\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use seconds for setting probe intervals(if logging is enabled default is 3sec)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}frequency}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/frequency\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/log\PYGZgt{}}
+         \PYG{n+nt}{\PYGZlt{}/emulation\PYGZgt{}}
+\end{Verbatim}
+
+
+\section{Multiple Distribution: CLI Examples}
+\label{04_cli_mult_examples:multiple-distribution-cli-examples}\label{04_cli_mult_examples::doc}
+blah
+
+
+\subsection{CPU}
+\label{04_cli_mult_examples:cpu}
+blah
+
+
+\subsection{I/O}
+\label{04_cli_mult_examples:i-o}
+Words can have \emph{emphasis in italics} or be \textbf{bold} and you can
+define code samples with back quotes, like when you talk about a
+command: \code{sudo} gives you super user powers!
+
+
+\subsection{Memory}
+\label{04_cli_mult_examples:memory}
+blah
+
+blah
+
+
+\subsection{Network}
+\label{04_cli_mult_examples:network}
+blah
+
+This is an example on how to link images:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+         \PYG{n+nt}{\PYGZlt{}emulation}\PYG{n+nt}{\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuname}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}emu\PYG{n+nt}{\PYGZlt{}/emuname\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuType}\PYG{n+nt}{\PYGZgt{}}Mix\PYG{n+nt}{\PYGZlt{}/emuType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuresourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/emuresourceType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustartTime}\PYG{n+nt}{\PYGZgt{}}now\PYG{n+nt}{\PYGZlt{}/emustartTime\PYGZgt{}}
+           \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustopTime}\PYG{n+nt}{\PYGZgt{}}15\PYG{n+nt}{\PYGZlt{}/emustopTime\PYGZgt{}}
+
+           \PYG{n+nt}{\PYGZlt{}distributions}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}distro\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}duration}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/duration\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}granularity}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/granularity\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{cpu utilization distribution range}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startLoad}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/startLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}stopLoad}\PYG{n+nt}{\PYGZgt{}}95\PYG{n+nt}{\PYGZlt{}/stopLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/lookbusy\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator\PYGZhy{}params}\PYG{n+nt}{\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{more parameters will be added }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{Number of CPUs to keep busy (default: autodetected)}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}ncpus}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/ncpus\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
+
+          \PYG{n+nt}{\PYGZlt{}log}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use value \PYGZdq{}1\PYGZdq{} to enable logging(by default logging is off)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}enable}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/enable\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use seconds for setting probe intervals(if logging is enabled default is 3sec)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}frequency}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/frequency\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/log\PYGZgt{}}
+         \PYG{n+nt}{\PYGZlt{}/emulation\PYGZgt{}}
+\end{Verbatim}
+
+
+\section{Multiple Distribution: REST Examples}
+\label{05_rest_mult_examples::doc}\label{05_rest_mult_examples:multiple-distribution-rest-examples}
+blah
+
+
+\subsection{CPU}
+\label{05_rest_mult_examples:cpu}
+blah
+
+
+\subsection{I/O}
+\label{05_rest_mult_examples:i-o}
+Words can have \emph{emphasis in italics} or be \textbf{bold} and you can
+define code samples with back quotes, like when you talk about a
+command: \code{sudo} gives you super user powers!
+
+
+\subsection{Memory}
+\label{05_rest_mult_examples:memory}
+blah
+
+blah
+
+
+\subsection{Network}
+\label{05_rest_mult_examples:network}
+blah
 
 This is an example on how to link images:
 
@@ -209,7 +624,7 @@ This is an example on how to link images:
 
 
 \chapter{Indices and tables}
-\label{index:indices-and-tables}\label{index::doc}\begin{itemize}
+\label{index:indices-and-tables}\begin{itemize}
 \item {} 
 \emph{genindex}
 

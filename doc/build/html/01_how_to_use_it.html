@@ -60,44 +60,124 @@ required workload on the chosen resource(-s) such as CPU, IO, Memory and/or Netw
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>The framework is designed to run on GNU/Linux and released in <em>.deb</em> package only.
 Once you have downloaded latest COCOMA version install it by running:</p>
-<p><tt class="docutils literal"><span class="pre">dpkg</span> <span class="pre">-i</span> <span class="pre">cocoma_X.X-X_all.deb</span></tt></p>
-<p>The application will be installed to folder <em>&#8220;/usr/share/pyshared/cocoma&#8221;</em>. All the additional required programs and libraries will be downloaded and installed on the fly if missing.
-to check check if it was installed correctly run:</p>
-<p><tt class="docutils literal"><span class="pre">ccmsh</span> <span class="pre">-v</span></tt></p>
+<div class="highlight-xml"><div class="highlight"><pre>$ dpkg -i cocoma_X.X-X_all.deb
+</pre></div>
 </div>
-<div class="section" id="starting-of-components">
-<h2>Starting of Components<a class="headerlink" href="#starting-of-components" title="Permalink to this headline">¶</a></h2>
+<p>The application will be installed to folder <em>&#8220;/usr/share/pyshared/cocoma&#8221;</em>. All the additional required programs and libraries will be downloaded and installed on the fly if missing.
+To check check if it was installed correctly run:</p>
+<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh -v
+</pre></div>
+</div>
+</div>
+<div class="section" id="starting-components">
+<h2>Starting Components<a class="headerlink" href="#starting-components" title="Permalink to this headline">¶</a></h2>
 <p>To avail full functionality of COCOMA two daemons need to be started:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Scheduler daemon</li>
+<li>Scheduler daemon (mandatory)</li>
 <li>API Daemon (optional if REST API functionality is required)</li>
 </ul>
 </div></blockquote>
-<p><strong>Scheduler daemon</strong> - runs on the background and executes workload with differential parameters at the time defined in the emulation properties.
+<p><strong>Scheduler daemon</strong> - runs in the background and executes workload with differential parameters at the time defined in the emulation properties.
 to start scheduler use command:</p>
-<p><tt class="docutils literal"><span class="pre">ccmsh</span> <span class="pre">--start</span> <span class="pre">scheduler</span></tt></p>
-<p><em>Note: Scheduler needs to be running otherwise nothing will work. Always execute it first!!</em></p>
-<blockquote>
-<div>Command Line Interface(CLI)</div></blockquote>
-<p>Or automatically numbered:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li>Item 1</li>
-<li>Item 2</li>
-</ol>
-</div></blockquote>
+<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start scheduler
+</pre></div>
+</div>
+<p>Default network interface is <em>eth0</em>, port <em>51889</em> you can change that by adding required interface name and port number at the end:</p>
+<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start scheduler wlan0 5180
+</pre></div>
+</div>
+<p>If more detailed output information is needed <em>Scheduler</em> also can be started in <em>DEBUG</em> mode:</p>
+<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start scheduler wlan0 5180 debug
+</pre></div>
+</div>
+<p><em>Note: Scheduler needs to be running otherwise nothing will work. Always start it first!!</em></p>
+<p><strong>API daemon</strong> - represents RESTfull web API which exposes COCOMA resources for use over the network. It follows the same startup pattern as the Scheduler:</p>
+<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start api
+</pre></div>
+</div>
+<p>By default web API will try to start using <em>eth0</em> network interface on port <em>5050</em>, but it can be changed by supplying own parameters:</p>
+<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start api wlan0 3030
+</pre></div>
+</div>
+<p>The log level will be always same as the <em>Scheduler</em>.</p>
 </div>
 <div class="section" id="command-line-arguments">
 <h2>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Permalink to this headline">¶</a></h2>
-<p>blah</p>
+<p>The COCOMA <strong class="program">ccmsh</strong> command line interface has several options:</p>
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-h">
+<tt class="descname">-h</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--help</tt><tt class="descclassname"> show this help message and exit</tt><a class="headerlink" href="#cmdoption-ccmsh-h" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-v">
+<tt class="descname">-v</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--version</tt><tt class="descclassname"> show version information</tt><a class="headerlink" href="#cmdoption-ccmsh-v" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-l">
+<tt class="descname">-l</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list</tt><tt class="descclassname"> list all emulations or specific emulation by name</tt><a class="headerlink" href="#cmdoption-ccmsh-l" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-r">
+<tt class="descname">-r</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--results</tt><tt class="descclassname"> list all emulations results or specific emulation results by name</tt><a class="headerlink" href="#cmdoption-ccmsh-r" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-j">
+<tt class="descname">-j</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list-jobs</tt><tt class="descclassname"> list of all scheduled jobs</tt><a class="headerlink" href="#cmdoption-ccmsh-j" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-i">
+<tt class="descname">-i</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--dist</tt><tt class="descclassname"> lists all available distributions and gives distributiondetails by name</tt><a class="headerlink" href="#cmdoption-ccmsh-i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-e">
+<tt class="descname">-e</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--emu</tt><tt class="descclassname"> lists all available emulators and gives emulator details by name</tt><a class="headerlink" href="#cmdoption-ccmsh-e" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-x">
+<tt class="descname">-x</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--xml</tt><tt class="descclassname"> provide path to XML file with emulation details</tt><a class="headerlink" href="#cmdoption-ccmsh-x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-n">
+<tt class="descname">-n</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--now</tt><tt class="descclassname"> add to the &quot;-x&quot; argument to override emulation start date and execute test immediately</tt><a class="headerlink" href="#cmdoption-ccmsh-n" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-d">
+<tt class="descname">-d</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--delete</tt><tt class="descclassname"> delete emulation by name</tt><a class="headerlink" href="#cmdoption-ccmsh-d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-p">
+<tt class="descname">-p</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--purge</tt><tt class="descclassname"> wipes all DB entries, removes all scheduled jobs and log files</tt><a class="headerlink" href="#cmdoption-ccmsh-p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh--start">
+<tt class="descname">--start</tt><tt class="descclassname"> launch Scheduler or API daemon</tt><a class="headerlink" href="#cmdoption-ccmsh--start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh--stop">
+<tt class="descname">--stop</tt><tt class="descclassname"> stop Scheduler or API daemon</tt><a class="headerlink" href="#cmdoption-ccmsh--stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh--show">
+<tt class="descname">--show</tt><tt class="descclassname"> show OS information on Scheduler or API daemon</tt><a class="headerlink" href="#cmdoption-ccmsh--show" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="rest-api-description">
 <h2>REST API Description<a class="headerlink" href="#rest-api-description" title="Permalink to this headline">¶</a></h2>
-<p>Words can have <em>emphasis in italics</em> or be <strong>bold</strong> and you can
-define code samples with back quotes, like when you talk about a
-command: <tt class="docutils literal"><span class="pre">sudo</span></tt> gives you super user powers!</p>
-<p>This is an example on how to link images:</p>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -131,40 +211,84 @@ command: <tt class="docutils literal"><span class="pre">sudo</span></tt> gives y
 31
 32
 33
-34</pre></div></td><td class="code"><div class="highlight"><pre>         <span class="nt">&lt;emulation&gt;</span>
-           <span class="nt">&lt;emuname&gt;</span>CPU_emu<span class="nt">&lt;/emuname&gt;</span>
-           <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
-           <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
-           <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
-           <span class="c">&lt;!--duration in seconds --&gt;</span>
-           <span class="nt">&lt;emustopTime&gt;</span>15<span class="nt">&lt;/emustopTime&gt;</span>
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+  <span class="nt">&lt;name&gt;</span>Emu-CPU-RAM-IO<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;emulationType&gt;</span>Mix<span class="nt">&lt;/emulationType&gt;</span>
+  <span class="nt">&lt;resourceType&gt;</span>Mix<span class="nt">&lt;/resourceType&gt;</span>
+  <span class="nt">&lt;startTime&gt;</span>now<span class="nt">&lt;/startTime&gt;</span>
+  <span class="c">&lt;!--duration in seconds --&gt;</span>
+  <span class="nt">&lt;stopTime&gt;</span>180<span class="nt">&lt;/stopTime&gt;</span>
 
-           <span class="nt">&lt;distributions&gt;</span>
-            <span class="nt">&lt;name&gt;</span>CPU_distro<span class="nt">&lt;/name&gt;</span>
-            <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
-            <span class="c">&lt;!--duration in seconds --&gt;</span>
-            <span class="nt">&lt;duration&gt;</span>10<span class="nt">&lt;/duration&gt;</span>
-            <span class="nt">&lt;granularity&gt;</span>1<span class="nt">&lt;/granularity&gt;</span>
-            <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
-            <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
-            <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
-            <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
-            <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
-            <span class="nt">&lt;emulator-params&gt;</span>
-                 <span class="c">&lt;!--more parameters will be added --&gt;</span>
-                 <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
-                 <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
-                 <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
-            <span class="nt">&lt;/emulator-params&gt;</span>
-          <span class="nt">&lt;/distributions&gt;</span>
+  <span class="nt">&lt;distributions&gt;</span>
+     <span class="nt">&lt;name&gt;</span>Distro1<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+     <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+   <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+      <span class="nt">&lt;startLoad&gt;</span>90<span class="nt">&lt;/startLoad&gt;</span>
+      <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;emulator-params&gt;</span>
+        <span class="c">&lt;!--more parameters will be added --&gt;</span>
+        <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+   <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+   <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
 
-          <span class="nt">&lt;log&gt;</span>
-            <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
-            <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
-            <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
-            <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
-          <span class="nt">&lt;/log&gt;</span>
-         <span class="nt">&lt;/emulation&gt;</span>
+      <span class="nt">&lt;/emulator-params&gt;</span>
+  <span class="nt">&lt;/distributions&gt;</span>
+
+   <span class="nt">&lt;distributions&gt;</span>
+     <span class="nt">&lt;name&gt;</span>Distro2<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+     <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+   <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+      <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+      <span class="nt">&lt;stopLoad&gt;</span>90<span class="nt">&lt;/stopLoad&gt;</span>
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;emulator-params&gt;</span>
+        <span class="c">&lt;!--more parameters will be added --&gt;</span>
+        <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+   <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+   <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+
+      <span class="nt">&lt;/emulator-params&gt;</span>
+  <span class="nt">&lt;/distributions&gt;</span>
+
+  <span class="nt">&lt;log&gt;</span>
+   <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+   <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+   <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+   <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
+  <span class="nt">&lt;/log&gt;</span>
+
+<span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -180,7 +304,7 @@ command: <tt class="docutils literal"><span class="pre">sudo</span></tt> gives y
   <ul>
 <li><a class="reference internal" href="#">How to use it</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#starting-of-components">Starting of Components</a></li>
+<li><a class="reference internal" href="#starting-components">Starting Components</a></li>
 <li><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
 <li><a class="reference internal" href="#rest-api-description">REST API Description</a></li>
 </ul>
