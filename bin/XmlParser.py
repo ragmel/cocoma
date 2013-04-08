@@ -33,8 +33,16 @@ def xmlReader(filename):
     #close file because we don't need it anymore:
     fileObj.close()
     #parse the xml you got from the file
-    (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)=xmlParser(data)
-    return emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData
+    try:
+        (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)=xmlParser(data)
+        return emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData
+    except:
+        #sending back just error message
+        try:
+            errorReturn=xmlParser(data)
+            return errorReturn
+        except Exception, e:
+            xmlLogger.exception("XML input Error:"+str(e))
 
 def xmlParser(xmlData):
     #general log creator
@@ -60,14 +68,31 @@ def xmlParser(xmlData):
         #lower case values
         dom2 = parseString(xmlData.lower())
     except Exception,e:
-        xmlLogger.exception("XML input Error:"+str(e))
-        return "<error>XML input Error:"+str(e)+"</error>"
+        xmlLogger.debug("XML input Error:"+str(e))
+        return "XML is not well formed Error: "+str(e)
+
+    try:
+        emulationXml=dom2.getElementsByTagName('emulation')[0]
+        emulationXml=""
+    except Exception, e:
+        xmlLogger.debug("XML input Error:"+str(e))
+        return 'XML input Error:"emulation" section not found'
+
         
         
     distroList = []
-    distributionsXml=dom2.getElementsByTagName('distributions')
+    try:
+        distributionsXml=dom2.getElementsByTagName('distributions')
+    except Exception, e:
+        xmlLogger.debug("XML input Error:"+str(e))
+        return 'XML input Error:"distributions" section not found'
+        
     #emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
-    emulationName=dom1.getElementsByTagName('emulation')[0].getElementsByTagName('emuname')[0].firstChild.data
+    try:
+        emulationName=dom1.getElementsByTagName('emulation')[0].getElementsByTagName('emuname')[0].firstChild.data
+    except Exception, e:
+        xmlLogger.debug("XML input Error:"+str(e))
+        return 'XML input Error:"emuname" section not found'
     
     #if <log> block is written in XML file we will find it and read it, if not we will just set default values 
     try:
@@ -92,12 +117,27 @@ def xmlParser(xmlData):
     
     try:
         emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emutype')[0].firstChild.data
+    except Exception, e:
+        xmlLogger.debug("XML input Error:"+str(e))
+        return 'XML input Error:"emutype"section not found'
+
+    try:    
         startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustarttime')[0].firstChild.data
+    except Exception, e:
+        xmlLogger.debug("XML input Error:"+str(e))
+        return 'XML input Error:"emustarttime" section not found'
+    
+    try:
         resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuresourcetype')[0].firstChild.data
+    except Exception, e:
+        xmlLogger.debug("XML input Error:"+str(e))
+        return 'XML input Error:"emuresourcetype" section not found'
+    
+    try:
         stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustoptime')[0].firstChild.data
     except Exception,e:
-        xmlLogger.exception("XML input Error:"+str(e))
-        return "<error>XML input Error:"+str(e)+"</error>"
+        xmlLogger.debug("XML input Error:"+str(e))
+        return 'XML input Error:"emustoptime" section not found'
      
     
     
@@ -118,8 +158,8 @@ def xmlParser(xmlData):
         try:
             resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data
         except Exception,e:
-            xmlLogger.exception("XML input Error:"+str(e))
-            return "<error>XML input Error:"+str(e)+"</error>"
+            xmlLogger.debug('XML input emulator-params Error:"resourcetype" section not found Error:'+str(e))
+            return 'XML input emulator-params Error:"resourcetype" section not found'
 
         try:
             moduleMethod=DistributionManager.loadDistributionArgNames(distrType)
@@ -127,15 +167,17 @@ def xmlParser(xmlData):
             distroArgsLimitsDict=moduleMethod(resourceTypeDist)
             moduleArgs=distroArgsLimitsDict.keys()
         except IOError, e:
-            print "Unable to load module name \"",distrType,"\" error:"
-            print e
-            sys.exit(0) 
+            return "Unable to load distribution module name \"",distrType,"\" error:"
+             
         '''
         loading emulator args
         '''
-        
-        emulator = dom2.getElementsByTagName('emulator')[n]
-        emulatorType = emulator.attributes["name"].value
+        try:
+            emulator = dom2.getElementsByTagName('emulator')[n]
+            emulatorType = emulator.attributes["name"].value
+        except Exception,e:
+            xmlLogger.debug('XML input Error:"emulator" section not found. '+str(e))
+            return 'XML input Error:"emulator" section not found'
             
         try:
             EmulatorModuleMethod=DistributionManager.loadEmulatorArgNames(emulatorType)
@@ -143,19 +185,28 @@ def xmlParser(xmlData):
             emulatorArgsLimitsDict=EmulatorModuleMethod(resourceTypeDist)
             emulatorArgs=emulatorArgsLimitsDict.keys()
         except IOError, e:
-            print "Unable to load module name \"",emulatorType,"\" error:"
-            print e
-            sys.exit(0)    
+            xmlLogger.debug("Unable to load module name \"",str(emulatorType),"\" error:"+str(e))
+            return "Unable to load module: "+str(emulatorType)    
         
         
         #get things inside "distributions"
         try:
             startTimeDistro = dom2.getElementsByTagName('distributions')[n].getElementsByTagName('starttime')[0].firstChild.data
+        except Exception,e:
+            xmlLogger.debug('XML input Error:distributions "starttime" section not found. '+str(e))
+            return 'XML input Error:distributions "starttime" section not found.'
+        
+        try:
             durationDistro = dom2.getElementsByTagName('duration')[n].firstChild.data
+        except Exception,e:
+            xmlLogger.debug('XML input Error:"duration" section not found. '+str(e))
+            return 'XML input Error:"duration" section not found'
+        
+        try:
             granularity= dom2.getElementsByTagName('granularity')[n].firstChild.data
         except Exception,e:
-            xmlLogger.exception("XML input Error:"+str(e))
-            return "<error>XML input Error:"+str(e)+"</error>"
+            xmlLogger.debug('XML input Error:"granularity" section not found. '+str(e))
+            return 'XML input Error:"granularity" section not found'
          
         distroArgs={}
         a=0
@@ -183,8 +234,8 @@ def xmlParser(xmlData):
                 a+=1
                
             except Exception,e:
-                    xmlLogger.exception("Distribution argument specified in XML does not exist in distribution module \""+str(resourceTypeDist)+"\" section: "+str(e))
-                    return "<error>Distribution argument specified in XML does not exist in distribution module \""+str(resourceTypeDist)+"\" section: "+str(e)+"</error>"
+                    xmlLogger.debug("Distribution argument specified in XML does not exist in distribution module \""+str(resourceTypeDist)+"\" section: "+str(e))
+                    return "Distribution argument specified in XML does not exist in distribution module \""+str(resourceTypeDist)+"\" section: "+str(e)
         '''
         getting all the arguments for emulator
         '''
@@ -203,17 +254,31 @@ def xmlParser(xmlData):
                 a+=1
                 
             except Exception, e:
-                    xmlLogger.exception("Emulator argument specified in XML does not exist in emulator module \""+str(resourceTypeDist)+"\" section: "+str(e))
-                    return "<error>Emulator argument specified in XML does not exist in emulator module \""+str(resourceTypeDist)+"\" section: "+str(e)+"</error>"
+                    xmlLogger.debug("Emulator argument specified in XML does not exist in emulator module \""+str(resourceTypeDist)+"\" section: "+str(e))
+                    return "Emulator argument specified in XML does not exist in emulator module \""+str(resourceTypeDist)+"\" section: "+str(e)
         
         try:
             resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data 
-            distributionsName=dom1.getElementsByTagName('distributions')[n].getElementsByTagName('name')[0].firstChild.data     
+        except Exception,e:
+            xmlLogger.debug('XML input emulator-params Error:"resourcetype" section not found. '+str(e))
+            return 'XML input emulator-params Error:"resourcetype" section not found'
+
+        try:
+            distributionsName=dom1.getElementsByTagName('distributions')[n].getElementsByTagName('name')[0].firstChild.data
+        except Exception,e:
+            xmlLogger.debug('XML distribution input Error:"name" section not found. '+str(e))
+            return 'XML input Error:"name" section not found'
+
+     
             emulator = dom1.getElementsByTagName('emulator')[n]
+        except Exception,e:
+            xmlLogger.debug('XML input Error:"emulator" section not found '+str(e))
+            return 'XML input Error:"emulator" section not found'
+        try:
             emulatorName = emulator.attributes["name"].value
         except Exception,e:
-            xmlLogger.exception("XML input Error:"+str(e))
-            return "<error>XML input Error:"+str(e)+"</error>"
+            xmlLogger.debug('XML input emulator Error:"name" section not found. '+str(e))
+            return 'XML input emulator Error:"name" section not found'
         
         #add every emulation in the dictionary
         distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,"distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist,"emulatorArgNotes":emulatorArgNotes,"distroArgsNotes":distroArgsNotes}

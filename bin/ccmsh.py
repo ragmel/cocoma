@@ -64,7 +64,7 @@ def main():
         
     deleteEmu = optparse.OptionGroup(parser, 'Delete emulations')
     deleteEmu.add_option('-d', '--delete', action='store_true',default=False, dest='deleteID', help='delete emulation by name')
-    deleteEmu.add_option('-p','--purge', action='store_true',default=False, dest='purge_all', help='wipes all DB entries, removes all scheduled jobs and log files')
+    deleteEmu.add_option('-p','--purge', action='store_true',default=False, dest='purge_all', help='wipes all DB entries and removes all scheduled jobs')
     
     listDistro = optparse.OptionGroup(parser, 'List available distributions')  
     listDistro.add_option('-i', '--dist', action='store_true', default=False,dest='listAllDistro',help='lists all available distributions and gives distribution details by name')
@@ -432,15 +432,22 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                 
                 if daemonCheck()!=False:
                     try:
+                        
                         (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(arguments[0])
+                        
                         if startTimeEmu.lower() =="now":
                             startTimeEmu1 = EmulationManager.emulationNow(2)
-                            print EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                            messageReturn=  EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                            print messageReturn
                         else:
-                            print EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                            messageReturn= EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                            print messageReturn
                     except Exception, e:
-                        logging.exception("Problem description:")
-                        logging.error("Unable to use this file.Error:"+str(e)) 
+                        try:
+                            errorReturn = XmlParser.xmlReader(arguments[0])
+                            print errorReturn
+                        except Exception,e:
+                                logging.exception("Problem description:")
                         
                         
                         
@@ -450,12 +457,20 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 
     
     if options.emuNow and options.xml:
-        print "Starting Now"
+        try:
+            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(arguments[0])
+            startTimeEmu = EmulationManager.emulationNow(2)
+            print EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+        except:
+            try:
+                errorReturn = XmlParser.xmlReader(arguments[0])
+                print errorReturn
+            except Exception,e:
+                logging.exception("Problem description:")
+                
+                
         
-        (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(arguments[0])
-        startTimeEmu = EmulationManager.emulationNow(2)
         
-        print EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
         
     #else:
         #parser.print_help()

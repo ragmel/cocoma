@@ -770,12 +770,14 @@ def create_emu():
             response.status = 400
             
     else:    
-        print "Body data detected:\n",xml_stream_body
         try:
             (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlParser(xml_stream_body)
         except Exception,e:
             response.status = 400
-            return XmlParser.xmlParser(xml_stream_body)
+            #proper way to return web API error
+            emuError=ET.Element('error')
+            emuError.text = str(XmlParser.xmlParser(xml_stream_body))
+            return prettify(emuError)
             
     
     #create emulation

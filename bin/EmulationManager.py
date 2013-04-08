@@ -387,9 +387,9 @@ def purgeAll():
         daemon.deleteJobs("all", "all")
     except Exception, e:
         print "Scheduler is not reachable: ",e
-    print "Removing all log files"
-    delLogsCmd ="rm "+HOMEPATH+"/logs/*" 
-    os.system(delLogsCmd)
+    #print "Removing all log files"
+    #delLogsCmd ="rm "+HOMEPATH+"/logs/*" 
+    #os.system(delLogsCmd)
 
 def createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData):
     #data checks
