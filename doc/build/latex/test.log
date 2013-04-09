@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.1.16)  14 FEB 2013 15:08
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.1.16)  9 APR 2013 19:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -789,11 +789,7 @@ Package: hypcap 2011/02/16 v1.11 Adjusting the anchors of captions (HO)
 
 
 Writing index file test.idx
-(./test.aux
-
-LaTeX Warning: Label `index::doc' multiply defined.
-
-)
+No file test.aux.
 \openout1 = `test.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 116.
@@ -811,7 +807,7 @@ LaTeX Font Info:    ... okay on input line 116.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 116.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 116.
 
- (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 116.
@@ -864,8 +860,6 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 116.
 LaTeX Info: Redefining \pageref on input line 116.
 LaTeX Info: Redefining \nameref on input line 116.
-
-(./test.out) (./test.out)
 \@outlinefile=\write6
 \openout6 = `test.out'.
 
@@ -879,7 +873,8 @@ LaTeX Font Info:    Try loading font information for T1+phv on input line 119.
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <24.88> not available
-(Font)              Font shape`T1/phv/m/it' in size <17.28> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 119.
+LaTeX Font Info:    Font shape `T1/phv/m/it' in size <17.28> not available
 (Font)              Font shape `T1/phv/m/sl' tried instead on input line 119.
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <17.28> not available
 (Font)              Font shape `T1/phv/b/it' tried instead on input line 119.
@@ -911,71 +906,88 @@ s been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.119 \tableofcontents
-                       [2]
+                       [2] [1
+
+] [2
+
+]
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 124.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 130.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 135.
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 142.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 140.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 145.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1pcr.fd
+File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
+)
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 161.
+
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 163.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 165.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 169.
+ [3]
+LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10> not available
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 211.
+ [4]
+LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 369.
+LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 370.
+ [5]
+LaTeX Font Info:    Font shape `T1/pcr/bx/it' in size <10> not available
+(Font)              Font shape `T1/pcr/b/it' tried instead on input line 421.
+LaTeX Font Info:    Font shape `T1/pcr/b/it' in size <10> not available
+(Font)              Font shape `T1/pcr/b/sl' tried instead on input line 421.
+ [6]
+[7] [8] [9] [10] [11] [12
 
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1pcr.fd
-File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
-)
+]
+Chapter 2.
+No file test.ind.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 932.
+[13]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 932.
+ (./test.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 932.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 932.
 
-LaTeX Warning: File `_static/system_activity.jpg' not found on input line 169.
 
+Package rerunfilecheck Warning: File `test.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
 
-! Package pdftex.def Error: File `_static/system_activity.jpg' not found.
+Package rerunfilecheck Info: Checksums for `test.out':
+(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             After:  FCAE402B8CF294980FE91D86809C5622;154.
 
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.169 ...ludegraphics{_static/system_activity.jpg}
-                                                  
-? 
-! Emergency stop.
- ...                                              
-                                                  
-l.169 ...ludegraphics{_static/system_activity.jpg}
-                                                  
-Using draft setting for this image.
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
- 
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 932.
+ ) 
 Here is how much of TeX's memory you used:
- 8736 strings out of 495059
- 120792 string characters out of 3182030
- 208239 words of memory out of 3000000
- 11754 multiletter control sequences out of 15000+200000
- 46523 words of font info for 50 fonts, out of 3000000 for 9000
+ 8862 strings out of 495059
+ 122989 string characters out of 3182030
+ 223235 words of memory out of 3000000
+ 11814 multiletter control sequences out of 15000+200000
+ 57781 words of font info for 69 fonts, out of 3000000 for 9000
  15 hyphenation exceptions out of 8191
- 36i,11n,45p,246b,382s stack positions out of 5000i,500n,10000p,200000b,50000s
-!  ==> Fatal error occurred, no output PDF file produced!
-nt info for 67 fonts, out of 3000000 for 9000
- 15 hyphenation exceptions out of 8191
- 36i,11n,45p,246b,403s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,11n,45p,391b,493s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
-rw/courier/ucrro8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/
-uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/urw/times/utmri8a.pfb>
-Output written on test.pdf (9 pages, 88654 bytes).
+fonts/type1/urw/courier/ucrbo8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/u
+crro8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1
+/urw/times/utmri8a.pfb>
+Output written on test.pdf (17 pages, 127269 bytes).
 PDF statistics:
- 103 PDF objects out of 1000 (max. 8388607)
- 83 compressed objects within 1 object stream
- 17 named destinations out of 1000 (max. 500000)
- 25 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 168 PDF objects out of 1000 (max. 8388607)
+ 138 compressed objects within 2 object streams
+ 56 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

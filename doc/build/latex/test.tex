@@ -319,57 +319,33 @@ Show OS information on Scheduler or API daemon, displays PID numbers
 
 
 
-\subsection{REST API Description}
-\label{01_how_to_use_it:rest-api-description}
+\subsection{REST API Index}
+\label{01_how_to_use_it:rest-api-index}
 If the web API daemon has been started successfully, then COCOMA toolkit can be accessed remotely using its RESTfull API.
-\begin{itemize}
-\item {} 
-/
 
-\item {} 
-/emulations
+The API URIs summary list:
 
-\item {} 
-/emulations/\{name\}
+\begin{Verbatim}[commandchars=\\\{\}]
+* /
+* /emulations
+* /emulations/\PYGZob{}name\PYGZcb{}
+* /distributions
+* /distributions/\PYGZob{}name\PYGZcb{}
+* /emulators
+* /emulators/\PYGZob{}name\PYGZcb{}
+* /results
+* /results/\PYGZob{}name\PYGZcb{}
+* /tests
+* /tests/\PYGZob{}name\PYGZcb{}
+* /logs
+* /logs/system
+* /logs/emulations
+* /logs/emulations/\PYGZob{}name\PYGZcb{}
+\end{Verbatim}
 
-\item {} 
-/distributions
 
-\item {} 
-/distributions/\{name\}
-
-\item {} 
-/emulators
-
-\item {} 
-/emulators/\{name\}
-
-\item {} 
-/results
-
-\item {} 
-/results/\{name\}
-
-\item {} 
-/tests
-
-\item {} 
-/tests/\{name\}
-
-\item {} 
-/logs
-
-\item {} 
-/logs/system
-
-\item {} 
-/logs/emulations
-
-\item {} 
-/logs/emulations/\{name\}
-
-\end{itemize}
-\index{GET (HTTP method)!/|textbf}
+\subsection{REST API Full Description}
+\label{01_how_to_use_it:rest-api-full-description}\index{GET (HTTP method)!/|textbf}
 
 \begin{fulllineitems}
 \phantomsection\label{01_how_to_use_it:method-get-}\pysigline{\code{GET}~\bfcode{/}}~\begin{quote}\begin{description}
@@ -516,7 +492,25 @@ The returned \emph{404 – Not Found} XML is:
 
 \end{description}\end{quote}
 
-Create emulation.
+The returned \emph{201-Created} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}emulation} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulations/4\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}ID}\PYG{n+nt}{\PYGZgt{}}4\PYGZhy{}CPU\PYGZus{}EMU\PYG{n+nt}{\PYGZlt{}/ID\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}EmuNotes}\PYG{n+nt}{\PYGZgt{}}OK\PYG{n+nt}{\PYGZlt{}/EmuNotes\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}DistroNotes}\PYG{n+nt}{\PYGZgt{}}OK\PYG{n+nt}{\PYGZlt{}/DistroNotes\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulations\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/emulation\PYGZgt{}}
+\end{Verbatim}
+
+The returned \emph{400 – Bad Request} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}error}\PYG{n+nt}{\PYGZgt{}}XML is not well formed Error: syntax error: line 1, column 0\PYG{n+nt}{\PYGZlt{}/error\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 
@@ -536,6 +530,19 @@ Create emulation.
 \end{description}\end{quote}
 
 Displays emulators list.
+The returned \emph{200- OK} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}collection} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}items} \PYG{n+na}{offset=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{total=}\PYG{l+s}{\PYGZdq{}3\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/lookbusy\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/stressapptest\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}stressapptest\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/iperf\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}iperf\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}/items\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/collection\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 
@@ -558,6 +565,35 @@ Displays emulators list.
 \end{description}\end{quote}
 
 Displays information about emulator by name.
+The returned \emph{200- OK} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulator/lookbusy\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}info}\PYG{n+nt}{\PYGZgt{}}
+    Emulator lookbusy can be used for following resources:
+    1)Loads CPU with parameters:
+      ncpus \PYGZhy{} Number of CPUs to keep busy (default: autodetected)
+
+    2)Loads Memory(MEM) with parameters:
+      memSleep \PYGZhy{} Time to sleep between iterations, in usec (default 1000)
+
+    3)Changing size of files to use during IO with parameters:
+      ioBlockSize \PYGZhy{} Size of blocks to use for I/O in MB
+      ioSleep \PYGZhy{} Time to sleep between iterations, in msec (default 100)
+
+
+    XML block example:
+    \PYG{n+ni}{\PYGZam{}lt;}emulator\PYGZhy{}params\PYG{n+ni}{\PYGZam{}gt;}
+        \PYG{n+ni}{\PYGZam{}lt;}resourceType\PYG{n+ni}{\PYGZam{}gt;}CPU\PYG{n+ni}{\PYGZam{}lt;}/resourceType\PYG{n+ni}{\PYGZam{}gt;}
+        \PYG{n+ni}{\PYGZam{}lt;}ncpus\PYG{n+ni}{\PYGZam{}gt;}0\PYG{n+ni}{\PYGZam{}lt;}/ncpus\PYG{n+ni}{\PYGZam{}gt;}
+    \PYG{n+ni}{\PYGZam{}lt;}/emulator\PYGZhy{}params\PYG{n+ni}{\PYGZam{}gt;}
+
+    \PYG{n+nt}{\PYGZlt{}/info\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/emulator\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 
@@ -577,6 +613,19 @@ Displays information about emulator by name.
 \end{description}\end{quote}
 
 Displays distributions list.
+The returned \emph{200- OK} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}collection} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}items} \PYG{n+na}{offset=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{total=}\PYG{l+s}{\PYGZdq{}3\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZus{}incr\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZus{}incr\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/trapezoidal\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}trapezoidal\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}/items\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/collection\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 
@@ -599,6 +648,16 @@ Displays distributions list.
 \end{description}\end{quote}
 
 Displays information about distributions by name.
+The returned \emph{200- OK} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}info}\PYG{n+nt}{\PYGZgt{}}Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types.\PYG{n+nt}{\PYGZlt{}/info\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/distribution\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 
@@ -618,6 +677,36 @@ Displays information about distributions by name.
 \end{description}\end{quote}
 
 Displays tests list.
+The returned \emph{200- OK} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}collection} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}items} \PYG{n+na}{offset=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{total=}\PYG{l+s}{\PYGZdq{}20\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/01\PYGZhy{}CPU\PYGZhy{}Linear\PYGZhy{}Lookbusy\PYGZus{}10\PYGZhy{}95.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}01\PYGZhy{}CPU\PYGZhy{}Linear\PYGZhy{}Lookbusy\PYGZus{}10\PYGZhy{}95.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/03\PYGZhy{}NET\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Iperf\PYGZhy{}100\PYGZhy{}1000.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}03\PYGZhy{}NET\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Iperf\PYGZhy{}100\PYGZhy{}1000.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/02\PYGZhy{}IO\PYGZhy{}Linear\PYGZhy{}Stressapptest\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}02\PYGZhy{}IO\PYGZhy{}Linear\PYGZhy{}Stressapptest\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/02\PYGZhy{}IO\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Stressapptest\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}02\PYGZhy{}IO\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Stressapptest\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/02\PYGZhy{}MEM\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Stressapptest\PYGZus{}100\PYGZhy{}1000.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}02\PYGZhy{}MEM\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Stressapptest\PYGZus{}100\PYGZhy{}1000.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/01\PYGZhy{}CPU\PYGZhy{}Trapezoidal\PYGZhy{}Lookbusy\PYGZus{}10\PYGZhy{}95.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}01\PYGZhy{}CPU\PYGZhy{}Trapezoidal\PYGZhy{}Lookbusy\PYGZus{}10\PYGZhy{}95.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/01\PYGZhy{}IO\PYGZhy{}Trapezoidal\PYGZhy{}Lookbusy\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}01\PYGZhy{}IO\PYGZhy{}Trapezoidal\PYGZhy{}Lookbusy\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/01\PYGZhy{}NET\PYGZus{}TEST.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}01\PYGZhy{}NET\PYGZus{}TEST.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/03\PYGZhy{}MEM\PYGZhy{}500\PYGZhy{}1000MB\PYGZhy{}overlap.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}03\PYGZhy{}MEM\PYGZhy{}500\PYGZhy{}1000MB\PYGZhy{}overlap.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/01\PYGZhy{}CPU\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Lookbusy\PYGZus{}10\PYGZhy{}95.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}01\PYGZhy{}CPU\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Lookbusy\PYGZus{}10\PYGZhy{}95.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/01\PYGZhy{}IO\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Lookbusy\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}01\PYGZhy{}IO\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Lookbusy\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/02\PYGZhy{}IO\PYGZhy{}Trapezoidal\PYGZhy{}Stressapptest\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}02\PYGZhy{}IO\PYGZhy{}Trapezoidal\PYGZhy{}Stressapptest\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/03\PYGZhy{}CPU\PYGZhy{}opposite.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}03\PYGZhy{}CPU\PYGZhy{}opposite.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/01\PYGZhy{}MEM\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Lookbusy\PYGZus{}100\PYGZhy{}1000.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}01\PYGZhy{}MEM\PYGZhy{}Linear\PYGZus{}incr\PYGZhy{}Lookbusy\PYGZus{}100\PYGZhy{}1000.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/03\PYGZhy{}MEM\PYGZhy{}500\PYGZhy{}1000MB.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}03\PYGZhy{}MEM\PYGZhy{}500\PYGZhy{}1000MB.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/03\PYGZhy{}MEM\PYGZhy{}Linear\PYGZhy{}Stressapptest\PYGZus{}500\PYGZhy{}1000MB.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}03\PYGZhy{}MEM\PYGZhy{}Linear\PYGZhy{}Stressapptest\PYGZus{}500\PYGZhy{}1000MB.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/01\PYGZhy{}MEM\PYGZhy{}Trapezoidal\PYGZhy{}Lookbusy\PYGZus{}100\PYGZhy{}1000.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}01\PYGZhy{}MEM\PYGZhy{}Trapezoidal\PYGZhy{}Lookbusy\PYGZus{}100\PYGZhy{}1000.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/02\PYGZhy{}MEM\PYGZhy{}Trapezoidal\PYGZhy{}Stressapptest\PYGZus{}100\PYGZhy{}1000.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}02\PYGZhy{}MEM\PYGZhy{}Trapezoidal\PYGZhy{}Stressapptest\PYGZus{}100\PYGZhy{}1000.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/03\PYGZhy{}NET\PYGZhy{}Trapezoidal\PYGZhy{}Iperf\PYGZhy{}100\PYGZhy{}1000.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}03\PYGZhy{}NET\PYGZhy{}Trapezoidal\PYGZhy{}Iperf\PYGZhy{}100\PYGZhy{}1000.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/01\PYGZhy{}IO\PYGZhy{}Linear\PYGZhy{}Lookbusy\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}01\PYGZhy{}IO\PYGZhy{}Linear\PYGZhy{}Lookbusy\PYGZus{}1\PYGZhy{}10.xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}/items\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/collection\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 
@@ -639,14 +728,14 @@ Displays tests list.
 
 \end{description}\end{quote}
 
-Displays information about tests by name.
+Displays Content of XML file.
 
 \end{fulllineitems}
 
-\index{POST (HTTP method)!/tests/\{name\}|textbf}
+\index{POST (HTTP method)!/tests|textbf}
 
 \begin{fulllineitems}
-\phantomsection\label{01_how_to_use_it:method-post-tests-name-}\pysigline{\code{POST}~\bfcode{/tests/\emph{\{name\}}}}~\begin{quote}\begin{description}
+\phantomsection\label{01_how_to_use_it:method-post-tests}\pysigline{\code{POST}~\bfcode{/tests}}~\begin{quote}\begin{description}
 \item[{Query params}] \leavevmode
 \textbf{string} -- name of the test that is located on COCOMA server
 
@@ -662,6 +751,23 @@ Displays information about tests by name.
 \end{description}\end{quote}
 
 Create emulation from already available tests
+The returned \emph{201- Created} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}test} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/tests/5\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}emulationName}\PYG{n+nt}{\PYGZgt{}}5\PYGZhy{}CPU\PYGZus{}EMU\PYG{n+nt}{\PYGZlt{}/emulationName\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}2013\PYGZhy{}04\PYGZhy{}09T18:57:32\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}durationSec}\PYG{n+nt}{\PYGZgt{}}60\PYG{n+nt}{\PYGZlt{}/durationSec\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/test\PYGZgt{}}
+\end{Verbatim}
+
+The returned \emph{400- Not Found} reply XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}error}\PYG{n+nt}{\PYGZgt{}}error message\PYG{n+nt}{\PYGZlt{}/error\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 
@@ -681,6 +787,21 @@ Create emulation from already available tests
 \end{description}\end{quote}
 
 Displays results list.
+The returned \emph{200- OK} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}collection} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/results\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}items} \PYG{n+na}{offset=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{total=}\PYG{l+s}{\PYGZdq{}5\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}results} \PYG{n+na}{failedRuns=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/results/1\PYGZhy{}Emu\PYGZhy{}CPU\PYGZhy{}RAM\PYGZhy{}IO\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}1\PYGZhy{}Emu\PYGZhy{}CPU\PYGZhy{}RAM\PYGZhy{}IO\PYGZdq{}} \PYG{n+na}{state=}\PYG{l+s}{\PYGZdq{}inactive\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}results} \PYG{n+na}{failedRuns=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/results/2\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}2\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{state=}\PYG{l+s}{\PYGZdq{}inactive\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}results} \PYG{n+na}{failedRuns=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/results/3\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}3\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{state=}\PYG{l+s}{\PYGZdq{}inactive\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}results} \PYG{n+na}{failedRuns=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/results/4\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}4\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{state=}\PYG{l+s}{\PYGZdq{}inactive\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}results} \PYG{n+na}{failedRuns=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/results/5\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}5\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{state=}\PYG{l+s}{\PYGZdq{}inactive\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}/items\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/collection\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 
@@ -703,6 +824,18 @@ Displays results list.
 \end{description}\end{quote}
 
 Displays information about results by name.
+The returned \emph{200- OK} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}results} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/results/1\PYGZhy{}Emu\PYGZhy{}CPU\PYGZhy{}RAM\PYGZhy{}IO\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}emulationName}\PYG{n+nt}{\PYGZgt{}}1\PYGZhy{}Emu\PYGZhy{}CPU\PYGZhy{}RAM\PYGZhy{}IO\PYG{n+nt}{\PYGZlt{}/emulationName\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}totalRuns}\PYG{n+nt}{\PYGZgt{}}6\PYG{n+nt}{\PYGZlt{}/totalRuns\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}executedRuns}\PYG{n+nt}{\PYGZgt{}}6\PYG{n+nt}{\PYGZlt{}/executedRuns\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}failedRuns}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/failedRuns\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}emuState}\PYG{n+nt}{\PYGZgt{}}inactive\PYG{n+nt}{\PYGZlt{}/emuState\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/results\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 
@@ -741,6 +874,20 @@ Return Zip file with system logs.
 \end{description}\end{quote}
 
 Displays emulations logs list.
+The returned \emph{200- OK} XML:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}collection} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/logs/emulations\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}items} \PYG{n+na}{offset=}\PYG{l+s}{\PYGZdq{}0\PYGZdq{}} \PYG{n+na}{total=}\PYG{l+s}{\PYGZdq{}3\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}emulationLog} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/logs/emulations/3\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}3\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}emulationLog} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/logs/emulations/5\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}5\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+    \PYG{n+nt}{\PYGZlt{}emulationLog} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/logs/emulations/4\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}4\PYGZhy{}CPU\PYGZus{}EMU\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}/items\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+  \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/logs\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
+\PYG{n+nt}{\PYGZlt{}/collection\PYGZgt{}}
+\end{Verbatim}
 
 \end{fulllineitems}
 

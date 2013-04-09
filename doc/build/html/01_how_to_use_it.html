@@ -186,28 +186,30 @@ to start scheduler use command:</p>
 </dd></dl>
 
 </div>
-<div class="section" id="rest-api-description">
-<h2>REST API Description<a class="headerlink" href="#rest-api-description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rest-api-index">
+<h2>REST API Index<a class="headerlink" href="#rest-api-index" title="Permalink to this headline">¶</a></h2>
 <p>If the web API daemon has been started successfully, then COCOMA toolkit can be accessed remotely using its RESTfull API.</p>
-<blockquote>
-<div><ul class="simple">
-<li>/</li>
-<li>/emulations</li>
-<li>/emulations/{name}</li>
-<li>/distributions</li>
-<li>/distributions/{name}</li>
-<li>/emulators</li>
-<li>/emulators/{name}</li>
-<li>/results</li>
-<li>/results/{name}</li>
-<li>/tests</li>
-<li>/tests/{name}</li>
-<li>/logs</li>
-<li>/logs/system</li>
-<li>/logs/emulations</li>
-<li>/logs/emulations/{name}</li>
-</ul>
-</div></blockquote>
+<p>The API URIs summary list:</p>
+<div class="highlight-xml"><div class="highlight"><pre>* /
+* /emulations
+* /emulations/{name}
+* /distributions
+* /distributions/{name}
+* /emulators
+* /emulators/{name}
+* /results
+* /results/{name}
+* /tests
+* /tests/{name}
+* /logs
+* /logs/system
+* /logs/emulations
+* /logs/emulations/{name}
+</pre></div>
+</div>
+</div>
+<div class="section" id="rest-api-full-description">
+<h2>REST API Full Description<a class="headerlink" href="#rest-api-full-description" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
 <dt id="method-get-">
 <tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/</span></tt><a class="headerlink" href="#method-get-" title="Permalink to this definition">¶</a></dt>
@@ -347,7 +349,22 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Create emulation.</p>
+<p>The returned <em>201-Created</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/4-CPU_EMU&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ID&gt;</span>4-CPU_EMU<span class="nt">&lt;/ID&gt;</span>
+  <span class="nt">&lt;EmuNotes&gt;</span>OK<span class="nt">&lt;/EmuNotes&gt;</span>
+  <span class="nt">&lt;DistroNotes&gt;</span>OK<span class="nt">&lt;/DistroNotes&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulations&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</div>
+<p>The returned <em>400 – Bad Request</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;error&gt;</span>XML is not well formed Error: syntax error: line 1, column 0<span class="nt">&lt;/error&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -365,7 +382,19 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Displays emulators list.</p>
+<p>Displays emulators list.
+The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/emulators&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/iperf&quot;</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/items&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -386,7 +415,35 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Displays information about emulator by name.</p>
+<p>Displays information about emulator by name.
+The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulator/lookbusy&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;info&gt;</span>
+    Emulator lookbusy can be used for following resources:
+    1)Loads CPU with parameters:
+      ncpus - Number of CPUs to keep busy (default: autodetected)
+
+    2)Loads Memory(MEM) with parameters:
+      memSleep - Time to sleep between iterations, in usec (default 1000)
+
+    3)Changing size of files to use during IO with parameters:
+      ioBlockSize - Size of blocks to use for I/O in MB
+      ioSleep - Time to sleep between iterations, in msec (default 100)
+
+
+    XML block example:
+    <span class="ni">&amp;lt;</span>emulator-params<span class="ni">&amp;gt;</span>
+        <span class="ni">&amp;lt;</span>resourceType<span class="ni">&amp;gt;</span>CPU<span class="ni">&amp;lt;</span>/resourceType<span class="ni">&amp;gt;</span>
+        <span class="ni">&amp;lt;</span>ncpus<span class="ni">&amp;gt;</span>0<span class="ni">&amp;lt;</span>/ncpus<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>/emulator-params<span class="ni">&amp;gt;</span>
+
+    <span class="nt">&lt;/info&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulators&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/emulator&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -404,7 +461,19 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Displays distributions list.</p>
+<p>Displays distributions list.
+The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/distributions&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/trapezoidal&quot;</span> <span class="na">name=</span><span class="s">&quot;trapezoidal&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/items&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -425,7 +494,16 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Displays information about distributions by name.</p>
+<p>Displays information about distributions by name.
+The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;info&gt;</span>Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types.<span class="nt">&lt;/info&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/distributions&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/distribution&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -443,7 +521,36 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Displays tests list.</p>
+<p>Displays tests list.
+The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/tests&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;20&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-CPU-Linear-Lookbusy_10-95.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-CPU-Linear-Lookbusy_10-95.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-NET-Linear_incr-Iperf-100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-NET-Linear_incr-Iperf-100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-IO-Linear-Stressapptest_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-IO-Linear-Stressapptest_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-IO-Linear_incr-Stressapptest_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-IO-Linear_incr-Stressapptest_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-MEM-Linear_incr-Stressapptest_100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-MEM-Linear_incr-Stressapptest_100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-CPU-Trapezoidal-Lookbusy_10-95.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-CPU-Trapezoidal-Lookbusy_10-95.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-IO-Trapezoidal-Lookbusy_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-IO-Trapezoidal-Lookbusy_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-NET_TEST.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-NET_TEST.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-MEM-500-1000MB-overlap.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-MEM-500-1000MB-overlap.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-CPU-Linear_incr-Lookbusy_10-95.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-CPU-Linear_incr-Lookbusy_10-95.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-IO-Linear_incr-Lookbusy_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-IO-Linear_incr-Lookbusy_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-IO-Trapezoidal-Stressapptest_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-IO-Trapezoidal-Stressapptest_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-CPU-opposite.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-CPU-opposite.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-MEM-Linear_incr-Lookbusy_100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-MEM-Linear_incr-Lookbusy_100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-MEM-500-1000MB.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-MEM-500-1000MB.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-MEM-Linear-Stressapptest_500-1000MB.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-MEM-Linear-Stressapptest_500-1000MB.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-MEM-Trapezoidal-Lookbusy_100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-MEM-Trapezoidal-Lookbusy_100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-MEM-Trapezoidal-Stressapptest_100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-MEM-Trapezoidal-Stressapptest_100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-NET-Trapezoidal-Iperf-100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-NET-Trapezoidal-Iperf-100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-IO-Linear-Lookbusy_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-IO-Linear-Lookbusy_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/items&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -464,12 +571,12 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Displays information about tests by name.</p>
+<p>Displays Content of XML file.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="method-post-tests-name-">
-<tt class="descclassname deschttpmethod">POST </tt><tt class="descname deschttpurl"><span class="deschttppath">/tests/<em class="deschttppatharg">{<span class="deschttppatharg deschttppatharg">name</span>}</em></span></tt><a class="headerlink" href="#method-post-tests-name-" title="Permalink to this definition">¶</a></dt>
+<dt id="method-post-tests">
+<tt class="descclassname deschttpmethod">POST </tt><tt class="descname deschttpurl"><span class="deschttppath">/tests</span></tt><a class="headerlink" href="#method-post-tests" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -485,7 +592,21 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Create emulation from already available tests</p>
+<p>Create emulation from already available tests
+The returned <em>201- Created</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/5-CPU_EMU&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;emulationName&gt;</span>5-CPU_EMU<span class="nt">&lt;/emulationName&gt;</span>
+  <span class="nt">&lt;startTime&gt;</span>2013-04-09T18:57:32<span class="nt">&lt;/startTime&gt;</span>
+  <span class="nt">&lt;durationSec&gt;</span>60<span class="nt">&lt;/durationSec&gt;</span>
+<span class="nt">&lt;/test&gt;</span>
+</pre></div>
+</div>
+<p>The returned <em>400- Not Found</em> reply XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;error&gt;</span>error message<span class="nt">&lt;/error&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -503,7 +624,21 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Displays results list.</p>
+<p>Displays results list.
+The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/results&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;5&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/1-Emu-CPU-RAM-IO&quot;</span> <span class="na">name=</span><span class="s">&quot;1-Emu-CPU-RAM-IO&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/2-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;2-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/3-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;3-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/4-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;4-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/5-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;5-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/items&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -524,7 +659,18 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Displays information about results by name.</p>
+<p>Displays information about results by name.
+The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;results</span> <span class="na">href=</span><span class="s">&quot;/results/1-Emu-CPU-RAM-IO&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;emulationName&gt;</span>1-Emu-CPU-RAM-IO<span class="nt">&lt;/emulationName&gt;</span>
+  <span class="nt">&lt;totalRuns&gt;</span>6<span class="nt">&lt;/totalRuns&gt;</span>
+  <span class="nt">&lt;executedRuns&gt;</span>6<span class="nt">&lt;/executedRuns&gt;</span>
+  <span class="nt">&lt;failedRuns&gt;</span>0<span class="nt">&lt;/failedRuns&gt;</span>
+  <span class="nt">&lt;emuState&gt;</span>inactive<span class="nt">&lt;/emuState&gt;</span>
+<span class="nt">&lt;/results&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -560,7 +706,20 @@ to start scheduler use command:</p>
 </tr>
 </tbody>
 </table>
-<p>Displays emulations logs list.</p>
+<p>Displays emulations logs list.
+The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/logs/emulations&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;emulationLog</span> <span class="na">href=</span><span class="s">&quot;/logs/emulations/3-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;3-CPU_EMU&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;emulationLog</span> <span class="na">href=</span><span class="s">&quot;/logs/emulations/5-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;5-CPU_EMU&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;emulationLog</span> <span class="na">href=</span><span class="s">&quot;/logs/emulations/4-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;4-CPU_EMU&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/items&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/logs&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -599,7 +758,8 @@ to start scheduler use command:</p>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#starting-components">Starting Components</a></li>
 <li><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
-<li><a class="reference internal" href="#rest-api-description">REST API Description</a></li>
+<li><a class="reference internal" href="#rest-api-index">REST API Index</a></li>
+<li><a class="reference internal" href="#rest-api-full-description">REST API Full Description</a></li>
 </ul>
 </li>
 </ul>

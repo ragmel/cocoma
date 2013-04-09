@@ -126,27 +126,33 @@ The COCOMA :program:`ccmsh` command line interface has several options:
       
       Show OS information on Scheduler or API daemon, displays PID numbers
 
-REST API Description
---------------------
+REST API Index
+--------------
 If the web API daemon has been started successfully, then COCOMA toolkit can be accessed remotely using its RESTfull API.
 
- * /
- * /emulations
- * /emulations/{name}
- * /distributions
- * /distributions/{name}
- * /emulators
- * /emulators/{name}
- * /results
- * /results/{name}
- * /tests
- * /tests/{name}
- * /logs
- * /logs/system
- * /logs/emulations
- * /logs/emulations/{name}
- 
- 
+The API URIs summary list:
+
+.. code-block:: xml
+
+   * /
+   * /emulations
+   * /emulations/{name}
+   * /distributions
+   * /distributions/{name}
+   * /emulators
+   * /emulators/{name}
+   * /results
+   * /results/{name}
+   * /tests
+   * /tests/{name}
+   * /logs
+   * /logs/system
+   * /logs/emulations
+   * /logs/emulations/{name}
+
+
+REST API Full Description
+-------------------------
 
 
 .. http:method:: GET /
@@ -244,8 +250,25 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 201: Emulation was created successfully
    :response 400:
 
-   Create emulation.
+   The returned *201-Created* XML:
+   
+   .. code-block:: xml   
+   
+      <?xml version="1.0" ?>
+      <emulation href="/emulations/4-CPU_EMU" xmlns="http://127.0.0.1/cocoma">
+        <ID>4-CPU_EMU</ID>
+        <EmuNotes>OK</EmuNotes>
+        <DistroNotes>OK</DistroNotes>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <link href="/emulations" rel="parent" type="application/vnd.bonfire+xml"/>
+      </emulation>
 
+   The returned *400 – Bad Request* XML:
+   
+   .. code-block:: xml
+    
+    <?xml version="1.0" ?>
+    <error>XML is not well formed Error: syntax error: line 1, column 0</error>
 
 .. http:method:: GET /emulators
 
@@ -253,6 +276,19 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 404: 
    
    Displays emulators list.
+   The returned *200- OK* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <collection href="/emulators" xmlns="http://127.0.0.1/cocoma">
+        <items offset="0" total="3">
+          <emulator href="/emulators/lookbusy" name="lookbusy"/>
+          <emulator href="/emulators/stressapptest" name="stressapptest"/>
+          <emulator href="/emulators/iperf" name="iperf"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+      </collection>
 
 
 .. http:method:: GET /emulators/{name}
@@ -262,6 +298,35 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 404: 
    
    Displays information about emulator by name.
+   The returned *200- OK* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <emulator href="/emulator/lookbusy" xmlns="http://127.0.0.1/cocoma">
+        <info>
+          Emulator lookbusy can be used for following resources:
+          1)Loads CPU with parameters:
+            ncpus - Number of CPUs to keep busy (default: autodetected)
+            
+          2)Loads Memory(MEM) with parameters:
+            memSleep - Time to sleep between iterations, in usec (default 1000)
+            
+          3)Changing size of files to use during IO with parameters:
+            ioBlockSize - Size of blocks to use for I/O in MB
+            ioSleep - Time to sleep between iterations, in msec (default 100)
+          
+          
+          XML block example:
+          &lt;emulator-params&gt;
+              &lt;resourceType&gt;CPU&lt;/resourceType&gt;
+              &lt;ncpus&gt;0&lt;/ncpus&gt;
+          &lt;/emulator-params&gt;
+          
+          </info>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <link href="/emulators" rel="parent" type="application/vnd.bonfire+xml"/>
+      </emulator>
 
 
 .. http:method:: GET /distributions
@@ -270,6 +335,19 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 404: 
    
    Displays distributions list.
+   The returned *200- OK* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <collection href="/distributions" xmlns="http://127.0.0.1/cocoma">
+        <items offset="0" total="3">
+          <distribution href="/distributions/linear" name="linear"/>
+          <distribution href="/distributions/linear_incr" name="linear_incr"/>
+          <distribution href="/distributions/trapezoidal" name="trapezoidal"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+      </collection>
 
 
 .. http:method:: GET /distributions/{name}
@@ -279,6 +357,16 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 404: 
    
    Displays information about distributions by name.
+   The returned *200- OK* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <distribution href="/distributions/linear" xmlns="http://127.0.0.1/cocoma">
+        <info>Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types.</info>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <link href="/distributions" rel="parent" type="application/vnd.bonfire+xml"/>
+      </distribution>
 
 
 .. http:method:: GET /tests
@@ -287,6 +375,39 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 404: 
    
    Displays tests list.
+   The returned *200- OK* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <collection href="/tests" xmlns="http://127.0.0.1/cocoma">
+        <items offset="0" total="20">
+          <test href="/tests/01-CPU-Linear-Lookbusy_10-95.xml" name="01-CPU-Linear-Lookbusy_10-95.xml"/>
+          <test href="/tests/03-NET-Linear_incr-Iperf-100-1000.xml" name="03-NET-Linear_incr-Iperf-100-1000.xml"/>
+          <test href="/tests/02-IO-Linear-Stressapptest_1-10.xml" name="02-IO-Linear-Stressapptest_1-10.xml"/>
+          <test href="/tests/02-IO-Linear_incr-Stressapptest_1-10.xml" name="02-IO-Linear_incr-Stressapptest_1-10.xml"/>
+          <test href="/tests/02-MEM-Linear_incr-Stressapptest_100-1000.xml" name="02-MEM-Linear_incr-Stressapptest_100-1000.xml"/>
+          <test href="/tests/01-CPU-Trapezoidal-Lookbusy_10-95.xml" name="01-CPU-Trapezoidal-Lookbusy_10-95.xml"/>
+          <test href="/tests/01-IO-Trapezoidal-Lookbusy_1-10.xml" name="01-IO-Trapezoidal-Lookbusy_1-10.xml"/>
+          <test href="/tests/01-NET_TEST.xml" name="01-NET_TEST.xml"/>
+          <test href="/tests/03-MEM-500-1000MB-overlap.xml" name="03-MEM-500-1000MB-overlap.xml"/>
+          <test href="/tests/01-CPU-Linear_incr-Lookbusy_10-95.xml" name="01-CPU-Linear_incr-Lookbusy_10-95.xml"/>
+          <test href="/tests/01-IO-Linear_incr-Lookbusy_1-10.xml" name="01-IO-Linear_incr-Lookbusy_1-10.xml"/>
+          <test href="/tests/02-IO-Trapezoidal-Stressapptest_1-10.xml" name="02-IO-Trapezoidal-Stressapptest_1-10.xml"/>
+          <test href="/tests/03-CPU-opposite.xml" name="03-CPU-opposite.xml"/>
+          <test href="/tests/01-MEM-Linear_incr-Lookbusy_100-1000.xml" name="01-MEM-Linear_incr-Lookbusy_100-1000.xml"/>
+          <test href="/tests/03-MEM-500-1000MB.xml" name="03-MEM-500-1000MB.xml"/>
+          <test href="/tests/03-MEM-Linear-Stressapptest_500-1000MB.xml" name="03-MEM-Linear-Stressapptest_500-1000MB.xml"/>
+          <test href="/tests/01-MEM-Trapezoidal-Lookbusy_100-1000.xml" name="01-MEM-Trapezoidal-Lookbusy_100-1000.xml"/>
+          <test href="/tests/02-MEM-Trapezoidal-Stressapptest_100-1000.xml" name="02-MEM-Trapezoidal-Stressapptest_100-1000.xml"/>
+          <test href="/tests/03-NET-Trapezoidal-Iperf-100-1000.xml" name="03-NET-Trapezoidal-Iperf-100-1000.xml"/>
+          <test href="/tests/01-IO-Linear-Lookbusy_1-10.xml" name="01-IO-Linear-Lookbusy_1-10.xml"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+      </collection>
+
+
+
 
 
 .. http:method:: GET /tests/{name}
@@ -295,15 +416,34 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 200: 
    :response 404: 
    
-   Displays information about tests by name.
+   Displays Content of XML file.
 
-.. http:method:: POST /tests/{name}
+.. http:method:: POST /tests
 
    :param string: name of the test that is located on COCOMA server
    :response 201: Emulation was created successfully
    :response 400:
 
-   Create emulation from already available tests 
+   Create emulation from already available tests
+   The returned *201- Created* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <test href="/tests/5-CPU_EMU" xmlns="http://127.0.0.1/cocoma">
+        <emulationName>5-CPU_EMU</emulationName>
+        <startTime>2013-04-09T18:57:32</startTime>
+        <durationSec>60</durationSec>
+      </test>
+   
+   The returned *400- Not Found* reply XML:
+   
+   .. code-block:: xml
+         
+      <?xml version="1.0" ?>
+      <error>error message</error>
+
+ 
   
 .. http:method:: GET /results
 
@@ -311,6 +451,21 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 404: 
    
    Displays results list.
+   The returned *200- OK* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <collection href="/results" xmlns="http://127.0.0.1/cocoma">
+        <items offset="0" total="5">
+          <results failedRuns="0" href="/results/1-Emu-CPU-RAM-IO" name="1-Emu-CPU-RAM-IO" state="inactive"/>
+          <results failedRuns="0" href="/results/2-CPU_EMU" name="2-CPU_EMU" state="inactive"/>
+          <results failedRuns="0" href="/results/3-CPU_EMU" name="3-CPU_EMU" state="inactive"/>
+          <results failedRuns="0" href="/results/4-CPU_EMU" name="4-CPU_EMU" state="inactive"/>
+          <results failedRuns="0" href="/results/5-CPU_EMU" name="5-CPU_EMU" state="inactive"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+      </collection>
 
 
 .. http:method:: GET /results/{name}
@@ -320,6 +475,20 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 404: 
    
    Displays information about results by name.
+   The returned *200- OK* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <results href="/results/1-Emu-CPU-RAM-IO" xmlns="http://127.0.0.1/cocoma">
+        <emulationName>1-Emu-CPU-RAM-IO</emulationName>
+        <totalRuns>6</totalRuns>
+        <executedRuns>6</executedRuns>
+        <failedRuns>0</failedRuns>
+        <emuState>inactive</emuState>
+      </results>
+
+
 
 
 .. http:method:: GET /logs
@@ -327,6 +496,16 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 404: 
    
    Displays logs list.
+   The returned *200- OK* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <logs href="/logs">
+        <link href="/logs/emulations" rel="emulations" type="application/vnd.bonfire+xml"/>
+        <link href="/logs/system" rel="system" type="application/vnd.bonfire+xml"/>
+      </logs>
+
    
 .. http:method:: GET /logs/system
 
@@ -341,6 +520,21 @@ If the web API daemon has been started successfully, then COCOMA toolkit can be 
    :response 404: 
    
    Displays emulations logs list.
+   The returned *200- OK* XML:
+   
+   .. code-block:: xml
+   
+      <?xml version="1.0" ?>
+      <collection href="/logs/emulations" xmlns="http://127.0.0.1/cocoma">
+        <items offset="0" total="3">
+          <emulationLog href="/logs/emulations/3-CPU_EMU" name="3-CPU_EMU"/>
+          <emulationLog href="/logs/emulations/5-CPU_EMU" name="5-CPU_EMU"/>
+          <emulationLog href="/logs/emulations/4-CPU_EMU" name="4-CPU_EMU"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <link href="/logs" rel="parent" type="application/vnd.bonfire+xml"/>
+      </collection>
+
 
 .. http:method:: GET /logs/{name}
 
