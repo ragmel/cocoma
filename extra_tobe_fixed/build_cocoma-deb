@@ -1,10 +1,41 @@
 #!/bin/bash
 
+if [ -z "$1" ]
+  then
+    VERSION=`grep version= setup.py | awk -F"\'" '{ print $2 }'`
+    echo "Using curent version: $VERSION"
+  else
+    VERSION=$1
+    sed -i "s;version=.*;version='$VERSION',;" setup.py
+fi
+
+#DIST_DIR="/home/melo/svn_cocoma/dist/deb_dist/cocoma-1.0/debian/"
+#SVN_DIR="/home/melo/svn_cocoma/cocoma/extra_tobe_fixed/deb-files/"
+
+echo "Running: python setup.py sdist ..."
 python setup.py sdist
 cd dist/
+#rsync -auz $DIST_DIR $SVN_DIR
 
-py2dsc -m 'Carmelo Ragusa <carmelo.ragusa@sap.com>' cocoma-0.1.tar.gz 
+echo "Running: py2dsc -m ..."
+py2dsc -m 'Carmelo Ragusa <carmelo.ragusa@sap.com>' cocoma-$VERSION.tar.gz 
 
-cd deb_dist/cocoma-0.1/
-cp ../../../cocoma/extra_tobe_fixed/deb-files/* debian/
+cd deb_dist/cocoma-$VERSION/
+
+echo "Running: rsync SVN_DIR DIST_DIR ..."
+
+#rsync -auz --exclude ~/svn_cocoma/cocoma/extra_tobe_fixed/deb-files/changelog $SVN_DIR $DIST_DIR
+
+cp -R /home/melo/svn_cocoma/cocoma/extra_tobe_fixed/deb-files/* /home/melo/svn_cocoma/dist/deb_dist/cocoma-$VERSION/debian/
+
+echo "Changelog prompt ..."
+dch -im
+
+echo "Running: debuild ..."
 debuild -us -uc
+
+echo "Running: rsync DIST_DIR SVN_DIR ..."
+cp /home/melo/svn_cocoma/dist/deb_dist/cocoma*.deb /home/melo/svn_cocoma/cocoma/extra_tobe_fixed/deb-pkg/ 
+cp /home/melo/svn_cocoma/dist/deb_dist/cocoma-$VERSION/debian/changelog /home/melo/svn_cocoma/cocoma/extra_tobe_fixed/deb-files/
+
+#rsync -auz $DIST_DIR $SVN_DIR
