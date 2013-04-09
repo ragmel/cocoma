@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>How to use it &mdash; COCOMA 1 documentation</title>
+    <title>Introduction &mdash; COCOMA 1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,6 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="COCOMA 1 documentation" href="index.html" />
-    <link rel="next" title="Single Distribution: CLI Examples" href="02_cli_examples.html" />
     <link rel="prev" title="Controlled Contentious and Malicious(COCOMA) framework - 1.0" href="index.html" /> 
   </head>
   <body>
@@ -36,9 +35,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="02_cli_examples.html" title="Single Distribution: CLI Examples"
-             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Controlled Contentious and Malicious(COCOMA) framework - 1.0"
              accesskey="P">previous</a> |</li>
@@ -51,8 +47,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="how-to-use-it">
-<h1>How to use it<a class="headerlink" href="#how-to-use-it" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
 <p>In order to use COCOMA framework experimenter creates an emulation using XML language(see below Examples section). Emulation should contain all the neccessary information
 about duration, magnitude and required resource usage. Once XML document is received by COCOMA, the framework will automatically schedule and execute
 required workload on the chosen resource(-s) such as CPU, IO, Memory and/or Network.</p>
@@ -107,190 +103,487 @@ to start scheduler use command:</p>
 <p>The COCOMA <strong class="program">ccmsh</strong> command line interface has several options:</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-h">
-<tt class="descname">-h</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--help</tt><tt class="descclassname"> show this help message and exit</tt><a class="headerlink" href="#cmdoption-ccmsh-h" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-h</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--help</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display help information of the available options</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-v">
-<tt class="descname">-v</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--version</tt><tt class="descclassname"> show version information</tt><a class="headerlink" href="#cmdoption-ccmsh-v" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-v</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--version</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display installed version information of COCOMA</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-l">
-<tt class="descname">-l</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list</tt><tt class="descclassname"> list all emulations or specific emulation by name</tt><a class="headerlink" href="#cmdoption-ccmsh-l" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-l</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list</tt><tt class="descclassname"> &lt;emulation name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display list of all emulations that are scheduled or already finished. If emulation name is provided then will it will list information for that specific emulation</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-r">
-<tt class="descname">-r</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--results</tt><tt class="descclassname"> list all emulations results or specific emulation results by name</tt><a class="headerlink" href="#cmdoption-ccmsh-r" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-r</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--results</tt><tt class="descclassname"> &lt;emulation name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display list of all emulation results that are scheduled or already finished. If emulation name is provided, then will it will list information for that specific emulation</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-j">
-<tt class="descname">-j</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list-jobs</tt><tt class="descclassname"> list of all scheduled jobs</tt><a class="headerlink" href="#cmdoption-ccmsh-j" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-j</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list-jobs</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-j" title="Permalink to this definition">¶</a></dt>
+<dd><p>Querries scheduler for the list of jobs which is to be executed. Gives jobs names and planned execution time</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-i">
-<tt class="descname">-i</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--dist</tt><tt class="descclassname"> lists all available distributions and gives distributiondetails by name</tt><a class="headerlink" href="#cmdoption-ccmsh-i" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-i</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--dist</tt><tt class="descclassname"> &lt;distribution name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scans <em>&#8220;/usr/share/pyshared/cocoma/distributions&#8221;</em> folder and displays all available distribution modules.  If distribution name is provided, then it will list help information for that specific distribution</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-e">
-<tt class="descname">-e</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--emu</tt><tt class="descclassname"> lists all available emulators and gives emulator details by name</tt><a class="headerlink" href="#cmdoption-ccmsh-e" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-e</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--emu</tt><tt class="descclassname"> &lt;emulator name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scans <em>&#8220;/usr/share/pyshared/cocoma/emulators&#8221;</em> folder and displays all available emulator wrapper modules.  If emulator name is provided, then it will list help information for that specific emulator wrapper</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-x">
-<tt class="descname">-x</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--xml</tt><tt class="descclassname"> provide path to XML file with emulation details</tt><a class="headerlink" href="#cmdoption-ccmsh-x" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-x</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--xml</tt><tt class="descclassname"> &lt;file name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-x" title="Permalink to this definition">¶</a></dt>
+<dd><p>If you have a local XML file with emulation parameters, you can use it to create emulation.</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-n">
-<tt class="descname">-n</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--now</tt><tt class="descclassname"> add to the &quot;-x&quot; argument to override emulation start date and execute test immediately</tt><a class="headerlink" href="#cmdoption-ccmsh-n" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-n</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--now</tt><tt class="descclassname"> (used with -x option only)</tt><a class="headerlink" href="#cmdoption-ccmsh-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>If your local XML file emulation has set start date in past or in future, but you want to override it and start the test right now, without modifying the file, then you can add this option after the file name i.e. <tt class="docutils literal"><span class="pre">ccmsh</span> <span class="pre">-x</span> <span class="pre">&lt;file</span> <span class="pre">name&gt;</span> <span class="pre">-n</span></tt></p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-d">
-<tt class="descname">-d</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--delete</tt><tt class="descclassname"> delete emulation by name</tt><a class="headerlink" href="#cmdoption-ccmsh-d" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-d</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--delete</tt><tt class="descclassname"> &lt;emulation name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes specific emulation from the database, logs will remain and will be available until manualy deleted from <em>&#8220;/usr/share/pyshared/cocoma/logs&#8221;</em> folder</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-p">
-<tt class="descname">-p</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--purge</tt><tt class="descclassname"> wipes all DB entries, removes all scheduled jobs and log files</tt><a class="headerlink" href="#cmdoption-ccmsh-p" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">-p</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--purge</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wipe all DB entries, removes all scheduled jobs, logs will remain and will be available until manualy deleted from <em>&#8220;/usr/share/pyshared/cocoma/logs&#8221;</em> folder</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh--start">
-<tt class="descname">--start</tt><tt class="descclassname"> launch Scheduler or API daemon</tt><a class="headerlink" href="#cmdoption-ccmsh--start" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">--start</tt><tt class="descclassname"> &lt;api interface port&gt;, &lt;scheduler interface port&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh--start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Launch Scheduler or API daemon by specifying network interface and port number i.e. <tt class="docutils literal"><span class="pre">ccmsh</span> <span class="pre">--start</span> <span class="pre">api</span> <span class="pre">eth0</span> <span class="pre">2020</span></tt> or <tt class="docutils literal"><span class="pre">ccmsh</span> <span class="pre">--start</span> <span class="pre">scheduler</span> <span class="pre">eth0</span> <span class="pre">3030</span></tt> . By default if interface is not specified then Scheduler daemon will run on <em>eth0</em> port <em>51889</em> and API daemon runs on <em>eth0</em> with port <em>5050</em>.</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh--stop">
-<tt class="descname">--stop</tt><tt class="descclassname"> stop Scheduler or API daemon</tt><a class="headerlink" href="#cmdoption-ccmsh--stop" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">--stop</tt><tt class="descclassname"> &lt;api&gt;, &lt;scheduler&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh--stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop Scheduler or API daemon</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh--show">
-<tt class="descname">--show</tt><tt class="descclassname"> show OS information on Scheduler or API daemon</tt><a class="headerlink" href="#cmdoption-ccmsh--show" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">--show</tt><tt class="descclassname"> &lt;api&gt;, &lt;scheduler&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh--show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show OS information on Scheduler or API daemon, displays PID numbers</p>
+</dd></dl>
 
 </div>
 <div class="section" id="rest-api-description">
 <h2>REST API Description<a class="headerlink" href="#rest-api-description" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
-  <span class="nt">&lt;name&gt;</span>Emu-CPU-RAM-IO<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;emulationType&gt;</span>Mix<span class="nt">&lt;/emulationType&gt;</span>
-  <span class="nt">&lt;resourceType&gt;</span>Mix<span class="nt">&lt;/resourceType&gt;</span>
-  <span class="nt">&lt;startTime&gt;</span>now<span class="nt">&lt;/startTime&gt;</span>
-  <span class="c">&lt;!--duration in seconds --&gt;</span>
-  <span class="nt">&lt;stopTime&gt;</span>180<span class="nt">&lt;/stopTime&gt;</span>
+<p>If the web API daemon has been started successfully, then COCOMA toolkit can be accessed remotely using its RESTfull API.</p>
+<blockquote>
+<div><ul class="simple">
+<li>/</li>
+<li>/emulations</li>
+<li>/emulations/{name}</li>
+<li>/distributions</li>
+<li>/distributions/{name}</li>
+<li>/emulators</li>
+<li>/emulators/{name}</li>
+<li>/results</li>
+<li>/results/{name}</li>
+<li>/tests</li>
+<li>/tests/{name}</li>
+<li>/logs</li>
+<li>/logs/system</li>
+<li>/logs/emulations</li>
+<li>/logs/emulations/{name}</li>
+</ul>
+</div></blockquote>
+<dl class="method">
+<dt id="method-get-">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/</span></tt><a class="headerlink" href="#method-get-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Title :</th><td class="field-body"><p class="first">root</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>root</strong> method returns <em>collection</em> of all the available resources. Example XML response:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;root</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;version&gt;</span>0.1.1<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;timestamp&gt;</span>1365518303.44<span class="nt">&lt;/timestamp&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulations&quot;</span> <span class="na">rel=</span><span class="s">&quot;emulations&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulators&quot;</span> <span class="na">rel=</span><span class="s">&quot;emulators&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/distributions&quot;</span> <span class="na">rel=</span><span class="s">&quot;distributions&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/tests&quot;</span> <span class="na">rel=</span><span class="s">&quot;tests&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/results&quot;</span> <span class="na">rel=</span><span class="s">&quot;results&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/logs&quot;</span> <span class="na">rel=</span><span class="s">&quot;logs&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/root&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
 
-  <span class="nt">&lt;distributions&gt;</span>
-     <span class="nt">&lt;name&gt;</span>Distro1<span class="nt">&lt;/name&gt;</span>
-     <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
-     <span class="c">&lt;!--duration in seconds --&gt;</span>
-     <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
-     <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
-     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
-   <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
-      <span class="nt">&lt;startLoad&gt;</span>90<span class="nt">&lt;/startLoad&gt;</span>
-      <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;emulator-params&gt;</span>
-        <span class="c">&lt;!--more parameters will be added --&gt;</span>
-        <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
-   <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
-   <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+<dl class="method">
+<dt id="method-get-emulations">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/emulations</span></tt><a class="headerlink" href="#method-get-emulations" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Title :</th><td class="field-body"><p class="first">emulations</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>emulations</strong> method returns <em>collection</em> of all the available emulation resources. Example XML response:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+ <span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/emulations&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+     <span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/1-Emu-CPU-RAM-IO&quot;</span> <span class="na">id=</span><span class="s">&quot;1&quot;</span> <span class="na">name=</span><span class="s">&quot;1-Emu-CPU-RAM-IO&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/2-CPU_EMU&quot;</span> <span class="na">id=</span><span class="s">&quot;2&quot;</span> <span class="na">name=</span><span class="s">&quot;2-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/3-CPU_EMU&quot;</span> <span class="na">id=</span><span class="s">&quot;3&quot;</span> <span class="na">name=</span><span class="s">&quot;3-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;/items&gt;</span>
+   <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+ <span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
 
-      <span class="nt">&lt;/emulator-params&gt;</span>
+<dl class="method">
+<dt id="method-get-emulations-name-">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/emulations/<em class="deschttppatharg">{<span class="deschttppatharg deschttppatharg">name</span>}</em></span></tt><a class="headerlink" href="#method-get-emulations-name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Path arguments:</th><td class="field-body"><p class="first"><strong>name</strong> &#8211; Name of emulation that you want to get more info</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays information about emulation by name. The returned <em>200-OK</em> XML is:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/1-Emu-CPU-RAM-IO&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;id&gt;</span>1<span class="nt">&lt;/id&gt;</span>
+  <span class="nt">&lt;emulationName&gt;</span>1-Emu-CPU-RAM-IO<span class="nt">&lt;/emulationName&gt;</span>
+  <span class="nt">&lt;emulationType&gt;</span>mix<span class="nt">&lt;/emulationType&gt;</span>
+  <span class="nt">&lt;resourceType&gt;</span>mix<span class="nt">&lt;/resourceType&gt;</span>
+  <span class="nt">&lt;emuStartTime&gt;</span>2013-04-09T13:00:01<span class="nt">&lt;/emuStartTime&gt;</span>
+  <span class="nt">&lt;emuStopTime&gt;</span>180<span class="nt">&lt;/emuStopTime&gt;</span>
+  <span class="nt">&lt;scheduledJobs&gt;</span>
+    <span class="nt">&lt;jobsempty&gt;</span>No jobs are scheduled<span class="nt">&lt;/jobsempty&gt;</span>
+  <span class="nt">&lt;/scheduledJobs&gt;</span>
+  <span class="nt">&lt;distributions</span> <span class="na">ID=</span><span class="s">&quot;1&quot;</span> <span class="na">name=</span><span class="s">&quot;Distro1&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+    <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+    <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+    <span class="nt">&lt;startload&gt;</span>10<span class="nt">&lt;/startload&gt;</span>
+    <span class="nt">&lt;stopload&gt;</span>90<span class="nt">&lt;/stopload&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
-
-   <span class="nt">&lt;distributions&gt;</span>
-     <span class="nt">&lt;name&gt;</span>Distro2<span class="nt">&lt;/name&gt;</span>
-     <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
-     <span class="c">&lt;!--duration in seconds --&gt;</span>
-     <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
-     <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
-     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
-   <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
-      <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
-      <span class="nt">&lt;stopLoad&gt;</span>90<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;emulator-params&gt;</span>
-        <span class="c">&lt;!--more parameters will be added --&gt;</span>
-        <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
-   <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
-   <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
-
-      <span class="nt">&lt;/emulator-params&gt;</span>
+  <span class="nt">&lt;distributions</span> <span class="na">ID=</span><span class="s">&quot;2&quot;</span> <span class="na">name=</span><span class="s">&quot;Distro2&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+    <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+    <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+    <span class="nt">&lt;startload&gt;</span>10<span class="nt">&lt;/startload&gt;</span>
+    <span class="nt">&lt;stopload&gt;</span>90<span class="nt">&lt;/stopload&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
-
-  <span class="nt">&lt;log&gt;</span>
-   <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
-   <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
-   <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
-   <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
-  <span class="nt">&lt;/log&gt;</span>
-
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulations&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
-</td></tr></table></div>
+</div>
+<p>The returned <em>404 – Not Found</em> XML is:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;error&gt;</span>Emulation Name: 1-Emu-CPU-RAM-IO1 not found. Error:too many values to unpack<span class="nt">&lt;/error&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-post-emulations">
+<tt class="descclassname deschttpmethod">POST </tt><tt class="descname deschttpurl"><span class="deschttppath">/emulations</span></tt><a class="headerlink" href="#method-post-emulations" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Query params:</th><td class="field-body"><p class="first"><strong>XML</strong> (<em>string</em>) &#8211; Emulation parameters defined via XML as shown in the examples section.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>201</strong> &#8211; Emulation was created successfully</li>
+<li><strong>400</strong> &#8211; Bad Request</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Create emulation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-emulators">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/emulators</span></tt><a class="headerlink" href="#method-get-emulators" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays emulators list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-emulators-name-">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/emulators/<em class="deschttppatharg">{<span class="deschttppatharg deschttppatharg">name</span>}</em></span></tt><a class="headerlink" href="#method-get-emulators-name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Path arguments:</th><td class="field-body"><p class="first"><strong>name</strong> &#8211; Name of emulator that you want to get more info</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays information about emulator by name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-distributions">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/distributions</span></tt><a class="headerlink" href="#method-get-distributions" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays distributions list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-distributions-name-">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/distributions/<em class="deschttppatharg">{<span class="deschttppatharg deschttppatharg">name</span>}</em></span></tt><a class="headerlink" href="#method-get-distributions-name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Path arguments:</th><td class="field-body"><p class="first"><strong>name</strong> &#8211; Name of distributions that you want to get more info</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays information about distributions by name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-tests">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/tests</span></tt><a class="headerlink" href="#method-get-tests" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays tests list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-tests-name-">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/tests/<em class="deschttppatharg">{<span class="deschttppatharg deschttppatharg">name</span>}</em></span></tt><a class="headerlink" href="#method-get-tests-name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Path arguments:</th><td class="field-body"><p class="first"><strong>name</strong> &#8211; Name of tests that you want to get more info</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays information about tests by name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-post-tests-name-">
+<tt class="descclassname deschttpmethod">POST </tt><tt class="descname deschttpurl"><span class="deschttppath">/tests/<em class="deschttppatharg">{<span class="deschttppatharg deschttppatharg">name</span>}</em></span></tt><a class="headerlink" href="#method-post-tests-name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Query params:</th><td class="field-body"><p class="first"><strong>string</strong> &#8211; name of the test that is located on COCOMA server</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>201</strong> &#8211; Emulation was created successfully</li>
+<li><strong>400</strong> &#8211; Bad Request</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Create emulation from already available tests</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-results">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/results</span></tt><a class="headerlink" href="#method-get-results" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays results list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-results-name-">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/results/<em class="deschttppatharg">{<span class="deschttppatharg deschttppatharg">name</span>}</em></span></tt><a class="headerlink" href="#method-get-results-name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Path arguments:</th><td class="field-body"><p class="first"><strong>name</strong> &#8211; Name of tests that you want to get more info</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays information about results by name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-logs-system">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/logs/system</span></tt><a class="headerlink" href="#method-get-logs-system" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Return Zip file with system logs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-logs-emulations">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/logs/emulations</span></tt><a class="headerlink" href="#method-get-logs-emulations" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays emulations logs list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method-get-logs-name-">
+<tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/logs/<em class="deschttppatharg">{<span class="deschttppatharg deschttppatharg">name</span>}</em></span></tt><a class="headerlink" href="#method-get-logs-name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Path arguments:</th><td class="field-body"><p class="first"><strong>name</strong> &#8211; Name of emulation logs that you want to get more info</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Responses:</th><td class="field-body"><ul class="first last simple">
+<li><strong>200</strong> &#8211; OK</li>
+<li><strong>404</strong> &#8211; Not Found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Return Zip file with emulation logs.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -302,7 +595,7 @@ to start scheduler use command:</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">How to use it</a><ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#starting-components">Starting Components</a></li>
 <li><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
@@ -314,9 +607,6 @@ to start scheduler use command:</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">Controlled Contentious and Malicious(COCOMA) framework - 1.0</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="02_cli_examples.html"
-                        title="next chapter">Single Distribution: CLI Examples</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/01_how_to_use_it.txt"
@@ -345,9 +635,6 @@ to start scheduler use command:</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="02_cli_examples.html" title="Single Distribution: CLI Examples"
-             >next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Controlled Contentious and Malicious(COCOMA) framework - 1.0"
              >previous</a> |</li>

@@ -51,6 +51,8 @@
 <div class="genindex-jumpbox">
  <a href="#Symbols"><strong>Symbols</strong></a>
  | <a href="#C"><strong>C</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#P"><strong>P</strong></a>
  
 </div>
 <h2 id="Symbols">Symbols</h2>
@@ -58,7 +60,7 @@
   <td style="width: 33%" valign="top"><dl>
       
   <dt>
-    --show show OS information on Scheduler or API daemon
+    --show &lt;api&gt;, &lt;scheduler&gt;
   </dt>
 
       <dd><dl>
@@ -69,7 +71,7 @@
       </dl></dd>
       
   <dt>
-    --start launch Scheduler or API daemon
+    --start &lt;api interface port&gt;, &lt;scheduler interface port&gt;
   </dt>
 
       <dd><dl>
@@ -80,7 +82,7 @@
       </dl></dd>
       
   <dt>
-    --stop stop Scheduler or API daemon
+    --stop &lt;api&gt;, &lt;scheduler&gt;
   </dt>
 
       <dd><dl>
@@ -91,7 +93,7 @@
       </dl></dd>
       
   <dt>
-    -d, --delete delete emulation by name
+    -d, --delete &lt;emulation name&gt;
   </dt>
 
       <dd><dl>
@@ -102,7 +104,7 @@
       </dl></dd>
       
   <dt>
-    -e, --emu lists all available emulators and gives emulator details by name
+    -e, --emu &lt;emulator name&gt;
   </dt>
 
       <dd><dl>
@@ -113,7 +115,7 @@
       </dl></dd>
       
   <dt>
-    -h, --help show this help message and exit
+    -h, --help
   </dt>
 
       <dd><dl>
@@ -124,7 +126,7 @@
       </dl></dd>
       
   <dt>
-    -i, --dist lists all available distributions and gives distributiondetails by name
+    -i, --dist &lt;distribution name&gt;
   </dt>
 
       <dd><dl>
@@ -137,7 +139,7 @@
   <td style="width: 33%" valign="top"><dl>
       
   <dt>
-    -j, --list-jobs list of all scheduled jobs
+    -j, --list-jobs
   </dt>
 
       <dd><dl>
@@ -148,7 +150,7 @@
       </dl></dd>
       
   <dt>
-    -l, --list list all emulations or specific emulation by name
+    -l, --list &lt;emulation name&gt;
   </dt>
 
       <dd><dl>
@@ -159,7 +161,7 @@
       </dl></dd>
       
   <dt>
-    -n, --now add to the &#34;-x&#34; argument to override emulation start date and execute test immediately
+    -n, --now (used with -x option only)
   </dt>
 
       <dd><dl>
@@ -170,7 +172,7 @@
       </dl></dd>
       
   <dt>
-    -p, --purge wipes all DB entries, removes all scheduled jobs and log files
+    -p, --purge
   </dt>
 
       <dd><dl>
@@ -181,7 +183,7 @@
       </dl></dd>
       
   <dt>
-    -r, --results list all emulations results or specific emulation results by name
+    -r, --results &lt;emulation name&gt;
   </dt>
 
       <dd><dl>
@@ -192,7 +194,7 @@
       </dl></dd>
       
   <dt>
-    -v, --version show version information
+    -v, --version
   </dt>
 
       <dd><dl>
@@ -203,7 +205,7 @@
       </dl></dd>
       
   <dt>
-    -x, --xml provide path to XML file with emulation details
+    -x, --xml &lt;file name&gt;
   </dt>
 
       <dd><dl>
@@ -225,59 +227,149 @@
 
       <dd><dl>
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh--show">--show show OS information on Scheduler or API daemon</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh--show">--show &lt;api&gt;, &lt;scheduler&gt;</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh--start">--start launch Scheduler or API daemon</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh--start">--start &lt;api interface port&gt;, &lt;scheduler interface port&gt;</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh--stop">--stop stop Scheduler or API daemon</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh--stop">--stop &lt;api&gt;, &lt;scheduler&gt;</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-d">-d, --delete delete emulation by name</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-d">-d, --delete &lt;emulation name&gt;</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-e">-e, --emu lists all available emulators and gives emulator details by name</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-e">-e, --emu &lt;emulator name&gt;</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-h">-h, --help show this help message and exit</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-h">-h, --help</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-i">-i, --dist lists all available distributions and gives distributiondetails by name</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-i">-i, --dist &lt;distribution name&gt;</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-j">-j, --list-jobs list of all scheduled jobs</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-j">-j, --list-jobs</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-l">-l, --list list all emulations or specific emulation by name</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-l">-l, --list &lt;emulation name&gt;</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-n">-n, --now add to the &#34;-x&#34; argument to override emulation start date and execute test immediately</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-n">-n, --now (used with -x option only)</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-p">-p, --purge wipes all DB entries, removes all scheduled jobs and log files</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-p">-p, --purge</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-r">-r, --results list all emulations results or specific emulation results by name</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-r">-r, --results &lt;emulation name&gt;</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-v">-v, --version show version information</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-v">-v, --version</a>
   </dt>
 
         
-  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-x">-x, --xml provide path to XML file with emulation details</a>
+  <dt><a href="01_how_to_use_it.html#cmdoption-ccmsh-x">-x, --xml &lt;file name&gt;</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt>
+    GET (HTTP method)
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="01_how_to_use_it.html#method-get-"><strong>/</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-distributions"><strong>/distributions</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-distributions-name-"><strong>/distributions/{name}</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-emulations"><strong>/emulations</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-emulations-name-"><strong>/emulations/{name}</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-emulators"><strong>/emulators</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-emulators-name-"><strong>/emulators/{name}</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-logs-emulations"><strong>/logs/emulations</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-logs-system"><strong>/logs/system</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-logs-name-"><strong>/logs/{name}</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-results"><strong>/results</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-results-name-"><strong>/results/{name}</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-tests"><strong>/tests</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-get-tests-name-"><strong>/tests/{name}</strong></a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt>
+    POST (HTTP method)
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="01_how_to_use_it.html#method-post-emulations"><strong>/emulations</strong></a>
+  </dt>
+
+        
+  <dt><a href="01_how_to_use_it.html#method-post-tests-name-"><strong>/tests/{name}</strong></a>
   </dt>
 
       </dl></dd>
