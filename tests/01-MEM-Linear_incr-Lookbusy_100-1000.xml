@@ -20,7 +20,8 @@
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
         <resourceType>MEM</resourceType>
-	    <!--time between iterations in usec (default 1000)-->	
+	    <!--time between iterations in usec (default 1000)-->
+	    <malloclimit>4004</malloclimit>	
 		<memSleep>0</memSleep>
       </emulator-params>
   </distributions>

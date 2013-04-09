@@ -31,24 +31,6 @@ runDurations = []
 
 RESTYPE = "null"
 
-class distributionMod(object):
-    
-    
-    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
-        
-        self.startLoad = distributionArg["startLoad"]
-        self.stopLoad = distributionArg["stopLoad"]
-        self.MALLOC_LIMIT = distributionArg["malloclimit"]
-#        distributionGranularity_count=distributionGranularity
-        #startTimesec = startTimesec
-        duration = float(duration)
-        
-#        runNo=int(0)
-        
-#        print "Hello this is dist_linear"
-#        print "emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH",emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH
-        
-
 def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
     
     startLoad = int(distributionArg["startload"])
@@ -158,16 +140,10 @@ here we specify how many arguments distribution instance require to run properly
 
 def argNames(Rtype):
     '''
-    Rtype = <MEM, CPU, IO, NET>
-    
+    We specify how many arguments distribution instance require to run properly
+    Rtype = <MEM, IO, NET>
     IMPORTANT: All argument variable names must be in lower case
     '''
-    if Rtype.lower() == "cpu":
-        
-        argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}}
-        RESTYPE = "CPU"
-        print "Use Arg's: ",argNames," with cpu"
-        return argNames
    
     #get free amount of memory and set it to upper bound
     if Rtype.lower() == "mem":

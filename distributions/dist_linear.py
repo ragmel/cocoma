@@ -17,23 +17,17 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-import math
-import Pyro4,time, psutil
-Pyro4.config.HMAC_KEY='pRivAt3Key'
+import math,psutil
 
 def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
+    '''
+    The actual distribution function which counts start time, duration and stress value for each run of distribution.  
+    '''
     
     startLoad = int(distributionArg["startload"])
     stopLoad = int(distributionArg["stopload"])
     
-    #print "hello this is dist linear"
-    #print "startLoad",startLoad
-    #print "stopLoad",stopLoad
-    #print "distributionGranularity",distributionGranularity
-    
-    #distributionGranularity_count=distributionGranularity
     upperBoundary= int(distributionGranularity)-1
-    #startTimesec = startTimesec
     duration = float(duration)
     
     #lists for return
@@ -42,8 +36,6 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     runDurations = []
     runDuration = int(duration)/distributionGranularity
     runDuration = float(runDuration)
-    #print "Duration is seconds:"
-    #print runDuration
     
     #run 1 at 0 time
     runStartTimeList.append(startTimesec)
@@ -55,47 +47,23 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     
     else:
         runNo=int(1)
-        
-        #runStartTime=startTimesec+(duration*upperBoundary)
-        
-    
         linearStress=0
         while(upperBoundary !=runNo):
-        
-                #print "Run No: "
-                ##print runNo
-                #print "self.startTimesec",startTimesec
+       
                 runStartTime=startTimesec+(runDuration*runNo)
-                
+
                 #delay of one sec
                 runStartTime =(runStartTime+(2*runNo))
-                
-                
                 runStartTimeList.append(runStartTime)
-                #print "This run start time: "
-                #print runStartTime
-                #print "This is time passed to scheduler:"
-                #print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))
-            
-                '''
-                1. Distribution formula goes here
-                '''
-                 
-                #########TADA########
+
+                #Distribution formula goes here
                 linearStep=((int(startLoad)-int(stopLoad))/(int(distributionGranularity)-1))
-                
-                
-                
-                #print "linearSterp",linearStep
                 linearStep=math.fabs((int(linearStep)))#making positive value
-                #print "LINEAR STEP SHOULD BE THE SAME"
-                #print linearStep
                 
                 if startLoad < stopLoad:
-                    
                     linearStress= (linearStep*int(runNo))+int(startLoad)
+                    
                 if startLoad > stopLoad:
-    
                     linearStress= (linearStep*(upperBoundary-int(runNo)))+int(stopLoad)
                 
                 if startLoad == stopLoad:
@@ -103,23 +71,11 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
                     
                 #make sure we return integer
                 linearStress=int(linearStress)
-                #print "LINEAR STRESS SHOULD CHANGE"
-                #print linearStress
-                
-                
-                
-                
                 stressValues.append(linearStress)
-                #print "This run stress Value: "
-                #print stressValues
-                
-                #print "runStartTimeList",runStartTimeList
-                runDurations.append(runDuration) 
+                runDurations.append(runDuration)
+                 
                 #increasing to next run            
                 runNo=int(runNo)+1
-                
-            
-                
         #run last plus 2sec
         runStartTimeList.append((startTimesec+runDuration*upperBoundary)+(int(upperBoundary*2)))
         stressValues.append(stopLoad)
@@ -130,22 +86,17 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     
     
 def distHelp():
+    '''
+    Help method that gives description of this particular distribution usage
+    '''
     
-    print "Linear Distribution How-To:"
-    print "Enter arg0 for first point and arg1 for 2nd point"
+    print "Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types."
+    return "Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types."
     
-    print "Have fun"
-    
-    return "Linear Distribution How-To: Enter arg0 for first point and arg1 for 2nd point"
-    
-'''
-here we specify how many arguments distribution instance require to run properly
-'''
-
 def argNames(Rtype):
     '''
-    Rtype = <MEM, CPU, IO, NET>
-    
+    We specify how many arguments distribution instance require to run properly
+    Rtype = <CPU,MEM,IO,NET>
     IMPORTANT: All argument variable names must be in lower case
     '''
     if Rtype.lower() == "cpu":

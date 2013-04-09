@@ -26,12 +26,25 @@ import logging
 xmlLogger = None
 
 def xmlReader(filename):
-    
-    fileObj = open(filename,'r')
-    #convert to string:
-    data = fileObj.read()
-    #close file because we don't need it anymore:
-    fileObj.close()
+    global xmlLogger
+    if xmlLogger is None:
+        #initialize logger
+        levelStr=str(EmulationManager.readLogLevel("coreloglevel"))
+        if levelStr=="info":
+            level=logging.INFO
+        if levelStr=="debug":
+            level=logging.DEBUG
+        #xmlLogger=EmulationManager.logToFile("XML Parser",level)
+        xmlLogger=EmulationManager.loggerSet("XML Parser")
+    try:
+        fileObj = open(filename,'r')
+        #convert to string:
+        data = fileObj.read()
+        #close file because we don't need it anymore:
+        fileObj.close()
+    except Exception,e:
+        xmlLogger.debug('File "'+str(filename)+'" could not be loaded. Check if it exists. Error:'+str(e))
+        return 'File "'+str(filename)+'" could not be loaded. Check if it exists'
     #parse the xml you got from the file
     try:
         (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)=xmlParser(data)
@@ -165,9 +178,15 @@ def xmlParser(xmlData):
             moduleMethod=DistributionManager.loadDistributionArgNames(distrType)
             
             distroArgsLimitsDict=moduleMethod(resourceTypeDist)
-            moduleArgs=distroArgsLimitsDict.keys()
-        except IOError, e:
-            return "Unable to load distribution module name \"",distrType,"\" error:"
+            try:
+                moduleArgs=distroArgsLimitsDict.keys()
+            except Exception, e:
+                xmlLogger.debug('Distribution "'+str(distrType)+'" does not support resource type "'+str(resourceTypeDist)+'"')
+                return 'Distribution "'+str(distrType)+'" does not support resource type "'+str(resourceTypeDist)+'"'
+                
+        except Exception, e:
+            xmlLogger.debug("Unable to find distribution module name:"+str(distrType))
+            return "Unable to find distribution module name:"+str(distrType)
              
         '''
         loading emulator args
@@ -234,9 +253,9 @@ def xmlParser(xmlData):
                 a+=1
                
             except Exception,e:
-                    xmlLogger.debug("Distribution argument specified in XML does not exist in distribution module \""+str(resourceTypeDist)+"\" section: "+str(e))
-                    return "Distribution argument specified in XML does not exist in distribution module \""+str(resourceTypeDist)+"\" section: "+str(e)
-        '''
+                    xmlLogger.debug('Distribution argument "'+str(moduleArgs[a])+'" specified in XML does not exist in distribution module section: "'+str(resourceTypeDist)+'" Error:'+str(e))
+                    return 'Distribution argument "'+str(moduleArgs[a])+'" is missing in XML document section "'+str(resourceTypeDist)+'"'
+        '''        
         getting all the arguments for emulator
         '''
         emulatorArg={}

@@ -1,10 +1,10 @@
 <emulation>
-  <name>Emu-CPU-RAM-IO</name>
-  <emulationType>Mix</emulationType>
-  <resourceType>Mix</resourceType>
-  <startTime>now</startTime>
+  <emuname>Emu-CPU-RAM-IO</emuname>
+  <emuType>Mix</emuType>
+  <emuresourceType>Mix</emuresourceType>
+  <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <stopTime>180</stopTime>
+  <emustopTime>180</emustopTime>
   
   <distributions>
      <name>Distro1</name>

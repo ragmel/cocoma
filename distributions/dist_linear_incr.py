@@ -19,8 +19,7 @@
 
 import math
 import Pyro4, time, psutil
-#import sqlite3 as sqlite
-#import datetime as dt
+
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 
@@ -30,24 +29,6 @@ runStartTimeList=[]
 runDurations = []
 
 RESTYPE = "null"
-
-class distributionMod(object):
-    
-    
-    def __init__(self,emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
-        
-        self.startLoad = distributionArg["startLoad"]
-        self.stopLoad = distributionArg["stopLoad"]
-        self.MALLOC_LIMIT = distributionArg["malloclimit"]
-#        distributionGranularity_count=distributionGranularity
-        #startTimesec = startTimesec
-        duration = float(duration)
-        
-#        runNo=int(0)
-
-#        print "Hello this is dist_linear"
-#        print "emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,arg,HOMEPATH",emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH
-        
 
 def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
     
@@ -141,26 +122,14 @@ def distHelp():
     print "Linear Distribution How-To:"
     print "Enter arg0 for first point and arg1 for 2nd point"
     
-    print "Have fun"
-    
     return "Linear Distribution How-To: Enter arg0 for first point and arg1 for 2nd point"
     
-'''
-here we specify how many arguments distribution instance require to run properly
-'''
-
 def argNames(Rtype):
     '''
-    Rtype = <MEM, CPU, IO, NET>
-    
+    We specify how many arguments distribution instance require to run properly
+    Rtype = <MEM, IO, NET>
     IMPORTANT: All argument variable names must be in lower case
     '''
-    if Rtype.lower() == "cpu":
-        
-        argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}}
-        RESTYPE = "CPU"
-#        print "Use Arg's: ",argNames," with cpu"
-        return argNames
 
     #get total amount of memory and set it to upper bound
     if Rtype.lower() == "mem":

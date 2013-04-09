@@ -325,7 +325,7 @@ def dbWriter(distributionID,runNo,message,executed):
         #connecting to the DB and storing parameters
         try:
             if HOMEPATH:
-                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite',timeout=1)
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
             else:
                 conn = sqlite.connect('./data/cocoma.sqlite')
                 
@@ -335,6 +335,7 @@ def dbWriter(distributionID,runNo,message,executed):
             # 1. Check if info is in the table before updating it
             c.execute('SELECT executed FROM runLog WHERE distributionID =? and runNo=?',[str(distributionID),str(runNo)])
             runLogFetch = c.fetchall()
+    
             if runLogFetch:
                 for row in runLogFetch:
                     if row[0]=="False":
@@ -345,9 +346,11 @@ def dbWriter(distributionID,runNo,message,executed):
                 c.execute('UPDATE runLog SET executed=? ,message=? WHERE distributionID =? and runNo=?',(executed,message,distributionID,runNo))
             
             
-            #c.close()
+            c.close()
             
         except sqlite.Error, e:
+            c.close()
+            conn.close()
             schedFileLogger.debug("Values: "+str(distributionID)+"-"+str(runNo)+"-"+str(message)+"-"+str(executed))
             schedFileLogger.error("Unable to connect to DB")
             schedFileLogger.exception(str(e))
