@@ -9,14 +9,14 @@ Installation
 The framework is designed to run on GNU/Linux and released in *.deb* package only.
 Once you have downloaded latest COCOMA version install it by running:
 
-.. code-block:: xml
+.. code-block:: bash
    
    $ dpkg -i cocoma_X.X-X_all.deb
 
 The application will be installed to folder *"/usr/share/pyshared/cocoma"*. All the additional required programs and libraries will be downloaded and installed on the fly if missing.
 To check check if it was installed correctly run:
 
-.. code-block:: xml
+.. code-block:: bash
    
    $ ccmsh -v  
 
@@ -31,19 +31,19 @@ To avail full functionality of COCOMA two daemons need to be started:
 **Scheduler daemon** - runs in the background and executes workload with differential parameters at the time defined in the emulation properties.
 to start scheduler use command:
 
-.. code-block:: xml
+.. code-block:: bash
 
    $ ccmsh --start scheduler
    
 Default network interface is *eth0*, port *51889* you can change that by adding required interface name and port number at the end:
 
-.. code-block:: xml
+.. code-block:: bash
 
    $ ccmsh --start scheduler wlan0 5180
 
 If more detailed output information is needed *Scheduler* also can be started in *DEBUG* mode:
 
-.. code-block:: xml
+.. code-block:: bash
 
    $ ccmsh --start scheduler wlan0 5180 debug 
 
@@ -51,13 +51,13 @@ If more detailed output information is needed *Scheduler* also can be started in
 
 **API daemon** - represents RESTfull web API which exposes COCOMA resources for use over the network. It follows the same startup pattern as the Scheduler:
 
-.. code-block:: xml
+.. code-block:: bash
 
    $ ccmsh --start api
 
 By default web API will try to start using *eth0* network interface on port *5050*, but it can be changed by supplying own parameters:
 
-.. code-block:: xml
+.. code-block:: bash
 
    $ ccmsh --start api wlan0 3030
 
@@ -151,8 +151,8 @@ The API URIs summary list:
    * /logs/emulations/{name}
 
 
-REST API Full Description
--------------------------
+REST API Description
+--------------------
 
 
 .. http:method:: GET /
@@ -544,3 +544,114 @@ REST API Full Description
    
    Return Zip file with emulation logs.
 
+XML payload structure
+---------------------
+Consider this sample XML document code:
+
+.. code-block:: xml
+   :linenos:
+   
+   <emulation>
+     <emuname>CPU_EMU</emuname>
+     <emuType>Mix</emuType>
+     <emuresourceType>CPU</emuresourceType>
+     <!--date format: 2014-10-10T10:10:10 -->
+     <emustartTime>now</emustartTime>
+     <!--duration in seconds -->
+     <emustopTime>60</emustopTime>
+     
+     <distributions>
+      
+      <name>CPU_Distro</name>
+        <startTime>0</startTime>
+        <!--duration in seconds -->
+        <duration>60</duration>
+        <granularity>20</granularity>
+        <distribution href="/distributions/linear" name="linear" />
+        <!--cpu utilization distribution range-->
+         <startLoad>10</startLoad>
+         <stopLoad>95</stopLoad>
+         
+         <emulator href="/emulators/lookbusy" name="lookbusy" /> 
+         <emulator-params>
+           <!--more parameters will be added -->
+           <resourceType>CPU</resourceType>
+          <!--Number of CPUs to keep busy (default: autodetected)-->
+          <ncpus>0</ncpus>
+         </emulator-params>
+         
+     </distributions>
+
+     <log>
+      <!-- Use value "1" to enable logging(by default logging is off)  -->
+      <enable>1</enable>
+      <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+      <frequency>1</frequency>
+      <logLevel>debug</logLevel>
+     </log>
+     
+   </emulation>
+
+
+XML document defines emulation experiment details and consists of three blocks:
+
+* **Emulatuion**
+   
+.. code-block:: xml
+   :linenos:
+   
+   <emulation>
+     <emuname>CPU_EMU</emuname>
+     <emuType>Mix</emuType>
+     <emuresourceType>CPU</emuresourceType>
+     <!--date format: 2014-10-10T10:10:10 -->
+     <emustartTime>now</emustartTime>
+     <!--duration in seconds -->
+     <emustopTime>60</emustopTime>
+     ...
+   </emulation>
+   
+* **Distribution**
+
+.. code-block:: xml
+   :linenos:
+
+     <distributions>
+      
+      <name>CPU_Distro</name>
+        <startTime>0</startTime>
+        <!--duration in seconds -->
+        <duration>60</duration>
+        <granularity>20</granularity>
+        <distribution href="/distributions/linear" name="linear" />
+        <!--cpu utilization distribution range-->
+         <startLoad>10</startLoad>
+         <stopLoad>95</stopLoad>
+         
+         <emulator href="/emulators/lookbusy" name="lookbusy" />
+         <emulator-params>
+           <!--more parameters will be added -->
+           <resourceType>CPU</resourceType>
+          <!--Number of CPUs to keep busy (default: autodetected)-->
+          <ncpus>0</ncpus>
+         </emulator-params>
+         
+     </distributions>
+
+
+
+* **Log** (optional)
+
+.. code-block:: xml
+   :linenos:
+
+     <log>
+      <!-- Use value "1" to enable logging(by default logging is off)  -->
+      <enable>1</enable>
+      <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+      <frequency>1</frequency>
+      <logLevel>debug</logLevel>
+     </log>
+
+
+In plain english it means - create emulation named *CPU_EMU* running for *60* sec. and stating right *now*. Emulation will include one distribution called *CPU_Distro* which starts at the same time as emulation, will run for *60* sec. using *linear* algorithm. In its duration it will increase workload of *CPU* from *10%* to *95%*  in *20* steps by using *lookbusy* emulator. Workload produced by the application will be logged every second with very detailed information.

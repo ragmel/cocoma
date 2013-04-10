@@ -12,14 +12,13 @@ Contents
 ========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    01_how_to_use_it.rst
-..
    02_cli_examples.rst
-   03_rest_examples.rst
-   04_cli_mult_examples.rst 
-   05_rest_mult_examples.rst
+   02_api_examples.rst   
+   03_examples.rst
+
 
   
 

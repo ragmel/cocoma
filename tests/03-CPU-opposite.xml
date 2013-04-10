@@ -1,5 +1,5 @@
 <emulation>
-  <emuname>Emu-CPU-RAM-IO</emuname>
+  <emuname>CPUStress</emuname>
   <emuType>Mix</emuType>
   <emuresourceType>Mix</emuresourceType>
   <emustartTime>now</emustartTime>

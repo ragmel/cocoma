@@ -34,6 +34,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -64,6 +67,106 @@ command: <tt class="docutils literal"><span class="pre">sudo</span></tt> gives y
 <div class="section" id="network">
 <h2>Network<a class="headerlink" href="#network" title="Permalink to this headline">¶</a></h2>
 <p>blah</p>
+<p>blah</p>
+<span class="target" id="module-EmulationManager"></span><dl class="function">
+<dt id="EmulationManager.checkDistroOverlap">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">checkDistroOverlap</tt><big>(</big><em>startTimeEmu</em>, <em>distroList</em><big>)</big><a class="headerlink" href="#EmulationManager.checkDistroOverlap" title="Permalink to this definition">¶</a></dt>
+<dd><ol class="arabic simple">
+<li>Get all the parameters from XML parser</li>
+<li>Check if distributions have overlapping time frames</li>
+<li>If so check if have the same resource and are within available resource bounds</li>
+</ol>
+</dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.checkPid">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">checkPid</tt><big>(</big><em>PROCNAME</em><big>)</big><a class="headerlink" href="#EmulationManager.checkPid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.createEmulation">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">createEmulation</tt><big>(</big><em>emulationName</em>, <em>emulationType</em>, <em>emulationLog</em>, <em>emulationLogFrequency</em>, <em>emulationLogLevel</em>, <em>resourceTypeEmulation</em>, <em>startTimeEmu</em>, <em>stopTimeEmu</em>, <em>distroList</em>, <em>xmlData</em><big>)</big><a class="headerlink" href="#EmulationManager.createEmulation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.dataCheck">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">dataCheck</tt><big>(</big><em>startTime</em>, <em>stopTime</em><big>)</big><a class="headerlink" href="#EmulationManager.dataCheck" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.dateOverlapCheck">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">dateOverlapCheck</tt><big>(</big><em>startTime</em>, <em>stopTime</em><big>)</big><a class="headerlink" href="#EmulationManager.dateOverlapCheck" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.deleteEmulation">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">deleteEmulation</tt><big>(</big><em>emulationID</em><big>)</big><a class="headerlink" href="#EmulationManager.deleteEmulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deleting specific emulation by ID number</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.distributionTypeCheck">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">distributionTypeCheck</tt><big>(</big><em>distributionType</em><big>)</big><a class="headerlink" href="#EmulationManager.distributionTypeCheck" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.emulationNow">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">emulationNow</tt><big>(</big><em>delay</em><big>)</big><a class="headerlink" href="#EmulationManager.emulationNow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.getActiveEmulationList">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">getActiveEmulationList</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#EmulationManager.getActiveEmulationList" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.getAllEmulationList">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">getAllEmulationList</tt><big>(</big><big>)</big><a class="headerlink" href="#EmulationManager.getAllEmulationList" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.getEmulation">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">getEmulation</tt><big>(</big><em>emulationName</em><big>)</big><a class="headerlink" href="#EmulationManager.getEmulation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.logToFile">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">logToFile</tt><big>(</big><em>elementName</em>, <em>level</em>, <em>filename=None</em><big>)</big><a class="headerlink" href="#EmulationManager.logToFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.loggerSet">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">loggerSet</tt><big>(</big><em>loggerName</em>, <em>filename=None</em><big>)</big><a class="headerlink" href="#EmulationManager.loggerSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.purgeAll">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">purgeAll</tt><big>(</big><big>)</big><a class="headerlink" href="#EmulationManager.purgeAll" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.readIfaceIP">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">readIfaceIP</tt><big>(</big><em>column</em><big>)</big><a class="headerlink" href="#EmulationManager.readIfaceIP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets interface name from database and retrieves IP adress for the service</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.readLogLevel">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">readLogLevel</tt><big>(</big><em>column</em><big>)</big><a class="headerlink" href="#EmulationManager.readLogLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets log level name from database</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.services_control">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">services_control</tt><big>(</big><em>service</em>, <em>action</em>, <em>args</em><big>)</big><a class="headerlink" href="#EmulationManager.services_control" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="EmulationManager.writeInterfaceData">
+<tt class="descclassname">EmulationManager.</tt><tt class="descname">writeInterfaceData</tt><big>(</big><em>iface</em>, <em>column</em><big>)</big><a class="headerlink" href="#EmulationManager.writeInterfaceData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes name of the interface into dedicated column in database</p>
+</dd></dl>
+
 <p>This is an example on how to link images:</p>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -182,6 +285,9 @@ command: <tt class="docutils literal"><span class="pre">sudo</span></tt> gives y
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>
     </div>

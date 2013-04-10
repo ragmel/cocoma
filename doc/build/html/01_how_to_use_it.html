@@ -26,6 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="COCOMA 1 documentation" href="index.html" />
+    <link rel="next" title="Creating Emulation via CLI" href="02_cli_examples.html" />
     <link rel="prev" title="Controlled Contentious and Malicious(COCOMA) framework - 1.0" href="index.html" /> 
   </head>
   <body>
@@ -35,6 +36,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="02_cli_examples.html" title="Creating Emulation via CLI"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Controlled Contentious and Malicious(COCOMA) framework - 1.0"
              accesskey="P">previous</a> |</li>
@@ -56,12 +60,12 @@ required workload on the chosen resource(-s) such as CPU, IO, Memory and/or Netw
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>The framework is designed to run on GNU/Linux and released in <em>.deb</em> package only.
 Once you have downloaded latest COCOMA version install it by running:</p>
-<div class="highlight-xml"><div class="highlight"><pre>$ dpkg -i cocoma_X.X-X_all.deb
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>dpkg -i cocoma_X.X-X_all.deb
 </pre></div>
 </div>
 <p>The application will be installed to folder <em>&#8220;/usr/share/pyshared/cocoma&#8221;</em>. All the additional required programs and libraries will be downloaded and installed on the fly if missing.
 To check check if it was installed correctly run:</p>
-<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh -v
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh -v
 </pre></div>
 </div>
 </div>
@@ -76,24 +80,24 @@ To check check if it was installed correctly run:</p>
 </div></blockquote>
 <p><strong>Scheduler daemon</strong> - runs in the background and executes workload with differential parameters at the time defined in the emulation properties.
 to start scheduler use command:</p>
-<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start scheduler
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --start scheduler
 </pre></div>
 </div>
 <p>Default network interface is <em>eth0</em>, port <em>51889</em> you can change that by adding required interface name and port number at the end:</p>
-<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start scheduler wlan0 5180
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --start scheduler wlan0 5180
 </pre></div>
 </div>
 <p>If more detailed output information is needed <em>Scheduler</em> also can be started in <em>DEBUG</em> mode:</p>
-<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start scheduler wlan0 5180 debug
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --start scheduler wlan0 5180 debug
 </pre></div>
 </div>
 <p><em>Note: Scheduler needs to be running otherwise nothing will work. Always start it first!!</em></p>
 <p><strong>API daemon</strong> - represents RESTfull web API which exposes COCOMA resources for use over the network. It follows the same startup pattern as the Scheduler:</p>
-<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start api
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --start api
 </pre></div>
 </div>
 <p>By default web API will try to start using <em>eth0</em> network interface on port <em>5050</em>, but it can be changed by supplying own parameters:</p>
-<div class="highlight-xml"><div class="highlight"><pre>$ ccmsh --start api wlan0 3030
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --start api wlan0 3030
 </pre></div>
 </div>
 <p>The log level will be always same as the <em>Scheduler</em>.</p>
@@ -208,8 +212,8 @@ to start scheduler use command:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="rest-api-full-description">
-<h2>REST API Full Description<a class="headerlink" href="#rest-api-full-description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rest-api-description">
+<h2>REST API Description<a class="headerlink" href="#rest-api-description" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
 <dt id="method-get-">
 <tt class="descclassname deschttpmethod">GET </tt><tt class="descname deschttpurl"><span class="deschttppath">/</span></tt><a class="headerlink" href="#method-get-" title="Permalink to this definition">¶</a></dt>
@@ -744,6 +748,181 @@ The returned <em>200- OK</em> XML:</p>
 </dd></dl>
 
 </div>
+<div class="section" id="xml-payload-structure">
+<h2>XML payload structure<a class="headerlink" href="#xml-payload-structure" title="Permalink to this headline">¶</a></h2>
+<p>Consider this sample XML document code:</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+  <span class="nt">&lt;emuname&gt;</span>CPU_EMU<span class="nt">&lt;/emuname&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
+  <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
+  <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+  <span class="c">&lt;!--duration in seconds --&gt;</span>
+  <span class="nt">&lt;emustopTime&gt;</span>60<span class="nt">&lt;/emustopTime&gt;</span>
+
+  <span class="nt">&lt;distributions&gt;</span>
+
+   <span class="nt">&lt;name&gt;</span>CPU_Distro<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
+     <span class="nt">&lt;granularity&gt;</span>20<span class="nt">&lt;/granularity&gt;</span>
+     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+     <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+      <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+      <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
+
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;emulator-params&gt;</span>
+        <span class="c">&lt;!--more parameters will be added --&gt;</span>
+        <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+       <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+       <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+      <span class="nt">&lt;/emulator-params&gt;</span>
+
+  <span class="nt">&lt;/distributions&gt;</span>
+
+  <span class="nt">&lt;log&gt;</span>
+   <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+   <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+   <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+   <span class="nt">&lt;frequency&gt;</span>1<span class="nt">&lt;/frequency&gt;</span>
+   <span class="nt">&lt;logLevel&gt;</span>debug<span class="nt">&lt;/logLevel&gt;</span>
+  <span class="nt">&lt;/log&gt;</span>
+
+<span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>XML document defines emulation experiment details and consists of three blocks:</p>
+<ul class="simple">
+<li><strong>Emulatuion</strong></li>
+</ul>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+  <span class="nt">&lt;emuname&gt;</span>CPU_EMU<span class="nt">&lt;/emuname&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
+  <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
+  <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+  <span class="c">&lt;!--duration in seconds --&gt;</span>
+  <span class="nt">&lt;emustopTime&gt;</span>60<span class="nt">&lt;/emustopTime&gt;</span>
+  ...
+<span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><strong>Distribution</strong></li>
+</ul>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="nt">&lt;distributions&gt;</span>
+
+   <span class="nt">&lt;name&gt;</span>CPU_Distro<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
+     <span class="nt">&lt;granularity&gt;</span>20<span class="nt">&lt;/granularity&gt;</span>
+     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+     <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+      <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+      <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
+
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;emulator-params&gt;</span>
+        <span class="c">&lt;!--more parameters will be added --&gt;</span>
+        <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+       <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+       <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+      <span class="nt">&lt;/emulator-params&gt;</span>
+
+  <span class="nt">&lt;/distributions&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><strong>Log</strong> (optional)</li>
+</ul>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="nt">&lt;log&gt;</span>
+   <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+   <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+   <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+   <span class="nt">&lt;frequency&gt;</span>1<span class="nt">&lt;/frequency&gt;</span>
+   <span class="nt">&lt;logLevel&gt;</span>debug<span class="nt">&lt;/logLevel&gt;</span>
+  <span class="nt">&lt;/log&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>In plain english it means - create emulation named <em>CPU_EMU</em> running for <em>60</em> sec. and stating right <em>now</em>. Emulation will include one distribution called <em>CPU_Distro</em> which starts at the same time as emulation, will run for <em>60</em> sec. using <em>linear</em> algorithm. In its duration it will increase workload of <em>CPU</em> from <em>10%</em> to <em>95%</em>  in <em>20</em> steps by using <em>lookbusy</em> emulator. Workload produced by the application will be logged every second with very detailed information.</p>
+</div>
 </div>
 
 
@@ -759,7 +938,8 @@ The returned <em>200- OK</em> XML:</p>
 <li><a class="reference internal" href="#starting-components">Starting Components</a></li>
 <li><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
 <li><a class="reference internal" href="#rest-api-index">REST API Index</a></li>
-<li><a class="reference internal" href="#rest-api-full-description">REST API Full Description</a></li>
+<li><a class="reference internal" href="#rest-api-description">REST API Description</a></li>
+<li><a class="reference internal" href="#xml-payload-structure">XML payload structure</a></li>
 </ul>
 </li>
 </ul>
@@ -767,6 +947,9 @@ The returned <em>200- OK</em> XML:</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">Controlled Contentious and Malicious(COCOMA) framework - 1.0</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="02_cli_examples.html"
+                        title="next chapter">Creating Emulation via CLI</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/01_how_to_use_it.txt"
@@ -795,6 +978,9 @@ The returned <em>200- OK</em> XML:</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="02_cli_examples.html" title="Creating Emulation via CLI"
+             >next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Controlled Contentious and Malicious(COCOMA) framework - 1.0"
              >previous</a> |</li>

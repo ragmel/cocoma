@@ -1,13 +1,10 @@
 require 'rubygems'
 require 'restfully'
 require 'logger'
-#require 'restfully/addons/bonfire'
 
 session = Restfully::Session.new(
- :configuration_file => "~/.restfully/api.cocoma.yml"
-# :cache => false,
-# :gateway => "ssh.bonfire.grid5000.fr",
-# :keys => ["~/.ssh/id_bonfire"]
+ :configuration_file => "./cocoma.yml"
+
 )
 
 session.logger.level = Logger::INFO

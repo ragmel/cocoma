@@ -26,7 +26,9 @@ Network
 -------
 blah
 
-
+.. automodule:: EmulationManager
+   :members:
+   :undoc-members:
 
 
 

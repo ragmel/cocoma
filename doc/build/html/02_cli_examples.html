@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Single Distribution: CLI Examples &mdash; COCOMA 1 documentation</title>
+    <title>Creating Emulation via CLI &mdash; COCOMA 1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,7 +25,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="COCOMA 1 documentation" href="index.html" /> 
+    <link rel="top" title="COCOMA 1 documentation" href="index.html" />
+    <link rel="next" title="Creating Emulation via API Client (Restfully)" href="02_api_examples.html" />
+    <link rel="prev" title="Introduction" href="01_how_to_use_it.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,6 +36,12 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="02_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="01_how_to_use_it.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
         <li><a href="index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -43,27 +51,9 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="single-distribution-cli-examples">
-<h1>Single Distribution: CLI Examples<a class="headerlink" href="#single-distribution-cli-examples" title="Permalink to this headline">¶</a></h1>
-<p>blah</p>
-<div class="section" id="cpu">
-<h2>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h2>
-<p>blah</p>
-</div>
-<div class="section" id="i-o">
-<h2>I/O<a class="headerlink" href="#i-o" title="Permalink to this headline">¶</a></h2>
-<p>Words can have <em>emphasis in italics</em> or be <strong>bold</strong> and you can
-define code samples with back quotes, like when you talk about a
-command: <tt class="docutils literal"><span class="pre">sudo</span></tt> gives you super user powers!</p>
-</div>
-<div class="section" id="memory">
-<h2>Memory<a class="headerlink" href="#memory" title="Permalink to this headline">¶</a></h2>
-<p>blah</p>
-</div>
-<div class="section" id="network">
-<h2>Network<a class="headerlink" href="#network" title="Permalink to this headline">¶</a></h2>
-<p>blah</p>
-<p>This is an example on how to link images:</p>
+  <div class="section" id="creating-emulation-via-cli">
+<h1>Creating Emulation via CLI<a class="headerlink" href="#creating-emulation-via-cli" title="Permalink to this headline">¶</a></h1>
+<p>Once <em>Scheduler</em> was started and running we can now create stress emulations for the resources. We are using local XML <tt class="docutils literal"><span class="pre">emulation.xml</span></tt> file:</p>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -97,43 +87,133 @@ command: <tt class="docutils literal"><span class="pre">sudo</span></tt> gives y
 31
 32
 33
-34</pre></div></td><td class="code"><div class="highlight"><pre>         <span class="nt">&lt;emulation&gt;</span>
-           <span class="nt">&lt;emuname&gt;</span>CPU_emu<span class="nt">&lt;/emuname&gt;</span>
-           <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
-           <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
-           <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
-           <span class="c">&lt;!--duration in seconds --&gt;</span>
-           <span class="nt">&lt;emustopTime&gt;</span>15<span class="nt">&lt;/emustopTime&gt;</span>
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56</pre></div></td><td class="code"><div class="highlight"><pre>   <span class="nt">&lt;emulation&gt;</span>
+     <span class="nt">&lt;emuname&gt;</span>CPU_Emulation<span class="nt">&lt;/emuname&gt;</span>
+     <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+     <span class="nt">&lt;emuresourceType&gt;</span>Mix<span class="nt">&lt;/emuresourceType&gt;</span>
+     <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;emustopTime&gt;</span>180<span class="nt">&lt;/emustopTime&gt;</span>
 
-           <span class="nt">&lt;distributions&gt;</span>
-            <span class="nt">&lt;name&gt;</span>CPU_distro<span class="nt">&lt;/name&gt;</span>
-            <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
-            <span class="c">&lt;!--duration in seconds --&gt;</span>
-            <span class="nt">&lt;duration&gt;</span>10<span class="nt">&lt;/duration&gt;</span>
-            <span class="nt">&lt;granularity&gt;</span>1<span class="nt">&lt;/granularity&gt;</span>
-            <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
-            <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
-            <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
-            <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
-            <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
-            <span class="nt">&lt;emulator-params&gt;</span>
-                 <span class="c">&lt;!--more parameters will be added --&gt;</span>
-                 <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
-                 <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
-                 <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
-            <span class="nt">&lt;/emulator-params&gt;</span>
-          <span class="nt">&lt;/distributions&gt;</span>
+     <span class="nt">&lt;distributions&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Distro1<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+        <span class="c">&lt;!--duration in seconds --&gt;</span>
+        <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+        <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+        <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+      <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+         <span class="nt">&lt;startLoad&gt;</span>90<span class="nt">&lt;/startLoad&gt;</span>
+         <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
+         <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;emulator-params&gt;</span>
+           <span class="c">&lt;!--more parameters will be added --&gt;</span>
+           <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+      <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+      <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
 
-          <span class="nt">&lt;log&gt;</span>
-            <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
-            <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
-            <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
-            <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
-          <span class="nt">&lt;/log&gt;</span>
-         <span class="nt">&lt;/emulation&gt;</span>
+         <span class="nt">&lt;/emulator-params&gt;</span>
+     <span class="nt">&lt;/distributions&gt;</span>
+
+      <span class="nt">&lt;distributions&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Distro2<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+        <span class="c">&lt;!--duration in seconds --&gt;</span>
+        <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+        <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+        <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+      <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+         <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+         <span class="nt">&lt;stopLoad&gt;</span>90<span class="nt">&lt;/stopLoad&gt;</span>
+         <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;emulator-params&gt;</span>
+           <span class="c">&lt;!--more parameters will be added --&gt;</span>
+           <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+      <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+      <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+
+         <span class="nt">&lt;/emulator-params&gt;</span>
+     <span class="nt">&lt;/distributions&gt;</span>
+
+     <span class="nt">&lt;log&gt;</span>
+      <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+      <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+      <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+      <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
+     <span class="nt">&lt;/log&gt;</span>
+
+   <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
+<p>start with simple CLI command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh -x emulation.xml
+</pre></div>
 </div>
+<p>If everything went right, you will see on the screen list of scheduled jobs:</p>
+<div class="highlight-bash"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span>ccmsh -x emulation.xml
+INFO:XML Parser:Finished running
+<span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-7-0-Distro1-lookbusy-cpu: 90 Duration: 10.0sec.Start Time: 2013-04-10 09:43:01 End Time: 09:43:11
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-7-1-Distro1-lookbusy-cpu: 50 Duration: 10.0sec.Start Time: 2013-04-10 09:43:13 End Time: 09:43:23
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-7-2-Distro1-lookbusy-cpu: 10 Duration: 10.0sec.Start Time: 2013-04-10 09:43:25 End Time: 09:43:35
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-8-0-Distro2-lookbusy-cpu: 10 Duration: 10.0sec.Start Time: 2013-04-10 09:43:01 End Time: 09:43:11
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-8-1-Distro2-lookbusy-cpu: 50 Duration: 10.0sec.Start Time: 2013-04-10 09:43:13 End Time: 09:43:23
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-8-2-Distro2-lookbusy-cpu: 90 Duration: 10.0sec.Start Time: 2013-04-10 09:43:25 End Time: 09:43:35
+</span>INFO:Emulation Manager:##Emulation 6-Emu-CPU-RAM-IO created
+<span class="hll">INFO:Emulation Manager:Started logger:6-CPU_Emulation-logger interval-3sec.StartTime:2013-04-10 09:42:56
+</span>6-Emu-CPU-RAM-IO
+</pre></div>
+</td></tr></table></div>
+<p>Each line from <em>3-8</em> shows information of a single scheduled emulation job. If we break it down, the line <em>3</em> from above as an example we have:</p>
+<ul class="simple">
+<li><strong>INFO:Distriburion Manager:Scheduler reply:</strong> -just a generic logger part</li>
+<li><strong>6-CPU_Emulation</strong> - emulation name, which is a combined string of emulation ID from the DB and <tt class="docutils literal"><span class="pre">emuname</span></tt> value in the XML file</li>
+<li><strong>7</strong> - database ID number for distribution</li>
+<li><strong>0</strong> - run number of this distribution</li>
+<li><strong>Distro1</strong> - name of the distribution taken from XML file</li>
+<li><strong>lookbusy</strong> - distribution module used to calculate each run parameters</li>
+<li><strong>cpu</strong> - the type of the resource used by this run</li>
+<li><strong>90</strong> - stress value applied to this run</li>
+<li><strong>Duration 10.0sec.</strong> - how long will job run</li>
+<li><strong>Start Time: 2013-04-10 09:43:01 End Time: 09:43:11</strong> - time gap when run will be executed</li>
+</ul>
+<p>We can write run name notation in this way:</p>
+<p><tt class="docutils literal"><span class="pre">{logger</span> <span class="pre">reply}</span> <span class="pre">-</span> <span class="pre">{emulationID-name}</span> <span class="pre">-</span> <span class="pre">{distribution</span> <span class="pre">ID}</span> <span class="pre">-</span> <span class="pre">{run</span> <span class="pre">number}</span> <span class="pre">-</span> <span class="pre">{distribution</span> <span class="pre">name}</span> <span class="pre">-</span> <span class="pre">{distribution</span> <span class="pre">module}</span> <span class="pre">-</span> <span class="pre">{resource}</span> <span class="pre">-</span> <span class="pre">{stress</span> <span class="pre">value}</span> <span class="pre">-</span> <span class="pre">{run</span> <span class="pre">duration}</span> <span class="pre">-</span> <span class="pre">{execution</span> <span class="pre">time}</span></tt></p>
+<p>Line <em>10</em> shows another job which was created for the logger.This job will appear only if <em>log</em> section is stated in XML and is optional. Logger job runs for the duration of the whole emulation
+and collects system resource usage information.
+Logger job name notation can be described in this way:</p>
+<p><tt class="docutils literal"><span class="pre">{logger</span> <span class="pre">reply}</span> <span class="pre">-</span> <span class="pre">{emulationID-name}</span> <span class="pre">-</span> <span class="pre">{logger</span> <span class="pre">mark}</span> <span class="pre">-</span> <span class="pre">{poll</span> <span class="pre">interval}</span> <span class="pre">-</span> <span class="pre">{start</span> <span class="pre">time}</span></tt></p>
 </div>
 
 
@@ -142,17 +222,12 @@ command: <tt class="docutils literal"><span class="pre">sudo</span></tt> gives y
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Single Distribution: CLI Examples</a><ul>
-<li><a class="reference internal" href="#cpu">CPU</a></li>
-<li><a class="reference internal" href="#i-o">I/O</a></li>
-<li><a class="reference internal" href="#memory">Memory</a></li>
-<li><a class="reference internal" href="#network">Network</a></li>
-</ul>
-</li>
-</ul>
-
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="01_how_to_use_it.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="02_api_examples.html"
+                        title="next chapter">Creating Emulation via API Client (Restfully)</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/02_cli_examples.txt"
@@ -181,6 +256,12 @@ command: <tt class="docutils literal"><span class="pre">sudo</span></tt> gives y
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="02_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="01_how_to_use_it.html" title="Introduction"
+             >previous</a> |</li>
         <li><a href="index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>
     </div>

@@ -915,6 +915,276 @@ Return Zip file with emulation logs.
 
 
 
+\section{Single Distribution: CLI Examples}
+\label{02_cli_examples:single-distribution-cli-examples}\label{02_cli_examples::doc}
+blah
+
+
+\subsection{CPU}
+\label{02_cli_examples:cpu}
+blah
+
+
+\subsection{I/O}
+\label{02_cli_examples:i-o}
+Words can have \emph{emphasis in italics} or be \textbf{bold} and you can
+define code samples with back quotes, like when you talk about a
+command: \code{sudo} gives you super user powers!
+
+
+\subsection{Memory}
+\label{02_cli_examples:memory}
+blah
+
+
+\subsection{Network}
+\label{02_cli_examples:network}
+blah
+
+This is an example on how to link images:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+         \PYG{n+nt}{\PYGZlt{}emulation}\PYG{n+nt}{\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuname}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}emu\PYG{n+nt}{\PYGZlt{}/emuname\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuType}\PYG{n+nt}{\PYGZgt{}}Mix\PYG{n+nt}{\PYGZlt{}/emuType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuresourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/emuresourceType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustartTime}\PYG{n+nt}{\PYGZgt{}}now\PYG{n+nt}{\PYGZlt{}/emustartTime\PYGZgt{}}
+           \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustopTime}\PYG{n+nt}{\PYGZgt{}}15\PYG{n+nt}{\PYGZlt{}/emustopTime\PYGZgt{}}
+
+           \PYG{n+nt}{\PYGZlt{}distributions}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}distro\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}duration}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/duration\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}granularity}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/granularity\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{cpu utilization distribution range}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startLoad}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/startLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}stopLoad}\PYG{n+nt}{\PYGZgt{}}95\PYG{n+nt}{\PYGZlt{}/stopLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/lookbusy\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator\PYGZhy{}params}\PYG{n+nt}{\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{more parameters will be added }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{Number of CPUs to keep busy (default: autodetected)}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}ncpus}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/ncpus\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
+
+          \PYG{n+nt}{\PYGZlt{}log}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use value \PYGZdq{}1\PYGZdq{} to enable logging(by default logging is off)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}enable}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/enable\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use seconds for setting probe intervals(if logging is enabled default is 3sec)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}frequency}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/frequency\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/log\PYGZgt{}}
+         \PYG{n+nt}{\PYGZlt{}/emulation\PYGZgt{}}
+\end{Verbatim}
+
+
+\section{Single Distribution: REST Examples}
+\label{03_rest_examples::doc}\label{03_rest_examples:single-distribution-rest-examples}
+blah
+
+
+\subsection{CPU}
+\label{03_rest_examples:cpu}
+blah
+
+
+\subsection{I/O}
+\label{03_rest_examples:i-o}
+Words can have \emph{emphasis in italics} or be \textbf{bold} and you can
+define code samples with back quotes, like when you talk about a
+command: \code{sudo} gives you super user powers!
+
+
+\subsection{Memory}
+\label{03_rest_examples:memory}
+blah
+
+blah
+
+
+\subsection{Network}
+\label{03_rest_examples:network}
+blah
+
+This is an example on how to link images:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+         \PYG{n+nt}{\PYGZlt{}emulation}\PYG{n+nt}{\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuname}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}emu\PYG{n+nt}{\PYGZlt{}/emuname\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuType}\PYG{n+nt}{\PYGZgt{}}Mix\PYG{n+nt}{\PYGZlt{}/emuType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuresourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/emuresourceType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustartTime}\PYG{n+nt}{\PYGZgt{}}now\PYG{n+nt}{\PYGZlt{}/emustartTime\PYGZgt{}}
+           \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustopTime}\PYG{n+nt}{\PYGZgt{}}15\PYG{n+nt}{\PYGZlt{}/emustopTime\PYGZgt{}}
+
+           \PYG{n+nt}{\PYGZlt{}distributions}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}distro\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}duration}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/duration\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}granularity}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/granularity\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{cpu utilization distribution range}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startLoad}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/startLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}stopLoad}\PYG{n+nt}{\PYGZgt{}}95\PYG{n+nt}{\PYGZlt{}/stopLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/lookbusy\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator\PYGZhy{}params}\PYG{n+nt}{\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{more parameters will be added }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{Number of CPUs to keep busy (default: autodetected)}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}ncpus}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/ncpus\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
+
+          \PYG{n+nt}{\PYGZlt{}log}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use value \PYGZdq{}1\PYGZdq{} to enable logging(by default logging is off)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}enable}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/enable\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use seconds for setting probe intervals(if logging is enabled default is 3sec)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}frequency}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/frequency\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/log\PYGZgt{}}
+         \PYG{n+nt}{\PYGZlt{}/emulation\PYGZgt{}}
+\end{Verbatim}
+
+
+\section{Multiple Distribution: CLI Examples}
+\label{04_cli_mult_examples:multiple-distribution-cli-examples}\label{04_cli_mult_examples::doc}
+blah
+
+
+\subsection{CPU}
+\label{04_cli_mult_examples:cpu}
+blah
+
+
+\subsection{I/O}
+\label{04_cli_mult_examples:i-o}
+Words can have \emph{emphasis in italics} or be \textbf{bold} and you can
+define code samples with back quotes, like when you talk about a
+command: \code{sudo} gives you super user powers!
+
+
+\subsection{Memory}
+\label{04_cli_mult_examples:memory}
+blah
+
+blah
+
+
+\subsection{Network}
+\label{04_cli_mult_examples:network}
+blah
+
+This is an example on how to link images:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+         \PYG{n+nt}{\PYGZlt{}emulation}\PYG{n+nt}{\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuname}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}emu\PYG{n+nt}{\PYGZlt{}/emuname\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuType}\PYG{n+nt}{\PYGZgt{}}Mix\PYG{n+nt}{\PYGZlt{}/emuType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuresourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/emuresourceType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustartTime}\PYG{n+nt}{\PYGZgt{}}now\PYG{n+nt}{\PYGZlt{}/emustartTime\PYGZgt{}}
+           \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustopTime}\PYG{n+nt}{\PYGZgt{}}15\PYG{n+nt}{\PYGZlt{}/emustopTime\PYGZgt{}}
+
+           \PYG{n+nt}{\PYGZlt{}distributions}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}distro\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}duration}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/duration\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}granularity}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/granularity\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{cpu utilization distribution range}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startLoad}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/startLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}stopLoad}\PYG{n+nt}{\PYGZgt{}}95\PYG{n+nt}{\PYGZlt{}/stopLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/lookbusy\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator\PYGZhy{}params}\PYG{n+nt}{\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{more parameters will be added }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{Number of CPUs to keep busy (default: autodetected)}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}ncpus}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/ncpus\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
+
+          \PYG{n+nt}{\PYGZlt{}log}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use value \PYGZdq{}1\PYGZdq{} to enable logging(by default logging is off)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}enable}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/enable\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use seconds for setting probe intervals(if logging is enabled default is 3sec)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}frequency}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/frequency\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/log\PYGZgt{}}
+         \PYG{n+nt}{\PYGZlt{}/emulation\PYGZgt{}}
+\end{Verbatim}
+
+
+\section{Multiple Distribution: REST Examples}
+\label{05_rest_mult_examples::doc}\label{05_rest_mult_examples:multiple-distribution-rest-examples}
+blah
+
+
+\subsection{CPU}
+\label{05_rest_mult_examples:cpu}
+blah
+
+
+\subsection{I/O}
+\label{05_rest_mult_examples:i-o}
+Words can have \emph{emphasis in italics} or be \textbf{bold} and you can
+define code samples with back quotes, like when you talk about a
+command: \code{sudo} gives you super user powers!
+
+
+\subsection{Memory}
+\label{05_rest_mult_examples:memory}
+blah
+
+blah
+
+
+\subsection{Network}
+\label{05_rest_mult_examples:network}
+blah
+
+This is an example on how to link images:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+         \PYG{n+nt}{\PYGZlt{}emulation}\PYG{n+nt}{\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuname}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}emu\PYG{n+nt}{\PYGZlt{}/emuname\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuType}\PYG{n+nt}{\PYGZgt{}}Mix\PYG{n+nt}{\PYGZlt{}/emuType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emuresourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/emuresourceType\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustartTime}\PYG{n+nt}{\PYGZgt{}}now\PYG{n+nt}{\PYGZlt{}/emustartTime\PYGZgt{}}
+           \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+           \PYG{n+nt}{\PYGZlt{}emustopTime}\PYG{n+nt}{\PYGZgt{}}15\PYG{n+nt}{\PYGZlt{}/emustopTime\PYGZgt{}}
+
+           \PYG{n+nt}{\PYGZlt{}distributions}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}name}\PYG{n+nt}{\PYGZgt{}}CPU\PYGZus{}distro\PYG{n+nt}{\PYGZlt{}/name\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startTime}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/startTime\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{duration in seconds }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}duration}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/duration\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}granularity}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/granularity\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}distribution} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/distributions/linear\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}linear\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{cpu utilization distribution range}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}startLoad}\PYG{n+nt}{\PYGZgt{}}10\PYG{n+nt}{\PYGZlt{}/startLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}stopLoad}\PYG{n+nt}{\PYGZgt{}}95\PYG{n+nt}{\PYGZlt{}/stopLoad\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators/lookbusy\PYGZdq{}} \PYG{n+na}{name=}\PYG{l+s}{\PYGZdq{}lookbusy\PYGZdq{}} \PYG{n+nt}{/\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}emulator\PYGZhy{}params}\PYG{n+nt}{\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{more parameters will be added }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}resourceType}\PYG{n+nt}{\PYGZgt{}}CPU\PYG{n+nt}{\PYGZlt{}/resourceType\PYGZgt{}}
+                 \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{Number of CPUs to keep busy (default: autodetected)}\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+                 \PYG{n+nt}{\PYGZlt{}ncpus}\PYG{n+nt}{\PYGZgt{}}0\PYG{n+nt}{\PYGZlt{}/ncpus\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
+
+          \PYG{n+nt}{\PYGZlt{}log}\PYG{n+nt}{\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use value \PYGZdq{}1\PYGZdq{} to enable logging(by default logging is off)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}enable}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/enable\PYGZgt{}}
+            \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Use seconds for setting probe intervals(if logging is enabled default is 3sec)  }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
+            \PYG{n+nt}{\PYGZlt{}frequency}\PYG{n+nt}{\PYGZgt{}}3\PYG{n+nt}{\PYGZlt{}/frequency\PYGZgt{}}
+          \PYG{n+nt}{\PYGZlt{}/log\PYGZgt{}}
+         \PYG{n+nt}{\PYGZlt{}/emulation\PYGZgt{}}
+\end{Verbatim}
+
+
 \chapter{Indices and tables}
 \label{index:indices-and-tables}\begin{itemize}
 \item {} 
