@@ -106,11 +106,11 @@ Each line from *3-8* shows information of a single scheduled emulation job. If w
    
 We can write run name notation in this way:
 
-``{logger reply} - {emulationID-name} - {distribution ID} - {run number} - {distribution name} - {distribution module} - {resource} - {stress value} - {run duration} - {execution time}``
+``(logger reply) - (emulationID-name) - (distribution ID) - (run number} - (distribution name) - (distribution module) - (resource) - (stress value) - (run duration) - (execution time)``
 
 
 Line *10* shows another job which was created for the logger.This job will appear only if *log* section is stated in XML and is optional. Logger job runs for the duration of the whole emulation 
 and collects system resource usage information.
 Logger job name notation can be described in this way:
 
-``{logger reply} - {emulationID-name} - {logger mark} - {poll interval} - {start time}``
+``(logger reply) - (emulationID-name) - (logger mark) - {poll interval} - (start time)``

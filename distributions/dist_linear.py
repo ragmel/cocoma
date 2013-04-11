@@ -87,7 +87,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     
 def distHelp():
     '''
-    Help method that gives description of this particular distribution usage
+    Help method that gives description of linear distribution usage
     '''
     
     print "Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types."

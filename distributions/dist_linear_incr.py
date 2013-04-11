@@ -118,11 +118,13 @@ def insertLoad(load, startTime, duration, mallocLimit):
         insertRun(load, startTime, duration)
 
 def distHelp():
+    '''
+    Help method that gives description of linear_incr distribution usage
+    '''
     
-    print "Linear Distribution How-To:"
-    print "Enter arg0 for first point and arg1 for 2nd point"
-    
-    return "Linear Distribution How-To: Enter arg0 for first point and arg1 for 2nd point"
+    print "Linear Increase distribution takes in start and stop load (plus malloclimit for MEM) parameters and gradually increasing resource workload by spawning jobs in parallel. Can be used with MEM,IO,NET resource types."
+        
+    return "Linear Increase distribution takes in start and stop load (plus malloclimit for MEM) parameters and gradually increasing resource workload by spawning jobs in parallel. Can be used with MEM,IO,NET resource types."
     
 def argNames(Rtype):
     '''
