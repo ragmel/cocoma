@@ -1,0 +1,106 @@
+Creating Emulation via API Client (Restfully)
+=============================================
+
+.. _restfully: https://github.com/crohr/restfully
+
+Here you can find examples for building ruby script XML payloads for restfully_ client.
+
+
+First you need to create configuration file like ``cocoma.yml``. It contains the IP address URI of COCOMA web API and used mediatype name:
+
+.. code-block:: ruby
+   
+   uri: http://10.55.164.223:5050/
+   require: [ApplicationVndBonfireXml]
+
+
+Next we creating ``MEM-emulation.rb`` file which contains XML payload and the path to config file: 
+
+.. code-block:: ruby
+      
+   require 'rubygems'
+   require 'restfully'
+   require 'logger'
+   
+   session = Restfully::Session.new(
+    :configuration_file => "~/cocoma.yml"
+   
+   )
+   
+   session.logger.level = Logger::INFO
+   
+   emulation = nil
+   
+   begin
+    emulation = session.root.emulations.submit(
+      :emuname => "MEM-emulation",
+      :emutype => "Contention",
+      :emuresourceType => "RAM",
+      :emustartTime => "now",
+      :emustopTime => "240",
+      :distributions =>[{
+            :name => "MEM-increase",
+               :startTime =>"0",
+               :duration =>"120",        
+               :granularity =>"10",
+              :distribution => {
+               :href => "/distributions/linear",
+               :name => "linear"},
+              :startLoad => "1000",
+               :stopLoad => "18000",
+               :emulator =>{
+               :href => "/emulators/stressapptest",
+               :name => "stressapptest"},
+               :'emulator-params' =>{
+                     :resourceType =>"MEM",
+                     :memThreads => "1"}
+         },
+            {
+                   :name => "MEM-decrease",
+                   :startTime =>"121",
+                   :duration =>"119",
+                   :granularity =>"10",
+                   :distribution => {
+                                   :href => "/distributions/linear",
+                                   :name => "linear"},
+                   :startLoad => "18000",
+                   :stopLoad => "1000",
+                   :emulator =>{
+                                   :href => "/emulators/stressapptest",
+                                   :name => "stressapptest"},
+                   :'emulator-params' =>{
+                                   :resourceType =>"MEM",
+                                   :memThreads => "1"}
+                   }]
+    )
+                  
+   end
+
+
+Finally we launch the script using ``resfully`` client
+   
+.. code-block:: bash
+
+   $ restfully emulation.rb
+
+
+If then you would like to check if the emulation was created you can list emulations again using ``restfully`` :
+   
+.. code-block:: bash
+
+   $ restfully -c cocoma.yml
+   
+   >> #<Collection:0x45f9f3e uri="/emulations"
+   >>  RELATIONSHIPS
+   >>    parent, self
+   >>  ITEMS (0..2)/2
+   >>    #<Resource:0x45b5d3e name="7-CPU_Stress" uri="/emulations/7-CPUStress">
+   >>    #<Resource:0x4489eb0 name="8-MEM-emulation" uri="/emulations/8-MEM-emulation">>
+   >> => nil
+   
+
+To get more client tutorials check the restfully_ web site. 
+
+
+   
+   
