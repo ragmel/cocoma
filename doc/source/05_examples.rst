@@ -1,11 +1,10 @@
 XML Examples
 ============
-This section shows XML payload examples for creating emulation experiments
-
+This section provides XML payload examples for creating different emulations over various resources.
 
 CPU
 ---
-Emulation XML for the CPU contention:
+Emulation XML for CPU contention:
 
 .. code-block:: xml
    :linenos:
@@ -25,7 +24,7 @@ Emulation XML for the CPU contention:
         <!--duration in seconds -->
         <duration>120</duration>
         <granularity>24</granularity>
-        <distribution href="/distributions/linear_incr" name="linear_incr" />
+        <distribution href="/distributions/linear" name="linear" />
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
          <stopLoad>95</stopLoad>
@@ -35,7 +34,7 @@ Emulation XML for the CPU contention:
            <!--more parameters will be added -->
            <resourceType>CPU</resourceType>
           <!--Number of CPUs to keep busy (default: autodetected)-->
-          <ncpus>0</ncpus>
+          <ncpus>1</ncpus>
          </emulator-params>     
      </distributions>
    
@@ -50,12 +49,10 @@ Emulation XML for the CPU contention:
    </emulation>
 
 
-
-
 I/O
 ---
 
-Emulation XML for the I/O contention:
+Emulation XML for I/O contention:
 
 .. code-block:: xml
    :linenos:
@@ -79,15 +76,15 @@ Emulation XML for the I/O contention:
         <distribution href="/distributions/linear_incr" name="linear_incr" />
          <startLoad>1</startLoad>
          <stopLoad>10</stopLoad>
-         <emulator href="/emulators/lookbusy" name="lookbusy" />
+         <emulator href="/emulators/stressapptest" name="stressapptest" />
          
          <emulator-params>
            <!--more parameters will be added -->
            <resourceType>IO</resourceType>
-          <!--Size of blocks to use for I/O, in MB-->
-          <ioBlockSize>10</ioBlockSize>
-          <!--Time to sleep between iterations, in msec-->
-          <ioSleep>100</ioSleep>
+          <!--Size of mem in MB used-->
+          <memsize>1000</memsize>
+          <!--Number of threads-->
+          <memThreads>10</memThreads>
          </emulator-params>
          
      </distributions>
@@ -102,7 +99,7 @@ Emulation XML for the I/O contention:
      
    </emulation>
 
-2nd example using *trapezoidal* distribution:
+In this example we use a different distribution called *trapezoidal*:
 
 .. code-block:: xml
    :linenos:
@@ -126,15 +123,15 @@ Emulation XML for the I/O contention:
         <distribution href="/distributions/trapezoidal" name="trapezoidal" />
          <startLoad>1</startLoad>
          <stopLoad>10</stopLoad>
-         <emulator href="/emulators/lookbusy" name="lookbusy" />
+         <emulator href="/emulators/stressapptest" name="stressapptest" />
          
          <emulator-params>
            <!--more parameters will be added -->
            <resourceType>IO</resourceType>
-          <!--Size of blocks to use for I/O, in MB-->
-          <ioBlockSize>10</ioBlockSize>
-          <!--Time to sleep between iterations, in msec-->
-          <ioSleep>100</ioSleep>
+          <!--Size of mem in MB used-->
+          <memsize>1000</memsize>
+          <!--Number of threads-->
+          <memThreads>10</memThreads>
          </emulator-params>
          
      </distributions>
@@ -152,7 +149,7 @@ Emulation XML for the I/O contention:
 
 Memory
 ------
-Emulation XML for the memory contention:
+Emulation XML for memory contention:
 
 .. code-block:: xml
    :linenos:
@@ -176,12 +173,11 @@ Emulation XML for the memory contention:
         <!--Megabytes for memory -->
          <startLoad>100</startLoad>
          <stopLoad>1000</stopLoad>
-         <emulator href="/emulators/lookbusy" name="lookbusy" />
+		 <malloclimit>4095</malloclimit>
+         <emulator href="/emulators/stressapptest" name="stressapptest" />
          <emulator-params>
-           <resourceType>MEM</resourceType>
-          <!--time between iterations in usec (default 1000)-->
-          <malloclimit>4004</malloclimit> 
-         <memSleep>0</memSleep>
+			<resourceType>MEM</resourceType>
+			<memThreads>0</memThreads>
          </emulator-params>
      </distributions>
    
@@ -195,7 +191,7 @@ Emulation XML for the memory contention:
    
    </emulation>
 
-2nd example using *trapezoidal* distribution:
+Example for memory emulation using *trapezoidal* distribution:
 
 .. code-block:: xml
    :linenos:
@@ -219,12 +215,11 @@ Emulation XML for the memory contention:
         <!--Megabytes for memory -->
          <startLoad>100</startLoad>
          <stopLoad>1000</stopLoad>
-         <malloclimit>4000</malloclimit>
-         <emulator href="/emulators/lookbusy" name="lookbusy" />
+         <malloclimit>4095</malloclimit>
+         <emulator href="/emulators/stressapptest" name="stressapptest" />
          <emulator-params>
-           <resourceType>MEM</resourceType>
-          <!--time between iterations in usec (default 1000)-->   
-         <memSleep>0</memSleep>
+			<resourceType>MEM</resourceType>  
+			<memThreads>0</memThreads>
          </emulator-params>
      </distributions>
    
@@ -244,8 +239,7 @@ Emulation XML for the memory contention:
 Network
 -------
 
-For this emulation to work you need to deploy two COCOMA VM's. One will act as a client (the one where XML is sent) and the other will act as a server.
-Emulation XML for the network contention:
+The newtork emulation needs two COCOMA VM's, one that acts as a client and the other as a server. Normally those two VMs are placed in different nodes. The SuT should be composed of at least two VMs placed on the same two nodes of COCOMA. The emulation XML for network contention looks like:
 
 .. code-block:: xml
    :linenos:
@@ -265,7 +259,7 @@ Emulation XML for the network contention:
         <!--duration in seconds -->
         <duration>150</duration>
         <granularity>10</granularity>
-        <distribution href="/distributions/linear" name="linear" />
+        <distribution href="/distributions/linear_incr" name="linear_incr" />
       <!--cpu utilization distribution range-->
          <startLoad>100</startLoad>
          <!-- set target bandwidth to bits per sec -->
@@ -273,13 +267,13 @@ Emulation XML for the network contention:
          <emulator href="/emulators/iperf" name="iperf" />
        <emulator-params>
            <resourceType>NET</resourceType>
-           <serverip>10.55.164.223</serverip>
-      <!--Leave "0" for default 5001 port -->
-      <serverport>5001</serverport>
-           <clientip>127.0.0.1</clientip>
-      <clientport>5001</clientport>
-           <packettype>UDP</packettype>
-       </emulator-params>
+           <serverip>172.18.254.234</serverip>
+		   <!--Leave "0" for default 5001 port -->
+		   <serverport>5001</serverport>
+		   <clientip>172.18.254.236</clientip>
+		   <clientport>5001</clientport>
+		   <packettype>UDP</packettype>
+		   </emulator-params>
      </distributions>
    
      <log>
@@ -292,13 +286,10 @@ Emulation XML for the network contention:
    </emulation>
 
 
-
-
-Multiple Distributions
+Multiple distributions emulation
 ----------------------
 
-You can create multiple distributions within one emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource.
-Distributions can overlap, meaning two distributions can run in the same time frame. If distributions for the same resource will overlap, the runs might crash if not enough resources available.
+A good feature of COCOMA is the ability to combine multiple distributions within the same emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource. Distributions can overlap, meaning two distributions can run at the same time frame. If distributions for the same resource overlap and they exceed the available resources, the runs might crash.
 
 
 * CPU and Memory example
@@ -343,13 +334,12 @@ Distributions can overlap, meaning two distributions can run in the same time fr
                  <!--Megabytes for memory -->
                   <startLoad>100</startLoad>
                   <stopLoad>1000</stopLoad>
-                  <emulator href="/emulators/lookbusy" name="lookbusy" />
-                  <emulator-params>
-                    <resourceType>MEM</resourceType>
-                   <!--time between iterations in usec (default 1000)-->
-                   <malloclimit>4004</malloclimit> 
-                  <memSleep>0</memSleep>
-                  </emulator-params>
+                  <malloclimit>4095</malloclimit>
+				  <emulator href="/emulators/stressapptest" name="stressapptest" />
+				  <emulator-params>
+					<resourceType>MEM</resourceType>
+					<memThreads>0</memThreads>
+				  </emulator-params>
               </distributions>
 
              <log>
@@ -403,13 +393,12 @@ Distributions can overlap, meaning two distributions can run in the same time fr
                  <!--Megabytes for memory -->
                   <startLoad>100</startLoad>
                   <stopLoad>1000</stopLoad>
-                  <emulator href="/emulators/lookbusy" name="lookbusy" />
-                  <emulator-params>
-                    <resourceType>MEM</resourceType>
-                   <!--time between iterations in usec (default 1000)-->
-                   <malloclimit>4004</malloclimit> 
-                  <memSleep>0</memSleep>
-                  </emulator-params>
+                  <malloclimit>4095</malloclimit>
+				  <emulator href="/emulators/stressapptest" name="stressapptest" />
+				  <emulator-params>
+					<resourceType>MEM</resourceType>
+					<memThreads>0</memThreads>
+				  </emulator-params>
               </distributions>
               
               <distributions>

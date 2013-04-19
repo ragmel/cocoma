@@ -1,6 +1,6 @@
 Creating Emulation via CLI
 ==========================
-Once *Scheduler* was started and running we can now create stress emulations for the resources. We are using local XML ``emulation.xml`` file: 
+To create an emulation via CLI, a local XML ``emulation.xml`` file as the following can be used: 
 
 .. code-block:: xml
    :linenos:
@@ -23,7 +23,7 @@ Once *Scheduler* was started and running we can now create stress emulations for
          <!--cpu utilization distribution range-->
             <startLoad>90</startLoad>
             <stopLoad>10</stopLoad>
-            <emulator href="/emulators/stressapptest" name="lookbusy" />
+            <emulator href="/emulators/lookbusy" name="lookbusy" />
             <emulator-params>
               <!--more parameters will be added -->
               <resourceType>CPU</resourceType>
@@ -43,7 +43,7 @@ Once *Scheduler* was started and running we can now create stress emulations for
          <!--cpu utilization distribution range-->
             <startLoad>10</startLoad>
             <stopLoad>90</stopLoad>
-            <emulator href="/emulators/stressapptest" name="lookbusy" />
+            <emulator href="/emulators/lookbusy" name="lookbusy" />
             <emulator-params>
               <!--more parameters will be added -->
               <resourceType>CPU</resourceType>
@@ -64,14 +64,14 @@ Once *Scheduler* was started and running we can now create stress emulations for
    
 
 
-start with simple CLI command:
+The comman to start the emulation via CLI is:
 
 .. code-block:: bash
    
    $ ccmsh -x emulation.xml
 
 
-If everything went right, you will see on the screen list of scheduled jobs:
+Once sent, the list of scheduled jobs is shown on screen as follow:
 
 .. code-block:: bash
    :emphasize-lines: 3,4,5,6,7,8,10
@@ -91,7 +91,7 @@ If everything went right, you will see on the screen list of scheduled jobs:
    6-Emu-CPU-RAM-IO
 
 
-Each line from *3-8* shows information of a single scheduled emulation job. If we break it down, the line *3* from above as an example we have:
+Each line from *3-8* shows information of a single scheduled emulation job. Each line provides job's information, for example line *3*:
 
 * **INFO:Distriburion Manager:Scheduler reply:** -just a generic logger part
 * **6-CPU_Emulation** - emulation name, which is a combined string of emulation ID from the DB and ``emuname`` value in the XML file
@@ -99,18 +99,16 @@ Each line from *3-8* shows information of a single scheduled emulation job. If w
 * **0** - run number of this distribution
 * **Distro1** - name of the distribution taken from XML file
 * **lookbusy** - distribution module used to calculate each run parameters
-* **cpu** - the type of the resource used by this run
+* **cpu** - the target resource used by this run
 * **90** - stress value applied to this run
-* **Duration 10.0sec.** - how long will job run
-* **Start Time: 2013-04-10 09:43:01 End Time: 09:43:11** - time gap when run will be executed 
+* **Duration 10.0sec.** - how long the job run
+* **Start Time: 2013-04-10 09:43:01 End Time: 09:43:11** - time interval when the run is/was executed 
    
-We can write run name notation in this way:
+More generally, the run/job notation is as follow:
 
 ``(logger reply) - (emulationID-name) - (distribution ID) - (run number} - (distribution name) - (distribution module) - (resource) - (stress value) - (run duration) - (execution time)``
 
 
-Line *10* shows another job which was created for the logger.This job will appear only if *log* section is stated in XML and is optional. Logger job runs for the duration of the whole emulation 
-and collects system resource usage information.
-Logger job name notation can be described in this way:
+Line *10* shows another job which was created for the logger. This job appears only if the optional *log* section is stated in the XML. The logger job executes for the duration of the whole emulation and collects system resource usage information. The logger job name notation can be described in this way:
 
 ``(logger reply) - (emulationID-name) - (logger mark) - {poll interval} - (start time)``
