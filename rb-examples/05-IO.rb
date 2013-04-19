@@ -27,16 +27,16 @@ begin
                 :duration =>"240",
                 :granularity =>"1",
                 :distribution => {
-                                :href => "/distributions/linear",
-                                :name => "linear"},
-                :startLoad => "1000",
-                :stopLoad => "1000",
+                                :href => "/distributions/linear_incr",
+                                :name => "linear_incr"},
+                :startLoad => "1",
+                :stopLoad => "20",
                 :emulator =>{
                                 :href => "/emulators/stressapptest",
                                 :name => "stressapptest"},
                 :'emulator-params' =>{
                                 :resourceType =>"IO",
-                                :fileQty => "10",
+                                :memsize => "1000",
 				:memThreads => "10"}
                 }]
  )

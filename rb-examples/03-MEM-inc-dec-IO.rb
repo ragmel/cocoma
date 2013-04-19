@@ -27,10 +27,11 @@ begin
        		:duration =>"120",        
        		:granularity =>"20",
 	        :distribution => {
-				:href => "/distributions/linear",
-				:name => "linear"},
-	        :startLoad => "1000",
-       		:stopLoad => "20000",
+				:href => "/distributions/linear_incr",
+				:name => "linear_incr"},
+	        :startLoad => "10%",
+       		:stopLoad => "80%",
+		:malloclimit => 4095,
        		:emulator =>{
 				:href => "/emulators/stressapptest",
 				:name => "stressapptest"},
@@ -44,10 +45,11 @@ begin
                 :duration =>"59",
                 :granularity =>"1",
                 :distribution => {
-                                :href => "/distributions/linear",
-                                :name => "linear"},
-                :startLoad => "20000",
-                :stopLoad => "20000",
+                                :href => "/distributions/linear_incr",
+                                :name => "linear_incr"},
+                :startLoad => "80%",
+                :stopLoad => "80%",
+		:malloclimit => 4095,
                 :emulator =>{
                                 :href => "/emulators/stressapptest",
                                 :name => "stressapptest"},
@@ -61,10 +63,11 @@ begin
                 :duration =>"119",
                 :granularity =>"20",
                 :distribution => {
-                                :href => "/distributions/linear",
-                                :name => "linear"},
-                :startLoad => "1000",
-                :stopLoad => "20000",
+                                :href => "/distributions/linear_icnr",
+                                :name => "linear_incr"},
+                :startLoad => "80%",
+                :stopLoad => "10%",
+		:malloclimit => 4095,
                 :emulator =>{
                                 :href => "/emulators/stressapptest",
                                 :name => "stressapptest"},
@@ -78,35 +81,17 @@ begin
                 :duration =>"239",
                 :granularity =>"1",
                 :distribution => {
-                                :href => "/distributions/linear",
-                                :name => "linear"},
-                :startLoad => "100",
-                :stopLoad => "100",
+                                :href => "/distributions/linear_incr",
+                                :name => "linear_incr"},
+                :startLoad => "1",
+                :stopLoad => "20",
                 :emulator =>{
                                 :href => "/emulators/stressapptest",
                                 :name => "stressapptest"},
                 :'emulator-params' =>{
                                 :resourceType =>"IO",
-                                :fileQty => "20",
-				:memThreads => "1"}
-                },
-		{
-                :name => "IO-MEM-inc",
-                :startTime =>"541",
-                :duration =>"239",
-                :granularity =>"20",
-                :distribution => {
-                                :href => "/distributions/linear",
-                                :name => "linear"},
-                :startLoad => "1000",
-                :stopLoad => "20000",
-                :emulator =>{
-                                :href => "/emulators/stressapptest",
-                                :name => "stressapptest"},
-                :'emulator-params' =>{
-                                :resourceType =>"IO",
-                                :fileQty => "20",
-				:memThreads => "5"}
+                                :memsize => "1000",
+				:memThreads => "10"}
                 }]
  )
                

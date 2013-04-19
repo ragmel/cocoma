@@ -22,55 +22,22 @@ begin
    :emuStartTime => "now",
    :emuStopTime => "300",
    :distributions =>[{
-   		:name => "MEM-increase",
+   		:name => "MEM-increase-stable-decrease",
            	:startTime =>"0",
-       		:duration =>"120",        
+       		:duration =>"300",        
        		:granularity =>"10",
 	        :distribution => {
-				:href => "/distributions/linear",
-				:name => "linear"},
-	        :startLoad => "1000",
-       		:stopLoad => "18000",
+				:href => "/distributions/trapezoidal",
+				:name => "trapezoidal"},
+	        :startLoad => "10%",
+       		:stopLoad => "80%",
+		:malloclimit => 4095,
        		:emulator =>{
 				:href => "/emulators/stressapptest",
 				:name => "stressapptest"},
        		:'emulator-params' =>{
            			:resourceType =>"MEM",
            			:memThreads => "10"}
-		},
-		{
-                :name => "MEM-stable",
-                :startTime =>"121",
-                :duration =>"59",
-                :granularity =>"1",
-                :distribution => {
-                                :href => "/distributions/linear",
-                                :name => "linear"},
-                :startLoad => "18000",
-                :stopLoad => "18000",
-                :emulator =>{
-                                :href => "/emulators/stressapptest",
-                                :name => "stressapptest"},
-                :'emulator-params' =>{
-                                :resourceType =>"MEM",
-                                :memThreads => "10"}
-                },
-    		{
-                :name => "MEM-decrease",
-                :startTime =>"181",
-                :duration =>"119",
-                :granularity =>"10",
-                :distribution => {
-                                :href => "/distributions/linear",
-                                :name => "linear"},
-                :startLoad => "18000",
-                :stopLoad => "1000",
-                :emulator =>{
-                                :href => "/emulators/stressapptest",
-                                :name => "stressapptest"},
-                :'emulator-params' =>{
-                                :resourceType =>"MEM",
-                                :memThreads => "10"}
                 }]
  )
                

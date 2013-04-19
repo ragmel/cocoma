@@ -3,7 +3,7 @@ require 'restfully'
 require 'logger'
 
 session = Restfully::Session.new(
- :configuration_file => "./cocoma.yml"
+ :configuration_file => ".restfully/api.cocoma.yml"
 
 )
 
@@ -26,8 +26,9 @@ begin
 	        :distribution => {
 				:href => "/distributions/linear",
 				:name => "linear"},
-	        :startLoad => "100",
-       		:stopLoad => "1000",
+	        :startLoad => "10%",
+       		:stopLoad => "80%",
+		:malloclimit => 4095,
        		:emulator =>{
 				:href => "/emulators/stressapptest",
 				:name => "stressapptest"},

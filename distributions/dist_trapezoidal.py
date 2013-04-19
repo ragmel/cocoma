@@ -84,7 +84,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             else:
                 runDuration2 = (duration - runDuration*runNo)/2
                 translatedStartTimesec = startTimesec + duration - runDuration2
-                insertLoad(linearStep, translatedStartTimesec, runDuration2)
+                insertLoad(linearStep, translatedStartTimesec, runDuration2, MALLOC_LIMIT)
 
             insertLoad(linearStep,runStartTime, runDuration2, MALLOC_LIMIT)
 
@@ -98,6 +98,8 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         else:
             runDuration2 = (duration - runDuration*upperBoundary)/2
             insertLoad(linearStep, runStartTime, runDuration2, MALLOC_LIMIT)
+            translatedStartTimesec = startTimesec + duration - runDuration2
+            insertLoad(linearStep, translatedStartTimesec, runDuration2, MALLOC_LIMIT)
         
         
 #        print "These are run stress Values:", stressValues
@@ -110,7 +112,7 @@ def insertRun(stressValue, startTime, runRuration):
     stressValues.append(stressValue)
     runStartTimeList.append(startTime)
     runDurations.append(runRuration)
-#    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runRuration
+    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runRuration
 
 # this function checks if the load is higher than the malloc limit. In that case creates smaller runs
 def insertLoad(load, startTime, duration, mallocLimit):

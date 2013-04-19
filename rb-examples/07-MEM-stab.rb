@@ -29,8 +29,9 @@ begin
                 :distribution => {
                                 :href => "/distributions/linear",
                                 :name => "linear"},
-                :startLoad => "18000",
-                :stopLoad => "18000",
+                :startLoad => "80%",
+                :stopLoad => "80%",
+		:malloclimit => 4095,
                 :emulator =>{
                                 :href => "/emulators/stressapptest",
                                 :name => "stressapptest"},
