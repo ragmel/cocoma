@@ -1,25 +1,33 @@
 
-Controlled Contentious and Malicious(COCOMA) framework - 1.0
-************************************************************
+COCOMA
+******
 
-COCOMA framework was designed by SAP as part of EU funded BonFIRE
-project. Task of COCOMA framework is to create, monitor and control
+
+Controlled Contentious and Malicious framework
+==============================================
+
+The aim of COCOMA framework is to create, monitor and control
 contentious and malicious system workload. By using this framework
-experimenters are able to make testing process more accurate and
-anticipate various scenarios of cloud infrastructure behaviour,
-collect and correlate metrics of the emulated environment with the
-test results.
+experimenters are able to create operational conditions under which
+tests and experiments can be carried out. This allows more insight
+into the testing process so that various scenarios of the cloud
+infrastructure behaviour can be analysed by collecting and correlate
+metrics of the emulated environment with the test results.
+
+COCOMA is provided by BonFIRE as a service within a VM already
+configured that can be added to an experiment and used.
 
 
 Contents
-********
+========
 
 * Introduction
-  * Installation
+* Getting Started
   * Starting Components
-  * Command Line Arguments
-  * REST API Index
-  * REST API Description
+  * CLI
+  * REST API
+    * Index
+    * Description
   * XML payload structure
 * Creating Emulation via CLI
 * Creating Emulation via API Client (Restfully)
@@ -28,11 +36,11 @@ Contents
   * I/O
   * Memory
   * Network
-  * Multiple Distributions
+  * Multiple distributions emulation
 
 Indices and tables
-******************
+==================
 
 * *Index*
 
-* *Search Page*
+* Glossary

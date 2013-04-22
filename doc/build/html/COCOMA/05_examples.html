@@ -10,38 +10,35 @@
     
     <title>XML Examples &mdash; COCOMA 1 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    '../',
         VERSION:     '1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="COCOMA 1 documentation" href="index.html" />
-    <link rel="prev" title="Creating Emulation via API Client (Restfully)" href="02_api_examples.html" /> 
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="prev" title="Creating Emulation via API Client (Restfully)" href="04_api_examples.html" /> 
   </head>
   <body>
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
+          <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="02_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+          <a href="04_api_examples.html" title="Creating Emulation via API Client (Restfully)"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">COCOMA 1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -52,10 +49,10 @@
             
   <div class="section" id="xml-examples">
 <h1>XML Examples<a class="headerlink" href="#xml-examples" title="Permalink to this headline">¶</a></h1>
-<p>This section shows XML payload examples for creating emulation experiments</p>
+<p>This section provides XML payload examples for creating different emulations over various resources.</p>
 <div class="section" id="cpu">
 <h2>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h2>
-<p>Emulation XML for the CPU contention:</p>
+<p>Emulation XML for CPU contention:</p>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -108,7 +105,7 @@
      <span class="c">&lt;!--duration in seconds --&gt;</span>
      <span class="nt">&lt;duration&gt;</span>120<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>24<span class="nt">&lt;/granularity&gt;</span>
-     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
      <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
       <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
@@ -118,7 +115,7 @@
         <span class="c">&lt;!--more parameters will be added --&gt;</span>
         <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
        <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
-       <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+       <span class="nt">&lt;ncpus&gt;</span>1<span class="nt">&lt;/ncpus&gt;</span>
       <span class="nt">&lt;/emulator-params&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
 
@@ -136,7 +133,7 @@
 </div>
 <div class="section" id="i-o">
 <h2>I/O<a class="headerlink" href="#i-o" title="Permalink to this headline">¶</a></h2>
-<p>Emulation XML for the I/O contention:</p>
+<p>Emulation XML for I/O contention:</p>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -196,15 +193,15 @@
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>1<span class="nt">&lt;/startLoad&gt;</span>
       <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
 
       <span class="nt">&lt;emulator-params&gt;</span>
         <span class="c">&lt;!--more parameters will be added --&gt;</span>
         <span class="nt">&lt;resourceType&gt;</span>IO<span class="nt">&lt;/resourceType&gt;</span>
-       <span class="c">&lt;!--Size of blocks to use for I/O, in MB--&gt;</span>
-       <span class="nt">&lt;ioBlockSize&gt;</span>10<span class="nt">&lt;/ioBlockSize&gt;</span>
-       <span class="c">&lt;!--Time to sleep between iterations, in msec--&gt;</span>
-       <span class="nt">&lt;ioSleep&gt;</span>100<span class="nt">&lt;/ioSleep&gt;</span>
+       <span class="c">&lt;!--Size of mem in MB used--&gt;</span>
+       <span class="nt">&lt;memsize&gt;</span>1000<span class="nt">&lt;/memsize&gt;</span>
+       <span class="c">&lt;!--Number of threads--&gt;</span>
+       <span class="nt">&lt;memThreads&gt;</span>10<span class="nt">&lt;/memThreads&gt;</span>
       <span class="nt">&lt;/emulator-params&gt;</span>
 
   <span class="nt">&lt;/distributions&gt;</span>
@@ -220,7 +217,7 @@
 <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
-<p>2nd example using <em>trapezoidal</em> distribution:</p>
+<p>In this example we use a different distribution called <em>trapezoidal</em>:</p>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -280,15 +277,15 @@
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/trapezoidal&quot;</span> <span class="na">name=</span><span class="s">&quot;trapezoidal&quot;</span> <span class="nt">/&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>1<span class="nt">&lt;/startLoad&gt;</span>
       <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
 
       <span class="nt">&lt;emulator-params&gt;</span>
         <span class="c">&lt;!--more parameters will be added --&gt;</span>
         <span class="nt">&lt;resourceType&gt;</span>IO<span class="nt">&lt;/resourceType&gt;</span>
-       <span class="c">&lt;!--Size of blocks to use for I/O, in MB--&gt;</span>
-       <span class="nt">&lt;ioBlockSize&gt;</span>10<span class="nt">&lt;/ioBlockSize&gt;</span>
-       <span class="c">&lt;!--Time to sleep between iterations, in msec--&gt;</span>
-       <span class="nt">&lt;ioSleep&gt;</span>100<span class="nt">&lt;/ioSleep&gt;</span>
+       <span class="c">&lt;!--Size of mem in MB used--&gt;</span>
+       <span class="nt">&lt;memsize&gt;</span>1000<span class="nt">&lt;/memsize&gt;</span>
+       <span class="c">&lt;!--Number of threads--&gt;</span>
+       <span class="nt">&lt;memThreads&gt;</span>10<span class="nt">&lt;/memThreads&gt;</span>
       <span class="nt">&lt;/emulator-params&gt;</span>
 
   <span class="nt">&lt;/distributions&gt;</span>
@@ -307,7 +304,7 @@
 </div>
 <div class="section" id="memory">
 <h2>Memory<a class="headerlink" href="#memory" title="Permalink to this headline">¶</a></h2>
-<p>Emulation XML for the memory contention:</p>
+<p>Emulation XML for memory contention:</p>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -343,8 +340,7 @@
 33
 34
 35
-36
-37</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>MEM_EMU<span class="nt">&lt;/emuname&gt;</span>
   <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>MEM<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -363,12 +359,11 @@
      <span class="c">&lt;!--Megabytes for memory --&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
       <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+              <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
       <span class="nt">&lt;emulator-params&gt;</span>
-        <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
-       <span class="c">&lt;!--time between iterations in usec (default 1000)--&gt;</span>
-       <span class="nt">&lt;malloclimit&gt;</span>4004<span class="nt">&lt;/malloclimit&gt;</span>
-      <span class="nt">&lt;memSleep&gt;</span>0<span class="nt">&lt;/memSleep&gt;</span>
+                     <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
+                     <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
       <span class="nt">&lt;/emulator-params&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
 
@@ -383,7 +378,7 @@
 <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
-<p>2nd example using <em>trapezoidal</em> distribution:</p>
+<p>Example for memory emulation using <em>trapezoidal</em> distribution:</p>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -419,8 +414,7 @@
 33
 34
 35
-36
-37</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>MEM_EMU<span class="nt">&lt;/emuname&gt;</span>
   <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>MEM<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -439,12 +433,11 @@
      <span class="c">&lt;!--Megabytes for memory --&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
       <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;malloclimit&gt;</span>4000<span class="nt">&lt;/malloclimit&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
       <span class="nt">&lt;emulator-params&gt;</span>
-        <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
-       <span class="c">&lt;!--time between iterations in usec (default 1000)--&gt;</span>
-      <span class="nt">&lt;memSleep&gt;</span>0<span class="nt">&lt;/memSleep&gt;</span>
+                     <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
+                     <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
       <span class="nt">&lt;/emulator-params&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
 
@@ -462,8 +455,7 @@
 </div>
 <div class="section" id="network">
 <h2>Network<a class="headerlink" href="#network" title="Permalink to this headline">¶</a></h2>
-<p>For this emulation to work you need to deploy two COCOMA VM&#8217;s. One will act as a client (the one where XML is sent) and the other will act as a server.
-Emulation XML for the network contention:</p>
+<p>The newtork emulation needs two COCOMA VM&#8217;s, one that acts as a client and the other as a server. Normally those two VMs are placed in different nodes. The SuT should be composed of at least two VMs placed on the same two nodes of COCOMA. The emulation XML for network contention looks like:</p>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -518,7 +510,7 @@ Emulation XML for the network contention:</p>
      <span class="c">&lt;!--duration in seconds --&gt;</span>
      <span class="nt">&lt;duration&gt;</span>150<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>10<span class="nt">&lt;/granularity&gt;</span>
-     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
    <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
       <span class="c">&lt;!-- set target bandwidth to bits per sec --&gt;</span>
@@ -526,13 +518,13 @@ Emulation XML for the network contention:</p>
       <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/iperf&quot;</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span> <span class="nt">/&gt;</span>
     <span class="nt">&lt;emulator-params&gt;</span>
         <span class="nt">&lt;resourceType&gt;</span>NET<span class="nt">&lt;/resourceType&gt;</span>
-        <span class="nt">&lt;serverip&gt;</span>10.55.164.223<span class="nt">&lt;/serverip&gt;</span>
-   <span class="c">&lt;!--Leave &quot;0&quot; for default 5001 port --&gt;</span>
-   <span class="nt">&lt;serverport&gt;</span>5001<span class="nt">&lt;/serverport&gt;</span>
-        <span class="nt">&lt;clientip&gt;</span>127.0.0.1<span class="nt">&lt;/clientip&gt;</span>
-   <span class="nt">&lt;clientport&gt;</span>5001<span class="nt">&lt;/clientport&gt;</span>
-        <span class="nt">&lt;packettype&gt;</span>UDP<span class="nt">&lt;/packettype&gt;</span>
-    <span class="nt">&lt;/emulator-params&gt;</span>
+        <span class="nt">&lt;serverip&gt;</span>172.18.254.234<span class="nt">&lt;/serverip&gt;</span>
+                <span class="c">&lt;!--Leave &quot;0&quot; for default 5001 port --&gt;</span>
+                <span class="nt">&lt;serverport&gt;</span>5001<span class="nt">&lt;/serverport&gt;</span>
+                <span class="nt">&lt;clientip&gt;</span>172.18.254.236<span class="nt">&lt;/clientip&gt;</span>
+                <span class="nt">&lt;clientport&gt;</span>5001<span class="nt">&lt;/clientport&gt;</span>
+                <span class="nt">&lt;packettype&gt;</span>UDP<span class="nt">&lt;/packettype&gt;</span>
+                <span class="nt">&lt;/emulator-params&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
 
   <span class="nt">&lt;log&gt;</span>
@@ -546,10 +538,9 @@ Emulation XML for the network contention:</p>
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="multiple-distributions">
-<h2>Multiple Distributions<a class="headerlink" href="#multiple-distributions" title="Permalink to this headline">¶</a></h2>
-<p>You can create multiple distributions within one emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource.
-Distributions can overlap, meaning two distributions can run in the same time frame. If distributions for the same resource will overlap, the runs might crash if not enough resources available.</p>
+<div class="section" id="multiple-distributions-emulation">
+<h2>Multiple distributions emulation<a class="headerlink" href="#multiple-distributions-emulation" title="Permalink to this headline">¶</a></h2>
+<p>A good feature of COCOMA is the ability to combine multiple distributions within the same emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource. Distributions can overlap, meaning two distributions can run at the same time frame. If distributions for the same resource overlap and they exceed the available resources, the runs might crash.</p>
 <ul class="simple">
 <li>CPU and Memory example</li>
 </ul>
@@ -604,8 +595,7 @@ Distributions can overlap, meaning two distributions can run in the same time fr
 49
 50
 51
-52
-53</pre></div></td><td class="code"><div class="highlight"><pre>       <span class="nt">&lt;emulation&gt;</span>
+52</pre></div></td><td class="code"><div class="highlight"><pre>       <span class="nt">&lt;emulation&gt;</span>
            <span class="nt">&lt;emuname&gt;</span>CPU_and_Mem<span class="nt">&lt;/emuname&gt;</span>
            <span class="nt">&lt;emutype&gt;</span>Mix<span class="nt">&lt;/emutype&gt;</span>
            <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -642,13 +632,12 @@ Distributions can overlap, meaning two distributions can run in the same time fr
               <span class="c">&lt;!--Megabytes for memory --&gt;</span>
                <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
                <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-               <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
-               <span class="nt">&lt;emulator-params&gt;</span>
-                 <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
-                <span class="c">&lt;!--time between iterations in usec (default 1000)--&gt;</span>
-                <span class="nt">&lt;malloclimit&gt;</span>4004<span class="nt">&lt;/malloclimit&gt;</span>
-               <span class="nt">&lt;memSleep&gt;</span>0<span class="nt">&lt;/memSleep&gt;</span>
-               <span class="nt">&lt;/emulator-params&gt;</span>
+               <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
+                               <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
+                               <span class="nt">&lt;emulator-params&gt;</span>
+                                     <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
+                                     <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
+                               <span class="nt">&lt;/emulator-params&gt;</span>
            <span class="nt">&lt;/distributions&gt;</span>
 
           <span class="nt">&lt;log&gt;</span>
@@ -735,8 +724,7 @@ Distributions can overlap, meaning two distributions can run in the same time fr
 70
 71
 72
-73
-74</pre></div></td><td class="code"><div class="highlight"><pre>       <span class="nt">&lt;emulation&gt;</span>
+73</pre></div></td><td class="code"><div class="highlight"><pre>       <span class="nt">&lt;emulation&gt;</span>
            <span class="nt">&lt;emuname&gt;</span>CPU_and_Mem<span class="nt">&lt;/emuname&gt;</span>
            <span class="nt">&lt;emutype&gt;</span>Mix<span class="nt">&lt;/emutype&gt;</span>
            <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -773,13 +761,12 @@ Distributions can overlap, meaning two distributions can run in the same time fr
               <span class="c">&lt;!--Megabytes for memory --&gt;</span>
                <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
                <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-               <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
-               <span class="nt">&lt;emulator-params&gt;</span>
-                 <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
-                <span class="c">&lt;!--time between iterations in usec (default 1000)--&gt;</span>
-                <span class="nt">&lt;malloclimit&gt;</span>4004<span class="nt">&lt;/malloclimit&gt;</span>
-               <span class="nt">&lt;memSleep&gt;</span>0<span class="nt">&lt;/memSleep&gt;</span>
-               <span class="nt">&lt;/emulator-params&gt;</span>
+               <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
+                               <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
+                               <span class="nt">&lt;emulator-params&gt;</span>
+                                     <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
+                                     <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
+                               <span class="nt">&lt;/emulator-params&gt;</span>
            <span class="nt">&lt;/distributions&gt;</span>
 
            <span class="nt">&lt;distributions&gt;</span>
@@ -821,29 +808,29 @@ Distributions can overlap, meaning two distributions can run in the same time fr
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">XML Examples</a><ul>
 <li><a class="reference internal" href="#cpu">CPU</a></li>
 <li><a class="reference internal" href="#i-o">I/O</a></li>
 <li><a class="reference internal" href="#memory">Memory</a></li>
 <li><a class="reference internal" href="#network">Network</a></li>
-<li><a class="reference internal" href="#multiple-distributions">Multiple Distributions</a></li>
+<li><a class="reference internal" href="#multiple-distributions-emulation">Multiple distributions emulation</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="02_api_examples.html"
+  <p class="topless"><a href="04_api_examples.html"
                         title="previous chapter">Creating Emulation via API Client (Restfully)</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/03_examples.txt"
+    <li><a href="../_sources/COCOMA/05_examples.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
+    <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
@@ -862,15 +849,12 @@ Distributions can overlap, meaning two distributions can run in the same time fr
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
+          <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="02_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+          <a href="04_api_examples.html" title="Creating Emulation via API Client (Restfully)"
              >previous</a> |</li>
-        <li><a href="index.html">COCOMA 1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

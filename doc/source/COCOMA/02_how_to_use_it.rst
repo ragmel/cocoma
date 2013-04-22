@@ -1,5 +1,5 @@
 Getting Started
-============
+===============
 COCOMA is installed in *"/usr/share/pyshared/cocoma"*. In this section we provide information about the components that have to be running in order to fully use the framework, and how can a user interact with it.
 
 Starting Components
@@ -48,7 +48,7 @@ If the network interface and port are omitted, the default values are respective
 The log level is the same specified for the *Scheduler*.
 
 CLI
-----------------------
+---
    
 The COCOMA CLI is called `ccmsh`, and provides the following options:
 
@@ -111,7 +111,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
       Show OS information on Scheduler or API daemon, displays PID numbers
 
 REST API
---------------
+--------
 
 Index
 .....
@@ -137,7 +137,7 @@ The API URIs summary list is as follow:
 
 
 Description
-....................
+...........
 
 ``http:method:: GET /``
 

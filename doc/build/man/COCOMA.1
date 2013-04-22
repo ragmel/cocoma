@@ -1,4 +1,4 @@
-.TH "COCOMA" "1" "April 11, 2013" "1" "COCOMA"
+.TH "COCOMA" "1" "April 22, 2013" "1" "COCOMA"
 .SH NAME
 COCOMA \- man page
 .
@@ -30,125 +30,111 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 ..
 .\" Man page generated from reStructuredText.
 .
+.SH CONTROLLED CONTENTIOUS AND MALICIOUS FRAMEWORK
 .sp
-COCOMA framework was designed by SAP as part of EU funded BonFIRE project. Task of COCOMA framework is
-to create, monitor and control contentious and malicious system workload. By using
-this framework experimenters are able to make testing process more accurate
-and anticipate various scenarios of cloud infrastructure behaviour, collect and
-correlate metrics of the emulated environment with the test results.
-.SH INTRODUCTION
+The aim of COCOMA framework is to create, monitor and control contentious and malicious system workload. By using this framework experimenters are able to create operational conditions under which tests and experiments can be carried out. This allows more insight into the testing process so that various scenarios of the cloud infrastructure behaviour can be analysed by collecting and correlate metrics of the emulated environment with the test results.
 .sp
-In order to use COCOMA framework experimenter creates an emulation using XML language(see below Examples section). Emulation should contain all the neccessary information
-about duration, magnitude and required resource usage. Once XML document is received by COCOMA, the framework will automatically schedule and execute
-required workload on the chosen resource(\-s) such as CPU, IO, Memory and/or Network.
-.SS Installation
+COCOMA is provided by BonFIRE as a service within a VM already configured that can be added to an experiment and used.
+.SH CONTENTS
+.SS Introduction
 .sp
-The framework is designed to run on GNU/Linux and released in \fI.deb\fP package only.
-Once you have downloaded latest COCOMA version install it by running:
+In order to use COCOMA, an experimenter defines an \fIemulation\fP which embeds all environment operational conditions as shown in the figure below. The actual operational conditions are defined in what are called \fIdistributions\fP, which create specific workloads over the targeted resource of a specific resource type. For example, \fIdistribution 1\fP targets the CPU creating an exponential trend over a specific time range within the whole emulation. Each distribution time is divided into multiple time\-slots based on the distribution granularity then broken down into multiple runs each one injecting a different load level per time slot, which depends on the discrete function of the distribution.
 .INDENT 0.0
 .INDENT 3.5
-.sp
-.nf
-.ft C
-$ dpkg \-i cocoma_X.X\-X_all.deb
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-The application will be installed to folder \fI"/usr/share/pyshared/cocoma"\fP. All the additional required programs and libraries will be downloaded and installed on the fly if missing.
-To check check if it was installed correctly run:
 .INDENT 0.0
-.INDENT 3.5
+.INDENT 2.5
+[image]
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Getting Started
 .sp
-.nf
-.ft C
-$ ccmsh \-v
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
+COCOMA is installed in \fI"/usr/share/pyshared/cocoma"\fP. In this section we provide information about the components that have to be running in order to fully use the framework, and how can a user interact with it.
 .SS Starting Components
 .sp
-To avail full functionality of COCOMA two daemons need to be started:
+The two main components of COCOMA are:
 .INDENT 0.0
 .INDENT 3.5
 .INDENT 0.0
 .IP \(bu 2
-Scheduler daemon (mandatory)
+Scheduler daemon (mandatory, needs to be the first started)
 .IP \(bu 2
-API Daemon (optional if REST API functionality is required)
+API Daemon (optional, if the REST API functionality is required)
 .UNINDENT
 .UNINDENT
 .UNINDENT
 .sp
-\fBScheduler daemon\fP \- runs in the background and executes workload with differential parameters at the time defined in the emulation properties.
-to start scheduler use command:
+The \fBScheduler daemon\fP \- runs in the background and executes workload with differential parameters at the time defined in the emulation properties.
+To check if the scheduler is running use the following:
 .INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
-$ ccmsh \-\-start scheduler
+$ ccmsh \-\-show scheduler
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .sp
-Default network interface is \fIeth0\fP, port \fI51889\fP you can change that by adding required interface name and port number at the end:
+To start the scheduler on a specific network interface and port, use the command:
 .INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
-$ ccmsh \-\-start scheduler wlan0 5180
+$ ccmsh \-\-start scheduler eth1 55555
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .sp
-If more detailed output information is needed \fIScheduler\fP also can be started in \fIDEBUG\fP mode:
+If the network interface and port are omitted, the default values are respectively \fIeth0\fP adn \fI51889\fP
+.sp
+If more detailed output information is needed, the \fIScheduler\fP can also be started in \fIDEBUG\fP mode:
 .INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
-$ ccmsh \-\-start scheduler wlan0 5180 debug
+$ ccmsh \-\-start scheduler eth1 55555 debug
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .sp
-\fINote: Scheduler needs to be running otherwise nothing will work. Always start it first!!\fP
-.sp
-\fBAPI daemon\fP \- represents RESTfull web API which exposes COCOMA resources for use over the network. It follows the same startup pattern as the Scheduler:
+The \fBAPI daemon\fP \- provides the RESTfull web API, which exposes COCOMA resources to be used over the network. It follows the same command structure as the Scheduler.
+To check if the scheduler is running use the following:
 .INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
-$ ccmsh \-\-start api
+$ ccmsh \-\-show api
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .sp
-By default web API will try to start using \fIeth0\fP network interface on port \fI5050\fP, but it can be changed by supplying own parameters:
+To start the api on a specific network interface and port, use the command:
 .INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
-$ ccmsh \-\-start api wlan0 3030
+$ ccmsh \-\-start api eth2 77777
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .sp
-The log level will be always same as the \fIScheduler\fP.
-.SS Command Line Arguments
+If the network interface and port are omitted, the default values are respectively \fIeth0\fP and \fI5050\fP
 .sp
-The COCOMA \fBccmsh\fP command line interface has several options:
+The log level is the same specified for the \fIScheduler\fP.
+.SS CLI
+.sp
+The COCOMA CLI is called \fIccmsh\fP, and provides the following options:
 .INDENT 0.0
 .TP
 .B \-h, \-\-help
@@ -162,52 +148,52 @@ Display installed version information of COCOMA
 .INDENT 0.0
 .TP
 .B \-l, \-\-list <emulation name>
-Display list of all emulations that are scheduled or already finished. If emulation name is provided then will it will list information for that specific emulation
+Display list of all emulations that are scheduled or already finished. If emulation name is provided then it lists information for that specific emulation
 .UNINDENT
 .INDENT 0.0
 .TP
 .B \-r, \-\-results <emulation name>
-Display list of all emulation results that are scheduled or already finished. If emulation name is provided, then will it will list information for that specific emulation
+Display list of results of all emulations that are scheduled or already finished. If emulation name is provided, then it lists information for that specific emulation
 .UNINDENT
 .INDENT 0.0
 .TP
 .B \-j, \-\-list\-jobs
-Querries scheduler for the list of jobs which is to be executed. Gives jobs names and planned execution time
+Queries the scheduler for the list of jobs that have to be executed. For each one, it gives the job name and the planned execution time
 .UNINDENT
 .INDENT 0.0
 .TP
 .B \-i, \-\-dist <distribution name>
-Scans \fI"/usr/share/pyshared/cocoma/distributions"\fP folder and displays all available distribution modules.  If distribution name is provided, then it will list help information for that specific distribution
+Scans the \fI"/usr/share/pyshared/cocoma/distributions"\fP folder and displays all available distribution modules. If a distribution name is provided, then it shows the help information for that specific distribution
 .UNINDENT
 .INDENT 0.0
 .TP
 .B \-e, \-\-emu <emulator name>
-Scans \fI"/usr/share/pyshared/cocoma/emulators"\fP folder and displays all available emulator wrapper modules.  If emulator name is provided, then it will list help information for that specific emulator wrapper
+Scans the \fI"/usr/share/pyshared/cocoma/emulators"\fP folder and displays all available emulator wrapper modules. If an emulator name is provided, then it shows the help information for that specific emulator wrapper
 .UNINDENT
 .INDENT 0.0
 .TP
 .B \-x, \-\-xml <file name>
-If you have a local XML file with emulation parameters, you can use it to create emulation.
+It create and emulation based on the local XML
 .UNINDENT
 .INDENT 0.0
 .TP
 .B \-n, \-\-now (used with \-x option only)
-If your local XML file emulation has set start date in past or in future, but you want to override it and start the test right now, without modifying the file, then you can add this option after the file name i.e. \fBccmsh \-x <file name> \-n\fP
+Override any start date in the local XML emulation file without modifying the file, i.e. \fBccmsh \-x <file name> \-n\fP
 .UNINDENT
 .INDENT 0.0
 .TP
 .B \-d, \-\-delete <emulation name>
-Deletes specific emulation from the database, logs will remain and will be available until manualy deleted from \fI"/usr/share/pyshared/cocoma/logs"\fP folder
+Deletes a specific emulation from the database
 .UNINDENT
 .INDENT 0.0
 .TP
 .B \-p, \-\-purge
-Wipe all DB entries, removes all scheduled jobs, logs will remain and will be available until manualy deleted from \fI"/usr/share/pyshared/cocoma/logs"\fP folder
+Remove all DB entries, all scheduled jobs
 .UNINDENT
 .INDENT 0.0
 .TP
 .B \-\-start <api interface port>, <scheduler interface port>
-Launch Scheduler or API daemon by specifying network interface and port number i.e. \fBccmsh \-\-start api eth0 2020\fP or \fBccmsh \-\-start scheduler eth0 3030\fP . By default if interface is not specified then Scheduler daemon will run on \fIeth0\fP port \fI51889\fP and API daemon runs on \fIeth0\fP with port \fI5050\fP.
+Start Scheduler or API daemon by specifying network interface and port number i.e. \fBccmsh \-\-start api eth0 2020\fP or \fBccmsh \-\-start scheduler eth0 3030\fP. By default if the network interface is not specified, the Scheduler daemon will run on \fIeth0\fP and \fI51889\fP, and the API daemon will run on \fIeth0\fP and \fI5050\fP.
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -219,11 +205,10 @@ Stop Scheduler or API daemon
 .B \-\-show <api>, <scheduler>
 Show OS information on Scheduler or API daemon, displays PID numbers
 .UNINDENT
-.SS REST API Index
+.SS REST API
+.SS Index
 .sp
-If the web API daemon has been started successfully, then COCOMA toolkit can be accessed remotely using its RESTfull API.
-.sp
-The API URIs summary list:
+The API URIs summary list is as follow:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -248,133 +233,96 @@ The API URIs summary list:
 .fi
 .UNINDENT
 .UNINDENT
-.SS REST API Description
-.INDENT 0.0
-.TP
-.B GET\~/
-.INDENT 7.0
-.TP
-.B Title 
-root
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
-.UNINDENT
-.UNINDENT
+.SS Description
 .sp
-The \fBroot\fP method returns \fIcollection\fP of all the available resources. Example XML response:
-.INDENT 7.0
+\fBhttp:method:: GET /\fP
+.INDENT 0.0
+.INDENT 3.5
+The \fBroot\fP returns a \fIcollection\fP of all the available resources. Example of a XML response:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <root href="/">
-  <version>0.1.1</version>
-  <timestamp>1365518303.44</timestamp>
-  <link href="/emulations" rel="emulations" type="application/vnd.bonfire+xml"/>
-  <link href="/emulators" rel="emulators" type="application/vnd.bonfire+xml"/>
-  <link href="/distributions" rel="distributions" type="application/vnd.bonfire+xml"/>
-  <link href="/tests" rel="tests" type="application/vnd.bonfire+xml"/>
-  <link href="/results" rel="results" type="application/vnd.bonfire+xml"/>
-  <link href="/logs" rel="logs" type="application/vnd.bonfire+xml"/>
+        <version>0.1.1</version>
+        <timestamp>1365518303.44</timestamp>
+        <link href="/emulations" rel="emulations" type="application/vnd.bonfire+xml"/>
+        <link href="/emulators" rel="emulators" type="application/vnd.bonfire+xml"/>
+        <link href="/distributions" rel="distributions" type="application/vnd.bonfire+xml"/>
+        <link href="/tests" rel="tests" type="application/vnd.bonfire+xml"/>
+        <link href="/results" rel="results" type="application/vnd.bonfire+xml"/>
+        <link href="/logs" rel="logs" type="application/vnd.bonfire+xml"/>
 </root>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
-.TP
-.B GET\~/emulations
-.INDENT 7.0
-.TP
-.B Title 
-emulations
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
-.UNINDENT
 .UNINDENT
 .sp
-The \fBemulations\fP method returns \fIcollection\fP of all the available emulation resources. Example XML response:
-.INDENT 7.0
+\fBhttp:method:: GET /emulations\fP
+.INDENT 0.0
+.INDENT 3.5
+The \fBemulations\fP returns a \fIcollection\fP of all the available emulation resources. Example of a XML response:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
- <collection href="/emulations" xmlns="http://127.0.0.1/cocoma">
-   <items offset="0" total="3">
-     <emulation href="/emulations/1\-Emu\-CPU\-RAM\-IO" id="1" name="1\-Emu\-CPU\-RAM\-IO" state="inactive"/>
-     <emulation href="/emulations/2\-CPU_EMU" id="2" name="2\-CPU_EMU" state="inactive"/>
-     <emulation href="/emulations/3\-CPU_EMU" id="3" name="3\-CPU_EMU" state="inactive"/>
-   </items>
-   <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
- </collection>
+<collection href="/emulations" xmlns="http://127.0.0.1/cocoma">
+        <items offset="0" total="3">
+                <emulation href="/emulations/1\-Emu\-CPU\-RAM\-IO" id="1" name="1\-Emu\-CPU\-RAM\-IO" state="inactive"/>
+                <emulation href="/emulations/2\-CPU_EMU" id="2" name="2\-CPU_EMU" state="inactive"/>
+                <emulation href="/emulations/3\-CPU_EMU" id="3" name="3\-CPU_EMU" state="inactive"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+</collection>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
-.TP
-.B GET\~/emulations/\fI{name}\fP
-.INDENT 7.0
-.TP
-.B Path arguments
-\fBname\fP \-\- Name of emulation that you want to get more info
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
-.UNINDENT
 .UNINDENT
 .sp
+\fBhttp:method:: GET /emulations/{name}\fP
+.INDENT 0.0
+.INDENT 3.5
 Displays information about emulation by name. The returned \fI200\-OK\fP XML is:
-.INDENT 7.0
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <emulation href="/emulations/1\-Emu\-CPU\-RAM\-IO" xmlns="http://127.0.0.1/cocoma">
-  <id>1</id>
-  <emulationName>1\-Emu\-CPU\-RAM\-IO</emulationName>
-  <emulationType>mix</emulationType>
-  <resourceType>mix</resourceType>
-  <emuStartTime>2013\-04\-09T13:00:01</emuStartTime>
-  <emuStopTime>180</emuStopTime>
-  <scheduledJobs>
-    <jobsempty>No jobs are scheduled</jobsempty>
-  </scheduledJobs>
-  <distributions ID="1" name="Distro1">
-    <startTime>5</startTime>
-    <granularity>3</granularity>
-    <duration>30</duration>
-    <startload>10</startload>
-    <stopload>90</stopload>
-  </distributions>
-  <distributions ID="2" name="Distro2">
-    <startTime>5</startTime>
-    <granularity>3</granularity>
-    <duration>30</duration>
-    <startload>10</startload>
-    <stopload>90</stopload>
-  </distributions>
-  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
-  <link href="/emulations" rel="parent" type="application/vnd.bonfire+xml"/>
+        <id>1</id>
+        <emulationName>1\-Emu\-CPU\-RAM\-IO</emulationName>
+        <emulationType>mix</emulationType>
+        <resourceType>mix</resourceType>
+        <emuStartTime>2013\-04\-09T13:00:01</emuStartTime>
+        <emuStopTime>180</emuStopTime>
+        <scheduledJobs>
+                <jobsempty>No jobs are scheduled</jobsempty>
+        </scheduledJobs>
+        <distributions ID="1" name="Distro1">
+                <startTime>5</startTime>
+                <granularity>3</granularity>
+                <duration>30</duration>
+                <startload>10</startload>
+                <stopload>90</stopload>
+        </distributions>
+        <distributions ID="2" name="Distro2">
+                <startTime>5</startTime>
+                <granularity>3</granularity>
+                <duration>30</duration>
+                <startload>10</startload>
+                <stopload>90</stopload>
+        </distributions>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <link href="/emulations" rel="parent" type="application/vnd.bonfire+xml"/>
 </emulation>
 .ft P
 .fi
@@ -382,7 +330,7 @@ Displays information about emulation by name. The returned \fI200\-OK\fP XML is:
 .UNINDENT
 .sp
 The returned \fI404 – Not Found\fP XML is:
-.INDENT 7.0
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
@@ -393,36 +341,35 @@ The returned \fI404 – Not Found\fP XML is:
 .UNINDENT
 .UNINDENT
 .UNINDENT
+.UNINDENT
+.sp
+\fBhttp:method:: POST /emulations\fP
 .INDENT 0.0
-.TP
-.B POST\~/emulations
-.INDENT 7.0
-.TP
-.B Query params
-\fBXML\fP (\fIstring\fP) \-\- Emulation parameters defined via XML as shown in the examples section.
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB201\fP \-\- Emulation was created successfully
-.IP \(bu 2
-\fB400\fP \-\- Bad Request
+.INDENT 3.5
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+:param string XML: Emulation parameters defined via XML as shown in the examples section.
+.ft P
+.fi
 .UNINDENT
 .UNINDENT
 .sp
 The returned \fI201\-Created\fP XML:
-.INDENT 7.0
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <emulation href="/emulations/4\-CPU_EMU" xmlns="http://127.0.0.1/cocoma">
-  <ID>4\-CPU_EMU</ID>
-  <EmuNotes>OK</EmuNotes>
-  <DistroNotes>OK</DistroNotes>
-  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
-  <link href="/emulations" rel="parent" type="application/vnd.bonfire+xml"/>
+        <ID>4\-CPU_EMU</ID>
+        <EmuNotes>OK</EmuNotes>
+        <DistroNotes>OK</DistroNotes>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <link href="/emulations" rel="parent" type="application/vnd.bonfire+xml"/>
 </emulation>
 .ft P
 .fi
@@ -430,7 +377,7 @@ The returned \fI201\-Created\fP XML:
 .UNINDENT
 .sp
 The returned \fI400 – Bad Request\fP XML:
-.INDENT 7.0
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
@@ -442,265 +389,228 @@ The returned \fI400 – Bad Request\fP XML:
 .UNINDENT
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
-.TP
-.B GET\~/emulators
-.INDENT 7.0
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
-.UNINDENT
 .UNINDENT
 .sp
-Displays emulators list.
-The returned \fI200\- OK\fP XML:
-.INDENT 7.0
+\fBhttp:method:: GET /emulators\fP
+.INDENT 0.0
+.INDENT 3.5
+Displays emulators list. The returned \fI200\- OK\fP XML:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <collection href="/emulators" xmlns="http://127.0.0.1/cocoma">
-  <items offset="0" total="3">
-    <emulator href="/emulators/lookbusy" name="lookbusy"/>
-    <emulator href="/emulators/stressapptest" name="stressapptest"/>
-    <emulator href="/emulators/iperf" name="iperf"/>
-  </items>
-  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <items offset="0" total="3">
+                <emulator href="/emulators/lookbusy" name="lookbusy"/>
+                <emulator href="/emulators/stressapptest" name="stressapptest"/>
+                <emulator href="/emulators/iperf" name="iperf"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
 </collection>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
+.UNINDENT
+.sp
+\fBhttp:method:: GET /emulators/{name}\fP
 .INDENT 0.0
-.TP
-.B GET\~/emulators/\fI{name}\fP
-.INDENT 7.0
-.TP
-.B Path arguments
-\fBname\fP \-\- Name of emulator that you want to get more info
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
+.INDENT 3.5
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+:arg name: Name of emulator that you want to get more info
+.ft P
+.fi
 .UNINDENT
 .UNINDENT
 .sp
-Displays information about emulator by name.
-The returned \fI200\- OK\fP XML:
-.INDENT 7.0
+Displays information about emulator by name. The returned \fI200\- OK\fP XML:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <emulator href="/emulator/lookbusy" xmlns="http://127.0.0.1/cocoma">
-  <info>
-    Emulator lookbusy can be used for following resources:
-    1)Loads CPU with parameters:
-      ncpus \- Number of CPUs to keep busy (default: autodetected)
+        <info>
+                Emulator lookbusy can be used for following resources:
+                1)Loads CPU with parameters:
+                ncpus \- Number of CPUs to keep busy (default: autodetected)
 
-    2)Loads Memory(MEM) with parameters:
-      memSleep \- Time to sleep between iterations, in usec (default 1000)
+                2)Loads Memory(MEM) with parameters:
+                memSleep \- Time to sleep between iterations, in usec (default 1000)
 
-    3)Changing size of files to use during IO with parameters:
-      ioBlockSize \- Size of blocks to use for I/O in MB
-      ioSleep \- Time to sleep between iterations, in msec (default 100)
+                3)Changing size of files to use during IO with parameters:
+                ioBlockSize \- Size of blocks to use for I/O in MB
+                ioSleep \- Time to sleep between iterations, in msec (default 100)
 
 
-    XML block example:
-    &lt;emulator\-params&gt;
-        &lt;resourceType&gt;CPU&lt;/resourceType&gt;
-        &lt;ncpus&gt;0&lt;/ncpus&gt;
-    &lt;/emulator\-params&gt;
+                XML block example:
+                &lt;emulator\-params&gt;
+                &lt;resourceType&gt;CPU&lt;/resourceType&gt;
+                &lt;ncpus&gt;0&lt;/ncpus&gt;
+                &lt;/emulator\-params&gt;
 
-    </info>
-  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
-  <link href="/emulators" rel="parent" type="application/vnd.bonfire+xml"/>
+        </info>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <link href="/emulators" rel="parent" type="application/vnd.bonfire+xml"/>
 </emulator>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
-.TP
-.B GET\~/distributions
-.INDENT 7.0
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
-.UNINDENT
 .UNINDENT
 .sp
-Displays distributions list.
-The returned \fI200\- OK\fP XML:
-.INDENT 7.0
+\fBhttp:method:: GET /distributions\fP
+.INDENT 0.0
+.INDENT 3.5
+Displays distributions list. The returned \fI200\- OK\fP XML:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <collection href="/distributions" xmlns="http://127.0.0.1/cocoma">
-  <items offset="0" total="3">
-    <distribution href="/distributions/linear" name="linear"/>
-    <distribution href="/distributions/linear_incr" name="linear_incr"/>
-    <distribution href="/distributions/trapezoidal" name="trapezoidal"/>
-  </items>
-  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <items offset="0" total="3">
+                <distribution href="/distributions/linear" name="linear"/>
+                <distribution href="/distributions/linear_incr" name="linear_incr"/>
+                <distribution href="/distributions/trapezoidal" name="trapezoidal"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
 </collection>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
+.UNINDENT
+.sp
+\fBhttp:method:: GET /distributions/{name}\fP
 .INDENT 0.0
-.TP
-.B GET\~/distributions/\fI{name}\fP
-.INDENT 7.0
-.TP
-.B Path arguments
-\fBname\fP \-\- Name of distributions that you want to get more info
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
+.INDENT 3.5
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+:arg name: Name of distributions that you want to get more info
+.ft P
+.fi
 .UNINDENT
 .UNINDENT
 .sp
-Displays information about distributions by name.
-The returned \fI200\- OK\fP XML:
-.INDENT 7.0
+Displays information about distributions by name. The returned \fI200\- OK\fP XML:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <distribution href="/distributions/linear" xmlns="http://127.0.0.1/cocoma">
-  <info>Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types.</info>
-  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
-  <link href="/distributions" rel="parent" type="application/vnd.bonfire+xml"/>
+        <info>Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types.</info>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <link href="/distributions" rel="parent" type="application/vnd.bonfire+xml"/>
 </distribution>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
-.TP
-.B GET\~/tests
-.INDENT 7.0
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
-.UNINDENT
 .UNINDENT
 .sp
-Displays tests list.
-The returned \fI200\- OK\fP XML:
-.INDENT 7.0
+\fBhttp:method:: GET /tests\fP
+.INDENT 0.0
+.INDENT 3.5
+Displays tests list. The returned \fI200\- OK\fP XML:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <collection href="/tests" xmlns="http://127.0.0.1/cocoma">
-  <items offset="0" total="20">
-    <test href="/tests/01\-CPU\-Linear\-Lookbusy_10\-95.xml" name="01\-CPU\-Linear\-Lookbusy_10\-95.xml"/>
-    <test href="/tests/03\-NET\-Linear_incr\-Iperf\-100\-1000.xml" name="03\-NET\-Linear_incr\-Iperf\-100\-1000.xml"/>
-    <test href="/tests/02\-IO\-Linear\-Stressapptest_1\-10.xml" name="02\-IO\-Linear\-Stressapptest_1\-10.xml"/>
-    <test href="/tests/02\-IO\-Linear_incr\-Stressapptest_1\-10.xml" name="02\-IO\-Linear_incr\-Stressapptest_1\-10.xml"/>
-    <test href="/tests/02\-MEM\-Linear_incr\-Stressapptest_100\-1000.xml" name="02\-MEM\-Linear_incr\-Stressapptest_100\-1000.xml"/>
-    <test href="/tests/01\-CPU\-Trapezoidal\-Lookbusy_10\-95.xml" name="01\-CPU\-Trapezoidal\-Lookbusy_10\-95.xml"/>
-    <test href="/tests/01\-IO\-Trapezoidal\-Lookbusy_1\-10.xml" name="01\-IO\-Trapezoidal\-Lookbusy_1\-10.xml"/>
-    <test href="/tests/01\-NET_TEST.xml" name="01\-NET_TEST.xml"/>
-    <test href="/tests/03\-MEM\-500\-1000MB\-overlap.xml" name="03\-MEM\-500\-1000MB\-overlap.xml"/>
-    <test href="/tests/01\-CPU\-Linear_incr\-Lookbusy_10\-95.xml" name="01\-CPU\-Linear_incr\-Lookbusy_10\-95.xml"/>
-    <test href="/tests/01\-IO\-Linear_incr\-Lookbusy_1\-10.xml" name="01\-IO\-Linear_incr\-Lookbusy_1\-10.xml"/>
-    <test href="/tests/02\-IO\-Trapezoidal\-Stressapptest_1\-10.xml" name="02\-IO\-Trapezoidal\-Stressapptest_1\-10.xml"/>
-    <test href="/tests/03\-CPU\-opposite.xml" name="03\-CPU\-opposite.xml"/>
-    <test href="/tests/01\-MEM\-Linear_incr\-Lookbusy_100\-1000.xml" name="01\-MEM\-Linear_incr\-Lookbusy_100\-1000.xml"/>
-    <test href="/tests/03\-MEM\-500\-1000MB.xml" name="03\-MEM\-500\-1000MB.xml"/>
-    <test href="/tests/03\-MEM\-Linear\-Stressapptest_500\-1000MB.xml" name="03\-MEM\-Linear\-Stressapptest_500\-1000MB.xml"/>
-    <test href="/tests/01\-MEM\-Trapezoidal\-Lookbusy_100\-1000.xml" name="01\-MEM\-Trapezoidal\-Lookbusy_100\-1000.xml"/>
-    <test href="/tests/02\-MEM\-Trapezoidal\-Stressapptest_100\-1000.xml" name="02\-MEM\-Trapezoidal\-Stressapptest_100\-1000.xml"/>
-    <test href="/tests/03\-NET\-Trapezoidal\-Iperf\-100\-1000.xml" name="03\-NET\-Trapezoidal\-Iperf\-100\-1000.xml"/>
-    <test href="/tests/01\-IO\-Linear\-Lookbusy_1\-10.xml" name="01\-IO\-Linear\-Lookbusy_1\-10.xml"/>
-  </items>
-  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <items offset="0" total="20">
+                <test href="/tests/01\-CPU\-Linear\-Lookbusy_10\-95.xml" name="01\-CPU\-Linear\-Lookbusy_10\-95.xml"/>
+                <test href="/tests/03\-NET\-Linear_incr\-Iperf\-100\-1000.xml" name="03\-NET\-Linear_incr\-Iperf\-100\-1000.xml"/>
+                <test href="/tests/02\-IO\-Linear\-Stressapptest_1\-10.xml" name="02\-IO\-Linear\-Stressapptest_1\-10.xml"/>
+                <test href="/tests/02\-IO\-Linear_incr\-Stressapptest_1\-10.xml" name="02\-IO\-Linear_incr\-Stressapptest_1\-10.xml"/>
+                <test href="/tests/02\-MEM\-Linear_incr\-Stressapptest_100\-1000.xml" name="02\-MEM\-Linear_incr\-Stressapptest_100\-1000.xml"/>
+                <test href="/tests/01\-CPU\-Trapezoidal\-Lookbusy_10\-95.xml" name="01\-CPU\-Trapezoidal\-Lookbusy_10\-95.xml"/>
+                <test href="/tests/01\-IO\-Trapezoidal\-Lookbusy_1\-10.xml" name="01\-IO\-Trapezoidal\-Lookbusy_1\-10.xml"/>
+                <test href="/tests/01\-NET_TEST.xml" name="01\-NET_TEST.xml"/>
+                <test href="/tests/03\-MEM\-500\-1000MB\-overlap.xml" name="03\-MEM\-500\-1000MB\-overlap.xml"/>
+                <test href="/tests/01\-CPU\-Linear_incr\-Lookbusy_10\-95.xml" name="01\-CPU\-Linear_incr\-Lookbusy_10\-95.xml"/>
+                <test href="/tests/01\-IO\-Linear_incr\-Lookbusy_1\-10.xml" name="01\-IO\-Linear_incr\-Lookbusy_1\-10.xml"/>
+                <test href="/tests/02\-IO\-Trapezoidal\-Stressapptest_1\-10.xml" name="02\-IO\-Trapezoidal\-Stressapptest_1\-10.xml"/>
+                <test href="/tests/03\-CPU\-opposite.xml" name="03\-CPU\-opposite.xml"/>
+                <test href="/tests/01\-MEM\-Linear_incr\-Lookbusy_100\-1000.xml" name="01\-MEM\-Linear_incr\-Lookbusy_100\-1000.xml"/>
+                <test href="/tests/03\-MEM\-500\-1000MB.xml" name="03\-MEM\-500\-1000MB.xml"/>
+                <test href="/tests/03\-MEM\-Linear\-Stressapptest_500\-1000MB.xml" name="03\-MEM\-Linear\-Stressapptest_500\-1000MB.xml"/>
+                <test href="/tests/01\-MEM\-Trapezoidal\-Lookbusy_100\-1000.xml" name="01\-MEM\-Trapezoidal\-Lookbusy_100\-1000.xml"/>
+                <test href="/tests/02\-MEM\-Trapezoidal\-Stressapptest_100\-1000.xml" name="02\-MEM\-Trapezoidal\-Stressapptest_100\-1000.xml"/>
+                <test href="/tests/03\-NET\-Trapezoidal\-Iperf\-100\-1000.xml" name="03\-NET\-Trapezoidal\-Iperf\-100\-1000.xml"/>
+                <test href="/tests/01\-IO\-Linear\-Lookbusy_1\-10.xml" name="01\-IO\-Linear\-Lookbusy_1\-10.xml"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
 </collection>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
+.UNINDENT
+.sp
+\fBhttp:method:: GET /tests/{name}\fP
 .INDENT 0.0
-.TP
-.B GET\~/tests/\fI{name}\fP
-.INDENT 7.0
-.TP
-.B Path arguments
-\fBname\fP \-\- Name of tests that you want to get more info
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
+.INDENT 3.5
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+:arg name: Name of tests that you want to get more info
+.ft P
+.fi
 .UNINDENT
 .UNINDENT
 .sp
 Displays Content of XML file.
 .UNINDENT
+.UNINDENT
+.sp
+\fBhttp:method:: POST /tests\fP
 .INDENT 0.0
-.TP
-.B POST\~/tests
-.INDENT 7.0
-.TP
-.B Query params
-\fBstring\fP \-\- name of the test that is located on COCOMA server
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB201\fP \-\- Emulation was created successfully
-.IP \(bu 2
-\fB400\fP \-\- Bad Request
+.INDENT 3.5
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+:param string: name of the test that is located on COCOMA machine
+.ft P
+.fi
 .UNINDENT
 .UNINDENT
 .sp
-Create emulation from already available tests
-The returned \fI201\- Created\fP XML:
-.INDENT 7.0
+Create emulation from available tests. The returned \fI201\- Created\fP XML:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <test href="/tests/5\-CPU_EMU" xmlns="http://127.0.0.1/cocoma">
-  <emulationName>5\-CPU_EMU</emulationName>
-  <startTime>2013\-04\-09T18:57:32</startTime>
-  <durationSec>60</durationSec>
+        <emulationName>5\-CPU_EMU</emulationName>
+        <startTime>2013\-04\-09T18:57:32</startTime>
+        <durationSec>60</durationSec>
 </test>
 .ft P
 .fi
@@ -708,7 +618,7 @@ The returned \fI201\- Created\fP XML:
 .UNINDENT
 .sp
 The returned \fI400\- Not Found\fP reply XML:
-.INDENT 7.0
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
@@ -720,152 +630,144 @@ The returned \fI400\- Not Found\fP reply XML:
 .UNINDENT
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
-.TP
-.B GET\~/results
-.INDENT 7.0
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
-.UNINDENT
 .UNINDENT
 .sp
-Displays results list.
-The returned \fI200\- OK\fP XML:
-.INDENT 7.0
+\fBhttp:method:: GET /results\fP
+.INDENT 0.0
+.INDENT 3.5
+Displays results list. The returned \fI200\- OK\fP XML:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <collection href="/results" xmlns="http://127.0.0.1/cocoma">
-  <items offset="0" total="5">
-    <results failedRuns="0" href="/results/1\-Emu\-CPU\-RAM\-IO" name="1\-Emu\-CPU\-RAM\-IO" state="inactive"/>
-    <results failedRuns="0" href="/results/2\-CPU_EMU" name="2\-CPU_EMU" state="inactive"/>
-    <results failedRuns="0" href="/results/3\-CPU_EMU" name="3\-CPU_EMU" state="inactive"/>
-    <results failedRuns="0" href="/results/4\-CPU_EMU" name="4\-CPU_EMU" state="inactive"/>
-    <results failedRuns="0" href="/results/5\-CPU_EMU" name="5\-CPU_EMU" state="inactive"/>
-  </items>
-  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <items offset="0" total="5">
+                <results failedRuns="0" href="/results/1\-Emu\-CPU\-RAM\-IO" name="1\-Emu\-CPU\-RAM\-IO" state="inactive"/>
+                <results failedRuns="0" href="/results/2\-CPU_EMU" name="2\-CPU_EMU" state="inactive"/>
+                <results failedRuns="0" href="/results/3\-CPU_EMU" name="3\-CPU_EMU" state="inactive"/>
+                <results failedRuns="0" href="/results/4\-CPU_EMU" name="4\-CPU_EMU" state="inactive"/>
+                <results failedRuns="0" href="/results/5\-CPU_EMU" name="5\-CPU_EMU" state="inactive"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
 </collection>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
+.UNINDENT
+.sp
+\fBhttp:method:: GET /results/{name}\fP
 .INDENT 0.0
-.TP
-.B GET\~/results/\fI{name}\fP
-.INDENT 7.0
-.TP
-.B Path arguments
-\fBname\fP \-\- Name of tests that you want to get more info
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
+.INDENT 3.5
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+:arg name: Name of tests that you want to get more info
+.ft P
+.fi
 .UNINDENT
 .UNINDENT
 .sp
-Displays information about results by name.
-The returned \fI200\- OK\fP XML:
-.INDENT 7.0
+Displays information about results by name. The returned \fI200\- OK\fP XML:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <results href="/results/1\-Emu\-CPU\-RAM\-IO" xmlns="http://127.0.0.1/cocoma">
-  <emulationName>1\-Emu\-CPU\-RAM\-IO</emulationName>
-  <totalRuns>6</totalRuns>
-  <executedRuns>6</executedRuns>
-  <failedRuns>0</failedRuns>
-  <emuState>inactive</emuState>
+        <emulationName>1\-Emu\-CPU\-RAM\-IO</emulationName>
+        <totalRuns>6</totalRuns>
+        <executedRuns>6</executedRuns>
+        <failedRuns>0</failedRuns>
+        <emuState>inactive</emuState>
 </results>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
+.UNINDENT
+.sp
+\fBhttp:method:: GET /logs\fP
 .INDENT 0.0
-.TP
-.B GET\~/logs/system
-.INDENT 7.0
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
+.INDENT 3.5
+Displays logs list. The returned \fI200\- OK\fP XML:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+<?xml version="1.0" ?>
+<logs href="/logs">
+        <link href="/logs/emulations" rel="emulations" type="application/vnd.bonfire+xml"/>
+        <link href="/logs/system" rel="system" type="application/vnd.bonfire+xml"/>
+</logs>
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
 .UNINDENT
 .UNINDENT
 .sp
+\fBhttp:method:: GET /logs/system\fP
+.INDENT 0.0
+.INDENT 3.5
 Return Zip file with system logs.
 .UNINDENT
-.INDENT 0.0
-.TP
-.B GET\~/logs/emulations
-.INDENT 7.0
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
-.UNINDENT
 .UNINDENT
 .sp
-Displays emulations logs list.
-The returned \fI200\- OK\fP XML:
-.INDENT 7.0
+\fBhttp:method:: GET /logs/emulations\fP
+.INDENT 0.0
+.INDENT 3.5
+Displays emulations logs list. The returned \fI200\- OK\fP XML:
+.INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
 <collection href="/logs/emulations" xmlns="http://127.0.0.1/cocoma">
-  <items offset="0" total="3">
-    <emulationLog href="/logs/emulations/3\-CPU_EMU" name="3\-CPU_EMU"/>
-    <emulationLog href="/logs/emulations/5\-CPU_EMU" name="5\-CPU_EMU"/>
-    <emulationLog href="/logs/emulations/4\-CPU_EMU" name="4\-CPU_EMU"/>
-  </items>
-  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
-  <link href="/logs" rel="parent" type="application/vnd.bonfire+xml"/>
+        <items offset="0" total="3">
+                <emulationLog href="/logs/emulations/3\-CPU_EMU" name="3\-CPU_EMU"/>
+                <emulationLog href="/logs/emulations/5\-CPU_EMU" name="5\-CPU_EMU"/>
+                <emulationLog href="/logs/emulations/4\-CPU_EMU" name="4\-CPU_EMU"/>
+        </items>
+        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        <link href="/logs" rel="parent" type="application/vnd.bonfire+xml"/>
 </collection>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .UNINDENT
+.UNINDENT
+.sp
+\fBhttp:method:: GET /logs/{name}\fP
 .INDENT 0.0
-.TP
-.B GET\~/logs/\fI{name}\fP
-.INDENT 7.0
-.TP
-.B Path arguments
-\fBname\fP \-\- Name of emulation logs that you want to get more info
-.TP
-.B Responses
-.INDENT 7.0
-.IP \(bu 2
-\fB200\fP \-\- OK
-.IP \(bu 2
-\fB404\fP \-\- Not Found
+.INDENT 3.5
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+:arg name: Name of emulation logs that you want to get
+.ft P
+.fi
 .UNINDENT
 .UNINDENT
 .sp
 Return Zip file with emulation logs.
 .UNINDENT
+.UNINDENT
 .SS XML payload structure
+.sp
+A COCOMA emulation is specified in XML. The user can directly create the XML and send it to COCOMA through the CLI client or any REST client. An Emulation must contain all the neccessary information about starting time, duration, target resource and required resource usage. Once the XML document is received by COCOMA, the framework automatically schedules and executes the required workload on the chosen resource(s), CPU, IO, Memory or Network.
 .sp
 Consider this sample XML document code:
 .INDENT 0.0
@@ -918,10 +820,10 @@ Consider this sample XML document code:
 .UNINDENT
 .UNINDENT
 .sp
-XML document defines emulation experiment details and consists of three blocks:
+The XML document defines the emulation experiment details, which consists of three blocks:
 .INDENT 0.0
 .IP \(bu 2
-\fBEmulatuion\fP
+\fBEmulation\fP
 .UNINDENT
 .INDENT 0.0
 .INDENT 3.5
@@ -997,10 +899,10 @@ XML document defines emulation experiment details and consists of three blocks:
 .UNINDENT
 .UNINDENT
 .sp
-In plain english it means \- create emulation named \fICPU_EMU\fP running for \fI60\fP sec. and stating right \fInow\fP. Emulation will include one distribution called \fICPU_Distro\fP which starts at the same time as emulation, will run for \fI60\fP sec. using \fIlinear\fP algorithm. In its duration it will increase workload of \fICPU\fP from \fI10%\fP to \fI95%\fP  in \fI20\fP steps by using \fIlookbusy\fP emulator. Workload produced by the application will be logged every second with very detailed information.
-.SH CREATING EMULATION VIA CLI
+In plain english it means \- create an emulation named \fICPU_EMU\fP starting \fInow\fP and running for \fI60\fP sec. The Emulation includes one distribution called \fICPU_Distro\fP, which starts at the same time as emulation, runs for \fI60\fP sec, using \fIlinear\fP pattern. The pattern increases the workload of the \fICPU\fP from \fI10%\fP to \fI95%\fP in \fI20\fP steps by using the \fIlookbusy\fP emulator. The workload produced by the application is logged every second with debug level information.
+.SS Creating Emulation via CLI
 .sp
-Once \fIScheduler\fP was started and running we can now create stress emulations for the resources. We are using local XML \fBemulation.xml\fP file:
+To create an emulation via CLI, a local XML \fBemulation.xml\fP file as the following can be used:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1024,7 +926,7 @@ Once \fIScheduler\fP was started and running we can now create stress emulations
       <!\-\-cpu utilization distribution range\-\->
          <startLoad>90</startLoad>
          <stopLoad>10</stopLoad>
-         <emulator href="/emulators/stressapptest" name="lookbusy" />
+         <emulator href="/emulators/lookbusy" name="lookbusy" />
          <emulator\-params>
            <!\-\-more parameters will be added \-\->
            <resourceType>CPU</resourceType>
@@ -1044,7 +946,7 @@ Once \fIScheduler\fP was started and running we can now create stress emulations
       <!\-\-cpu utilization distribution range\-\->
          <startLoad>10</startLoad>
          <stopLoad>90</stopLoad>
-         <emulator href="/emulators/stressapptest" name="lookbusy" />
+         <emulator href="/emulators/lookbusy" name="lookbusy" />
          <emulator\-params>
            <!\-\-more parameters will be added \-\->
            <resourceType>CPU</resourceType>
@@ -1067,7 +969,7 @@ Once \fIScheduler\fP was started and running we can now create stress emulations
 .UNINDENT
 .UNINDENT
 .sp
-start with simple CLI command:
+The comman to start the emulation via CLI is:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1079,7 +981,7 @@ $ ccmsh \-x emulation.xml
 .UNINDENT
 .UNINDENT
 .sp
-If everything went right, you will see on the screen list of scheduled jobs:
+Once sent, the list of scheduled jobs is shown on screen as follow:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1101,7 +1003,7 @@ INFO:Emulation Manager:Started logger:6\-CPU_Emulation\-logger interval\-3sec.St
 .UNINDENT
 .UNINDENT
 .sp
-Each line from \fI3\-8\fP shows information of a single scheduled emulation job. If we break it down, the line \fI3\fP from above as an example we have:
+Each line from \fI3\-8\fP shows information of a single scheduled emulation job. Each line provides job\(aqs information, for example line \fI3\fP:
 .INDENT 0.0
 .IP \(bu 2
 \fBINFO:Distriburion Manager:Scheduler reply:\fP \-just a generic logger part
@@ -1116,42 +1018,40 @@ Each line from \fI3\-8\fP shows information of a single scheduled emulation job.
 .IP \(bu 2
 \fBlookbusy\fP \- distribution module used to calculate each run parameters
 .IP \(bu 2
-\fBcpu\fP \- the type of the resource used by this run
+\fBcpu\fP \- the target resource used by this run
 .IP \(bu 2
 \fB90\fP \- stress value applied to this run
 .IP \(bu 2
-\fBDuration 10.0sec.\fP \- how long will job run
+\fBDuration 10.0sec.\fP \- how long the job run
 .IP \(bu 2
-\fBStart Time: 2013\-04\-10 09:43:01 End Time: 09:43:11\fP \- time gap when run will be executed
+\fBStart Time: 2013\-04\-10 09:43:01 End Time: 09:43:11\fP \- time interval when the run is/was executed
 .UNINDENT
 .sp
-We can write run name notation in this way:
+More generally, the run/job notation is as follow:
 .sp
 \fB(logger reply) \- (emulationID\-name) \- (distribution ID) \- (run number} \- (distribution name) \- (distribution module) \- (resource) \- (stress value) \- (run duration) \- (execution time)\fP
 .sp
-Line \fI10\fP shows another job which was created for the logger.This job will appear only if \fIlog\fP section is stated in XML and is optional. Logger job runs for the duration of the whole emulation
-and collects system resource usage information.
-Logger job name notation can be described in this way:
+Line \fI10\fP shows another job which was created for the logger. This job appears only if the optional \fIlog\fP section is stated in the XML. The logger job executes for the duration of the whole emulation and collects system resource usage information. The logger job name notation can be described in this way:
 .sp
 \fB(logger reply) \- (emulationID\-name) \- (logger mark) \- {poll interval} \- (start time)\fP
-.SH CREATING EMULATION VIA API CLIENT (RESTFULLY)
+.SS Creating Emulation via API Client (Restfully)
 .sp
-Here you can find examples for building ruby script XML payloads for \fI\%restfully\fP client.
+This sections provides examples on how to use the REST API via the \fI\%restfully\fP client.
 .sp
-First you need to create configuration file like \fBcocoma.yml\fP. It contains the IP address URI of COCOMA web API and used mediatype name:
+First you need to create a configuration file for restfully \fBapi.cocoma.yml\fP, containing the public IP address of COCOMA:
 .INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
-uri: http://10.55.164.223:5050/
+uri: http://131.254.204.223/
 require: [ApplicationVndBonfireXml]
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .sp
-Next we creating \fBMEM\-emulation.rb\fP file which contains XML payload and the path to config file:
+The example below creates an emulation with two distributions over the MEM resource. The file can be saved as a .rb and used by restfully. It contains the XML payload for COCOMA and a reference to the config file to connect to the COCOMA VM:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1162,7 +1062,7 @@ require \(aqrestfully\(aq
 require \(aqlogger\(aq
 
 session = Restfully::Session.new(
- :configuration_file => "~/cocoma.yml"
+ :configuration_file => "~/api.cocoma.yml"
 
 )
 
@@ -1182,35 +1082,35 @@ begin
             :startTime =>"0",
             :duration =>"120",
             :granularity =>"10",
-           :distribution => {
-            :href => "/distributions/linear",
-            :name => "linear"},
-           :startLoad => "1000",
-            :stopLoad => "18000",
+            :distribution => {
+                                :href => "/distributions/linear_incr",
+                                :name => "linear_incr"},
+            :startLoad => "10%",
+            :stopLoad => "80%",
             :emulator =>{
             :href => "/emulators/stressapptest",
             :name => "stressapptest"},
             :\(aqemulator\-params\(aq =>{
-                  :resourceType =>"MEM",
-                  :memThreads => "1"}
-      },
-         {
-                :name => "MEM\-decrease",
-                :startTime =>"121",
-                :duration =>"119",
-                :granularity =>"10",
-                :distribution => {
-                                :href => "/distributions/linear",
-                                :name => "linear"},
-                :startLoad => "18000",
-                :stopLoad => "1000",
-                :emulator =>{
-                                :href => "/emulators/stressapptest",
-                                :name => "stressapptest"},
-                :\(aqemulator\-params\(aq =>{
                                 :resourceType =>"MEM",
                                 :memThreads => "1"}
-                }]
+      },
+             {
+                        :name => "MEM\-decrease",
+                        :startTime =>"121",
+                        :duration =>"119",
+                        :granularity =>"10",
+                        :distribution => {
+                                :href => "/distributions/linear_incr",
+                                :name => "linear_incr"},
+                        :startLoad => "80%",
+                        :stopLoad => "10%",
+                        :emulator =>{
+                                :href => "/emulators/stressapptest",
+                                :name => "stressapptest"},
+                        :\(aqemulator\-params\(aq =>{
+                                :resourceType =>"MEM",
+                                :memThreads => "1"}
+                        }]
  )
 
 end
@@ -1219,7 +1119,7 @@ end
 .UNINDENT
 .UNINDENT
 .sp
-Finally we launch the script using \fBresfully\fP client
+The script can be executed as:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1231,7 +1131,7 @@ $ restfully emulation.rb
 .UNINDENT
 .UNINDENT
 .sp
-If then you would like to check if the emulation was created you can list emulations again using \fBrestfully\fP :
+You can access the COCOMA VM interactively thorugh the \fBrestfully\fP client, and check if the emulation was created successfully:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1239,6 +1139,7 @@ If then you would like to check if the emulation was created you can list emulat
 .ft C
 $ restfully \-c cocoma.yml
 
+>> pp root.emulations
 >> #<Collection:0x45f9f3e uri="/emulations"
 >>  RELATIONSHIPS
 >>    parent, self
@@ -1251,13 +1152,13 @@ $ restfully \-c cocoma.yml
 .UNINDENT
 .UNINDENT
 .sp
-To get more client tutorials check the \fI\%restfully\fP web site.
-.SH XML EXAMPLES
+To get more client tutorials check the \fI\%restfully\fP page.
+.SS XML Examples
 .sp
-This section shows XML payload examples for creating emulation experiments
+This section provides XML payload examples for creating different emulations over various resources.
 .SS CPU
 .sp
-Emulation XML for the CPU contention:
+Emulation XML for CPU contention:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1278,7 +1179,7 @@ Emulation XML for the CPU contention:
      <!\-\-duration in seconds \-\->
      <duration>120</duration>
      <granularity>24</granularity>
-     <distribution href="/distributions/linear_incr" name="linear_incr" />
+     <distribution href="/distributions/linear" name="linear" />
      <!\-\-cpu utilization distribution range\-\->
       <startLoad>10</startLoad>
       <stopLoad>95</stopLoad>
@@ -1288,7 +1189,7 @@ Emulation XML for the CPU contention:
         <!\-\-more parameters will be added \-\->
         <resourceType>CPU</resourceType>
        <!\-\-Number of CPUs to keep busy (default: autodetected)\-\->
-       <ncpus>0</ncpus>
+       <ncpus>1</ncpus>
       </emulator\-params>
   </distributions>
 
@@ -1307,7 +1208,7 @@ Emulation XML for the CPU contention:
 .UNINDENT
 .SS I/O
 .sp
-Emulation XML for the I/O contention:
+Emulation XML for I/O contention:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1332,15 +1233,15 @@ Emulation XML for the I/O contention:
      <distribution href="/distributions/linear_incr" name="linear_incr" />
       <startLoad>1</startLoad>
       <stopLoad>10</stopLoad>
-      <emulator href="/emulators/lookbusy" name="lookbusy" />
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
 
       <emulator\-params>
         <!\-\-more parameters will be added \-\->
         <resourceType>IO</resourceType>
-       <!\-\-Size of blocks to use for I/O, in MB\-\->
-       <ioBlockSize>10</ioBlockSize>
-       <!\-\-Time to sleep between iterations, in msec\-\->
-       <ioSleep>100</ioSleep>
+       <!\-\-Size of mem in MB used\-\->
+       <memsize>1000</memsize>
+       <!\-\-Number of threads\-\->
+       <memThreads>10</memThreads>
       </emulator\-params>
 
   </distributions>
@@ -1359,7 +1260,7 @@ Emulation XML for the I/O contention:
 .UNINDENT
 .UNINDENT
 .sp
-2nd example using \fItrapezoidal\fP distribution:
+In this example we use a different distribution called \fItrapezoidal\fP:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1384,15 +1285,15 @@ Emulation XML for the I/O contention:
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
       <startLoad>1</startLoad>
       <stopLoad>10</stopLoad>
-      <emulator href="/emulators/lookbusy" name="lookbusy" />
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
 
       <emulator\-params>
         <!\-\-more parameters will be added \-\->
         <resourceType>IO</resourceType>
-       <!\-\-Size of blocks to use for I/O, in MB\-\->
-       <ioBlockSize>10</ioBlockSize>
-       <!\-\-Time to sleep between iterations, in msec\-\->
-       <ioSleep>100</ioSleep>
+       <!\-\-Size of mem in MB used\-\->
+       <memsize>1000</memsize>
+       <!\-\-Number of threads\-\->
+       <memThreads>10</memThreads>
       </emulator\-params>
 
   </distributions>
@@ -1412,7 +1313,7 @@ Emulation XML for the I/O contention:
 .UNINDENT
 .SS Memory
 .sp
-Emulation XML for the memory contention:
+Emulation XML for memory contention:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1437,12 +1338,11 @@ Emulation XML for the memory contention:
      <!\-\-Megabytes for memory \-\->
       <startLoad>100</startLoad>
       <stopLoad>1000</stopLoad>
-      <emulator href="/emulators/lookbusy" name="lookbusy" />
+              <malloclimit>4095</malloclimit>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator\-params>
-        <resourceType>MEM</resourceType>
-       <!\-\-time between iterations in usec (default 1000)\-\->
-       <malloclimit>4004</malloclimit>
-      <memSleep>0</memSleep>
+                     <resourceType>MEM</resourceType>
+                     <memThreads>0</memThreads>
       </emulator\-params>
   </distributions>
 
@@ -1460,7 +1360,7 @@ Emulation XML for the memory contention:
 .UNINDENT
 .UNINDENT
 .sp
-2nd example using \fItrapezoidal\fP distribution:
+Example for memory emulation using \fItrapezoidal\fP distribution:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1485,12 +1385,11 @@ Emulation XML for the memory contention:
      <!\-\-Megabytes for memory \-\->
       <startLoad>100</startLoad>
       <stopLoad>1000</stopLoad>
-      <malloclimit>4000</malloclimit>
-      <emulator href="/emulators/lookbusy" name="lookbusy" />
+      <malloclimit>4095</malloclimit>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator\-params>
-        <resourceType>MEM</resourceType>
-       <!\-\-time between iterations in usec (default 1000)\-\->
-      <memSleep>0</memSleep>
+                     <resourceType>MEM</resourceType>
+                     <memThreads>0</memThreads>
       </emulator\-params>
   </distributions>
 
@@ -1509,8 +1408,7 @@ Emulation XML for the memory contention:
 .UNINDENT
 .SS Network
 .sp
-For this emulation to work you need to deploy two COCOMA VM\(aqs. One will act as a client (the one where XML is sent) and the other will act as a server.
-Emulation XML for the network contention:
+The newtork emulation needs two COCOMA VM\(aqs, one that acts as a client and the other as a server. Normally those two VMs are placed in different nodes. The SuT should be composed of at least two VMs placed on the same two nodes of COCOMA. The emulation XML for network contention looks like:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -1531,7 +1429,7 @@ Emulation XML for the network contention:
      <!\-\-duration in seconds \-\->
      <duration>150</duration>
      <granularity>10</granularity>
-     <distribution href="/distributions/linear" name="linear" />
+     <distribution href="/distributions/linear_incr" name="linear_incr" />
    <!\-\-cpu utilization distribution range\-\->
       <startLoad>100</startLoad>
       <!\-\- set target bandwidth to bits per sec \-\->
@@ -1539,13 +1437,13 @@ Emulation XML for the network contention:
       <emulator href="/emulators/iperf" name="iperf" />
     <emulator\-params>
         <resourceType>NET</resourceType>
-        <serverip>10.55.164.223</serverip>
-   <!\-\-Leave "0" for default 5001 port \-\->
-   <serverport>5001</serverport>
-        <clientip>127.0.0.1</clientip>
-   <clientport>5001</clientport>
-        <packettype>UDP</packettype>
-    </emulator\-params>
+        <serverip>172.18.254.234</serverip>
+                <!\-\-Leave "0" for default 5001 port \-\->
+                <serverport>5001</serverport>
+                <clientip>172.18.254.236</clientip>
+                <clientport>5001</clientport>
+                <packettype>UDP</packettype>
+                </emulator\-params>
   </distributions>
 
   <log>
@@ -1560,10 +1458,9 @@ Emulation XML for the network contention:
 .fi
 .UNINDENT
 .UNINDENT
-.SS Multiple Distributions
+.SS Multiple distributions emulation
 .sp
-You can create multiple distributions within one emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource.
-Distributions can overlap, meaning two distributions can run in the same time frame. If distributions for the same resource will overlap, the runs might crash if not enough resources available.
+A good feature of COCOMA is the ability to combine multiple distributions within the same emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource. Distributions can overlap, meaning two distributions can run at the same time frame. If distributions for the same resource overlap and they exceed the available resources, the runs might crash.
 .INDENT 0.0
 .IP \(bu 2
 CPU and Memory example
@@ -1610,13 +1507,12 @@ CPU and Memory example
               <!\-\-Megabytes for memory \-\->
                <startLoad>100</startLoad>
                <stopLoad>1000</stopLoad>
-               <emulator href="/emulators/lookbusy" name="lookbusy" />
-               <emulator\-params>
-                 <resourceType>MEM</resourceType>
-                <!\-\-time between iterations in usec (default 1000)\-\->
-                <malloclimit>4004</malloclimit>
-               <memSleep>0</memSleep>
-               </emulator\-params>
+               <malloclimit>4095</malloclimit>
+                               <emulator href="/emulators/stressapptest" name="stressapptest" />
+                               <emulator\-params>
+                                     <resourceType>MEM</resourceType>
+                                     <memThreads>0</memThreads>
+                               </emulator\-params>
            </distributions>
 
           <log>
@@ -1676,13 +1572,12 @@ CPU, MEM and IO example
               <!\-\-Megabytes for memory \-\->
                <startLoad>100</startLoad>
                <stopLoad>1000</stopLoad>
-               <emulator href="/emulators/lookbusy" name="lookbusy" />
-               <emulator\-params>
-                 <resourceType>MEM</resourceType>
-                <!\-\-time between iterations in usec (default 1000)\-\->
-                <malloclimit>4004</malloclimit>
-               <memSleep>0</memSleep>
-               </emulator\-params>
+               <malloclimit>4095</malloclimit>
+                               <emulator href="/emulators/stressapptest" name="stressapptest" />
+                               <emulator\-params>
+                                     <resourceType>MEM</resourceType>
+                                     <memThreads>0</memThreads>
+                               </emulator\-params>
            </distributions>
 
            <distributions>
@@ -1717,11 +1612,14 @@ CPU, MEM and IO example
 .fi
 .UNINDENT
 .UNINDENT
+.SH INDICES AND TABLES
 .INDENT 0.0
 .IP \(bu 2
 \fIgenindex\fP
+.UNINDENT
+.INDENT 0.0
 .IP \(bu 2
-\fIsearch\fP
+\fI\%Glossary\fP
 .UNINDENT
 .SH AUTHOR
 Carmelo Ragusa, Philip Robinson, Sergej Svorobej
