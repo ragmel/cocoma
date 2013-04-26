@@ -1,4 +1,0 @@
-#!/bin/sh
-
-echo "Removing COCOMA env variable from /etc/profile ..."
-sed -i '/^export COCOMA/d' /etc/profile

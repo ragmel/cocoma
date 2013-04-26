@@ -1,3 +1,0 @@
-include cocoma/LICENSE cocoma/NEWS cocoma/README cocoma/NOTICE cocoma/data/cocoma.sqlite distribute_setup.py distribute-0.6.28.tar.gz cocoma/xml-examples/* cocoma/bin/* cocoma/distributions/*  
-#recursive-include examples *.txt *.py
-#prune examples/sample?/build
