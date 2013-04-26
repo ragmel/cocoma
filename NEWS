@@ -1,1 +1,17 @@
-This is the NEWS file for COCOMA. NEWS will be added here later on
+cocoma (1.0) unstable; urgency=low
+
+  * Creating release 1.0
+  * Only resorce contention over CPU RAM IO(Disk) and NETWORK is available
+  * Known issues:
+  * - emulation analysis warnings when resource usage exceed available resources not working
+  * Wanted features:
+  * - Implementing malicious and faultiness modules, and relative distributions
+  * - Real system workload traces parsing and replay capability
+  * - Distributed COCOMA solution to enable large complex distributed scenarios
+  * - Web UI to manage the framework
+  * - Contention at CPU cache level
+  * - Tool to record system traces in a COCOMA compatible format
+  * - Extend emulation analyser for distributed version to get warning for large scenarios' emulations
+
+
+ -- Carmelo Ragusa <carmelo.ragusa@sap.com>  Wed, 23 Apr 2013 14:21:08 +0100

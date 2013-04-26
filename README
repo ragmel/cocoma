@@ -1,21 +1,5 @@
-COCOMA is a tool for creating deliberate contention (in the future also malicious and faulty) load
-in a controlled way.
+The aim of COCOMA framework is to create, monitor and control contentious and malicious system workload. By using this framework experimenters are able to create operational conditions under which tests and experiments can be carried out. This allows more insight into the testing process so that various scenarios of the cloud infrastructure behaviour can be analysed by collecting and correlate metrics of the emulated environment with the test results.
 
-Quick start
------------------------------------
-Run COCOMA through command line (ccmsh)
+In order to use COCOMA, an experimenter defines an `emulation` which embeds all environment operational conditions as shown in the figure below. The actual operational conditions are defined in what are called `distributions`, which create specific workloads over the targeted resource of a specific resource type. For example, `distribution 1` targets the CPU creating an exponential trend over a specific time range within the whole emulation. Each distribution time is divided into multiple time-slots based on the distribution granularity then broken down into multiple runs each one injecting a different load level per time slot, which depends on the discrete function of the distribution.
 
-First start the scheduler
-
-	ccmsh --start scheduler
-
-	ccmsh -x <path to xml file>
-
-
-xml files examples can be found in the xml-examples/ and xml-examples/tests/ (the test dir should have more updated xml files)
-
-You can check that jobs have been scheduled by running
-
-	ccmsh --list-jobs all
-
-To understand if the jobs are running properly, you can use "top" or "iostat -x 3" commands
+Please refer to the documentation in the doc/ folder
