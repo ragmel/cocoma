@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating Emulation via CLI &mdash; COCOMA 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="next" title="Creating Emulation via API Client (Restfully)" href="04_api_examples.html" />
+    <link rel="prev" title="Getting Started" href="02_how_to_use_it.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="04_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="02_how_to_use_it.html" title="Getting Started"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="creating-emulation-via-cli">
+<h1>Creating Emulation via CLI<a class="headerlink" href="#creating-emulation-via-cli" title="Permalink to this headline">¶</a></h1>
+<p>To create an emulation via CLI, a local XML <tt class="docutils literal"><span class="pre">emulation.xml</span></tt> file as the following can be used:</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56</pre></div></td><td class="code"><div class="highlight"><pre>   <span class="nt">&lt;emulation&gt;</span>
+     <span class="nt">&lt;emuname&gt;</span>CPU_Emulation<span class="nt">&lt;/emuname&gt;</span>
+     <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+     <span class="nt">&lt;emuresourceType&gt;</span>Mix<span class="nt">&lt;/emuresourceType&gt;</span>
+     <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;emustopTime&gt;</span>180<span class="nt">&lt;/emustopTime&gt;</span>
+
+     <span class="nt">&lt;distributions&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Distro1<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+        <span class="c">&lt;!--duration in seconds --&gt;</span>
+        <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+        <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+        <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+      <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+         <span class="nt">&lt;startLoad&gt;</span>90<span class="nt">&lt;/startLoad&gt;</span>
+         <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
+         <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;emulator-params&gt;</span>
+           <span class="c">&lt;!--more parameters will be added --&gt;</span>
+           <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+      <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+      <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+
+         <span class="nt">&lt;/emulator-params&gt;</span>
+     <span class="nt">&lt;/distributions&gt;</span>
+
+      <span class="nt">&lt;distributions&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Distro2<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+        <span class="c">&lt;!--duration in seconds --&gt;</span>
+        <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+        <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+        <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+      <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+         <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+         <span class="nt">&lt;stopLoad&gt;</span>90<span class="nt">&lt;/stopLoad&gt;</span>
+         <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;emulator-params&gt;</span>
+           <span class="c">&lt;!--more parameters will be added --&gt;</span>
+           <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+      <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+      <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+
+         <span class="nt">&lt;/emulator-params&gt;</span>
+     <span class="nt">&lt;/distributions&gt;</span>
+
+     <span class="nt">&lt;log&gt;</span>
+      <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+      <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+      <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+      <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
+     <span class="nt">&lt;/log&gt;</span>
+
+   <span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The comman to start the emulation via CLI is:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh -x emulation.xml
+</pre></div>
+</div>
+<p>Once sent, the list of scheduled jobs is shown on screen as follow:</p>
+<div class="highlight-bash"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span>ccmsh -x emulation.xml
+INFO:XML Parser:Finished running
+<span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-7-0-Distro1-lookbusy-cpu: 90 Duration: 10.0sec.Start Time: 2013-04-10 09:43:01 End Time: 09:43:11
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-7-1-Distro1-lookbusy-cpu: 50 Duration: 10.0sec.Start Time: 2013-04-10 09:43:13 End Time: 09:43:23
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-7-2-Distro1-lookbusy-cpu: 10 Duration: 10.0sec.Start Time: 2013-04-10 09:43:25 End Time: 09:43:35
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-8-0-Distro2-lookbusy-cpu: 10 Duration: 10.0sec.Start Time: 2013-04-10 09:43:01 End Time: 09:43:11
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-8-1-Distro2-lookbusy-cpu: 50 Duration: 10.0sec.Start Time: 2013-04-10 09:43:13 End Time: 09:43:23
+</span><span class="hll">INFO:Distriburion Manager:Scheduler reply: 6-CPU_Emulation-8-2-Distro2-lookbusy-cpu: 90 Duration: 10.0sec.Start Time: 2013-04-10 09:43:25 End Time: 09:43:35
+</span>INFO:Emulation Manager:##Emulation 6-Emu-CPU-RAM-IO created
+<span class="hll">INFO:Emulation Manager:Started logger:6-CPU_Emulation-logger interval-3sec.StartTime:2013-04-10 09:42:56
+</span>6-Emu-CPU-RAM-IO
+</pre></div>
+</td></tr></table></div>
+<p>Each line from <em>3-8</em> shows information of a single scheduled emulation job. Each line provides job&#8217;s information, for example line <em>3</em>:</p>
+<ul class="simple">
+<li><strong>INFO:Distriburion Manager:Scheduler reply:</strong> -just a generic logger part</li>
+<li><strong>6-CPU_Emulation</strong> - emulation name, which is a combined string of emulation ID from the DB and <tt class="docutils literal"><span class="pre">emuname</span></tt> value in the XML file</li>
+<li><strong>7</strong> - database ID number for distribution</li>
+<li><strong>0</strong> - run number of this distribution</li>
+<li><strong>Distro1</strong> - name of the distribution taken from XML file</li>
+<li><strong>lookbusy</strong> - distribution module used to calculate each run parameters</li>
+<li><strong>cpu</strong> - the target resource used by this run</li>
+<li><strong>90</strong> - stress value applied to this run</li>
+<li><strong>Duration 10.0sec.</strong> - how long the job run</li>
+<li><strong>Start Time: 2013-04-10 09:43:01 End Time: 09:43:11</strong> - time interval when the run is/was executed</li>
+</ul>
+<p>More generally, the run/job notation is as follow:</p>
+<p><tt class="docutils literal"><span class="pre">(logger</span> <span class="pre">reply)</span> <span class="pre">-</span> <span class="pre">(emulationID-name)</span> <span class="pre">-</span> <span class="pre">(distribution</span> <span class="pre">ID)</span> <span class="pre">-</span> <span class="pre">(run</span> <span class="pre">number}</span> <span class="pre">-</span> <span class="pre">(distribution</span> <span class="pre">name)</span> <span class="pre">-</span> <span class="pre">(distribution</span> <span class="pre">module)</span> <span class="pre">-</span> <span class="pre">(resource)</span> <span class="pre">-</span> <span class="pre">(stress</span> <span class="pre">value)</span> <span class="pre">-</span> <span class="pre">(run</span> <span class="pre">duration)</span> <span class="pre">-</span> <span class="pre">(execution</span> <span class="pre">time)</span></tt></p>
+<p>Line <em>10</em> shows another job which was created for the logger. This job appears only if the optional <em>log</em> section is stated in the XML. The logger job executes for the duration of the whole emulation and collects system resource usage information. The logger job name notation can be described in this way:</p>
+<p><tt class="docutils literal"><span class="pre">(logger</span> <span class="pre">reply)</span> <span class="pre">-</span> <span class="pre">(emulationID-name)</span> <span class="pre">-</span> <span class="pre">(logger</span> <span class="pre">mark)</span> <span class="pre">-</span> <span class="pre">{poll</span> <span class="pre">interval}</span> <span class="pre">-</span> <span class="pre">(start</span> <span class="pre">time)</span></tt></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="02_how_to_use_it.html"
+                        title="previous chapter">Getting Started</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="04_api_examples.html"
+                        title="next chapter">Creating Emulation via API Client (Restfully)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/COCOMA/03_cli_examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="04_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="02_how_to_use_it.html" title="Getting Started"
+             >previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, SAP.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

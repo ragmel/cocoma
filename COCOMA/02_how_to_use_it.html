@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; COCOMA 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="next" title="Creating Emulation via CLI" href="03_cli_examples.html" />
+    <link rel="prev" title="Introduction" href="01_introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="03_cli_examples.html" title="Creating Emulation via CLI"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="01_introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>COCOMA is installed in <em>&#8220;/usr/share/pyshared/cocoma&#8221;</em>. In this section we provide information about the components that have to be running in order to fully use the framework, and how can a user interact with it.</p>
+<div class="section" id="starting-components">
+<h2>Starting Components<a class="headerlink" href="#starting-components" title="Permalink to this headline">¶</a></h2>
+<p>The two main components of COCOMA are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Scheduler daemon (mandatory, needs to be the first started)</li>
+<li>API Daemon (optional, if the REST API functionality is required)</li>
+</ul>
+</div></blockquote>
+<p>The <strong>Scheduler daemon</strong> - runs in the background and executes workload with differential parameters at the time defined in the emulation properties.
+To check if the scheduler is running use the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --show scheduler
+</pre></div>
+</div>
+<p>To start the scheduler on a specific network interface and port, use the command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --start scheduler eth1 55555
+</pre></div>
+</div>
+<p>If the network interface and port are omitted, the default values are respectively <em>eth0</em> adn <em>51889</em></p>
+<p>If more detailed output information is needed, the <em>Scheduler</em> can also be started in <em>DEBUG</em> mode:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --start scheduler eth1 55555 debug
+</pre></div>
+</div>
+<p>The <strong>API daemon</strong> - provides the RESTfull web API, which exposes COCOMA resources to be used over the network. It follows the same command structure as the Scheduler.
+To check if the scheduler is running use the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --show api
+</pre></div>
+</div>
+<p>To start the api on a specific network interface and port, use the command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --start api eth2 77777
+</pre></div>
+</div>
+<p>If the network interface and port are omitted, the default values are respectively <em>eth0</em> and <em>5050</em></p>
+<p>The log level is the same specified for the <em>Scheduler</em>.</p>
+</div>
+<div class="section" id="cli">
+<h2>CLI<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h2>
+<p>The COCOMA CLI is called <cite>ccmsh</cite>, and provides the following options:</p>
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-h">
+<tt class="descname">-h</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--help</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display help information of the available options</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-v">
+<tt class="descname">-v</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--version</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display installed version information of COCOMA</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-l">
+<tt class="descname">-l</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list</tt><tt class="descclassname"> &lt;emulation name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display list of all emulations that are scheduled or already finished. If emulation name is provided then it lists information for that specific emulation</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-r">
+<tt class="descname">-r</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--results</tt><tt class="descclassname"> &lt;emulation name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display list of results of all emulations that are scheduled or already finished. If emulation name is provided, then it lists information for that specific emulation</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-j">
+<tt class="descname">-j</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list-jobs</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-j" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the scheduler for the list of jobs that have to be executed. For each one, it gives the job name and the planned execution time</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-i">
+<tt class="descname">-i</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--dist</tt><tt class="descclassname"> &lt;distribution name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scans the <em>&#8220;/usr/share/pyshared/cocoma/distributions&#8221;</em> folder and displays all available distribution modules. If a distribution name is provided, then it shows the help information for that specific distribution</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-e">
+<tt class="descname">-e</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--emu</tt><tt class="descclassname"> &lt;emulator name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scans the <em>&#8220;/usr/share/pyshared/cocoma/emulators&#8221;</em> folder and displays all available emulator wrapper modules. If an emulator name is provided, then it shows the help information for that specific emulator wrapper</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-x">
+<tt class="descname">-x</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--xml</tt><tt class="descclassname"> &lt;file name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-x" title="Permalink to this definition">¶</a></dt>
+<dd><p>It create and emulation based on the local XML</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-n">
+<tt class="descname">-n</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--now</tt><tt class="descclassname"> (used with -x option only)</tt><a class="headerlink" href="#cmdoption-ccmsh-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override any start date in the local XML emulation file without modifying the file, i.e. <tt class="docutils literal"><span class="pre">ccmsh</span> <span class="pre">-x</span> <span class="pre">&lt;file</span> <span class="pre">name&gt;</span> <span class="pre">-n</span></tt></p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-d">
+<tt class="descname">-d</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--delete</tt><tt class="descclassname"> &lt;emulation name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a specific emulation from the database</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-p">
+<tt class="descname">-p</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--purge</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all DB entries, all scheduled jobs</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh--start">
+<tt class="descname">--start</tt><tt class="descclassname"> &lt;api interface port&gt;, &lt;scheduler interface port&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh--start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start Scheduler or API daemon by specifying network interface and port number i.e. <tt class="docutils literal"><span class="pre">ccmsh</span> <span class="pre">--start</span> <span class="pre">api</span> <span class="pre">eth0</span> <span class="pre">2020</span></tt> or <tt class="docutils literal"><span class="pre">ccmsh</span> <span class="pre">--start</span> <span class="pre">scheduler</span> <span class="pre">eth0</span> <span class="pre">3030</span></tt>. By default if the network interface is not specified, the Scheduler daemon will run on <em>eth0</em> and <em>51889</em>, and the API daemon will run on <em>eth0</em> and <em>5050</em>.</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh--stop">
+<tt class="descname">--stop</tt><tt class="descclassname"> &lt;api&gt;, &lt;scheduler&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh--stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop Scheduler or API daemon</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh--show">
+<tt class="descname">--show</tt><tt class="descclassname"> &lt;api&gt;, &lt;scheduler&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh--show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show OS information on Scheduler or API daemon, displays PID numbers</p>
+</dd></dl>
+
+</div>
+<div class="section" id="rest-api">
+<h2>REST API<a class="headerlink" href="#rest-api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="index">
+<h3>Index<a class="headerlink" href="#index" title="Permalink to this headline">¶</a></h3>
+<p>The API URIs summary list is as follow:</p>
+<div class="highlight-xml"><div class="highlight"><pre>* /
+* /emulations
+* /emulations/{name}
+* /distributions
+* /distributions/{name}
+* /emulators
+* /emulators/{name}
+* /results
+* /results/{name}
+* /tests
+* /tests/{name}
+* /logs
+* /logs/system
+* /logs/emulations
+* /logs/emulations/{name}
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/</span></tt></p>
+<blockquote>
+<div><p>The <strong>root</strong> returns a <em>collection</em> of all the available resources. Example of a XML response:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;root</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;version&gt;</span>0.1.1<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;timestamp&gt;</span>1365518303.44<span class="nt">&lt;/timestamp&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulations&quot;</span> <span class="na">rel=</span><span class="s">&quot;emulations&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulators&quot;</span> <span class="na">rel=</span><span class="s">&quot;emulators&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/distributions&quot;</span> <span class="na">rel=</span><span class="s">&quot;distributions&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/tests&quot;</span> <span class="na">rel=</span><span class="s">&quot;tests&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/results&quot;</span> <span class="na">rel=</span><span class="s">&quot;results&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/logs&quot;</span> <span class="na">rel=</span><span class="s">&quot;logs&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/root&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/emulations</span></tt></p>
+<blockquote>
+<div><p>The <strong>emulations</strong> returns a <em>collection</em> of all the available emulation resources. Example of a XML response:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/emulations&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/1-Emu-CPU-RAM-IO&quot;</span> <span class="na">id=</span><span class="s">&quot;1&quot;</span> <span class="na">name=</span><span class="s">&quot;1-Emu-CPU-RAM-IO&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/2-CPU_EMU&quot;</span> <span class="na">id=</span><span class="s">&quot;2&quot;</span> <span class="na">name=</span><span class="s">&quot;2-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/3-CPU_EMU&quot;</span> <span class="na">id=</span><span class="s">&quot;3&quot;</span> <span class="na">name=</span><span class="s">&quot;3-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/items&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/emulations/{name}</span></tt></p>
+<blockquote>
+<div><p>Displays information about emulation by name. The returned <em>200-OK</em> XML is:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/1-Emu-CPU-RAM-IO&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;id&gt;</span>1<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;emulationName&gt;</span>1-Emu-CPU-RAM-IO<span class="nt">&lt;/emulationName&gt;</span>
+        <span class="nt">&lt;emulationType&gt;</span>mix<span class="nt">&lt;/emulationType&gt;</span>
+        <span class="nt">&lt;resourceType&gt;</span>mix<span class="nt">&lt;/resourceType&gt;</span>
+        <span class="nt">&lt;emuStartTime&gt;</span>2013-04-09T13:00:01<span class="nt">&lt;/emuStartTime&gt;</span>
+        <span class="nt">&lt;emuStopTime&gt;</span>180<span class="nt">&lt;/emuStopTime&gt;</span>
+        <span class="nt">&lt;scheduledJobs&gt;</span>
+                <span class="nt">&lt;jobsempty&gt;</span>No jobs are scheduled<span class="nt">&lt;/jobsempty&gt;</span>
+        <span class="nt">&lt;/scheduledJobs&gt;</span>
+        <span class="nt">&lt;distributions</span> <span class="na">ID=</span><span class="s">&quot;1&quot;</span> <span class="na">name=</span><span class="s">&quot;Distro1&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+                <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+                <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+                <span class="nt">&lt;startload&gt;</span>10<span class="nt">&lt;/startload&gt;</span>
+                <span class="nt">&lt;stopload&gt;</span>90<span class="nt">&lt;/stopload&gt;</span>
+        <span class="nt">&lt;/distributions&gt;</span>
+        <span class="nt">&lt;distributions</span> <span class="na">ID=</span><span class="s">&quot;2&quot;</span> <span class="na">name=</span><span class="s">&quot;Distro2&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+                <span class="nt">&lt;granularity&gt;</span>3<span class="nt">&lt;/granularity&gt;</span>
+                <span class="nt">&lt;duration&gt;</span>30<span class="nt">&lt;/duration&gt;</span>
+                <span class="nt">&lt;startload&gt;</span>10<span class="nt">&lt;/startload&gt;</span>
+                <span class="nt">&lt;stopload&gt;</span>90<span class="nt">&lt;/stopload&gt;</span>
+        <span class="nt">&lt;/distributions&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulations&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</div>
+<p>The returned <em>404 – Not Found</em> XML is:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;error&gt;</span>Emulation Name: 1-Emu-CPU-RAM-IO1 not found. Error:too many values to unpack<span class="nt">&lt;/error&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">POST</span> <span class="pre">/emulations</span></tt></p>
+<blockquote>
+<div><div class="highlight-html"><div class="highlight"><pre>:param string XML: Emulation parameters defined via XML as shown in the examples section.
+</pre></div>
+</div>
+<p>The returned <em>201-Created</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;emulation</span> <span class="na">href=</span><span class="s">&quot;/emulations/4-CPU_EMU&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;ID&gt;</span>4-CPU_EMU<span class="nt">&lt;/ID&gt;</span>
+        <span class="nt">&lt;EmuNotes&gt;</span>OK<span class="nt">&lt;/EmuNotes&gt;</span>
+        <span class="nt">&lt;DistroNotes&gt;</span>OK<span class="nt">&lt;/DistroNotes&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulations&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</div>
+<p>The returned <em>400 – Bad Request</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;error&gt;</span>XML is not well formed Error: syntax error: line 1, column 0<span class="nt">&lt;/error&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/emulators</span></tt></p>
+<blockquote>
+<div><p>Displays emulators list. The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/emulators&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/iperf&quot;</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/items&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/emulators/{name}</span></tt></p>
+<blockquote>
+<div><div class="highlight-html"><div class="highlight"><pre>:arg name: Name of emulator that you want to get more info
+</pre></div>
+</div>
+<p>Displays information about emulator by name. The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulator/lookbusy&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;info&gt;</span>
+                Emulator lookbusy can be used for following resources:
+                1)Loads CPU with parameters:
+                ncpus - Number of CPUs to keep busy (default: autodetected)
+
+                2)Loads Memory(MEM) with parameters:
+                memSleep - Time to sleep between iterations, in usec (default 1000)
+
+                3)Changing size of files to use during IO with parameters:
+                ioBlockSize - Size of blocks to use for I/O in MB
+                ioSleep - Time to sleep between iterations, in msec (default 100)
+
+
+                XML block example:
+                <span class="ni">&amp;lt;</span>emulator-params<span class="ni">&amp;gt;</span>
+                <span class="ni">&amp;lt;</span>resourceType<span class="ni">&amp;gt;</span>CPU<span class="ni">&amp;lt;</span>/resourceType<span class="ni">&amp;gt;</span>
+                <span class="ni">&amp;lt;</span>ncpus<span class="ni">&amp;gt;</span>0<span class="ni">&amp;lt;</span>/ncpus<span class="ni">&amp;gt;</span>
+                <span class="ni">&amp;lt;</span>/emulator-params<span class="ni">&amp;gt;</span>
+
+        <span class="nt">&lt;/info&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulators&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/emulator&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/distributions</span></tt></p>
+<blockquote>
+<div><p>Displays distributions list. The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/distributions&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/trapezoidal&quot;</span> <span class="na">name=</span><span class="s">&quot;trapezoidal&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/items&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/distributions/{name}</span></tt></p>
+<blockquote>
+<div><div class="highlight-html"><div class="highlight"><pre>:arg name: Name of distributions that you want to get more info
+</pre></div>
+</div>
+<p>Displays information about distributions by name. The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;info&gt;</span>Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types.<span class="nt">&lt;/info&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/distributions&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/distribution&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/tests</span></tt></p>
+<blockquote>
+<div><p>Displays tests list. The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/tests&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;20&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-CPU-Linear-Lookbusy_10-95.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-CPU-Linear-Lookbusy_10-95.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-NET-Linear_incr-Iperf-100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-NET-Linear_incr-Iperf-100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-IO-Linear-Stressapptest_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-IO-Linear-Stressapptest_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-IO-Linear_incr-Stressapptest_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-IO-Linear_incr-Stressapptest_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-MEM-Linear_incr-Stressapptest_100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-MEM-Linear_incr-Stressapptest_100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-CPU-Trapezoidal-Lookbusy_10-95.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-CPU-Trapezoidal-Lookbusy_10-95.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-IO-Trapezoidal-Lookbusy_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-IO-Trapezoidal-Lookbusy_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-NET_TEST.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-NET_TEST.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-MEM-500-1000MB-overlap.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-MEM-500-1000MB-overlap.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-CPU-Linear_incr-Lookbusy_10-95.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-CPU-Linear_incr-Lookbusy_10-95.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-IO-Linear_incr-Lookbusy_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-IO-Linear_incr-Lookbusy_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-IO-Trapezoidal-Stressapptest_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-IO-Trapezoidal-Stressapptest_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-CPU-opposite.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-CPU-opposite.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-MEM-Linear_incr-Lookbusy_100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-MEM-Linear_incr-Lookbusy_100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-MEM-500-1000MB.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-MEM-500-1000MB.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-MEM-Linear-Stressapptest_500-1000MB.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-MEM-Linear-Stressapptest_500-1000MB.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-MEM-Trapezoidal-Lookbusy_100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-MEM-Trapezoidal-Lookbusy_100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/02-MEM-Trapezoidal-Stressapptest_100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;02-MEM-Trapezoidal-Stressapptest_100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/03-NET-Trapezoidal-Iperf-100-1000.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;03-NET-Trapezoidal-Iperf-100-1000.xml&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/01-IO-Linear-Lookbusy_1-10.xml&quot;</span> <span class="na">name=</span><span class="s">&quot;01-IO-Linear-Lookbusy_1-10.xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/items&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/tests/{name}</span></tt></p>
+<blockquote>
+<div><div class="highlight-html"><div class="highlight"><pre>:arg name: Name of tests that you want to get more info
+</pre></div>
+</div>
+<p>Displays Content of XML file.</p>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">POST</span> <span class="pre">/tests</span></tt></p>
+<blockquote>
+<div><div class="highlight-html"><div class="highlight"><pre>:param string: name of the test that is located on COCOMA machine
+</pre></div>
+</div>
+<p>Create emulation from available tests. The returned <em>201- Created</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;test</span> <span class="na">href=</span><span class="s">&quot;/tests/5-CPU_EMU&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;emulationName&gt;</span>5-CPU_EMU<span class="nt">&lt;/emulationName&gt;</span>
+        <span class="nt">&lt;startTime&gt;</span>2013-04-09T18:57:32<span class="nt">&lt;/startTime&gt;</span>
+        <span class="nt">&lt;durationSec&gt;</span>60<span class="nt">&lt;/durationSec&gt;</span>
+<span class="nt">&lt;/test&gt;</span>
+</pre></div>
+</div>
+<p>The returned <em>400- Not Found</em> reply XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;error&gt;</span>error message<span class="nt">&lt;/error&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/results</span></tt></p>
+<blockquote>
+<div><p>Displays results list. The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/results&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;5&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/1-Emu-CPU-RAM-IO&quot;</span> <span class="na">name=</span><span class="s">&quot;1-Emu-CPU-RAM-IO&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/2-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;2-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/3-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;3-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/4-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;4-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;results</span> <span class="na">failedRuns=</span><span class="s">&quot;0&quot;</span> <span class="na">href=</span><span class="s">&quot;/results/5-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;5-CPU_EMU&quot;</span> <span class="na">state=</span><span class="s">&quot;inactive&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/items&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/results/{name}</span></tt></p>
+<blockquote>
+<div><div class="highlight-html"><div class="highlight"><pre>:arg name: Name of tests that you want to get more info
+</pre></div>
+</div>
+<p>Displays information about results by name. The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;results</span> <span class="na">href=</span><span class="s">&quot;/results/1-Emu-CPU-RAM-IO&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;emulationName&gt;</span>1-Emu-CPU-RAM-IO<span class="nt">&lt;/emulationName&gt;</span>
+        <span class="nt">&lt;totalRuns&gt;</span>6<span class="nt">&lt;/totalRuns&gt;</span>
+        <span class="nt">&lt;executedRuns&gt;</span>6<span class="nt">&lt;/executedRuns&gt;</span>
+        <span class="nt">&lt;failedRuns&gt;</span>0<span class="nt">&lt;/failedRuns&gt;</span>
+        <span class="nt">&lt;emuState&gt;</span>inactive<span class="nt">&lt;/emuState&gt;</span>
+<span class="nt">&lt;/results&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/logs</span></tt></p>
+<blockquote>
+<div><p>Displays logs list. The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;logs</span> <span class="na">href=</span><span class="s">&quot;/logs&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/logs/emulations&quot;</span> <span class="na">rel=</span><span class="s">&quot;emulations&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/logs/system&quot;</span> <span class="na">rel=</span><span class="s">&quot;system&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/logs&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/logs/system</span></tt></p>
+<blockquote>
+<div>Return Zip file with system logs.</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/logs/emulations</span></tt></p>
+<blockquote>
+<div><p>Displays emulations logs list. The returned <em>200- OK</em> XML:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/logs/emulations&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;emulationLog</span> <span class="na">href=</span><span class="s">&quot;/logs/emulations/3-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;3-CPU_EMU&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;emulationLog</span> <span class="na">href=</span><span class="s">&quot;/logs/emulations/5-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;5-CPU_EMU&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;emulationLog</span> <span class="na">href=</span><span class="s">&quot;/logs/emulations/4-CPU_EMU&quot;</span> <span class="na">name=</span><span class="s">&quot;4-CPU_EMU&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/items&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/logs&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/logs/{name}</span></tt></p>
+<blockquote>
+<div><div class="highlight-html"><div class="highlight"><pre>:arg name: Name of emulation logs that you want to get
+</pre></div>
+</div>
+<p>Return Zip file with emulation logs.</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="xml-payload-structure">
+<h2>XML payload structure<a class="headerlink" href="#xml-payload-structure" title="Permalink to this headline">¶</a></h2>
+<p>A COCOMA emulation is specified in XML. The user can directly create the XML and send it to COCOMA through the CLI client or any REST client. An Emulation must contain all the neccessary information about starting time, duration, target resource and required resource usage. Once the XML document is received by COCOMA, the framework automatically schedules and executes the required workload on the chosen resource(s), CPU, IO, Memory or Network.</p>
+<p>Consider this sample XML document code:</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+  <span class="nt">&lt;emuname&gt;</span>CPU_EMU<span class="nt">&lt;/emuname&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
+  <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
+  <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+  <span class="c">&lt;!--duration in seconds --&gt;</span>
+  <span class="nt">&lt;emustopTime&gt;</span>60<span class="nt">&lt;/emustopTime&gt;</span>
+
+  <span class="nt">&lt;distributions&gt;</span>
+
+   <span class="nt">&lt;name&gt;</span>CPU_Distro<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
+     <span class="nt">&lt;granularity&gt;</span>20<span class="nt">&lt;/granularity&gt;</span>
+     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+     <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+      <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+      <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
+
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;emulator-params&gt;</span>
+        <span class="c">&lt;!--more parameters will be added --&gt;</span>
+        <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+       <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+       <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+      <span class="nt">&lt;/emulator-params&gt;</span>
+
+  <span class="nt">&lt;/distributions&gt;</span>
+
+  <span class="nt">&lt;log&gt;</span>
+   <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+   <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+   <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+   <span class="nt">&lt;frequency&gt;</span>1<span class="nt">&lt;/frequency&gt;</span>
+   <span class="nt">&lt;logLevel&gt;</span>debug<span class="nt">&lt;/logLevel&gt;</span>
+  <span class="nt">&lt;/log&gt;</span>
+
+<span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The XML document defines the emulation experiment details, which consists of three blocks:</p>
+<ul class="simple">
+<li><strong>Emulation</strong></li>
+</ul>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+  <span class="nt">&lt;emuname&gt;</span>CPU_EMU<span class="nt">&lt;/emuname&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
+  <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
+  <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+  <span class="c">&lt;!--duration in seconds --&gt;</span>
+  <span class="nt">&lt;emustopTime&gt;</span>60<span class="nt">&lt;/emustopTime&gt;</span>
+  ...
+<span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><strong>Distribution</strong></li>
+</ul>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="nt">&lt;distributions&gt;</span>
+
+   <span class="nt">&lt;name&gt;</span>CPU_Distro<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
+     <span class="nt">&lt;granularity&gt;</span>20<span class="nt">&lt;/granularity&gt;</span>
+     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+     <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+      <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+      <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
+
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;emulator-params&gt;</span>
+        <span class="c">&lt;!--more parameters will be added --&gt;</span>
+        <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+       <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+       <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+      <span class="nt">&lt;/emulator-params&gt;</span>
+
+  <span class="nt">&lt;/distributions&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><strong>Log</strong> (optional)</li>
+</ul>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="nt">&lt;log&gt;</span>
+   <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+   <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+   <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+   <span class="nt">&lt;frequency&gt;</span>1<span class="nt">&lt;/frequency&gt;</span>
+   <span class="nt">&lt;logLevel&gt;</span>debug<span class="nt">&lt;/logLevel&gt;</span>
+  <span class="nt">&lt;/log&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>In plain english it means - create an emulation named <em>CPU_EMU</em> starting <em>now</em> and running for <em>60</em> sec. The Emulation includes one distribution called <em>CPU_Distro</em>, which starts at the same time as emulation, runs for <em>60</em> sec, using <em>linear</em> pattern. The pattern increases the workload of the <em>CPU</em> from <em>10%</em> to <em>95%</em> in <em>20</em> steps by using the <em>lookbusy</em> emulator. The workload produced by the application is logged every second with debug level information.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#starting-components">Starting Components</a></li>
+<li><a class="reference internal" href="#cli">CLI</a></li>
+<li><a class="reference internal" href="#rest-api">REST API</a><ul>
+<li><a class="reference internal" href="#index">Index</a></li>
+<li><a class="reference internal" href="#description">Description</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#xml-payload-structure">XML payload structure</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="01_introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="03_cli_examples.html"
+                        title="next chapter">Creating Emulation via CLI</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/COCOMA/02_how_to_use_it.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="03_cli_examples.html" title="Creating Emulation via CLI"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="01_introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, SAP.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
