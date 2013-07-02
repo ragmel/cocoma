@@ -287,7 +287,8 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
 
 
 Multiple distributions emulation
-----------------------
+--------------------------------
+
 
 A good feature of COCOMA is the ability to combine multiple distributions within the same emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource. Distributions can overlap, meaning two distributions can run at the same time frame. If distributions for the same resource overlap and they exceed the available resources, the runs might crash.
 

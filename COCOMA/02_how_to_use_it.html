@@ -177,6 +177,43 @@ To check if the scheduler is running use the following:</p>
 </dd></dl>
 
 </div>
+<div class="section" id="logging">
+<h2>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="event-logging">
+<h3>Event Logging<a class="headerlink" href="#event-logging" title="Permalink to this headline">¶</a></h3>
+<p>COCOMA provides two levels of event logging, <em>INFO</em> which is set by default, and <em>DEBUG</em> which can be enabled if more detailed feedback is required:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --start scheduler eth1 55555 debug
+</pre></div>
+</div>
+<p>Timestamped events are then saved in the <tt class="docutils literal"><span class="pre">logs/COCOMAlogfile.csv</span></tt> file.</p>
+<p>Both <em>Scheduler</em> and <em>API</em> also save their CLI output in the <tt class="docutils literal"><span class="pre">logs/COCOMAlogfile_Scheduler_sout.txt</span></tt> and <tt class="docutils literal"><span class="pre">logs/COCOMAlogfile_API_sout.txt</span></tt> accordingly.
+All above files can be retrieved as ZIP archive through COCOMA web API URI:</p>
+<div class="highlight-xml"><div class="highlight"><pre>* /logs/system
+</pre></div>
+</div>
+</div>
+<div class="section" id="resource-consumption-logging">
+<h3>Resource Consumption Logging<a class="headerlink" href="#resource-consumption-logging" title="Permalink to this headline">¶</a></h3>
+<p>Optionally the CPU, Memory and Network consumption of COCOMA VM can be recorded during each emulation. To enable resource consumption logging just add this XML code block to the payload:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;log&gt;</span>
+ <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+ <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+ <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+ <span class="nt">&lt;frequency&gt;</span>1<span class="nt">&lt;/frequency&gt;</span>
+ <span class="c">&lt;!-- Set the level of information detail  --&gt;</span>
+ <span class="nt">&lt;logLevel&gt;</span>debug<span class="nt">&lt;/logLevel&gt;</span>
+<span class="nt">&lt;/log&gt;</span>
+</pre></div>
+</div>
+<p>If the logging was enabled, once the emulation is finished, COCOMA will produce two files named after the emulation (e.g. <tt class="docutils literal"><span class="pre">logs/4-CPU_EMU-res_2013-04-09T18:51:09.csv</span></tt> and <tt class="docutils literal"><span class="pre">logs/4-CPU_EMU-config_2013-04-09T18:51:09.xml</span></tt>).
+The file with CSV extention will contain the system resource data, and the file with XML extention will have the exact copy of the payload used for that emulation.</p>
+<p>Both files can be retrieved as ZIP archive through COCOMA web API URI by emulation name:</p>
+<div class="highlight-xml"><div class="highlight"><pre>* /logs/emulations
+* /logs/emulations/{name}
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="rest-api">
 <h2>REST API<a class="headerlink" href="#rest-api" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="index">
@@ -314,31 +351,57 @@ To check if the scheduler is running use the following:</p>
 <div><div class="highlight-html"><div class="highlight"><pre>:arg name: Name of emulator that you want to get more info
 </pre></div>
 </div>
-<p>Displays information about emulator by name. The returned <em>200- OK</em> XML:</p>
+<p>Displays information about emulator by name. It returns parameters that can be used with emulator and the values limits (where applicable). The returned <em>200- OK</em> XML:</p>
 <div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
-<span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulator/lookbusy&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;info&gt;</span>
-                Emulator lookbusy can be used for following resources:
-                1)Loads CPU with parameters:
-                ncpus - Number of CPUs to keep busy (default: autodetected)
+<span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;info&gt;</span>
+    <span class="nt">&lt;help&gt;</span>
+    Emulator lookbusy can be used for following resources:
+    1)Loads CPU with parameters:
+      ncpus - Number of CPUs to keep busy (default: autodetected)
 
-                2)Loads Memory(MEM) with parameters:
-                memSleep - Time to sleep between iterations, in usec (default 1000)
+    2)Loads Memory(MEM) with parameters:
+      memSleep - Time to sleep between iterations, in usec (default 1000)
 
-                3)Changing size of files to use during IO with parameters:
-                ioBlockSize - Size of blocks to use for I/O in MB
-                ioSleep - Time to sleep between iterations, in msec (default 100)
+    3)Changing size of files to use during IO with parameters:
+      ioBlockSize - Size of blocks to use for I/O in MB
+      ioSleep - Time to sleep between iterations, in msec (default 100)
 
 
-                XML block example:
-                <span class="ni">&amp;lt;</span>emulator-params<span class="ni">&amp;gt;</span>
-                <span class="ni">&amp;lt;</span>resourceType<span class="ni">&amp;gt;</span>CPU<span class="ni">&amp;lt;</span>/resourceType<span class="ni">&amp;gt;</span>
-                <span class="ni">&amp;lt;</span>ncpus<span class="ni">&amp;gt;</span>0<span class="ni">&amp;lt;</span>/ncpus<span class="ni">&amp;gt;</span>
-                <span class="ni">&amp;lt;</span>/emulator-params<span class="ni">&amp;gt;</span>
+    XML block example:
+    <span class="ni">&amp;lt;</span>emulator-params<span class="ni">&amp;gt;</span>
+        <span class="ni">&amp;lt;</span>resourceType<span class="ni">&amp;gt;</span>CPU<span class="ni">&amp;lt;</span>/resourceType<span class="ni">&amp;gt;</span>
+        <span class="ni">&amp;lt;</span>ncpus<span class="ni">&amp;gt;</span>0<span class="ni">&amp;lt;</span>/ncpus<span class="ni">&amp;gt;</span>
+    <span class="ni">&amp;lt;</span>/emulator-params<span class="ni">&amp;gt;</span>
 
-        <span class="nt">&lt;/info&gt;</span>
-        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulators&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/help&gt;</span>
+    <span class="nt">&lt;resources&gt;</span>
+      <span class="nt">&lt;cpu&gt;</span>
+        <span class="nt">&lt;ncpus&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>100<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>100<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/ncpus&gt;</span>
+      <span class="nt">&lt;/cpu&gt;</span>
+      <span class="nt">&lt;io&gt;</span>
+        <span class="nt">&lt;iosleep&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>999999999<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>999999999<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/iosleep&gt;</span>
+        <span class="nt">&lt;ioblocksize&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>9999999<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>9999999<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/ioblocksize&gt;</span>
+      <span class="nt">&lt;/io&gt;</span>
+      <span class="nt">&lt;mem&gt;</span>
+        <span class="nt">&lt;memsleep&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>999999999<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>999999999<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/memsleep&gt;</span>
+      <span class="nt">&lt;/mem&gt;</span>
+    <span class="nt">&lt;/resources&gt;</span>
+  <span class="nt">&lt;/info&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/emulators&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/emulator&gt;</span>
 </pre></div>
 </div>
@@ -363,12 +426,51 @@ To check if the scheduler is running use the following:</p>
 <div><div class="highlight-html"><div class="highlight"><pre>:arg name: Name of distributions that you want to get more info
 </pre></div>
 </div>
-<p>Displays information about distributions by name. The returned <em>200- OK</em> XML:</p>
+<p>Displays information about distributions by name. It returns parameters that can be used with distributions and the values limits(where applicable). The returned <em>200- OK</em> XML:</p>
 <div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
-<span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;info&gt;</span>Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types.<span class="nt">&lt;/info&gt;</span>
-        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/distributions&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;info&gt;</span>
+    <span class="nt">&lt;help&gt;</span>Linear Increase distribution takes in start and stop load (plus malloclimit for MEM) parameters and gradually
+    increasing resource workload by spawning jobs in parallel. Can be used with MEM,IO,NET resource types.<span class="nt">&lt;/help&gt;</span>
+    <span class="nt">&lt;resources&gt;</span>
+      <span class="nt">&lt;mem&gt;</span>
+        <span class="nt">&lt;startload&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>3895<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>3895<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/startload&gt;</span>
+        <span class="nt">&lt;stopload&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>3895<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>3895<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/stopload&gt;</span>
+        <span class="nt">&lt;malloclimit&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>4095<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>4095<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/malloclimit&gt;</span>
+      <span class="nt">&lt;/mem&gt;</span>
+      <span class="nt">&lt;io&gt;</span>
+        <span class="nt">&lt;startload&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>999999<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>999999<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/startload&gt;</span>
+        <span class="nt">&lt;stopload&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>999999<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>999999<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/stopload&gt;</span>
+      <span class="nt">&lt;/io&gt;</span>
+      <span class="nt">&lt;net&gt;</span>
+        <span class="nt">&lt;startload&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>1000000<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>1000000<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/startload&gt;</span>
+        <span class="nt">&lt;stopload&gt;</span>
+          <span class="nt">&lt;upperBound&gt;</span>1000000<span class="nt">&lt;/upperBound&gt;</span>
+          <span class="nt">&lt;lowerBound&gt;</span>1000000<span class="nt">&lt;/lowerBound&gt;</span>
+        <span class="nt">&lt;/stopload&gt;</span>
+      <span class="nt">&lt;/net&gt;</span>
+    <span class="nt">&lt;/resources&gt;</span>
+  <span class="nt">&lt;/info&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/distributions&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/distribution&gt;</span>
 </pre></div>
 </div>
@@ -694,6 +796,11 @@ To check if the scheduler is running use the following:</p>
 <li><a class="reference internal" href="#">Getting Started</a><ul>
 <li><a class="reference internal" href="#starting-components">Starting Components</a></li>
 <li><a class="reference internal" href="#cli">CLI</a></li>
+<li><a class="reference internal" href="#logging">Logging</a><ul>
+<li><a class="reference internal" href="#event-logging">Event Logging</a></li>
+<li><a class="reference internal" href="#resource-consumption-logging">Resource Consumption Logging</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#rest-api">REST API</a><ul>
 <li><a class="reference internal" href="#index">Index</a></li>
 <li><a class="reference internal" href="#description">Description</a></li>
