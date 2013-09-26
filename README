@@ -1,5 +1,4 @@
-COCOMA is a tool for creating deliberate contention (in the future also malicious and faulty) load
-in a controlled way.
+COCOMA is a tool for creating deliberate contention, malicious and faulty load in a controlled way.
 
 Please note that the location of the backfuzz emulator must be specified prior to trying to run any emulations using it. This is done with the command:
     ccmsh -b "YOUR/PATH/HERE/backfuzz.py"
