@@ -1,0 +1,6 @@
+Bottle v0.11.6 server starting up (using WSGIRefServer())...
+Listening on http://127.0.0.1:5050/
+Hit Ctrl-C to quit.
+
+127.0.0.1 - - [24/Sep/2013 14:30:29] "GET /distributions HTTP/1.1" 200 670
+127.0.0.1 - - [24/Sep/2013 14:32:57] "GET /emulators HTTP/1.1" 200 516

@@ -1,0 +1,18 @@
+#!/bin/bash
+declare -a IPADDR
+
+index=0
+
+for i in $( ifconfig | grep 'inet addr' | awk '{print $2}'| sed 's#addr:##g' );
+do
+        IPADDR[$index]=$i
+        let "index += 1"
+done
+
+index=0
+
+for i in $( ifconfig | grep 'eth' | awk '{print $1}' );
+do
+        echo $i ${IPADDR[$index]}
+        let "index += 1"
+done

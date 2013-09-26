@@ -1,0 +1,117 @@
+#!/bin/bash
+
+# This script allows recording CPU and MEM usage over a period of time of the machine is executed
+# by Carmelo Ragusa, no rights reserved ;)
+
+# Argument = -t test -r server -p password -v
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script allows recording CPU and MEM usage over a period of time of the machine is executed.
+
+OPTIONS:
+   -h      Show this message
+   -f      Poll frequency of the script, default is 1
+   -o      Output file. If not specified it will print on screen
+EOF
+}
+
+FR=
+FILE=
+DATE=$(date +"%Y-%m-%d-%H-%M")
+
+while getopts “hf:o:” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+         f)
+             FR=$OPTARG
+	     echo "FR: " $FR
+             ;;
+         o)
+             FILE=$OPTARG\_$DATE.txt
+	     FILE=$(echo $FILE | tr -s [:upper:] [:lower:])
+             ;;
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [ -z $FR ]
+then
+   FR=1
+fi
+ 
+PREV_TOTAL=0
+PREV_IDLE=0
+
+NCPUS=`grep -c ^processor /proc/cpuinfo`
+ 
+MEM=(`cat /proc/meminfo | grep '^MemTotal'`) # Get the total MEM
+unset MEM[0]                          # Discard the "MemTotal" prefix.
+MEMT=${MEM[1]} 
+TIMESTAMP=`date +%s%N | cut -b1-13`
+
+if [ -z $FILE ]
+then
+  echo "NCPUS $NCPUS"
+  echo "MEMTOTAL $MEMT"
+  echo "TIMESTAMP $TIMESTAMP"
+  echo "POLLFR $FR"
+  echo -e "CPU%\tMEMUSED%"
+else
+  echo "NCPUS $NCPUS" >> $FILE
+  echo "MEMTOTAL $MEMT" >> $FILE
+  echo "TIMESTAMP $TIMESTAMP" >> $FILE
+  echo "POLLFR $FR" >> $FILE
+  echo -e "CPU%\tMEMUSED%" >> $FILE
+fi
+
+
+while true; do
+  CPU=(`cat /proc/stat | grep '^cpu '`) # Get the total CPU statistics.
+  unset CPU[0]                          # Discard the "cpu" prefix.
+  IDLE=${CPU[4]}                        # Get the idle CPU time.
+
+  # Calculate the total CPU time.
+  TOTAL=0
+  for VALUE in "${CPU[@]}"; do
+    let "TOTAL=$TOTAL+$VALUE"
+  done
+
+
+  MEMF=(`cat /proc/meminfo | grep '^MemFree'`) # Get the MEM free statistics.
+  unset MEMF[0]                          # Discard the "MemFree" prefix.
+  MEMFREE=${MEMF[1]}                        # Get the MEMFREE.
+ 
+  #TIMESTAMP=`date +%s%N | cut -b1-13`
+  # Calculate the CPU usage since we last checked.
+  let "DIFF_IDLE=$IDLE-$PREV_IDLE"
+  let "DIFF_TOTAL=$TOTAL-$PREV_TOTAL"
+  let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/$DIFF_TOTAL+5)/10"
+  #let "MF=(1000*$MEMFREE/$MEMT+5)/10"
+  let "MU=(1000*($MEMT-$MEMFREE)/$MEMT+5)/10"
+  #echo -en "\r$TIMESTAMP     $DIFF_USAGE     $MF     $MU     $NCPUS     $MEMT  \b\b"
+  
+  if [ -z $FILE ]
+  then
+	echo -e "$DIFF_USAGE\t$MU"
+  else
+	echo -e "$DIFF_USAGE\t$MU" >> $FILE
+  fi
+ 
+  # Remember the total and idle CPU times for the next check.
+  PREV_TOTAL="$TOTAL"
+  PREV_IDLE="$IDLE"
+ 
+  # Wait before checking again.
+  sleep $FR
+done

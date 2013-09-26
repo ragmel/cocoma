@@ -1,0 +1,38 @@
+<emulation>
+  <emuname>MAL_EMU</emuname>
+  <emuType>NET</emuType>
+  <emuresourceType>NET</emuresourceType>
+  <!--date format: 2014-10-10T10:10:10 -->
+  <emustartTime>now</emustartTime>
+  <!--duration in seconds -->
+  <emustopTime>30</emustopTime>
+  
+  <distributions>
+     <name>MAL_Distro1</name>
+     <startTime>0</startTime>
+     <distribution href="/distributions/fuzz" name="fuzz" />
+      <startLoad>1000</startLoad>
+      <emulator href="/emulators/backfuzz" name="backfuzz" />
+      <emulator-params>
+        <resourceType>NET</resourceType>
+	<min>1000</min>
+	<fuzzRange>9000</fuzzRange>
+        <serverip>10.55.168.238</serverip>
+        <serverport>51889</serverport>      
+        <packettype>HTTP</packettype>
+        <timedelay>1</timedelay>
+        <salt>500</salt>
+     </emulator-params>
+  </distributions>
+  
+  <log>
+  	<!-- Use value "1" to enable logging(by default logging is off)  -->
+  	<enable>0</enable>
+  	<!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+	<frequency>3</frequency>	
+  	<logLevel>debug</logLevel>
+  </log>
+
+</emulation>
+
+

@@ -1,0 +1,58 @@
+<emulation>
+  <emuname>Event_Emu</emuname>
+  <emuType>Event</emuType>
+  <emuresourceType>MIX</emuresourceType>
+  <!--date format: 2014-10-10T10:10:10 -->
+  <emustartTime>now</emustartTime>
+  <!--duration in seconds -->
+  <emustopTime>30</emustopTime>
+  
+  <distributions>
+   
+   <name>Fuzzer_Distro1</name>
+     <nextevent>NONE</nextevent>
+     <!--duration in seconds -->
+     <starttime>0</starttime>
+     <distribution href="/distributions/event" name="event" />
+     <emulator href="/emulators/backfuzz" name="backfuzz" />
+      
+    <emulator-params>
+        <resourceType>NET</resourceType>
+        <serverip>10.55.168.238</serverip>
+        <serverport>51889</serverport>
+	<min>100</min>
+	<fuzzRange>4</fuzzRange>      
+        <packettype>HTTP</packettype>
+        <timedelay>0</timedelay>
+        <salt>2</salt>
+    </emulator-params>
+      
+  </distributions>
+
+      <distributions>
+        <name>CPU_distro</name>
+        <startTime>0</startTime>
+        <!--duration in seconds -->
+        <duration>30</duration>
+        <granularity>10</granularity>
+        <distribution href="/distributions/linear" name="linear" />
+        <!--cpu utilization distribution range-->
+        <startLoad>10</startLoad>
+        <stopLoad>50</stopLoad>
+        <emulator href="/emulators/lookbusy" name="lookbusy" />
+        <emulator-params>
+            <resourceType>CPU</resourceType>
+            <!--Number of CPUs to keep busy (default: autodetected)-->
+            <ncpus>0</ncpus>
+        </emulator-params>
+     </distributions>
+
+ <log>
+	<enable>0</enable>
+	<frequency>3</frequency>
+	<logLevel>debug</logLevel>
+ </log>
+  
+</emulation>
+
+

@@ -1,0 +1,180 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating Emulation via the Web UI &mdash; COCOMA 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="next" title="XML Examples" href="05_examples.html" />
+    <link rel="prev" title="Creating Emulation via API Client (Restfully)" href="04_api_examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="05_examples.html" title="XML Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="04_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="creating-emulation-via-the-web-ui">
+<h1>Creating Emulation via the Web UI<a class="headerlink" href="#creating-emulation-via-the-web-ui" title="Permalink to this headline">¶</a></h1>
+<p>Here we explain how to use the web UI to create and manage emulations and view their results</p>
+<div class="section" id="opening-the-ui">
+<h2>Opening the UI<a class="headerlink" href="#opening-the-ui" title="Permalink to this headline">¶</a></h2>
+<p>Provided that the API is running (see the <em>Starting components</em> section) The web UI will be accessible at</p>
+<div class="highlight-python"><pre>http://[yourIP]:5050/index.html</pre>
+</div>
+<p>The page is compatible with Chrome, Firefox or Safari web browsers</p>
+<p>The page will automatically load in available emulators, distributions and resources.
+It will detect which distributions and resources are compatible with the given emulator so that the user
+need not worry about creating XML the framework cannot process.</p>
+<p>Any emulations which already exist will also be displayed in the right hand bar.</p>
+<a class="reference internal image-reference" href="../_images/Overall.png"><img alt="../_images/Overall.png" src="../_images/Overall.png" style="width: 960.0px; height: 548.0px;" /></a>
+</div>
+<div class="section" id="creating-an-emulation">
+<h2>Creating an emulation<a class="headerlink" href="#creating-an-emulation" title="Permalink to this headline">¶</a></h2>
+<p>Each emulation requires a name and at least one distribution, as many distributions as required can be added.
+Each distribution requires a name and all required fields to be filled, this data will vary as per the emulation, distribution or resource selected.</p>
+<p>Distribution windows can be minimized for overall readability or removed entirely by clicking the &#8216;x&#8217; in the top right corner</p>
+<a class="reference internal image-reference" href="../_images/MultiDist.png"><img alt="../_images/MultiDist.png" class="align-right" src="../_images/MultiDist.png" style="width: 576.75px; height: 650.25px;" /></a>
+<div class="section" id="distribution-parameters">
+<h3>Distribution Parameters<a class="headerlink" href="#distribution-parameters" title="Permalink to this headline">¶</a></h3>
+<p><em>Start time</em> determines how long (in seconds) after the overall emulation has begun, this particular distribution will begin.</p>
+<p><em>Duration</em> is how long the distribution will last for.</p>
+<p><em>Granularity</em> refers to the size of the steps taken from <em>startLoad</em> through to <em>stopLoad</em> over the course of the distributions run
+For example a 60 second duration CPU stressing distribution with a granularity of 10 will move from <em>startLoad</em> to <em>stopLoad</em> in steps of 6%</p>
+<p>More information on the emulator or distribution currently selected and the specific parameters they require can be viewed by hovering over the blue question mark beside it</p>
+<a class="reference internal image-reference" href="../_images/emulatorPopup.png"><img alt="../_images/emulatorPopup.png" src="../_images/emulatorPopup.png" style="width: 389.7px; height: 194.4px;" /></a>
+<a class="reference internal image-reference" href="../_images/DistPopup.png"><img alt="../_images/DistPopup.png" src="../_images/DistPopup.png" style="width: 367.2px; height: 163.8px;" /></a>
+</div>
+<div class="section" id="logging-and-message-queue">
+<h3>Logging and Message Queue<a class="headerlink" href="#logging-and-message-queue" title="Permalink to this headline">¶</a></h3>
+<p>After the distributions have been created and specified, there is an option to enable or disable logging.
+Enabling logging give 2 more options, the <em>frequency</em> in seconds and the <em>level</em>, which dictates the amount of output the logs will contain</p>
+<p>Below this is the option to enable or disable the message queue followed by various parameters allowing for it&#8217;s setup</p>
+<a class="reference internal image-reference" href="../_images/logsandMQ.png"><img alt="../_images/logsandMQ.png" src="../_images/logsandMQ.png" style="width: 550.4px; height: 264.8px;" /></a>
+</div>
+<div class="section" id="running-the-emulation">
+<h3>Running the emulation<a class="headerlink" href="#running-the-emulation" title="Permalink to this headline">¶</a></h3>
+<p>Once all the parameters are set there are two options; run the emulation right away by clicking the <em>Run now</em> button,
+or schedule the emulation to begin running at a set time in the future by clicking the <em>Run at</em> button</p>
+<a class="reference internal image-reference" href="../_images/runAt.png"><img alt="../_images/runAt.png" src="../_images/runAt.png" style="width: 264.6px; height: 86.4px;" /></a>
+</div>
+</div>
+<div class="section" id="working-with-existing-emulations">
+<h2>Working with existing emulations<a class="headerlink" href="#working-with-existing-emulations" title="Permalink to this headline">¶</a></h2>
+<p>Any existing emulations in your system will be listed on the right hand side of the screen.
+The UI also displays the total number of runs, how many of those failed and the current state of the emulation (<em>active</em> or <em>inactive</em>)</p>
+<p>Hovering over the emulation name will display the information on that emulation in a popup and by clicking on it the emulation data
+can be loaded into the creation screen on the left where its parameters can be edited or simply run again right away.</p>
+<p>Clicking the small download icon to the right of each emulation will prompt the download of a zip file to your system.
+This zip file contains the .xml used to create the emulation as well as .csv files with the system logs and the logs for that specific emulation.</p>
+<a class="reference internal image-reference" href="../_images/emuDisplay.png"><img alt="../_images/emuDisplay.png" src="../_images/emuDisplay.png" style="width: 672.3px; height: 429.3px;" /></a>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Creating Emulation via the Web UI</a><ul>
+<li><a class="reference internal" href="#opening-the-ui">Opening the UI</a></li>
+<li><a class="reference internal" href="#creating-an-emulation">Creating an emulation</a><ul>
+<li><a class="reference internal" href="#distribution-parameters">Distribution Parameters</a></li>
+<li><a class="reference internal" href="#logging-and-message-queue">Logging and Message Queue</a></li>
+<li><a class="reference internal" href="#running-the-emulation">Running the emulation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#working-with-existing-emulations">Working with existing emulations</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="04_api_examples.html"
+                        title="previous chapter">Creating Emulation via API Client (Restfully)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="05_examples.html"
+                        title="next chapter">XML Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/COCOMA/07_webUI.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="05_examples.html" title="XML Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="04_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+             >previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, SAP.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

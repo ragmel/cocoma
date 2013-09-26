@@ -1,0 +1,1006 @@
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	</head>
+	<body>
+	
+		<script src="jquery-1.js"></script>
+		<script src="xml2json.js"></script>
+		<link href="style.css" rel="stylesheet" type="text/css">
+	
+		<div id="topBar">
+		<h2 style="color:white;padding:15px;">
+			Cocoma
+		</h2>
+		</div>
+		<div id="centreBox">
+			<div class="wrapper" style="float:left">
+			<div id="inputBox" class="box" style="padding:30px;">
+					<div class="entryArea">
+						Emulation name: <input id="ename" style="float:right;"><br>
+					</div>
+					<br>
+					<div id="distList">
+						<div id="distArea1" class="distStrip">
+							Distribution name: <input id='distName1' style='width:100px;'>
+						
+							<button type="button" id="xbtn1" onclick="removeDist(distArea1)" class="link">x</button>
+							<button type="button" id="distbtn1" onclick="expandDist(1, this)" class="link">-</button>
+							<form id="distForm1" >
+								<div class='entryArea'>
+									Run <label id='localLbl1'>locally</label> <input type='checkbox' onchange='locChecked(this)' class='locCheck' id='locCheck1' style='float:right;' checked>
+									<div id='locBox1' class='entryArea' style='display:none;'>
+										&emsp;&nbsp;&nbsp; on <input id='remoteIP1'>
+									</div>
+								</div>
+								<br><div class='entryArea'>
+									Start time (s from beginning): <input id='sTime1' class='nBox' style='float:right;' value='0' onchange='calculateTotalDuration()'><br>
+								</div>
+								<div class='entryArea'>
+									Emulator: 
+									<button id='helpBtn1' type='button' onmouseover='showHelpBox(1)' onmouseout='hideHelpBox(popup1)' class='list' style='float:right;'>?</button>
+									<select id='emulatorSelect1' onchange='emuChanged(1)' style='float:right;'>
+										<!-- add emulators-->
+									</select>
+									<div id='popup1' class='helpBox'></div>
+									<br>
+								</div>
+								<div class='entryArea'>
+									Distribution: 
+									<button id='distBtn1' type='button' onmouseover='showDistBox(1)' onmouseout='hideHelpBox(popup1)' class='list' style='float:right;'>?</button>
+									<select id='distSelect1' onchange='distChanged(1)' style='float:right;'>
+										<!-- add distributions-->
+									</select><br>
+								</div>
+								<div class='entryArea'>
+									Resource: <select id='resourceSelect1' onchange='resChanged(1)' style='float:right;'>
+										<!--add resources-->
+									</select><br>
+								</div>
+								
+								<div class='entryArea' id='extraParams1'>
+									<!--contains additional params for dist and emu-->
+								</div>
+							</form>
+						</div>
+
+					</div>
+					<br>
+					<button id="addDist" style="float:right;" >Add Distribution</button><br><br><br>
+					<hr>
+					<div class='entryArea'>
+						Enable logging <input type="checkbox" id='loggingCheck' style='float:right;' checked>
+					</div>
+					<div id='logBox' class="entryArea" style="font-size:15px;">
+						<div class="entryArea">
+						&emsp;Frequency: <input id='logFreq' class='nBox' style='float:right' value='3'><br>
+						</div>
+						<div class="entryArea">
+						&emsp;Level:  <select id='logLevel' style='float:right;'>
+									<option>info</option>
+									<option>debug</option>
+									<option>error</option>
+								</select>
+						</div>
+					</div>
+					
+					<div class='entryArea'>
+						Enable message queue  <input type="checkbox" id='mqCheck' style='float:right;'>
+					</div>
+					<div id='mqBox' class="entryArea" style="display:none; font-size:15px;">
+						<div class="entryArea">
+						&emsp;vhost: <input id='mqvhost' class='nBox' style='float:right' value=''><br>
+						</div>
+						<div class="entryArea">
+						&emsp;exchange: <input id='mqexchange' class='nBox' style='float:right' value=''><br>
+						</div>
+						<div class="entryArea">
+						&emsp;user: <input id='mquser' style='float:right' value=''><br>
+						</div>
+						<div class="entryArea">
+						&emsp;password: <input id='mqpassword' style='float:right' value=''><br>
+						</div>
+						<div class="entryArea">
+						&emsp;host: <input id='mqhost' class='nBox' style='float:right' value=''><br>
+						</div>
+						<div class="entryArea">
+						&emsp;topic: <input id='mqtopic' class='nBox' style='float:right' value=''><br>
+						</div>
+					</div>
+					<hr>
+					<br>
+					Total Duration: &nbsp;<label id="totalDuration">60</label>
+					<br><br>
+					
+					<button type="button" onclick="run()">Run now</button>
+					<div style="float:right"> 
+						<button type="button" onclick="runAt()">Run at:</button>
+						<input id="StartDate" value="dd/mm/yyyy" style="color:#CCCCCC;width:75px;" onfocus = "blankBox(this)"/>
+						<input id="StartTime" value="HH:MM" style="color:#CCCCCC;width:55px;"  onfocus = "blankBox(this)">
+					</div>
+					
+				</div>
+				
+				<!-- <div id="emuDetailsBox" class="box" style="margin-top:40px;float:left;padding:30px;"></div> -->
+			</div>
+			
+			<div class="wrapper" style="float:right">
+				<div id="rightBox" class="box" style="padding:30px;">
+					<div id="topBox"></div>
+					<div id="displayBox" style="float:left;" onmouseout='hidePopups'></div>
+					<div id="dlLink" class="resultscolumn"></div>
+					<div id="AorI" class="resultscolumn"></div>
+					<div id="failedRuns" class="resultscolumn"></div>
+					<div id="totalRuns" class="resultscolumn"></div>
+					<div style="clear:both;"></div>
+					
+					<div id="detailsPopup" class='helpBox'></div>
+				</div>
+			</div>
+
+		</div>
+
+
+	<script type="text/javascript">
+		var cocomaIP = "/";
+		var currentDist = new Array();		//these variables hold the json objects that are fetched when the dropdowns are changed
+		var currentEmu = new Array();			//they are later used to write the XML string
+		
+		var distParams = new Array();	//hold extra params required by dist and emulator, there is one index per dist, each containing an array of extraparams
+		var emuParams = new Array();
+		
+		var noOfDists = 1;
+		distParams[1] = new Array();		//all arrays concerning multiples dists begin at 1
+		emuParams[1] = new Array();
+		
+		var totalDuration = 60;
+		
+		var emuString;
+		
+		var mouseX;
+		$(document).mousemove(function(e) {
+		    mouseY = e.pageY;
+		}).mouseover();
+		
+		//n=0 the dist number, other 3 params indicate if the select should be set
+		//to a specific value (if an existing emus values are being called in)
+		populateEmulatorList(1, null, null, null, null);	
+		showEmus();
+						
+		function blankBox(box)
+		{
+			box.value = "";
+			box.style.color ="#000000";
+		}
+		
+		$('#loggingCheck').change(function() {
+			  	if($('#loggingCheck').attr('checked'))
+					$("#logBox").slideDown()
+				else
+					$("#logBox").slideUp()
+			});
+		
+		$('#mqCheck').change(function() {
+		  	if($('#mqCheck').attr('checked'))
+				$("#mqBox").slideDown()
+			else
+				$("#mqBox").slideUp()
+		});
+		
+		function locChecked(box)
+		{
+			var n = box.id.slice(8, box.id.length)
+			if(box.checked)
+			{
+				$('#localLbl'+n).css("color", "black")
+				$('#locBox'+n).slideUp()
+			}else{
+				$('#localLbl'+n).css("color", "#CCC")
+				$('#locBox'+n).slideDown()
+			}
+		}
+			
+		function locChecked(box)
+		{
+			var n = box.id.slice(8, box.id.length)
+			if(box.checked)
+			{
+				$('#localLbl'+n).css("color", "black")
+				$('#locBox'+n).slideUp()
+			}else{
+				$('#localLbl'+n).css("color", "#CCC")
+				$('#locBox'+n).slideDown()
+			}
+		}
+		function populateEmulatorList(n, emuVal, distVal, resVal, extraParamVals)
+		{
+			$.get(cocomaIP + "emulators", function(response){
+				var serializer = new XMLSerializer();				//transform xml response into json
+				var str = serializer.serializeToString(response);
+				//console.log(str);
+				var emulators = xml2json.parser(str);
+				
+				var emulatorList = new Array();
+				if(emulators.valueOf().collection.items.emulator.length == null)					//account for xml2json array parsing
+					emulatorList[0] = emulators.valueOf().collection.items.emulator
+					else
+						emulatorList = emulators.valueOf().collection.items
+				
+				for(var i=0; i<emulators.valueOf().collection.items.total; i++)	//populate list
+				{
+					var name = emulators.valueOf().collection.items.emulator[i].name;
+					$("#emulatorSelect"+n).append("<option>"+ name +"</option>");
+					if(emuVal != null)
+						$("#emulatorSelect"+n).val(emuVal);
+				}
+				checkEmuResources($("#emulatorSelect"+n+" :selected").text(), n, distVal, resVal, extraParamVals);
+				
+			});
+		}
+			
+		function checkEmuResources(name, n, distVal, resVal, extraParamVals)		//if emu changed, edit dist and resources
+		{
+			var resourceOptions;
+			$.get(cocomaIP + "emulators/" + name, function(response){
+					var serializer = new XMLSerializer();				//transform xml response into json
+					var str = serializer.serializeToString(response);
+					//console.log(str);
+					var resources = xml2json.parser(str);
+					currentEmu[n] = resources;	//set global var
+					resourceOptions = checkResourceOptions(resources.valueOf().emulator);
+					
+					populateDistList(resourceOptions, n, distVal, resVal, extraParamVals);
+				});	
+		
+		}
+		
+		function checkResourceOptions(resources)	//used for emus and distributions
+		{
+			resourceString = ""			//this string indicates if the resource can be used 'cmin' (cpu, mem, io, net) == all 4 resources 'xxxx' ==none 
+			if(resources.info.resources.cpu != undefined)
+				resourceString += 'c';
+			else
+				resourceString += "x"; 
+			if(resources.info.resources.mem != undefined)
+				resourceString += 'm';
+			else
+				resourceString += "x"; 
+			if(resources.info.resources.io != undefined)
+				resourceString += 'i';
+			else
+				resourceString += "x"; 
+			if(resources.info.resources.net != undefined)
+				resourceString += 'n';
+			else
+				resourceString += "x";
+				
+			return resourceString;
+		}
+	
+		function populateDistList(emuResources, n, distVal, resVal, extraParamVals)
+		{
+			$.get(cocomaIP + "distributions", function(response){
+				var serializer = new XMLSerializer();				//transform xml response into json
+				var str = serializer.serializeToString(response);
+				//console.log(str);
+				var dist = xml2json.parser(str);
+				var popResources = false;		//makes sure checkDistResources is only run for the currently selected (first) <option> and not all of them
+				
+				$("#distSelect" + n).html("");	//blank select
+				
+				for(var i=0; i<dist.valueOf().collection.items.total; i++)
+				{
+					var name = dist.valueOf().collection.items.distribution[i].name
+					var distResources;
+					var url = cocomaIP + "distributions/" + name;
+
+					$.get(url, function(response){
+						var serializer = new XMLSerializer();				//transform xml response into json
+						var str = serializer.serializeToString(response);
+						//console.log(str);
+						var resources = xml2json.parser(str);
+						distResources = checkResourceOptions(resources.valueOf().distribution);
+
+						var matches = false;
+						for(var j=0; j<4; j++)		//if there are no resources that can be used by both the emu and the dist, dont list dist as option
+						{
+							if(emuResources[j] != "x" && emuResources[j] == distResources[j])
+								matches = true;
+						}
+
+						if(matches)
+						{
+							var currentDistName = resources.valueOf().distribution.href.split('/')[2];
+							$("#distSelect" +n).append("<option>"+ currentDistName +"</option>");
+							
+							if(distVal != null)
+								$("#distSelect" +n).val(distVal);
+							
+							if(!popResources)
+							{
+								checkDistResources(currentDistName, emuResources, n, resVal, extraParamVals);
+								emuString = emuResources;
+								popResources = true;	//method has now been run for first option, dont allow running for all options
+							}
+						}
+					});
+				}
+			});
+		}
+		
+		function expandDist(n, btn)
+		{
+			if(btn.textContent == "-")		//collapsed
+			{
+				$("#distForm"+n).slideUp();
+				btn.textContent = "+";
+			}else
+			{								//expanded
+				btn.textContent = "-";
+				$("#distForm"+n).slideDown();
+			}
+
+		}
+		
+		$("#addDist").click(function(){			//add a dist
+				noOfDists++;
+				n = noOfDists;
+				newDistForm(n);
+				populateEmulatorList(n);
+			});
+		
+		function newDistForm(n)
+		{
+			distParams[n] = new Array();
+			emuParams[n] = new Array();
+			
+			var distForm = "<div id='distArea"+n+"' class='distStrip'>Distribution name: <input id='distName"+n+"' style='width:100px;'>"
+			+"<button type='button' id='xbtn"+n+"' onclick='removeDist(distArea"+n+")' class='link'>x</button>"
+			+"<button type='button' id='distbtn"+n+"' onclick='expandDist("+n+", this)' class='link'>-</button>"
+			
+			+"<form id='distForm"+n+"'>"
+			+"<div class='entryArea'>"
+			+"Run <label id='localLbl"+n+"'>locally</label> <input type='checkbox' onchange='locChecked(this)' class='locCheck' id='locCheck"+n+"' style='float:right;' checked>"
+			+"	<div id='locBox"+n+"' class='entryArea' style='display:none;'>"
+			+"	&emsp;&nbsp;&nbsp; on <input id='remoteIP"+n+"'>"
+			+	"</div></div><br>"
+			+"<div class='entryArea'>"
+			+"	Start time (s from beginning): <input id='sTime"+n+"' class='nBox' style='float:right;' value='0' onchange='calculateTotalDuration()'><br>"
+			+"</div>"
+			+"<div class='entryArea'>"
+			+"	Emulator: "
+			+"<button id='helpBtn"+n+"' type='button' onmouseover='showHelpBox("+n+")' onmouseout='hideHelpBox(popup"+n+")' class='list' style='float:right;'>?</button>"
+			+"<select id='emulatorSelect"+n+"' onchange='emuChanged("+n+")' style='float:right;'>"
+			+"		<!-- add emulators-->"
+			+"</select>"
+			+"	<div id='popup"+n+"' class='helpBox' ></div>"
+			+"</div>"
+			+"<div class='entryArea'>"
+			+"Distribution: "
+			+"<button id='distBtn"+n+"' type='button' onmouseover='showDistBox("+n+")' onmouseout='hideHelpBox(popup"+n+")' class='list' style='float:right;'>?</button>"
+			+"<select id='distSelect"+n+"' onchange='distChanged("+n+")' style='float:right;'>"
+			+"		<!-- add distributions-->"
+			+"	</select><br>"
+			+"</div>"
+			+"<div class='entryArea'>"
+			+"	Resource: <select id='resourceSelect"+n+"' onchange='resChanged("+n+")' style='float:right;'>"
+			+"		<!--add resources-->"
+			+"	</select><br>"
+			+"</div>"
+			+"<div class='entryArea' id='extraParams"+n+"'>"
+			+"	<!--contains additional params for dist and emu-->"
+			+"</div></form></div>";
+			
+			
+			$("#distList").append(distForm);
+		}
+		
+		function removeDist(strip)
+		{
+			$(strip).remove();
+		}
+		
+		function showHelpBox(n)
+		{
+			$.get(cocomaIP + "emulators/"+ $("#emulatorSelect"+n+" :selected").text(), function(response){
+				var serializer = new XMLSerializer();				//transform xml response into json 
+				var str = serializer.serializeToString(response);
+				//console.log(str);
+				var helpInfo = xml2json.parser(str);
+
+				helpInfo = helpInfo.valueOf().emulator.info.help;
+				helpInfo += "<br><label style='color: #0F77B2; font-size:10px; float:right'>Click to hide</label>";
+				
+				helpInfo = helpInfo.replace(/\n/g, "<br>");
+				
+				$("#popup"+n).css('top', $("#helpBtn"+n).position().top + 20);
+				$("#popup"+n).css('left', $("#helpBtn"+n).position().left);
+				$("#popup"+n).css('display', 'block');
+				$("#popup"+n).html(helpInfo);
+			});
+		}
+		
+		function showDistBox(n)
+		{
+			$.get(cocomaIP + "distributions/"+ $("#distSelect"+n+" :selected").text(), function(response){
+				var serializer = new XMLSerializer();				//transform xml response into json 
+				var str = serializer.serializeToString(response);
+				//console.log(str);
+				var helpInfo = xml2json.parser(str);
+				
+				helpInfo = helpInfo.valueOf().distribution.info.help;
+				helpInfo += "<br><label style='color: #0F77B2; font-size:10px; float:right'>Click to hide</label>";
+				
+				$("#popup"+n).css('top', $("#distBtn"+n).position().top + 20);
+				$("#popup"+n).css('left', $("#distBtn"+n).position().left);
+				$("#popup"+n).css('display', 'block');
+				$("#popup"+n).html(helpInfo);
+			});
+		}
+		
+		function hideHelpBox(popup)
+		{
+			$("#"+popup.id).fadeOut();
+		}
+		
+		$(document).click(function(){
+			$("#detailsPopup").fadeOut();
+			for(var i=0; i<=noOfDists; i++)
+				$("#popup"+ i).fadeOut();
+			});
+		
+		function checkDistResources(name, emuResources, n, resVal, extraParamVals)		//if dist is changed, edit emulator and resources
+		{
+			var resourceOptions;
+			$.get(cocomaIP + "distributions/" + name, function(response){
+					var serializer = new XMLSerializer();				//transform xml response into json
+					var str = serializer.serializeToString(response);
+					//console.log(str);
+					var resources = xml2json.parser(str);
+					currentDist[n] = resources;
+					resourceOptions = checkResourceOptions(resources.valueOf().distribution);
+					populateResourceList(resourceOptions, emuResources, n, resVal, extraParamVals);
+				});	
+		}
+		
+		function populateResourceList(options, emuOptions, n, resVal, extraParamVals)
+		{
+			$("#resourceSelect" +n).html(""); //blank select
+			if(options[0] != 'x' && emuOptions[0] != 'x')
+				$("#resourceSelect" +n).append("<option>CPU</option>");
+			if(options[1] != 'x' && emuOptions[1] != 'x')		//if memory, add additional option malloclimit
+				$("#resourceSelect" +n).append("<option>Memory</option>");
+			if(options[2] != 'x' && emuOptions[2] != 'x')
+				$("#resourceSelect" +n).append("<option>I/O</option>");
+			if(options[3] != 'x' && emuOptions[3] != 'x')
+				$("#resourceSelect" +n).append("<option>Net</option>");
+				
+			//check additional params required for the current dist and emulator, add input boxes for their specification
+			
+			if(resVal != null)
+				$("#resourceSelect" +n).val(resVal)
+			
+			addExtraParams(n, extraParamVals);
+			
+		}
+		
+		function addExtraParams(n, extraParamVals)
+		{
+			$("#extraParams"+n).html("");
+			
+			var currentResource = convertRType($("#resourceSelect"+n+" :selected").text()).toLowerCase();
+			var extraParameters = new Array();	//hold all additional parameters required by dist and emulator
+			
+			var distP = currentDist[n].distribution.info.resources[currentResource];
+			distParams[n] = Object.keys(distP);
+			
+			for(var i=0; i<distParams[n].length; i++)			//TEMPORARY FIX DUE TO XML MISSPELLING
+			{
+				if(distParams[n][i] == "startload")
+					distParams[n][i] = "startLoad";
+				if(distParams[n][i] == "stopload")
+					distParams[n][i] = "stopLoad";
+			}
+
+			var emuP = currentEmu[n].emulator.info.resources[currentResource];
+			emuParams[n] = Object.keys(emuP);
+			
+			extraParameters = distParams[n].concat(emuParams[n]);
+			
+
+			for(var i=0; i<(extraParameters.length); i++)
+			{
+			     //Add onChange listener to the duration box
+			    if (extraParameters[i] == "duration")
+			         $("#extraParams"+n).append("<div class='entryArea'>"+extraParameters[i]+": <input id='"+extraParameters[i]+""+n+"' onchange='calculateTotalDuration()' style='float:right;'><br></div>");
+			    else
+				     $("#extraParams"+n).append("<div class='entryArea'>"+extraParameters[i]+": <input id='"+extraParameters[i]+""+n+"' style='float:right;'><br></div>");
+				if(extraParamVals != null)
+				{
+					try{
+					$("#"+extraParameters[i]+n).val(extraParamVals.getElementsByTagName(extraParameters[i].toLowerCase())[0].textContent);
+					}catch(e){}
+				}
+			}
+			
+		}
+				
+		function emuChanged(n){
+			checkEmuResources($("#emulatorSelect"+n+" :selected").text(), n, null, null, null);
+		}
+		
+		function distChanged(n){
+			checkDistResources($("#distSelect"+n+" :selected").text(), emuString, n, null, null);
+		}
+		
+		function resChanged(n){
+			addExtraParams(n, null);
+		}
+		
+			
+		function run()
+		{		//run now
+			var exml = writeEmuXML("now");
+			
+			if(validateForm())
+			{
+				//$("#showXML").html(convertXML(exml));		//display xml (for debugging only)
+				$.post(cocomaIP + "emulations", exml, function(response){
+						var serializer = new XMLSerializer();				//transform xml response into json
+						var str = serializer.serializeToString(response);
+						//console.log(str);
+						alert("Emulation is running");
+						showEmus();
+					}).error(function(e){
+						alert(e.responseText)
+					});
+			}
+		}
+		
+		function runAt()		//run at specified time
+		{
+			if($("#StartDate").val() != "" && $("#StartTime").val() != "")
+			{
+				if(checkdate($("#StartDate").val()) && checktime($("#StartTime").val()))
+				{
+					var date = $("#StartDate").val();
+					var time = $("#StartTime").val();
+					
+					if(date != "" && time != "")
+					{
+						var DT = parseDate(date, time);
+						var exml = writeEmuXML(DT);
+						if(validateForm())
+						{
+							//$("#showXML").html(convertXML(exml));
+							$.post(cocomaIP + "emulations", exml, function(response){
+									var serializer = new XMLSerializer();				//transform xml response into json
+									var str = serializer.serializeToString(response);
+									console.log(str);
+									alert("Emulation will begin running at "+ date +" "+ time);
+									showEmus();
+								}).error(function(e){
+									//var error = xml2json.parser(e.responseText);
+									//alert(error.error)
+									alert(e.statusText)
+								});
+						}
+					}
+				}
+			}
+		}
+		
+		function parseDate(date, time)   //parse date into xml legal string
+		{
+			var output = "";
+			var d = date.split("/");
+			
+			output += d[2]+"-"+d[1]+"-"+d[0]+"T"+time+":00";
+			
+			return output;
+		}
+		
+		function validateForm()
+		{
+			var valid = true;
+			
+			if($("#ename").val() == "")
+					valid = false;
+				
+			return valid;
+		}
+		
+		function isNumber(n) 
+		{
+			return !isNaN(parseFloat(n)) && isFinite(n);
+		}
+		
+		function showEmus()
+		{
+			$.get(cocomaIP + "emulations", function(response){
+					var serializer = new XMLSerializer();				//transform xml response into json
+					var str = serializer.serializeToString(response);
+					//console.log(str);
+					var emus = xml2json.parser(str);
+					displayEmus(emus);
+				});
+		}
+		
+		function calculateTotalDuration()
+		{
+			var td = 0;
+			for(var i=1; i<=noOfDists; i++)
+			{
+			     for (var y=0; y <= distParams[i].length; y++)
+			     {
+			         if (distParams[i][y] == "duration")
+			         var duration = $("#duration" + i).val();
+			     }
+				var start = $("#sTime"+i).val();
+				var temp = start*1 + duration*1;
+				
+				td += temp;
+			}
+			totalDuration = td; //set global var
+			$("#totalDuration").text(td);
+		}
+		
+		function displayEmus(data)
+		{
+			$("#displayBox").html("Name<br><br>");
+			$("#topBox").html("<p style='font-weight:bold;'>Current emulations:&nbsp&nbsp&nbsphover to veiw details</p>");
+			count = data.valueOf().collection.items.total;
+			$("#dlLink").html("<br><br>");
+			
+			if(count == 0)
+				$("#displayBox").html("No emulations to display")
+			else
+			{
+				emuNamesList = new Array();
+				if(data.valueOf().collection.items.emulation.length == null)
+					emuNamesList[0] = data.valueOf().collection.items.emulation
+					else
+						emuNamesList = data.valueOf().collection.items.emulation
+						
+				for(var i=0; i < count; i++){
+					var name = emuNamesList[i].name;
+					
+					$("#totalRuns").html("total runs<br><br>");
+					$("#failedRuns").html("failed<br><br>");
+					$("#AorI").html("state<br><br>");
+					
+					$.get(cocomaIP + "results/" + name, function(response){		//get results xml
+						var serializer = new XMLSerializer();				//transform xml response into json
+						var str = serializer.serializeToString(response);
+						var results = xml2json.parser(str);
+						
+						$("#totalRuns").append(results.valueOf().results.totalruns + "<br>");
+						$("#failedRuns").append(results.valueOf().results.failedruns + "<br>");
+						var aori = results.valueOf().results.emustate
+						if(aori == "Executed")
+							$("#AorI").append("<label style='color:#008C0D'>Executed</label><br>");
+						else if(aori == "Failed run(s)")
+                            $("#AorI").append("<label style='color:#BF0600'>Failed run(s)</label><br>");
+                        else if(aori == "Unexecuted run(s)")
+                            $("#AorI").append("<label style='color:#D98313'>Unexecuted run(s)</label><br>");
+                        else if(aori == "Pending Execution")
+                            $("#AorI").append("<label style='color:#9009DE'>Pending Execution</label><br>");
+						else
+							$("#AorI").append("<label style='color:#1E00B7'>Running</label><br>");
+						});
+
+					var l = ' onclick="emuClicked(&#39;'+name+'&#39;)"';
+					var m = ' onmouseover="emuHover(&#39;'+name+'&#39;)"';
+					$("#displayBox").append("<button class='list' "+l+m+" onmouseout='hideHelpBox(detailsPopup)'>"+name+"</button> <br>");
+				}
+				
+			        $.get(cocomaIP + "logs/emulations/", function(serverResponse){     //get results xml
+                    var serializer = new XMLSerializer();               //transform xml response into json
+                    var responseStr = serializer.serializeToString(serverResponse);
+                    var responseJSON = xml2json.parser(responseStr);
+                    
+                    logNameList = new Array()
+                    if (responseJSON.valueOf().collection.items.emulationlog.length == null)
+                        logNameList[0] = responseJSON.valueOf().collection.items.emulationlog;
+                    else
+                        logNameList = responseJSON.valueOf().collection.items.emulationlog;
+                        
+                    var logNameListLength = responseJSON.valueOf().collection.items.total;
+                    for(var y=0; y < count; y++){
+                        var listName = emuNamesList[y].name;
+                        var logFound = false
+                        for (var x=0; x < logNameListLength; x++){
+                            var logName = logNameList[x].name;
+                            if (logName == listName ) logFound = true;
+                            }
+                        
+                        if (logFound) $("#dlLink").append("<a href='"+ cocomaIP + "logs/emulations/" + listName +"' class='linktxt' id='"+listName+"'onclick='f(){return false;}'><img src='download.png' height='19'></a><br>");
+                        else $("#dlLink").append("<a class='linktxt' id='"+listName+"'onclick='f(){return false;}'><img src='noDownload.png' height='19'></a><br>");
+                        }
+                   });
+			}
+		}
+		
+		function emuClicked(name)
+		{
+			$.get(cocomaIP + "emulations/" + name, function(response){
+					$xml = $(response);
+					$("#ename").val(name);
+					console.log($xml);
+					var dists = $xml.find('distributions')
+					var distCount = dists.length;	//refers to numebr of dists in saved emulation about to be loaded
+					for(var i =1; i<= noOfDists; i++)		//start by removing all dists from display
+					{
+						try
+						{
+							$("#distArea"+i).remove();
+						}catch(e){}
+					}
+					
+					for(var i=0; i<distCount; i++)		//add a new dist form for every dist in emu
+					{
+						var n=i+1;
+						
+						newDistForm(n);		//load in all emu/dist/res options and set them to those specified in the emu beng loaded
+						$("#distName"+n).val(dists[i].attributes[1].nodeValue);
+						$("#sTime"+n).val(dists[i].childNodes[1].textContent);
+						$("#duration"+n).val(dists[i].childNodes[7].textContent);
+						$("#granularity"+n).val(dists[i].childNodes[3].textContent);
+						
+						var emuVal = dists[i].childNodes[13].attributes[1].nodeValue;
+						var distVal = dists[0].childNodes[5].attributes[1].textContent
+						var resVal =  convertResType(dists[0].childNodes[15].childNodes[1].textContent)
+						var extraParamVals = dists[i];
+						
+						populateEmulatorList(n, emuVal, distVal, resVal, extraParamVals);
+					}
+				
+				});
+		}
+		
+		function convertResType(res)		//convert from XML resource type to GUI readable resource type
+		{
+			var parsed = "";
+			switch(res)
+			{
+			case "mem":
+				parsed = "Memory"
+				break;
+			case "cpu":
+				parsed = "CPU"
+				break;
+			case "io":
+				parsed = "I/O"
+				break;
+			case "net":
+				parsed = "Net"
+				break;
+			default:
+				alert("resource name error");
+			}
+			return parsed;
+		}
+		
+		function emuHover(name)		//display details of emulations when mouse is hovered over name in list
+		{
+			var details = "";
+			$.get(cocomaIP + "emulations/" + name, function(response){
+
+				//var detailsObject = response.documentElement
+				$xml = $(response);
+								
+				details += "Emulation name: "+name+"<br><hr><br>"
+				+" Start time: <label style='float:right'>"+unparseDate($xml.find('emuStartTime').text())+"</label><br>"
+				+" Duration: <label style='float:right'>"+ $xml.find('emuStopTime').text() +" s</label><br>";
+
+				var dists = $xml.find('distributions')
+				var noofDists = dists.length
+				
+				for(var i =0; i<noofDists; i++)
+				{
+					details += "<br>"+ dists[i].attributes[1].nodeValue +":<br>";
+
+					for(var j=0; j<dists[i].childNodes.length; j++)	//loops through and display dist parameters
+					{
+						if(dists[i].childNodes[j].nodeName == "emulator")
+							details += "&emsp;&emsp;"+ dists[i].childNodes[j].nodeName + ": <label style='float:right;'>"+ dists[i].childNodes[j].attributes[1].textContent +"</label><br>";
+							else if(dists[i].childNodes[j].nodeName == "distribution")
+							{
+								details += "&emsp;&emsp;distribution: <label style='float:right;'>"+ dists[i].childNodes[j].attributes.name.textContent +"</label><br>";
+							}
+							else if(dists[i].childNodes[j].nodeName == "emulator-params")
+							{
+								details += "&emsp;&emsp;Emulator parameters:<br>"
+								for(var k=0; k<dists[i].childNodes[j].childNodes.length; k++)
+								{
+									if(dists[i].childNodes[j].childNodes[k].nodeName[0] != "#")
+										details += "&emsp;&emsp;&emsp;&emsp;"+ dists[i].childNodes[j].childNodes[k].nodeName + ": <label style='float:right;'>"+ dists[i].childNodes[j].childNodes[k].textContent + "</label><br>";
+								}	
+							}
+							else if(dists[i].childNodes[j].nodeName[0] != "#")
+							details += "&emsp;&emsp;"+ dists[i].childNodes[j].nodeName + ": <label style='float:right;'>"+ dists[i].childNodes[j].textContent +"</label><br>";
+					}
+				}
+				
+				details += "<br><label style='color: #0F77B2; font-size:10px; float:right'>Click to hide</label>";
+				$("#detailsPopup").html(details);
+				
+				if((mouseY + $("#detailsPopup").height() >= $(document).height()) && ($("#detailsPopup").height() < mouseY))
+					$("#detailsPopup").css('top', mouseY - $("#detailsPopup").height() -30);
+				else
+					$("#detailsPopup").css('top', mouseY + 10);
+				$("#detailsPopup").css('left', $("#displayBox").position().left);
+				$("#detailsPopup").css('display', 'block');
+				});
+		}
+		
+		function hidePopups()
+		{
+			$("#detailsPopup").fadeOut();
+		}
+			
+		function unparseDate(d)		//convert xml date into format for display 
+		{
+			var unparsed = "";
+			unparsed += d[8]+d[9]+"/"+d[5]+d[6]+"/"+d[0]+d[1]+d[2]+d[3]+"  "+(d.split("t")[1]);
+			return unparsed;
+		}
+
+		function writeEmuXML(time)
+		{
+			var xml = "<emulation>";
+			xml += CE("emuname", $("#ename").val());
+			xml += CE("emuType", "Mix");
+			xml += CE("emuresourceType", "Mix");		//change for other resource types !!MIX
+			xml += CE("emustartTime", time);	
+			xml += CE("emustopTime", totalDuration);
+			
+			for(var j=1; j<=noOfDists; j++)
+			{
+				if($("#sTime"+ j).val() != null)		//if hasnt been deleted
+				{
+					xml += "<distributions>";
+						var dist = $("#distSelect"+j+" :selected").text();
+						if($("#locCheck"+j).is(":checked"))
+							xml += CE("runloc", "local");
+						else
+							xml += CE("runloc", $("#remoteIP"+j).val());
+						xml += CE("name", $("#distName"+j).val());
+						xml += CE("startTime", $("#sTime"+j).val());
+						xml += CE("duration", $("#duration"+j).val());
+						xml += CE("granularity", $("#granularity"+j).val());
+						xml += "<distribution href='/distributions/"+ dist +"' name='"+ dist +"' />";
+						for(var i=0; i<distParams[j].length; i++)
+						{
+							var n= "#"+distParams[j][i];
+							xml += CE(distParams[j][i], $(n).val());
+						}
+						var emu = $("#emulatorSelect"+j+" :selected").text();
+						xml += "<emulator href='/emulators/"+emu+"' name='"+emu+"'/><emulator-params>";
+						xml += CE("resourceType", convertRType($("#resourceSelect"+j+" :selected").text()));
+						for(var i=0; i<emuParams[j].length; i++)
+						{
+							var n = "#"+emuParams[j][i];
+							xml += CE(emuParams[j][i], $(n).val());
+						}
+						xml += "</emulator-params>";
+					xml += "</distributions>";
+				}
+			}
+			//log info:
+			if($("#loggingCheck").is(":checked"))			
+				xml += "<log><enable>1</enable>";
+			else
+				xml += "<log><enable>0</enable>";
+			xml += "<frequency>"+ $("#logFreq").val() +"</frequency><logLevel>"+ $("#logLevel").val() +"</logLevel></log>";
+			
+			//mq info:
+			if($("#mqCheck").is(":checked"))
+			{
+				xml += "<mq><enabled>yes</enabled>";
+				xml += CE("vhost", $("#vhost").val());
+				xml += CE("exchange", $("#exchange").val());
+				xml += CE("user", $("#user").val());
+				xml += CE("password", $("#password").val());
+				xml += CE("host", $("#host").val());
+				xml += CE("topic", $("#topic").val());
+				xml += "</mq>";
+			}
+			
+			xml += "</emulation>";
+			
+			console.log(xml);
+			//$("#displayBox").html(convertXML(xml));		//for display of xml on page
+			
+			return xml;
+		}
+		
+		function CE(name, data)			//create element from name and data
+		{
+			return "<"+ name +">"+ data +"</"+ name +">";
+		}
+		
+		function convertRType(type) //convert resource to XML suitable string
+		{
+			var returnType = "";
+			switch(type)
+			{
+			case "Memory":
+				returnType = "MEM";
+				break;
+			case "I/O":
+				returnType = "IO";
+				break;
+			case "CPU":
+				returnType = "CPU";
+				break;
+			case "Net":
+				returnType = "NET";
+				break;
+			}
+			return returnType;
+		}
+		
+		function checkdate(input)
+		{
+			var validformat=/^\d{2}\/\d{2}\/\d{4}$/ //Basic check for format validity
+			var returnval=false
+			
+			if (!validformat.test(input))
+				alert("Invalid Date Format")
+			else{ //Detailed check for valid date ranges
+				returnval =true;
+			}
+			if (!returnval)
+			{
+				input = "";
+			} 
+			return returnval;
+		}
+		
+		function checktime(input)
+		{
+			var valid = true;
+			var validformat= /^\d{2}\:\d{2}$/
+			if(validformat.test(input))
+			{
+				var hours = input.split(":")[0];
+				var minutes = input.split(":")[1];
+				if(hours <0 || hours >23)
+					valid = false;
+				if(minutes<0 || minutes>59)
+					valid = false;
+			}else valid = false;
+			
+			if(!valid)
+			{
+				alert("Invalid time");
+				input = "";
+			}
+			return valid;	
+		}
+		
+		function convertXML(xml)	//converts an XML string so it can be displayed in and html page
+		{
+			var output = "";
+			for(var i=0; i<xml.length; i++)
+			{
+				if(xml[i] == "<")
+					output += "&lt";
+				else if(xml[i] == ">")
+				{
+					output += "&gt";
+					try{
+						if(xml[i+1] == "<")
+							output += "<br>";
+					}catch(e){}
+				}
+				else output += xml[i];
+			}
+			return output;
+		}
+		
+	</script>
+
+</body>
+</html>

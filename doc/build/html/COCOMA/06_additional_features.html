@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Additional Features &mdash; COCOMA 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="prev" title="XML Examples" href="05_examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="05_examples.html" title="XML Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="additional-features">
+<h1>Additional Features<a class="headerlink" href="#additional-features" title="Permalink to this headline">¶</a></h1>
+<p>In this section the additional features of COCOMA will be discussed</p>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>COCOMA has two main sets of tests supplied with it; <strong>API Tests</strong> and <strong>Command Line Interface (CLI) Tests</strong>. Both of which are implemented using python&#8217;s unit testing framework (pyUnit)</p>
+<p>The test files (<strong>TestAPI</strong> and <strong>TestCLI</strong>) are located in <em>&#8220;/usr/share/pyshared/cocoma/unitTest&#8221;</em></p>
+<p>To run a set of tests on the API or CLI, navigate to the <em>unitTest</em> folder and use on of the commands:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -m unittest -v TestAPI
+<span class="nv">$ </span>python -m unittest -v TestCLI
+</pre></div>
+</div>
+<p>The <em>-v</em> argument gives more verbose output, and may be omitted if required</p>
+<p>Individual test results are output to the terminal in the format <tt class="docutils literal"><span class="pre">test_Emulators</span> <span class="pre">(TestAPI.TestAPI)</span> <span class="pre">...</span> <span class="pre">ok</span></tt> if the test was successful
+An unsuccessful test will produce the same outoput, with <em>ERROR</em> or <em>FAIL</em> instead of <em>ok</em></p>
+<p>Once all the tests in the  file have run, a summary of the results will be printed. This will indicate which (if any) tests were unsuccessful, and attempt to give a reason why the test failed</p>
+<div class="section" id="cli-testing">
+<h3>CLI Testing<a class="headerlink" href="#cli-testing" title="Permalink to this headline">¶</a></h3>
+<p>Individual tests can be run on the CLI using the syntax</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -m unittest TestCLI.TestCLI.test_Name
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">test_Name</span></tt> is replaced by one of the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test_EMU_CPU</span>
+<span class="n">test_EMU_IO</span>
+<span class="n">test_EMU_IOTrap</span>
+<span class="n">test_EMU_MEM</span>
+<span class="n">test_EMU_MEMTrap</span>
+<span class="n">test_EMU_MULTI1</span>
+<span class="n">test_EMU_MULTI2</span>
+<span class="n">test_EMU_NETWORK</span>
+<span class="n">test_EMU_NowOperator</span>
+
+<span class="n">test_Scheduler_Start</span>
+<span class="n">test_Scheduler_Show</span>
+<span class="n">test_Scheduler_Stop</span>
+
+<span class="n">test_API_Start</span>
+<span class="n">test_API_Show</span>
+<span class="n">test_API_Stop</span>
+
+<span class="n">test_Help</span>
+<span class="n">test_Version</span>
+<span class="n">test_List</span>
+<span class="n">test_Result</span>
+<span class="n">test_Distributions</span>
+<span class="n">test_Emulators</span>
+<span class="n">test_Purge</span>
+<span class="n">test_Jobs</span>
+</pre></div>
+</div>
+<p>This will produce output similar to running the entire set of tests</p>
+</div>
+<div class="section" id="api-testing">
+<h3>API Testing<a class="headerlink" href="#api-testing" title="Permalink to this headline">¶</a></h3>
+<p>Individual tests can be run on the API using the syntax</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -m unittest TestAPI.TestAPI.test_Name
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">test_Name</span></tt> is replaced by one of the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test_List_Emulation</span>
+<span class="n">test_List_Emulator</span>
+<span class="n">test_List_Distributions</span>
+<span class="n">test_List_Results</span>
+<span class="n">test_List_Logs</span>
+<span class="n">test_List_SysLogs</span>
+<span class="n">test_List_EmuLogs</span>
+<span class="n">test_List_Tests</span>
+
+<span class="n">test_EMU_Logs</span>
+<span class="n">test_EMUcr_IO</span>
+<span class="n">test_EMUcr_IOtrap</span>
+<span class="n">test_EMUcr_MEM</span>
+<span class="n">test_EMUcr_MEMtrap</span>
+<span class="n">test_EMUcr_NETWORK</span>
+<span class="n">test_EMUcr_MULTI1</span>
+<span class="n">test_EMUcr_MULTI2</span>
+</pre></div>
+</div>
+<p>This will produce output similar to running the entire set of tests</p>
+</div>
+</div>
+<div class="section" id="resource-overloading">
+<h2>Resource Overloading<a class="headerlink" href="#resource-overloading" title="Permalink to this headline">¶</a></h2>
+<p>In order to prevent resources from becoming Overloaded (using more than 100% of a resource at a point in time,) the system calculates the resource usage before any Emulation is run.</p>
+<p>If an Emulation would cause any of the resources to become overloaded, then that emulation will not run and an exception will be raised with the format:</p>
+<div class="highlight-python"><pre>Unable to create distribution:
+CPU resource will become Overloaded: Stopping execution</pre>
+</div>
+</div>
+<div class="section" id="abstract-classes">
+<h2>Abstract Classes<a class="headerlink" href="#abstract-classes" title="Permalink to this headline">¶</a></h2>
+<p>When adding a new Emulator or Distribution class they should extend their respective abstract class. This requires the new class to contain the following code:</p>
+<ul class="simple">
+<li>For Emulators</li>
+</ul>
+<dl class="docutils">
+<dt>::</dt>
+<dd><p class="first">sys.path.insert(0, getHomepath() + &#8216;/emulators/&#8217;)
+from abstract_emu import *</p>
+<dl class="last docutils">
+<dt>class run_yourEmulatorName(abstract_emu):</dt>
+<dd>pass</dd>
+</dl>
+</dd>
+</dl>
+<ul class="simple">
+<li>For Distributions</li>
+</ul>
+<dl class="docutils">
+<dt>::</dt>
+<dd><p class="first">sys.path.insert(0, getHomepath() + &#8216;/distributions/&#8217;)
+from abstract_dist import *</p>
+<dl class="last docutils">
+<dt>class dist_yourDistributionName(abstract_dist):</dt>
+<dd>pass</dd>
+</dl>
+</dd>
+</dl>
+<p>This feature was added to minimize problems caused by adding new emulators or distributions</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Additional Features</a><ul>
+<li><a class="reference internal" href="#testing">Testing</a><ul>
+<li><a class="reference internal" href="#cli-testing">CLI Testing</a></li>
+<li><a class="reference internal" href="#api-testing">API Testing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resource-overloading">Resource Overloading</a></li>
+<li><a class="reference internal" href="#abstract-classes">Abstract Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="05_examples.html"
+                        title="previous chapter">XML Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/COCOMA/06_additional_features.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="05_examples.html" title="XML Examples"
+             >previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, SAP.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

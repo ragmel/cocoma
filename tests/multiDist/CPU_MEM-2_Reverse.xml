@@ -1,0 +1,52 @@
+ <emulation>
+      <emuname>CPU_and_Mem</emuname>
+      <emutype>Mix</emutype>
+      <emuresourceType>MIX</emuresourceType>
+      <emustartTime>now</emustartTime>
+      <!--duration in seconds -->
+      <emustopTime>100</emustopTime>
+
+      <distributions>
+        <name>CPU_distro</name>
+        <startTime>0</startTime>
+        <!--duration in seconds -->
+        <duration>70</duration>
+        <granularity>10</granularity>
+        <distribution href="/distributions/linear" name="linear" />
+        <!--cpu utilization distribution range-->
+        <startLoad>95</startLoad>
+        <stopLoad>10</stopLoad>
+        <emulator href="/emulators/lookbusy" name="lookbusy" />
+        <emulator-params>
+            <resourceType>CPU</resourceType>
+            <!--Number of CPUs to keep busy (default: autodetected)-->
+            <ncpus>0</ncpus>
+        </emulator-params>
+     </distributions>
+
+     <distributions >
+        <name>MEM_Distro</name>
+        <startTime>40</startTime>
+        <!--duration in seconds -->
+        <duration>60</duration>
+        <granularity>10</granularity>
+        <distribution href="/distributions/linear" name="linear" />
+        <!--Megabytes for memory -->
+        <startLoad>1000</startLoad>
+        <stopLoad>100</stopLoad>
+        <malloclimit>4095</malloclimit>
+        <emulator href="/emulators/lookbusy" name="lookbusy" />
+         <emulator-params>
+             <resourceType>MEM</resourceType>
+             <memSleep>0</memsleep>
+        </emulator-params>
+     </distributions>
+
+     <log>
+        <!-- Use value "1" to enable logging(by default logging is off)  -->
+        <enable>0</enable>
+        <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+        <frequency>3</frequency>
+     </log>
+</emulation>
+
