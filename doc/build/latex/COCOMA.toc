@@ -8,14 +8,14 @@
 \contentsline {subsubsection}{REST API}{iv}{subsubsection*.18}
 \contentsline {paragraph}{Index}{iv}{paragraph*.19}
 \contentsline {paragraph}{Description}{v}{paragraph*.20}
-\contentsline {subsubsection}{XML payload structure}{ix}{subsubsection*.21}
+\contentsline {subsubsection}{XML payload structure}{x}{subsubsection*.21}
 \contentsline {subsection}{\numberline {2.3}Creating Emulation via CLI}{xi}{subsection.2.3}
 \contentsline {subsection}{\numberline {2.4}Creating Emulation via API Client (Restfully)}{xiii}{subsection.2.4}
 \contentsline {subsection}{\numberline {2.5}XML Examples}{xv}{subsection.2.5}
 \contentsline {subsubsection}{CPU}{xv}{subsubsection*.22}
-\contentsline {subsubsection}{I/O}{xv}{subsubsection*.23}
+\contentsline {subsubsection}{I/O}{xvi}{subsubsection*.23}
 \contentsline {subsubsection}{Memory}{xvii}{subsubsection*.24}
-\contentsline {subsubsection}{Network}{xviii}{subsubsection*.25}
-\contentsline {subsubsection}{Multiple distributions emulation}{xix}{subsubsection*.26}
+\contentsline {subsubsection}{Network}{xix}{subsubsection*.25}
+\contentsline {subsubsection}{Multiple distributions emulation}{xx}{subsubsection*.26}
 \contentsline {section}{\numberline {3}Indices and tables}{xxii}{section.3}
 \contentsline {chapter}{Index}{xxiii}{section*.27}

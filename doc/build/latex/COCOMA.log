@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.1.16)  22 APR 2013 14:09
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.5.7)  6 JUN 2013 11:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -939,56 +939,106 @@ LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
 (Font)              Font shape `T1/pcr/m/sl' tried instead on input line 353.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
 (Font)              Font shape `T1/pcr/b/n' tried instead on input line 354.
- [5] [6]
+ [5]
+! FancyVerb Error:
+  Empty verbatim environment
+.
+\FV@Error ... {FancyVerb Error:
+\space \space #1
+}
+                                                  
+l.485 \end{Verbatim}
+                    
+? 
+
+Underfull \hbox (badness 10000) in paragraph at lines 504--507
+[]\T1/ptm/m/n/10 ioBlockSize - Size of
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 514--516
+[]\T1/ptm/m/n/10 &lt;resourceType&gt;CPU&lt;/resourceType&gt;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 525--528
+[]\T1/ptm/m/n/10 <upperBound>100</upperBound> <lower-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 539--542
+[]\T1/ptm/m/n/10 <upperBound>999999999</upperBound> <lower-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 549--551
+[]\T1/ptm/m/n/10 <upperBound>9999999</upperBound> <lower-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 560--563
+[]\T1/ptm/m/n/10 <upperBound>999999999</upperBound> <lower-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 576--579
+[]\T1/ptm/m/n/10 </info> <link href=''/'' rel=''parent'' type=''application/vnd
+.bonfire+xml''/> <link
+ []
+
 [7] [8] [9] [10] [11] [12]
-Underfull \hbox (badness 10000) in paragraph at lines 948--949
+Underfull \hbox (badness 10000) in paragraph at lines 1020--1021
 []\T1/pcr/m/n/10 (logger reply) - (emulationID-name) - (distribution ID) - (run
  number} -
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 948--949
+Underfull \hbox (badness 10000) in paragraph at lines 1020--1021
 \T1/pcr/m/n/10 (distribution name) - (distribution module) - (resource) - (stre
 ss value) -
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 952--953
+Underfull \hbox (badness 10000) in paragraph at lines 1024--1025
 []\T1/pcr/m/n/10 (logger reply) - (emulationID-name) - (logger mark) - {poll in
 terval} - (start
  []
 
-[13] [14] [15]
-Underfull \vbox (badness 3895) detected at line 1195
+[13] [14] [15] [16] [17]
+Underfull \vbox (badness 3895) detected at line 1352
  []
 
-[16] [17] [18] [19]
-Underfull \vbox (badness 3895) detected at line 1474
+[18] [19] [20]
+Overfull \vbox (0.92825pt too high) detected at line 1546
  []
 
-[20] [21] (./COCOMA.ind [22] [23
+[21] (./COCOMA.ind [22] [23
 
 
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1493.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1493.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1565.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1565.
  (./COCOMA.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1493.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1493.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1565.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1565.
 
 Package rerunfilecheck Info: File `COCOMA.out' has not changed.
 (rerunfilecheck)             Checksum: 47B6EE2E8791448532E10F916DB04F65;1198.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1493.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1565.
  ) 
 Here is how much of TeX's memory you used:
  8891 strings out of 495059
- 123436 string characters out of 3182030
- 235445 words of memory out of 3000000
+ 123436 string characters out of 3182031
+ 229444 words of memory out of 3000000
  11830 multiletter control sequences out of 15000+200000
  57051 words of font info for 64 fonts, out of 3000000 for 9000
  15 hyphenation exceptions out of 8191
- 36i,11n,45p,738b,459s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,11n,45p,738b,516s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
@@ -998,10 +1048,10 @@ uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb>
 texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /urw/times/utmri8a.pfb>
-Output written on COCOMA.pdf (23 pages, 177906 bytes).
+Output written on COCOMA.pdf (23 pages, 179103 bytes).
 PDF statistics:
- 293 PDF objects out of 1000 (max. 8388607)
- 255 compressed objects within 3 object streams
+ 294 PDF objects out of 1000 (max. 8388607)
+ 256 compressed objects within 3 object streams
  59 named destinations out of 1000 (max. 500000)
  150 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -26,7 +26,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
-    <link rel="prev" title="Creating Emulation via API Client (Restfully)" href="04_api_examples.html" /> 
+    <link rel="next" title="Additional Features" href="06_additional_features.html" />
+    <link rel="prev" title="Creating Emulation via the Web UI" href="07_webUI.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,7 +37,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="04_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+          <a href="06_additional_features.html" title="Additional Features"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="07_webUI.html" title="Creating Emulation via the Web UI"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>
@@ -89,8 +93,7 @@
 34
 35
 36
-37
-38</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+37</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>CPU_EMU<span class="nt">&lt;/emuname&gt;</span>
   <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -112,7 +115,6 @@
       <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
 
       <span class="nt">&lt;emulator-params&gt;</span>
-        <span class="c">&lt;!--more parameters will be added --&gt;</span>
         <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
        <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
        <span class="nt">&lt;ncpus&gt;</span>1<span class="nt">&lt;/ncpus&gt;</span>
@@ -173,8 +175,7 @@
 37
 38
 39
-40
-41</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+40</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>IO_EMU<span class="nt">&lt;/emuname&gt;</span>
   <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>IO<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -191,17 +192,16 @@
      <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;startLoad&gt;</span>1<span class="nt">&lt;/startLoad&gt;</span>
-      <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;startLoad&gt;</span>1<span class="nt">&lt;/startLoad&gt;</span>
+     <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
+     <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
 
       <span class="nt">&lt;emulator-params&gt;</span>
-        <span class="c">&lt;!--more parameters will be added --&gt;</span>
         <span class="nt">&lt;resourceType&gt;</span>IO<span class="nt">&lt;/resourceType&gt;</span>
-       <span class="c">&lt;!--Size of mem in MB used--&gt;</span>
-       <span class="nt">&lt;memsize&gt;</span>1000<span class="nt">&lt;/memsize&gt;</span>
-       <span class="c">&lt;!--Number of threads--&gt;</span>
-       <span class="nt">&lt;memThreads&gt;</span>10<span class="nt">&lt;/memThreads&gt;</span>
+        <span class="c">&lt;!--Size of mem in MB used--&gt;</span>
+        <span class="nt">&lt;memsize&gt;</span>1000<span class="nt">&lt;/memsize&gt;</span>
+        <span class="c">&lt;!--Number of threads--&gt;</span>
+        <span class="nt">&lt;memThreads&gt;</span>10<span class="nt">&lt;/memThreads&gt;</span>
       <span class="nt">&lt;/emulator-params&gt;</span>
 
   <span class="nt">&lt;/distributions&gt;</span>
@@ -257,8 +257,7 @@
 37
 38
 39
-40
-41</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+40</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>IO_EMU<span class="nt">&lt;/emuname&gt;</span>
   <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>IO<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -275,17 +274,16 @@
      <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/trapezoidal&quot;</span> <span class="na">name=</span><span class="s">&quot;trapezoidal&quot;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;startLoad&gt;</span>1<span class="nt">&lt;/startLoad&gt;</span>
-      <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;startLoad&gt;</span>1<span class="nt">&lt;/startLoad&gt;</span>
+     <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
+     <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
 
       <span class="nt">&lt;emulator-params&gt;</span>
-        <span class="c">&lt;!--more parameters will be added --&gt;</span>
         <span class="nt">&lt;resourceType&gt;</span>IO<span class="nt">&lt;/resourceType&gt;</span>
-       <span class="c">&lt;!--Size of mem in MB used--&gt;</span>
-       <span class="nt">&lt;memsize&gt;</span>1000<span class="nt">&lt;/memsize&gt;</span>
-       <span class="c">&lt;!--Number of threads--&gt;</span>
-       <span class="nt">&lt;memThreads&gt;</span>10<span class="nt">&lt;/memThreads&gt;</span>
+        <span class="c">&lt;!--Size of mem in MB used--&gt;</span>
+        <span class="nt">&lt;memsize&gt;</span>1000<span class="nt">&lt;/memsize&gt;</span>
+        <span class="c">&lt;!--Number of threads--&gt;</span>
+        <span class="nt">&lt;memThreads&gt;</span>10<span class="nt">&lt;/memThreads&gt;</span>
       <span class="nt">&lt;/emulator-params&gt;</span>
 
   <span class="nt">&lt;/distributions&gt;</span>
@@ -356,15 +354,15 @@
      <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
-     <span class="c">&lt;!--Megabytes for memory --&gt;</span>
-      <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
-      <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-              <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;emulator-params&gt;</span>
-                     <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
-                     <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
-      <span class="nt">&lt;/emulator-params&gt;</span>
+     <span class="c">&lt;!--Memory usage (Megabytes) --&gt;</span>
+     <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
+     <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
+     <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
+     <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;emulator-params&gt;</span>
+         <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
+         <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
+     <span class="nt">&lt;/emulator-params&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
 
   <span class="nt">&lt;log&gt;</span>
@@ -431,14 +429,14 @@
      <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/trapezoidal&quot;</span> <span class="na">name=</span><span class="s">&quot;trapezoidal&quot;</span> <span class="nt">/&gt;</span>
      <span class="c">&lt;!--Megabytes for memory --&gt;</span>
-      <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
-      <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;emulator-params&gt;</span>
-                     <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
-                     <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
-      <span class="nt">&lt;/emulator-params&gt;</span>
+     <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
+     <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
+     <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
+     <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;emulator-params&gt;</span>
+         <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
+         <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
+     <span class="nt">&lt;/emulator-params&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
 
   <span class="nt">&lt;log&gt;</span>
@@ -505,26 +503,26 @@
   <span class="nt">&lt;emustopTime&gt;</span>155<span class="nt">&lt;/emustopTime&gt;</span>
 
   <span class="nt">&lt;distributions&gt;</span>
-   <span class="nt">&lt;name&gt;</span>NET_distro<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;name&gt;</span>NET_distro<span class="nt">&lt;/name&gt;</span>
      <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
      <span class="c">&lt;!--duration in seconds --&gt;</span>
      <span class="nt">&lt;duration&gt;</span>150<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>10<span class="nt">&lt;/granularity&gt;</span>
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
-   <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
-      <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
-      <span class="c">&lt;!-- set target bandwidth to bits per sec --&gt;</span>
-      <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/iperf&quot;</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span> <span class="nt">/&gt;</span>
-    <span class="nt">&lt;emulator-params&gt;</span>
+     <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+     <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
+     <span class="c">&lt;!-- set target bandwidth to bits per sec --&gt;</span>
+     <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
+     <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/iperf&quot;</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;emulator-params&gt;</span>
         <span class="nt">&lt;resourceType&gt;</span>NET<span class="nt">&lt;/resourceType&gt;</span>
         <span class="nt">&lt;serverip&gt;</span>172.18.254.234<span class="nt">&lt;/serverip&gt;</span>
-                <span class="c">&lt;!--Leave &quot;0&quot; for default 5001 port --&gt;</span>
-                <span class="nt">&lt;serverport&gt;</span>5001<span class="nt">&lt;/serverport&gt;</span>
-                <span class="nt">&lt;clientip&gt;</span>172.18.254.236<span class="nt">&lt;/clientip&gt;</span>
-                <span class="nt">&lt;clientport&gt;</span>5001<span class="nt">&lt;/clientport&gt;</span>
-                <span class="nt">&lt;packettype&gt;</span>UDP<span class="nt">&lt;/packettype&gt;</span>
-                <span class="nt">&lt;/emulator-params&gt;</span>
+        <span class="c">&lt;!--Leave &quot;0&quot; for default 5001 port --&gt;</span>
+        <span class="nt">&lt;serverport&gt;</span>5001<span class="nt">&lt;/serverport&gt;</span>
+        <span class="nt">&lt;clientip&gt;</span>172.18.254.236<span class="nt">&lt;/clientip&gt;</span>
+        <span class="nt">&lt;clientport&gt;</span>5001<span class="nt">&lt;/clientport&gt;</span>
+        <span class="nt">&lt;packettype&gt;</span>UDP<span class="nt">&lt;/packettype&gt;</span>
+        <span class="nt">&lt;/emulator-params&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
 
   <span class="nt">&lt;log&gt;</span>
@@ -537,10 +535,98 @@
 <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
+<p>In the following example a different emulator named <em>backfuzz</em> will be used with its proprietary distribution <em>fuzz</em>. This combination is used to simulate malicious network activity by sending a series of random requests and data to the specified server</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+ <span class="nt">&lt;emuname&gt;</span>MAL_EMU<span class="nt">&lt;/emuname&gt;</span>
+ <span class="nt">&lt;emuType&gt;</span>NET<span class="nt">&lt;/emuType&gt;</span>
+ <span class="nt">&lt;emuresourceType&gt;</span>NET<span class="nt">&lt;/emuresourceType&gt;</span>
+ <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
+ <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+ <span class="c">&lt;!--duration in seconds --&gt;</span>
+ <span class="nt">&lt;emustopTime&gt;</span>120<span class="nt">&lt;/emustopTime&gt;</span>
+
+ <span class="nt">&lt;distributions&gt;</span>
+    <span class="nt">&lt;name&gt;</span>MAL_Distro1<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+    <span class="nt">&lt;duration&gt;</span>120<span class="nt">&lt;/duration&gt;</span>
+    <span class="c">&lt;!-- Granularity isn&#39;t required, can be any value --&gt;</span>
+    <span class="nt">&lt;granularity&gt;</span>0<span class="nt">&lt;/granularity&gt;</span>
+    <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/fuzz&quot;</span> <span class="na">name=</span><span class="s">&quot;fuzz&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
+    <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/backfuzz&quot;</span> <span class="na">name=</span><span class="s">&quot;backfuzz&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;emulator-params&gt;</span>
+        <span class="nt">&lt;resourceType&gt;</span>NET<span class="nt">&lt;/resourceType&gt;</span>
+        <span class="c">&lt;!-- Difference between MIN and MAX fuzz values --&gt;</span>
+        <span class="nt">&lt;fuzzRange&gt;</span>900<span class="nt">&lt;/fuzzRange&gt;</span>
+        <span class="c">&lt;!-- IP and port of remote COCOMA instance --&gt;</span>
+        <span class="nt">&lt;serverip&gt;</span>10.55.168.238<span class="nt">&lt;/serverip&gt;</span>
+        <span class="nt">&lt;serverport&gt;</span>51889<span class="nt">&lt;/serverport&gt;</span>
+        <span class="c">&lt;!-- Type of packet to use for fuzzing --&gt;</span>
+        <span class="nt">&lt;packettype&gt;</span>HTTP<span class="nt">&lt;/packettype&gt;</span>
+        <span class="c">&lt;!-- Time to pause on each fuzz value in s (leave as 0 for default of 0.8s) --&gt;</span>
+        <span class="nt">&lt;timedelay&gt;</span>1<span class="nt">&lt;/timedelay&gt;</span>
+        <span class="c">&lt;!-- Value to increment by --&gt;</span>
+        <span class="nt">&lt;salt&gt;</span>50<span class="nt">&lt;/salt&gt;</span>
+    <span class="nt">&lt;/emulator-params&gt;</span>
+ <span class="nt">&lt;/distributions&gt;</span>
+
+ <span class="nt">&lt;log&gt;</span>
+  <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+  <span class="nt">&lt;enable&gt;</span>0<span class="nt">&lt;/enable&gt;</span>
+  <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+  <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
+  <span class="nt">&lt;logLevel&gt;</span>debug<span class="nt">&lt;/logLevel&gt;</span>
+ <span class="nt">&lt;/log&gt;</span>
+
+<span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</td></tr></table></div>
 </div>
 <div class="section" id="multiple-distributions-emulation">
 <h2>Multiple distributions emulation<a class="headerlink" href="#multiple-distributions-emulation" title="Permalink to this headline">¶</a></h2>
-<p>A good feature of COCOMA is the ability to combine multiple distributions within the same emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource. Distributions can overlap, meaning two distributions can run at the same time frame. If distributions for the same resource overlap and they exceed the available resources, the runs might crash.</p>
+<p>An important feature of COCOMA is the ability to combine multiple distributions within the same emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource. Distributions can overlap, meaning two distributions can run at the same time frame. If distributions for the same resource overlap and they exceed the available resources, the runs might crash.</p>
 <ul class="simple">
 <li>CPU and Memory example</li>
 </ul>
@@ -594,59 +680,57 @@
 48
 49
 50
-51
-52</pre></div></td><td class="code"><div class="highlight"><pre>       <span class="nt">&lt;emulation&gt;</span>
-           <span class="nt">&lt;emuname&gt;</span>CPU_and_Mem<span class="nt">&lt;/emuname&gt;</span>
-           <span class="nt">&lt;emutype&gt;</span>Mix<span class="nt">&lt;/emutype&gt;</span>
-           <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
-           <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
-           <span class="c">&lt;!--duration in seconds --&gt;</span>
-           <span class="nt">&lt;emustopTime&gt;</span>80<span class="nt">&lt;/emustopTime&gt;</span>
+51</pre></div></td><td class="code"><div class="highlight"><pre> <span class="nt">&lt;emulation&gt;</span>
+     <span class="nt">&lt;emuname&gt;</span>CPU_and_Mem<span class="nt">&lt;/emuname&gt;</span>
+     <span class="nt">&lt;emutype&gt;</span>Mix<span class="nt">&lt;/emutype&gt;</span>
+     <span class="nt">&lt;emuresourceType&gt;</span>MIX<span class="nt">&lt;/emuresourceType&gt;</span>
+     <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;emustopTime&gt;</span>80<span class="nt">&lt;/emustopTime&gt;</span>
 
-           <span class="nt">&lt;distributions&gt;</span>
-            <span class="nt">&lt;name&gt;</span>CPU_distro<span class="nt">&lt;/name&gt;</span>
-            <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
-            <span class="c">&lt;!--duration in seconds --&gt;</span>
-            <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
-            <span class="nt">&lt;granularity&gt;</span>1<span class="nt">&lt;/granularity&gt;</span>
-            <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
-            <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
-            <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
-            <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
-            <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
-            <span class="nt">&lt;emulator-params&gt;</span>
-                 <span class="c">&lt;!--more parameters will be added --&gt;</span>
-                 <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
-                 <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
-                 <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
-            <span class="nt">&lt;/emulator-params&gt;</span>
-          <span class="nt">&lt;/distributions&gt;</span>
+     <span class="nt">&lt;distributions&gt;</span>
+        <span class="nt">&lt;name&gt;</span>CPU_distro<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+        <span class="c">&lt;!--duration in seconds --&gt;</span>
+        <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
+        <span class="nt">&lt;granularity&gt;</span>1<span class="nt">&lt;/granularity&gt;</span>
+        <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+        <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+        <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+        <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
+        <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;emulator-params&gt;</span>
+             <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+             <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+             <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+        <span class="nt">&lt;/emulator-params&gt;</span>
+     <span class="nt">&lt;/distributions&gt;</span>
 
-           <span class="nt">&lt;distributions</span> <span class="nt">&gt;</span>
-              <span class="nt">&lt;name&gt;</span>MEM_Distro<span class="nt">&lt;/name&gt;</span>
-              <span class="nt">&lt;startTime&gt;</span>20<span class="nt">&lt;/startTime&gt;</span>
-              <span class="c">&lt;!--duration in seconds --&gt;</span>
-              <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
-              <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
-              <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
-              <span class="c">&lt;!--Megabytes for memory --&gt;</span>
-               <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
-               <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-               <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
-                               <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
-                               <span class="nt">&lt;emulator-params&gt;</span>
-                                     <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
-                                     <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
-                               <span class="nt">&lt;/emulator-params&gt;</span>
-           <span class="nt">&lt;/distributions&gt;</span>
+     <span class="nt">&lt;distributions&gt;</span>
+         <span class="nt">&lt;name&gt;</span>MEM_Distro<span class="nt">&lt;/name&gt;</span>
+         <span class="nt">&lt;startTime&gt;</span>20<span class="nt">&lt;/startTime&gt;</span>
+         <span class="c">&lt;!--duration in seconds --&gt;</span>
+         <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
+         <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
+         <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
+         <span class="c">&lt;!--Megabytes for memory --&gt;</span>
+         <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
+         <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
+         <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
+         <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;emulator-params&gt;</span>
+           <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
+           <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
+         <span class="nt">&lt;/emulator-params&gt;</span>
+     <span class="nt">&lt;/distributions&gt;</span>
 
-          <span class="nt">&lt;log&gt;</span>
-            <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
-            <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
-            <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
-            <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
-          <span class="nt">&lt;/log&gt;</span>
-       <span class="nt">&lt;/emulation&gt;</span>
+     <span class="nt">&lt;log&gt;</span>
+        <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+        <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+        <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+        <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
+     <span class="nt">&lt;/log&gt;</span>
+ <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
 <ul class="simple">
@@ -721,84 +805,89 @@
 67
 68
 69
-70
-71
-72
-73</pre></div></td><td class="code"><div class="highlight"><pre>       <span class="nt">&lt;emulation&gt;</span>
-           <span class="nt">&lt;emuname&gt;</span>CPU_and_Mem<span class="nt">&lt;/emuname&gt;</span>
-           <span class="nt">&lt;emutype&gt;</span>Mix<span class="nt">&lt;/emutype&gt;</span>
-           <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
-           <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
-           <span class="c">&lt;!--duration in seconds --&gt;</span>
-           <span class="nt">&lt;emustopTime&gt;</span>80<span class="nt">&lt;/emustopTime&gt;</span>
+70</pre></div></td><td class="code"><div class="highlight"><pre> <span class="nt">&lt;emulation&gt;</span>
+     <span class="nt">&lt;emuname&gt;</span>CPU_and_Mem<span class="nt">&lt;/emuname&gt;</span>
+     <span class="nt">&lt;emutype&gt;</span>Mix<span class="nt">&lt;/emutype&gt;</span>
+     <span class="nt">&lt;emuresourceType&gt;</span>MIX<span class="nt">&lt;/emuresourceType&gt;</span>
+     <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+     <span class="c">&lt;!--duration in seconds --&gt;</span>
+     <span class="nt">&lt;emustopTime&gt;</span>80<span class="nt">&lt;/emustopTime&gt;</span>
 
-           <span class="nt">&lt;distributions&gt;</span>
-            <span class="nt">&lt;name&gt;</span>CPU_distro<span class="nt">&lt;/name&gt;</span>
-            <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
-            <span class="c">&lt;!--duration in seconds --&gt;</span>
-            <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
-            <span class="nt">&lt;granularity&gt;</span>1<span class="nt">&lt;/granularity&gt;</span>
-            <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
-            <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
-            <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
-            <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
-            <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
-            <span class="nt">&lt;emulator-params&gt;</span>
-                 <span class="c">&lt;!--more parameters will be added --&gt;</span>
-                 <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
-                 <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
-                 <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
-            <span class="nt">&lt;/emulator-params&gt;</span>
-          <span class="nt">&lt;/distributions&gt;</span>
+     <span class="nt">&lt;distributions&gt;</span>
+         <span class="nt">&lt;name&gt;</span>CPU_distro<span class="nt">&lt;/name&gt;</span>
+         <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+         <span class="c">&lt;!--duration in seconds --&gt;</span>
+         <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
+         <span class="nt">&lt;granularity&gt;</span>1<span class="nt">&lt;/granularity&gt;</span>
+         <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+         <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+         <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+         <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
+         <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;emulator-params&gt;</span>
+              <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+              <span class="c">&lt;!--Number of CPUs to keep busy (default: autodetected)--&gt;</span>
+              <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+         <span class="nt">&lt;/emulator-params&gt;</span>
+      <span class="nt">&lt;/distributions&gt;</span>
 
-           <span class="nt">&lt;distributions</span> <span class="nt">&gt;</span>
-              <span class="nt">&lt;name&gt;</span>MEM_Distro<span class="nt">&lt;/name&gt;</span>
-              <span class="nt">&lt;startTime&gt;</span>20<span class="nt">&lt;/startTime&gt;</span>
-              <span class="c">&lt;!--duration in seconds --&gt;</span>
-              <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
-              <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
-              <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
-              <span class="c">&lt;!--Megabytes for memory --&gt;</span>
-               <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
-               <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-               <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
-                               <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
-                               <span class="nt">&lt;emulator-params&gt;</span>
-                                     <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
-                                     <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
-                               <span class="nt">&lt;/emulator-params&gt;</span>
-           <span class="nt">&lt;/distributions&gt;</span>
+      <span class="nt">&lt;distributions</span> <span class="nt">&gt;</span>
+         <span class="nt">&lt;name&gt;</span>MEM_Distro<span class="nt">&lt;/name&gt;</span>
+         <span class="nt">&lt;startTime&gt;</span>20<span class="nt">&lt;/startTime&gt;</span>
+         <span class="c">&lt;!--duration in seconds --&gt;</span>
+         <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
+         <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
+         <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
+         <span class="c">&lt;!--Megabytes for memory --&gt;</span>
+         <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
+         <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
+         <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
+         <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;emulator-params&gt;</span>
+            <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
+            <span class="nt">&lt;memThreads&gt;</span>0<span class="nt">&lt;/memThreads&gt;</span>
+         <span class="nt">&lt;/emulator-params&gt;</span>
+      <span class="nt">&lt;/distributions&gt;</span>
 
-           <span class="nt">&lt;distributions&gt;</span>
-            <span class="nt">&lt;name&gt;</span>IO_Distro<span class="nt">&lt;/name&gt;</span>
-              <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
-              <span class="c">&lt;!--duration in seconds --&gt;</span>
-              <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
-              <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
-              <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
-               <span class="nt">&lt;startLoad&gt;</span>1<span class="nt">&lt;/startLoad&gt;</span>
-               <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
-               <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;distributions&gt;</span>
+         <span class="nt">&lt;name&gt;</span>IO_Distro<span class="nt">&lt;/name&gt;</span>
+         <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+         <span class="c">&lt;!--duration in seconds --&gt;</span>
+         <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
+         <span class="nt">&lt;granularity&gt;</span>5<span class="nt">&lt;/granularity&gt;</span>
+         <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;startLoad&gt;</span>1<span class="nt">&lt;/startLoad&gt;</span>
+         <span class="nt">&lt;stopLoad&gt;</span>10<span class="nt">&lt;/stopLoad&gt;</span>
+         <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;emulator-params&gt;</span>
+             <span class="nt">&lt;resourceType&gt;</span>IO<span class="nt">&lt;/resourceType&gt;</span>
+             <span class="c">&lt;!--Size of blocks to use for I/O, in MB--&gt;</span>
+             <span class="nt">&lt;ioBlockSize&gt;</span>10<span class="nt">&lt;/ioBlockSize&gt;</span>
+             <span class="c">&lt;!--Time to sleep between iterations, in msec--&gt;</span>
+            <span class="nt">&lt;ioSleep&gt;</span>100<span class="nt">&lt;/ioSleep&gt;</span>
+        <span class="nt">&lt;/emulator-params&gt;</span>
+    <span class="nt">&lt;/distributions&gt;</span>
 
-               <span class="nt">&lt;emulator-params&gt;</span>
-                 <span class="c">&lt;!--more parameters will be added --&gt;</span>
-                 <span class="nt">&lt;resourceType&gt;</span>IO<span class="nt">&lt;/resourceType&gt;</span>
-                <span class="c">&lt;!--Size of blocks to use for I/O, in MB--&gt;</span>
-                <span class="nt">&lt;ioBlockSize&gt;</span>10<span class="nt">&lt;/ioBlockSize&gt;</span>
-                <span class="c">&lt;!--Time to sleep between iterations, in msec--&gt;</span>
-                <span class="nt">&lt;ioSleep&gt;</span>100<span class="nt">&lt;/ioSleep&gt;</span>
-               <span class="nt">&lt;/emulator-params&gt;</span>
-            <span class="nt">&lt;/distributions&gt;</span>
-
-          <span class="nt">&lt;log&gt;</span>
-            <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
-            <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
-            <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
-            <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
-          <span class="nt">&lt;/log&gt;</span>
-       <span class="nt">&lt;/emulation&gt;</span>
+    <span class="nt">&lt;log&gt;</span>
+       <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+       <span class="nt">&lt;enable&gt;</span>1<span class="nt">&lt;/enable&gt;</span>
+       <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+       <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
+    <span class="nt">&lt;/log&gt;</span>
+ <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
+</div>
+<div class="section" id="known-issues">
+<h2>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h2>
+<p>The interaction of the various emulators used in COCOMA can cause unexpected issues. Some of these issues are listed below (This is <em>not</em> an exhaustive list, and will be updated as new issues are discovered)</p>
+<ul class="simple">
+<li>Stressapptest uses ~100% CPU, regardless of what resource it is being ran on.</li>
+<li>If a Linear increase distribution is run on memory using stressapptest at the same time as Iperf is being used to load the Network, then the Network resource may not reach its target load. This problem is usually encountered when the memory usage reaches over ~80% (as shown in the graph below)</li>
+</ul>
+<div class="figure align-center">
+<img alt="../_images/MEM_NET-Problem.png" src="../_images/MEM_NET-Problem.png" />
+</div>
 </div>
 </div>
 
@@ -816,13 +905,17 @@
 <li><a class="reference internal" href="#memory">Memory</a></li>
 <li><a class="reference internal" href="#network">Network</a></li>
 <li><a class="reference internal" href="#multiple-distributions-emulation">Multiple distributions emulation</a></li>
+<li><a class="reference internal" href="#known-issues">Known Issues</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="04_api_examples.html"
-                        title="previous chapter">Creating Emulation via API Client (Restfully)</a></p>
+  <p class="topless"><a href="07_webUI.html"
+                        title="previous chapter">Creating Emulation via the Web UI</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="06_additional_features.html"
+                        title="next chapter">Additional Features</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/COCOMA/05_examples.txt"
@@ -852,7 +945,10 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="04_api_examples.html" title="Creating Emulation via API Client (Restfully)"
+          <a href="06_additional_features.html" title="Additional Features"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="07_webUI.html" title="Creating Emulation via the Web UI"
              >previous</a> |</li>
         <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>

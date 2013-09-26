@@ -18,18 +18,112 @@
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
 
-import psutil,sys,os,time
+import psutil,time,Library,logging,EMQproducer
 from datetime import datetime as dt
+
+
+from logging import handlers
+from EMQproducer import Producer
+
+global producer
+producer = Producer()
+
+global myName
+myName = "Logger"
+
+emulationEndLogger = None
+   
+
+def singleLogger(elementName,level=None,filename=None):
+    #file writing handler
+    producer=Producer()
+    HOMEPATH= Library.getHomepath()
+    global emulationEndLogger
+    emulationEndLogger=Library.loggerSet("Logger")
+
+    def logLevelGet():
+        
+        LOG_LEVEL=logging.INFO
+        
+        LogLevel=Library.readLogLevel("coreloglevel")
+        if LogLevel=="info":
+            LOG_LEVEL=logging.INFO
+        if LogLevel=="debug":
+            LOG_LEVEL=logging.DEBUG
+        else:
+            LOG_LEVEL=logging.INFO
+        
+        
+        return LOG_LEVEL
+
+    if level==None:
+        level=logLevelGet()
+    
+    fileLogger=logging.getLogger(elementName)
+    fileLogger.setLevel(level)
+    #we do not add additional handlers if they are there
+    if not len(fileLogger.handlers):
+    
+        #adding producer handler
+        #bHandler= EMQproducer.BroadcastLogHandler(elementName,producer)
+        #fileLogger.addHandler(bHandler)
+        EMQproducer.StreamAndBroadcastHandler("TEST",producer)
+        
+        if filename == None:
+            #setting log rotation for 10 files each up to 10000000 bytes (10MB)
+            fileHandler = handlers.RotatingFileHandler(HOMEPATH+"/logs/COCOMAlogfile.csv",'a', 10000000, 10)
+            fileLoggerFormatter=logging.Formatter ('%(asctime)s;%(name)s;%(levelname)s;%(message)s',datefmt='%m/%d/%Y %H:%M:%S')
+            fileHandler.setFormatter(fileLoggerFormatter)
+            fileLogger.addHandler(fileHandler)
+            
+            
+            #cli writing handler
+            cliLoggerFormatter=logging.Formatter ('%(asctime)s - [%(name)s] - %(levelname)s : %(message)s',datefmt='%m/%d/%Y %H:%M:%S')
+            cliHandler = logging.StreamHandler()
+            cliHandler.setFormatter(cliLoggerFormatter)
+            fileLogger.addHandler(cliHandler)
+        
+        else:
+            fileHandler= logging.FileHandler(HOMEPATH+"/logs/"+str(filename))
+            
+            fileLoggerFormatter=logging.Formatter ('%(asctime)s;%(name)s;%(levelname)s;%(message)s',datefmt='%m/%d/%Y %H:%M:%S')
+            fileHandler.setFormatter(fileLoggerFormatter)
+            fileLogger.addHandler(fileHandler)
+    
+    
+    return fileLogger 
+
+    
+
+
+
+#Logger job that collects system stats during emulation , run by scheduler
+
+
+def emulationEnd(emulationName):
+    """
+    IN: job that executes at the end of emulation
+    DOING: just producing logger notification
+    OUT: nothing
+    """
+    try:
+        print "Emulation Time expired, removing extra jobs"
+        global emulationEndLogger
+        msg = {"Action":"Emulation finished","EmulationName":str(emulationName)}
+        producer.sendmsg(myName,msg)
+        emulationEndLogger.info(msg)
+        #emulationEndLogger.info("Emulation '"+str(emulationName)+"' finished.")
+        Library.removeExtraJobs(emulationName)
+        return True
+    except:
+        return False
 
 
 
 
 def loadMon(duration,interval,emulationID,emulationName,emuStartTime):
-    try:
-        HOMEPATH= os.environ['COCOMA']
-    except:
-        print "no $COCOMA environmental variable set"
     
+    HOMEPATH= Library.getHomepath()
     emulationName=str(emulationName)
     interval=int(interval)
     

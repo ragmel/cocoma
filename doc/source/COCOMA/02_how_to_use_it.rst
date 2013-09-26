@@ -62,6 +62,10 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
       Display installed version information of COCOMA
 
+.. cmdoption:: -b, --bfz  
+
+      Update the path of to the backfuzz emulator (stored in database)
+
 .. cmdoption:: -l, --list <emulation name>  
 
       Display list of all emulations that are scheduled or already finished. If emulation name is provided then it lists information for that specific emulation
@@ -657,7 +661,9 @@ The XML document defines the emulation experiment details, which consists of thr
      <emustopTime>60</emustopTime>
      ...
    </emulation>
-   
+
+The 'emuresourceType' value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions use 'MIX'
+
 * **Distribution**
 
 .. code-block:: xml

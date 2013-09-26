@@ -1,4 +1,4 @@
-Copyright 2012 SAP Ltd 
+Copyright 2012 SAP Ltd
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,6 +13,333 @@ Copyright 2012 SAP Ltd
    limitations under the License.
 
 COCOMA list of files
-...
-...
-...
+.
+├── bin
+│   ├── ccmshAPI.py
+│   ├── ccmsh.py
+│   ├── DistributionManager.py
+│   ├── Distribution.py
+│   ├── EMQproducer.py
+│   ├── EmulationManager.py
+│   ├── Emulation.py
+│   ├── Job.py
+│   ├── Library.py
+│   ├── Logger.py
+│   ├── Run.py
+│   ├── Scheduler.py
+│   ├── webcontent
+│   │   ├── download.png
+│   │   ├── index.html
+│   │   ├── jquery-1.js
+│   │   ├── jquery.hoverIntent.js
+│   │   ├── noDownload.png
+│   │   ├── style.css
+│   │   ├── test.py
+│   │   └── xml2json.js
+│   └── XmlParser.py
+├── data
+│   └── cocoma.sqlite
+├── distributions
+│   ├── abstract_dist.py
+│   ├── dist_event.py
+│   ├── dist_exp.py
+│   ├── dist_fuzz.py
+│   ├── dist_linear_incr.py
+│   ├── dist_linear.py
+│   ├── dist_real_trace.py
+│   └── dist_trapezoidal.py
+├── doc
+│   ├── build
+│   │   ├── doctrees
+│   │   │   ├── 01_how_to_use_it.doctree
+│   │   │   ├── 02_cli_examples.doctree
+│   │   │   ├── 02_examples.doctree
+│   │   │   ├── 03_license.doctree
+│   │   │   ├── 03_rest_examples.doctree
+│   │   │   ├── 04_cli_mult_examples.doctree
+│   │   │   ├── 05_rest_mult_examples.doctree
+│   │   │   ├── COCOMA
+│   │   │   │   ├── 01_introduction.doctree
+│   │   │   │   ├── 02_how_to_use_it.doctree
+│   │   │   │   ├── 03_cli_examples.doctree
+│   │   │   │   ├── 04_api_examples.doctree
+│   │   │   │   ├── 05_examples.doctree
+│   │   │   │   ├── 06_additional_features.doctree
+│   │   │   │   ├── 07_webUI.doctree
+│   │   │   │   └── glossary.doctree
+│   │   │   ├── environment.pickle
+│   │   │   ├── example.doctree
+│   │   │   └── index.doctree
+│   │   ├── html
+│   │   │   ├── COCOMA
+│   │   │   │   ├── 01_introduction.html
+│   │   │   │   ├── 02_how_to_use_it.html
+│   │   │   │   ├── 03_cli_examples.html
+│   │   │   │   ├── 04_api_examples.html
+│   │   │   │   ├── 05_examples.html
+│   │   │   │   ├── 06_additional_features.html
+│   │   │   │   ├── 07_webUI.html
+│   │   │   │   └── glossary.html
+│   │   │   ├── genindex.html
+│   │   │   ├── _images
+│   │   │   │   ├── DistPopup.png
+│   │   │   │   ├── emuDisplay.png
+│   │   │   │   ├── emulation2.png
+│   │   │   │   ├── emulatorPopup.png
+│   │   │   │   ├── logsandMQ.png
+│   │   │   │   ├── MEM_NET-Problem.png
+│   │   │   │   ├── MultiDist.png
+│   │   │   │   ├── Overall.png
+│   │   │   │   └── runAt.png
+│   │   │   ├── index.html
+│   │   │   ├── objects.inv
+│   │   │   ├── py-modindex.html
+│   │   │   ├── search.html
+│   │   │   ├── searchindex.js
+│   │   │   ├── _sources
+│   │   │   │   ├── 01_how_to_use_it.txt
+│   │   │   │   ├── 02_cli_examples.txt
+│   │   │   │   ├── 02_examples.txt
+│   │   │   │   ├── 03_license.txt
+│   │   │   │   ├── 03_rest_examples.txt
+│   │   │   │   ├── 04_cli_mult_examples.txt
+│   │   │   │   ├── 05_rest_mult_examples.txt
+│   │   │   │   ├── COCOMA
+│   │   │   │   │   ├── 01_introduction.txt
+│   │   │   │   │   ├── 02_how_to_use_it.txt
+│   │   │   │   │   ├── 03_cli_examples.txt
+│   │   │   │   │   ├── 04_api_examples.txt
+│   │   │   │   │   ├── 05_examples.txt
+│   │   │   │   │   ├── 06_additional_features.txt
+│   │   │   │   │   ├── 07_webUI.txt
+│   │   │   │   │   └── glossary.txt
+│   │   │   │   ├── example.txt
+│   │   │   │   └── index.txt
+│   │   │   └── _static
+│   │   │       ├── ajax-loader.gif
+│   │   │       ├── basic.css
+│   │   │       ├── comment-bright.png
+│   │   │       ├── comment-close.png
+│   │   │       ├── comment.png
+│   │   │       ├── default.css
+│   │   │       ├── doctools.js
+│   │   │       ├── down.png
+│   │   │       ├── down-pressed.png
+│   │   │       ├── file.png
+│   │   │       ├── jquery.js
+│   │   │       ├── minus.png
+│   │   │       ├── plus.png
+│   │   │       ├── pygments.css
+│   │   │       ├── searchtools.js
+│   │   │       ├── sidebar.js
+│   │   │       ├── underscore.js
+│   │   │       ├── up.png
+│   │   │       ├── up-pressed.png
+│   │   │       └── websupport.js
+│   │   ├── latex
+│   │   │   ├── COCOMA.aux
+│   │   │   ├── COCOMA.idx
+│   │   │   ├── COCOMA.ilg
+│   │   │   ├── COCOMA.ind
+│   │   │   ├── COCOMA.log
+│   │   │   ├── COCOMA.out
+│   │   │   ├── COCOMA.pdf
+│   │   │   ├── COCOMA.tex
+│   │   │   ├── COCOMA.toc
+│   │   │   ├── emulation2.png
+│   │   │   ├── fncychap.sty
+│   │   │   ├── Makefile
+│   │   │   ├── python.ist
+│   │   │   ├── sphinxhowto.cls
+│   │   │   ├── sphinxmanual.cls
+│   │   │   ├── sphinx.sty
+│   │   │   ├── tabulary.sty
+│   │   │   ├── test.aux
+│   │   │   ├── test.idx
+│   │   │   ├── test.ilg
+│   │   │   ├── test.ind
+│   │   │   ├── test.log
+│   │   │   ├── test.out
+│   │   │   ├── test.tex
+│   │   │   └── test.toc
+│   │   ├── man
+│   │   │   └── COCOMA.1
+│   │   └── text
+│   │       ├── 01_how_to_use_it.txt
+│   │       ├── 02_cli_examples.txt
+│   │       ├── 03_api_examples.txt
+│   │       ├── 04_examples.txt
+│   │       ├── COCOMA
+│   │       │   ├── 01_introduction.txt
+│   │       │   ├── 02_how_to_use_it.txt
+│   │       │   ├── 03_cli_examples.txt
+│   │       │   ├── 04_api_examples.txt
+│   │       │   ├── 05_examples.txt
+│   │       │   └── glossary.txt
+│   │       └── index.txt
+│   ├── make.bat
+│   ├── Makefile
+│   └── source
+│       ├── COCOMA
+│       │   ├── 01_introduction.rst
+│       │   ├── 02_how_to_use_it.rst
+│       │   ├── 03_cli_examples.rst
+│       │   ├── 04_api_examples.rst
+│       │   ├── 05_examples.rst
+│       │   ├── 06_additional_features.rst
+│       │   ├── 07_webUI.rst
+│       │   ├── emulation2.png
+│       │   ├── MEM_NET-Problem.png
+│       │   └── webUIimages
+│       │       ├── DistPopup.png
+│       │       ├── emuDisplay.png
+│       │       ├── emulatorPopup.png
+│       │       ├── logsandMQ.png
+│       │       ├── MultiDist.png
+│       │       ├── Overall.png
+│       │       └── runAt.png
+│       ├── conf.py
+│       └── index.rst
+├── emulators
+│   ├── abstract_emu.py
+│   ├── run_backfuzz.py
+│   ├── run_iperf.py
+│   ├── run_lookbusy_pin.py
+│   ├── run_lookbusy.py
+│   └── run_stressapptest.py
+├── extra_tobe_fixed
+│   ├── build_cocoma-deb
+│   ├── create_sources
+│   ├── deb-files
+│   │   ├── changelog
+│   │   ├── control
+│   │   ├── copyright
+│   │   ├── links
+│   │   ├── postinst
+│   │   ├── postrm
+│   │   └── rules
+│   ├── deb-pkg
+│   │   ├── cocoma_1.0_all.deb
+│   │   ├── cocoma_1.1_all.deb
+│   │   ├── cocoma_1.2_all.deb
+│   │   ├── cocoma_1.3_all.deb
+│   │   ├── cocoma_1.4.1_all.deb
+│   │   ├── cocoma_1.4_all.deb
+│   │   ├── cocoma_1.5.1_all.deb
+│   │   ├── cocoma_1.5_all.deb
+│   │   ├── cocoma_1.6_all.deb
+│   │   ├── cocoma_1.7.1_all.deb
+│   │   ├── cocoma_1.7.2_all.deb
+│   │   ├── cocoma_1.7.3_all.deb
+│   │   └── cocoma_1.7_all.deb
+│   ├── distribute-0.6.28.tar.gz
+│   ├── distribute_setup.py
+│   ├── getIP
+│   ├── gitsearch
+│   ├── MANIFEST.in
+│   ├── node-03-usage_2013-07-19_10-48-45_subset1.txt
+│   ├── node-03-usage_2013-07-19_10-48-45.txt
+│   ├── real-trace_1.txt
+│   ├── real-trace_2.txt
+│   ├── rec_res_usage
+│   ├── run_io_write_test.sh
+│   ├── setup.py
+│   ├── testlist.txt
+│   └── vm-context.sh
+├── __init__.py
+├── LICENSE
+├── logs
+│   ├── COCOMAlogfile_API_sout.txt
+│   └── COCOMAlogfile.csv
+├── NEWS
+├── NOTICE
+├── rb-examples
+│   ├── 01-MEM.rb
+│   ├── 02-MEM-inc-dec.rb
+│   ├── 03-MEM-inc-dec-IO.rb
+│   ├── 05-IO.rb
+│   ├── 06-MEM-inc-stab-dec.rb
+│   ├── 07-MEM-stab.rb
+│   └── 09-CPU-inc-dec.rb
+├── README
+├── scripts
+│   ├── rec_res_usage
+│   └── test_2013-09-24-16-44.txt
+├── tests
+│   ├── CPU-Linear-Lookbusy_10-95.xml
+│   ├── CPU-Linear-Lookbusy_95-10.xml
+│   ├── CPU-Real-1.xml
+│   ├── CPU-Real-2.xml
+│   ├── EVENT-1R.xml
+│   ├── EVENT-1.xml
+│   ├── EVENT-2.xml
+│   ├── EVENT-3.xml
+│   ├── MALICIOUS-HTTP_1000-10000.xml
+│   ├── MALICIOUS-HTTP_100-1000.xml
+│   ├── MALICIOUS-TCP_1000-10000.xml
+│   ├── MALICIOUS-TCP_100-1000.xml
+│   ├── MEM-Linear_incr-Lookbusy_1000-100.xml
+│   ├── MEM-Linear_incr-Lookbusy_100-1000.xml
+│   ├── MEM-Linear_incr-Stressapptest_1000-100.xml
+│   ├── MEM-Linear_incr-Stressapptest_100-1000.xml
+│   ├── MEM-Linear-Lookbusy_1000-100.xml
+│   ├── MEM-Linear-Lookbusy_100-1000.xml
+│   ├── MEM-Linear-Stressapptest_500-50.xml
+│   ├── MEM-Linear-Stressapptest_50-500.xml
+│   ├── MEM-Real-Lookbusy-1.xml
+│   ├── MEM-Real-Lookbusy-2.xml
+│   ├── MEM-Real-Stressapptest-1.xml
+│   ├── MEM-Real-Stressapptest-2.xml
+│   ├── MEM-Trapezoidal-Lookbusy_1000-100.xml
+│   ├── MEM-Trapezoidal-Lookbusy_100-1000.xml
+│   ├── MEM-Trapezoidal-Stressapptest_1000-100.xml
+│   ├── MEM-Trapezoidal-Stressapptest_100-1000.xml
+│   ├── multiDist
+│   │   ├── CPU_MEM-1_Reverse.xml
+│   │   ├── CPU_MEM-1.xml
+│   │   ├── CPU_MEM-2_Reverse.xml
+│   │   ├── CPU_MEM-2.xml
+│   │   ├── CPU_MEM_NET_Reverse.xml
+│   │   ├── CPU_MEM_NET.xml
+│   │   ├── NET_CPU_Reverse.xml
+│   │   ├── NET_CPU.xml
+│   │   ├── NET_MEM_Reverse.xml
+│   │   └── NET_MEM.xml
+│   ├── NET-Linear_incr-Iperf-100-1.xml
+│   ├── NET-Linear_incr-Iperf-1-100.xml
+│   ├── NET-Linear-Iperf-100-1.xml
+│   ├── NET-Linear-Iperf-1-100.xml
+│   ├── NET-Trapezoidal-Iperf-100-1.xml
+│   └── NET-Trapezoidal-Iperf-1-100.xml
+└── unitTest
+    ├── getIP
+    ├── TestAPI.py
+    ├── TestCLI.py
+    ├── tests
+    │   ├── emulationTests.py
+    │   └── __init__.py
+    └── XMLExamples
+        ├── CPU.xml
+        ├── Delay_CPU.xml
+        ├── IOTrap.xml
+        ├── IO.xml
+        ├── MemTrap.xml
+        ├── Mem.xml
+        ├── MultiDist1.xml
+        ├── MultiDist2.xml
+        ├── Network.xml
+        └── shortTests
+            ├── CPU.xml
+            ├── IOTrap.xml
+            ├── IO.xml
+            ├── MemTrap.xml
+            ├── Mem.xml
+            ├── MQtest.xml
+            ├── MultiDist1.xml
+            ├── MultiDist2.xml
+            ├── Network.xml
+            ├── Overload_CPU.xml
+            ├── Overload_MEM.xml
+            └── Overload_MULTI.xml
+
+

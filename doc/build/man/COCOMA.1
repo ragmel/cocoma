@@ -1,4 +1,4 @@
-.TH "COCOMA" "1" "April 22, 2013" "1" "COCOMA"
+.TH "COCOMA" "1" "June 13, 2013" "1" "COCOMA"
 .SH NAME
 COCOMA \- man page
 .
@@ -204,6 +204,71 @@ Stop Scheduler or API daemon
 .TP
 .B \-\-show <api>, <scheduler>
 Show OS information on Scheduler or API daemon, displays PID numbers
+.UNINDENT
+.SS Logging
+.SS Event Logging
+.sp
+COCOMA has two modes of event logging \fIINFO\fP which is set by default and \fIDEBUG\fP which can be enabled if more detailed feedback is required:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ccmsh \-\-start scheduler eth1 55555 debug
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Timestamped events are then saved in the \fB/logs/COCOMAlogfile.csv\fP file.
+.sp
+Both \fIScheduler\fP and \fIAPI\fP also save their CLI output in the \fB/logs/COCOMAlogfile_Scheduler_sout.txt\fP and \fB/logs/COCOMAlogfile_API_sout.txt\fP accordingly.
+All above files can be retrieved as ZIP archive through COCOMA web API URI:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+* /logs/system
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Resource Consumption Logging
+.sp
+Optionally the CPU, Memory and Network consumption of COCOMA VM can be recorded during each emulation. To enable resource consumption logging just add this XML code block to the payload:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+<log>
+ <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
+ <enable>1</enable>
+ <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
+ <frequency>1</frequency>
+ <!\-\- Set the level of information detail  \-\->
+ <logLevel>debug</logLevel>
+</log>
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+If the logging was enabled, once experiment is finished COCOMA will produce two files named after emulation (e.g. \fB/logs/4\-CPU_EMU\-res_2013\-04\-09T18:51:09.csv\fP and \fB/logs/4\-CPU_EMU\-config_2013\-04\-09T18:51:09.xml\fP).
+The file with CSV extention will contain the system resource data and file with XML extention will have the exact copy of the payload for verification.
+.sp
+Both files can be retrieved as ZIP archive through COCOMA web API URI by emulation name:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+* /logs/emulations
+* /logs/emulations/{name}
+.ft P
+.fi
+.UNINDENT
 .UNINDENT
 .SS REST API
 .SS Index
@@ -430,36 +495,62 @@ Displays emulators list. The returned \fI200\- OK\fP XML:
 .UNINDENT
 .UNINDENT
 .sp
-Displays information about emulator by name. The returned \fI200\- OK\fP XML:
+Displays information about emulator by name. It returns parameters that can be used with emulator and the values limits (where applicable). The returned \fI200\- OK\fP XML:
 .INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
-<emulator href="/emulator/lookbusy" xmlns="http://127.0.0.1/cocoma">
-        <info>
-                Emulator lookbusy can be used for following resources:
-                1)Loads CPU with parameters:
-                ncpus \- Number of CPUs to keep busy (default: autodetected)
+<emulator href="/emulators/lookbusy" xmlns="http://127.0.0.1/cocoma">
+  <info>
+    <help>
+    Emulator lookbusy can be used for following resources:
+    1)Loads CPU with parameters:
+      ncpus \- Number of CPUs to keep busy (default: autodetected)
 
-                2)Loads Memory(MEM) with parameters:
-                memSleep \- Time to sleep between iterations, in usec (default 1000)
+    2)Loads Memory(MEM) with parameters:
+      memSleep \- Time to sleep between iterations, in usec (default 1000)
 
-                3)Changing size of files to use during IO with parameters:
-                ioBlockSize \- Size of blocks to use for I/O in MB
-                ioSleep \- Time to sleep between iterations, in msec (default 100)
+    3)Changing size of files to use during IO with parameters:
+      ioBlockSize \- Size of blocks to use for I/O in MB
+      ioSleep \- Time to sleep between iterations, in msec (default 100)
 
 
-                XML block example:
-                &lt;emulator\-params&gt;
-                &lt;resourceType&gt;CPU&lt;/resourceType&gt;
-                &lt;ncpus&gt;0&lt;/ncpus&gt;
-                &lt;/emulator\-params&gt;
+    XML block example:
+    &lt;emulator\-params&gt;
+        &lt;resourceType&gt;CPU&lt;/resourceType&gt;
+        &lt;ncpus&gt;0&lt;/ncpus&gt;
+    &lt;/emulator\-params&gt;
 
-        </info>
-        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
-        <link href="/emulators" rel="parent" type="application/vnd.bonfire+xml"/>
+    </help>
+    <resources>
+      <cpu>
+        <ncpus>
+          <upperBound>100</upperBound>
+          <lowerBound>100</lowerBound>
+        </ncpus>
+      </cpu>
+      <io>
+        <iosleep>
+          <upperBound>999999999</upperBound>
+          <lowerBound>999999999</lowerBound>
+        </iosleep>
+        <ioblocksize>
+          <upperBound>9999999</upperBound>
+          <lowerBound>9999999</lowerBound>
+        </ioblocksize>
+      </io>
+      <mem>
+        <memsleep>
+          <upperBound>999999999</upperBound>
+          <lowerBound>999999999</lowerBound>
+        </memsleep>
+      </mem>
+    </resources>
+  </info>
+  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+  <link href="/emulators" rel="parent" type="application/vnd.bonfire+xml"/>
 </emulator>
 .ft P
 .fi
@@ -507,17 +598,56 @@ Displays distributions list. The returned \fI200\- OK\fP XML:
 .UNINDENT
 .UNINDENT
 .sp
-Displays information about distributions by name. The returned \fI200\- OK\fP XML:
+Displays information about distributions by name. It returns parameters that can be used with distributions and the values limits(where applicable). The returned \fI200\- OK\fP XML:
 .INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
 <?xml version="1.0" ?>
-<distribution href="/distributions/linear" xmlns="http://127.0.0.1/cocoma">
-        <info>Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types.</info>
-        <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
-        <link href="/distributions" rel="parent" type="application/vnd.bonfire+xml"/>
+<distribution href="/distributions/linear_incr" xmlns="http://127.0.0.1/cocoma">
+  <info>
+    <help>Linear Increase distribution takes in start and stop load (plus malloclimit for MEM) parameters and gradually
+    increasing resource workload by spawning jobs in parallel. Can be used with MEM,IO,NET resource types.</help>
+    <resources>
+      <mem>
+        <startload>
+          <upperBound>3895</upperBound>
+          <lowerBound>3895</lowerBound>
+        </startload>
+        <stopload>
+          <upperBound>3895</upperBound>
+          <lowerBound>3895</lowerBound>
+        </stopload>
+        <malloclimit>
+          <upperBound>4095</upperBound>
+          <lowerBound>4095</lowerBound>
+        </malloclimit>
+      </mem>
+      <io>
+        <startload>
+          <upperBound>999999</upperBound>
+          <lowerBound>999999</lowerBound>
+        </startload>
+        <stopload>
+          <upperBound>999999</upperBound>
+          <lowerBound>999999</lowerBound>
+        </stopload>
+      </io>
+      <net>
+        <startload>
+          <upperBound>1000000</upperBound>
+          <lowerBound>1000000</lowerBound>
+        </startload>
+        <stopload>
+          <upperBound>1000000</upperBound>
+          <lowerBound>1000000</lowerBound>
+        </stopload>
+      </net>
+    </resources>
+  </info>
+  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+  <link href="/distributions" rel="parent" type="application/vnd.bonfire+xml"/>
 </distribution>
 .ft P
 .fi

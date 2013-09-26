@@ -16,376 +16,302 @@
 #
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 #
-import __builtin__
-from xml.dom.minidom import parseString, Node
-import xml.dom.minidom,psutil
-import DistributionManager,sys,EmulationManager
-import logging
 
-#declare global variable for reference 
+import xml.dom.minidom
+import sys
+from xml.dom.minidom import parseString
+import Library
+
 xmlLogger = None
 
-def xmlReader(filename):
+def xmlFileParser (xmlFileName):
     global xmlLogger
-    if xmlLogger is None:
-        #initialize logger
-        levelStr=str(EmulationManager.readLogLevel("coreloglevel"))
-        if levelStr=="info":
-            level=logging.INFO
-        if levelStr=="debug":
-            level=logging.DEBUG
-        #xmlLogger=EmulationManager.logToFile("XML Parser",level)
-        xmlLogger=EmulationManager.loggerSet("XML Parser")
-    try:
-        fileObj = open(filename,'r')
-        #convert to string:
-        data = fileObj.read()
-        #close file because we don't need it anymore:
-        fileObj.close()
-    except Exception,e:
-        xmlLogger.debug('File "'+str(filename)+'" could not be loaded. Check if it exists. Error:'+str(e))
-        return 'File "'+str(filename)+'" could not be loaded. Check if it exists'
-    #parse the xml you got from the file
-    try:
-        (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)=xmlParser(data)
-        return emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData
-    except:
-        #sending back just error message
-        try:
-            errorReturn=xmlParser(data)
-            return errorReturn
-        except Exception, e:
-            xmlLogger.exception("XML input Error:"+str(e))
-
-def xmlParser(xmlData):
-    #general log creator
-    global xmlLogger
-    if xmlLogger is None:
-        #initialize logger
-        levelStr=str(EmulationManager.readLogLevel("coreloglevel"))
-        if levelStr=="info":
-            level=logging.INFO
-        if levelStr=="debug":
-            level=logging.DEBUG
-        #xmlLogger=EmulationManager.logToFile("XML Parser",level)
-        xmlLogger=EmulationManager.loggerSet("XML Parser")
-
-    xmlLogger.debug("###This is XML Parser: xmlParser(xmlData)")
-    emulationLogFrequency = "3"
-    emulationLog="0"
-
-    #normal values
-    try:
-        dom1 = parseString(xmlData)
-        
-        #lower case values
-        dom2 = parseString(xmlData.lower())
-    except Exception,e:
-        xmlLogger.debug("XML input Error:"+str(e))
-        return "XML is not well formed Error: "+str(e)
-
-    try:
-        emulationXml=dom2.getElementsByTagName('emulation')[0]
-        emulationXml=""
-    except Exception, e:
-        xmlLogger.debug("XML input Error:"+str(e))
-        return 'XML input Error:"emulation" section not found'
-
-        
-        
-    distroList = []
-    try:
-        distributionsXml=dom2.getElementsByTagName('distributions')
-    except Exception, e:
-        xmlLogger.debug("XML input Error:"+str(e))
-        return 'XML input Error:"distributions" section not found'
-        
-    #emulationName=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emulationName')[0].firstChild.data
-    try:
-        emulationName=dom1.getElementsByTagName('emulation')[0].getElementsByTagName('emuname')[0].firstChild.data
-    except Exception, e:
-        xmlLogger.debug("XML input Error:"+str(e))
-        return 'XML input Error:"emuname" section not found'
-    
-    #if <log> block is written in XML file we will find it and read it, if not we will just set default values 
-    try:
-        emulationLog=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('enable')[0].firstChild.data
-        
-        try:
-            emulationLogFrequency=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('frequency')[0].firstChild.data
-        except Exception, e:
-            if int(emulationLog)==1:
-                xmlLogger.debug("Log frequency not set in XML setting to 3s")
-        
-        try:
-            emulationLogLevel=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('log')[0].getElementsByTagName('loglevel')[0].firstChild.data
-            if emulationLogLevel.lower()!= "debug":
-                emulationLogLevel = "info"
-        except Exception, e:
-            emulationLogLevel = "info"
-
-    except Exception, e:
-        emulationLogLevel = "info"
-        xmlLogger.debug("Setting logging to INFO")
-    
-    try:
-        emulationType=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emutype')[0].firstChild.data
-    except Exception, e:
-        xmlLogger.debug("XML input Error:"+str(e))
-        return 'XML input Error:"emutype"section not found'
-
-    try:    
-        startTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustarttime')[0].firstChild.data
-    except Exception, e:
-        xmlLogger.debug("XML input Error:"+str(e))
-        return 'XML input Error:"emustarttime" section not found'
-    
-    try:
-        resourceTypeEmulation=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emuresourcetype')[0].firstChild.data
-    except Exception, e:
-        xmlLogger.debug("XML input Error:"+str(e))
-        return 'XML input Error:"emuresourcetype" section not found'
-    
-    try:
-        stopTimeEmu=dom2.getElementsByTagName('emulation')[0].getElementsByTagName('emustoptime')[0].firstChild.data
-    except Exception,e:
-        xmlLogger.debug("XML input Error:"+str(e))
-        return 'XML input Error:"emustoptime" section not found'
-     
-    
-    
-    xmlLogger.debug( "##########################")
-    xmlLogger.debug("emulation name: "+str(emulationName))
-    xmlLogger.debug("emulation type: "+str(emulationType))
-    xmlLogger.debug("resource type: "+str(resourceTypeEmulation))
-    xmlLogger.debug("start time: "+str(startTimeEmu))
-    xmlLogger.debug("stop time: "+str(stopTimeEmu))
-    xmlLogger.debug("##########################")
-    
-    n=0
-    for node in distributionsXml:
-        distribution = dom2.getElementsByTagName('distribution')[n]
-        distrType = distribution.attributes["name"].value
-        
-        #getting resource type of distribution CPU,IO,MEM or NET
-        try:
-            resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data
-        except Exception,e:
-            xmlLogger.debug('XML input emulator-params Error:"resourcetype" section not found Error:'+str(e))
-            return 'XML input emulator-params Error:"resourcetype" section not found'
-
-        try:
-            moduleMethod=DistributionManager.loadDistributionArgNames(distrType)
-            
-            distroArgsLimitsDict=moduleMethod(resourceTypeDist)
-            try:
-                moduleArgs=distroArgsLimitsDict.keys()
-            except Exception, e:
-                xmlLogger.debug('Distribution "'+str(distrType)+'" does not support resource type "'+str(resourceTypeDist)+'"')
-                return 'Distribution "'+str(distrType)+'" does not support resource type "'+str(resourceTypeDist)+'"'
-                
-        except Exception, e:
-            xmlLogger.debug("Unable to find distribution module name:"+str(distrType))
-            return "Unable to find distribution module name:"+str(distrType)
-             
-        '''
-        loading emulator args
-        '''
-        try:
-            emulator = dom2.getElementsByTagName('emulator')[n]
-            emulatorType = emulator.attributes["name"].value
-        except Exception,e:
-            xmlLogger.debug('XML input Error:"emulator" section not found. '+str(e))
-            return 'XML input Error:"emulator" section not found'
-            
-        try:
-            EmulatorModuleMethod=DistributionManager.loadEmulatorArgNames(emulatorType)
-            #argNames={"fileQty":{"upperBound":10,"lowerBound":0}}
-            emulatorArgsLimitsDict=EmulatorModuleMethod(resourceTypeDist)
-            emulatorArgs=emulatorArgsLimitsDict.keys()
-        except IOError, e:
-            xmlLogger.debug("Unable to load module name \"",str(emulatorType),"\" error:"+str(e))
-            return "Unable to load module: "+str(emulatorType)    
-        
-        
-        #get things inside "distributions"
-        try:
-            startTimeDistro = dom2.getElementsByTagName('distributions')[n].getElementsByTagName('starttime')[0].firstChild.data
-        except Exception,e:
-            xmlLogger.debug('XML input Error:distributions "starttime" section not found. '+str(e))
-            return 'XML input Error:distributions "starttime" section not found.'
-        
-        try:
-            durationDistro = dom2.getElementsByTagName('duration')[n].firstChild.data
-        except Exception,e:
-            xmlLogger.debug('XML input Error:"duration" section not found. '+str(e))
-            return 'XML input Error:"duration" section not found'
-        
-        try:
-            granularity= dom2.getElementsByTagName('granularity')[n].firstChild.data
-        except Exception,e:
-            xmlLogger.debug('XML input Error:"granularity" section not found. '+str(e))
-            return 'XML input Error:"granularity" section not found'
-         
-        distroArgs={}
-        a=0
-        #for things in moduleArgs:
-        '''
-        Getting all the arguments for distribution
-        ''' 
-        distroArgsNotes=[]
-        for args in moduleArgs:
-            
-            try:    
-                arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(moduleArgs[a].lower())[0].firstChild.data
-                
-                #if data given in percentage for memory converting it to real values
-                if resourceTypeDist.lower()=="mem":
-                    if str(arg0[-1])=="%":
-                        memReading=psutil.phymem_usage()
-                        allMemoryPc =(memReading.total/1048576.00)/100.00
-                        arg0=int(str(arg0[:-1]))*allMemoryPc
-                        
-                distributionsLimitsDictValues = distroArgsLimitsDict[moduleArgs[a].lower()]
-                checked_distroArgs,checkDistroNote = boundsCompare(arg0,distributionsLimitsDictValues)               
-                distroArgsNotes.append(checkDistroNote)
-                distroArgs.update({moduleArgs[a].lower():checked_distroArgs})                
-                a+=1
-               
-            except Exception,e:
-                    xmlLogger.debug('Distribution argument "'+str(moduleArgs[a])+'" specified in XML does not exist in distribution module section: "'+str(resourceTypeDist)+'" Error:'+str(e))
-                    return 'Distribution argument "'+str(moduleArgs[a])+'" is missing in XML document section "'+str(resourceTypeDist)+'"'
-        '''        
-        getting all the arguments for emulator
-        '''
-        emulatorArg={}
-        emulatorArgNotes=[]
-        a=0
-        #for things in moduleArgs:
-        for args in emulatorArgs:
-            try:
-                
-                arg0 = dom2.getElementsByTagName('distributions')[n].getElementsByTagName(emulatorArgs[a].lower())[0].firstChild.data
-                emulatorLimitsDictValues = emulatorArgsLimitsDict[emulatorArgs[a].lower()]
-                checked_emuargs,check_note = boundsCompare(arg0,emulatorLimitsDictValues,emulatorArgs[a].lower())                
-                emulatorArg.update({emulatorArgs[a].lower():checked_emuargs})
-                emulatorArgNotes.append(check_note)
-                a+=1
-                
-            except Exception, e:
-                    xmlLogger.debug("Emulator argument specified in XML does not exist in emulator module \""+str(resourceTypeDist)+"\" section: "+str(e))
-                    return "Emulator argument specified in XML does not exist in emulator module \""+str(resourceTypeDist)+"\" section: "+str(e)
-        
-        try:
-            resourceTypeDist = dom2.getElementsByTagName('emulator-params')[n].getElementsByTagName('resourcetype')[0].firstChild.data 
-        except Exception,e:
-            xmlLogger.debug('XML input emulator-params Error:"resourcetype" section not found. '+str(e))
-            return 'XML input emulator-params Error:"resourcetype" section not found'
-
-        try:
-            distributionsName=dom1.getElementsByTagName('distributions')[n].getElementsByTagName('name')[0].firstChild.data
-        except Exception,e:
-            xmlLogger.debug('XML distribution input Error:"name" section not found. '+str(e))
-            return 'XML input Error:"name" section not found'
-
-     
-            emulator = dom1.getElementsByTagName('emulator')[n]
-        except Exception,e:
-            xmlLogger.debug('XML input Error:"emulator" section not found '+str(e))
-            return 'XML input Error:"emulator" section not found'
-        try:
-            emulatorName = emulator.attributes["name"].value
-        except Exception,e:
-            xmlLogger.debug('XML input emulator Error:"name" section not found. '+str(e))
-            return 'XML input emulator Error:"name" section not found'
-        
-        #add every emulation in the dictionary
-        distroDict={"distributionsName":distributionsName,"startTimeDistro":startTimeDistro,"durationDistro":durationDistro,"granularity":granularity,"distrType":distrType,"distroArgs":distroArgs,"emulatorName":emulatorName,"emulatorArg":emulatorArg,"resourceTypeDist":resourceTypeDist,"emulatorArgNotes":emulatorArgNotes,"distroArgsNotes":distroArgsNotes}
-        distroList.append(distroDict)
-        n=n+1
-        
-        #    CPU-dis-1        Mix          1              3                        Mix               now         180       [{'distroArgs': {'startLoad': u'10', 'stopLoad': u'90'}, 'emulatorName': u'lookbusy', 'distrType': u'linear', 'resourceTypeDist': u'CPU', 'startTimeDistro': u'5', 'distributionsName': u'CPU-dis-1', 'durationDistro': u'170', 'emulatorArg': {'ncpus': u'0'}, 'granularity': u'10'}] 
-                                                                                                                                            
-    xmlLogger.debug("XML Extracted Values: "+str(emulationName)+" "+str(emulationType)+" "+str(emulationLog)+" "+str(emulationLogFrequency)+" "+str(resourceTypeEmulation)+" "+str(startTimeEmu)+" "+str(stopTimeEmu)+" "+str(distroList))
-    xmlLogger.info("Finished running")
-    
-    return emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData
-
-
-def boundsCompare(xmlValue,LimitsDictValues,variableName = None):
-    '''
-    Comparing XML variables with emulator or distribution set bounds.
-    NOTE: in future might be better moved to the wrapper modules
-    '''
-    
-    if  variableName == "serverip" or variableName == "clientip" or variableName == "packettype":
-        return_note ="\nOK"
-        return xmlValue,return_note
-    
-    upperBound=int(LimitsDictValues["upperBound"])
-    lowerBound=int(LimitsDictValues["lowerBound"])
-
-    xmlValue=int(xmlValue)
-    
-    if xmlValue >= lowerBound:
-        if xmlValue <= upperBound:
-            return_note ="\nOK"
-            return xmlValue, return_note
-            
-        else:
-            return_note ="\nThe specified value "+str(xmlValue)+" was higher than the maximum limit "+str(upperBound)+" changing to the maximum limit"
-            return upperBound , return_note 
+    xmlLogger = Library.loggerSet("XML Parser")
+    xmlStr = getXMLFile(xmlFileName)
+    if xmlStr.lstrip()[:1] == "<":  #Does if XML File Exists
+#        xmlStr = getXMLString(fileName)
+        xmlData = getXMLString(xmlStr)
+        return xmlReader(xmlStr)
     else:
-        return_note ="\nThe specified value "+str(xmlValue)+" was lower than the minimum limit "+str(lowerBound)+" changing to the maximum limit"
-        return lowerBound, return_note
+        raise Exception ("Cannot parse XML, see documentation for required sections \n Printing xmlData: \n" + xmlStr)
 
-
-if __name__ == '__main__':
-    """
-    Testing information
-    """
-    xmlData='''
-<emulation>
-  <emuname>MEM_EMU</emuname>
-  <emuType>Mix</emuType>
-  <emuresourceType>MEM</emuresourceType>
-  <!--date format: 2014-10-10T10:10:10 -->
-  <emustartTime>now</emustartTime>
-  <!--duration in seconds -->
-  <emustopTime>60</emustopTime>
-  
-  <distributions >
-     <name>MEM_Distro</name>
-     <startTime>0</startTime>
-     <!--duration in seconds -->
-     <duration>60</duration>
-     <granularity>5</granularity>
-     <distribution href="/distributions/linear_incr" name="linear_incr" />
-     <!--Megabytes for memory -->
-      <startLoad>100</startLoad>
-      <stopLoad>1000</stopLoad>
-      <emulator href="/emulators/lookbusy" name="lookbusy" />
-      <emulator-params>
-        <resourceType>MEM</resourceType>
-        <!--time between iterations in usec (default 1000)-->    
-        <memSleep>0</memSleep>
-      </emulator-params>
-  </distributions>
-
-  <log>
-      <!-- Use value "1" to enable logging(by default logging is off)  -->
-      <enable>0</enable>
-      <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
-      <frequency>3</frequency>
-      <logLevel>debug</logLevel>
-  </log>
-
-</emulation>
-
+def xmlReader(xmlParam):
+    setLoggerDetails(xmlParam)
+    xmlStr = getXMLString(xmlParam)
+#    
+#    xmlData = getXMLFile(fileName)
+#    if xmlData.lstrip()[:1] == "<":  #Does if XML File Exists
+#        xmlStr = getXMLString(fileName)
+#    else:
+#        raise Exception ("Cannot parse XML, see documentation for required sections \n Printing xmlData: \n" + xmlData)
     
+    emuPresent = sectionCheck(xmlStr, "emulation")
+    distroPresent = sectionCheck(xmlStr, "distributions")
+    if not (emuPresent) or not (distroPresent):    #If either section is absent, fail 
+        errorStr = "XML not well formed, 'Emulation' or 'Distributions' sections(s) missing"
+        xmlLogger.error(errorStr)
+        raise Exception (errorStr)
+
+    xmlStr = xmlStr.getElementsByTagName('emulation')[0] #Set to emulation (main) tree
     
-    '''
+    (emulationName, emulationType, resourceTypeEmulation, startTimeEmu, stopTimeEmu) = getEmulationDetails(xmlStr)
+    emulationName = emulationName.upper()
+
+    distroList = getDistributionDetails(xmlStr)
+
+    if sectionCheck(xmlStr, "log"):
+        (emulationLog, emulationLogFrequency, emulationLogLevel) = getLoggerDetails(xmlStr.getElementsByTagName('log')[0])
+    else:
+        (emulationLog, emulationLogFrequency, emulationLogLevel) = getLoggerDetails("")
+
+    MQproducerValues = {}
+    if sectionCheck(xmlStr, "mq"):
+        MQproducerValues = getMQDetails(xmlStr.getElementsByTagName('mq')[0])
+
+    xmlLogger.info("##########################")
+    xmlLogger.info("emulation name: " + str(emulationName))
+    xmlLogger.info("emulation type: " + str(emulationType))
+    xmlLogger.info("resource type: " + str(resourceTypeEmulation))
+    xmlLogger.info("start time: " + str(startTimeEmu))
+    xmlLogger.info("stop time: " + str(stopTimeEmu))
+    xmlLogger.info("##########################")
+
+    xmlLogger.info("XML Extracted Values: " + str(emulationName) + " " + str(emulationType) + " " + 
+                    str(emulationLog) + " " + str(emulationLogFrequency) + " " + str(resourceTypeEmulation) + 
+                    " " + str(startTimeEmu) + " " + str(stopTimeEmu) + " " + str(distroList) + " " + str(MQproducerValues.values()))
+
+    # Check distroResType match emuResType
+    resTypeCheck(resourceTypeEmulation, distroList)
+
+    xmlLogger.info("XML parsing done")
+
+    return (emulationName, emulationType, emulationLog, emulationLogFrequency, emulationLogLevel,
+            resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList, xmlParam, MQproducerValues)
+
+def getXMLFile(fileName):
+    xmlData = None
+
+    try:
+        fileObj = open(fileName, 'r')
+        #convert to string:
+        xmlData = fileObj.read()
+        #close file because we don't need it anymore
+        fileObj.close()
+    except Exception, e:
+        xmlLogger.error('File "' + str(fileName) + '" could not be loaded. Check if it exists. Error:' + str(e))
+        return 'File "' + str(fileName) + '" could not be loaded. Check if it exists'
+
+    return xmlData
+
+def getXMLString(xmlData):
+    xmlStr = ""
+#    xmlData = getXMLFile(fileName)
+    try:
+        xmlStr = parseString(xmlData.lower())
+    except Exception, e:
+        xmlLogger.error("XML input Error:" + str(e))
+        return "XML is not well formed Error: " + str(e)
+
+    return xmlStr
+
+def getXMLData (xmlData, xmlTagName, secondXMLTagName): #Accepts up-to 2 xmlTageName's
+    tagData = ""
+    if sectionCheck(xmlData, xmlTagName):
+        if (secondXMLTagName == ""): #if second value is empty ignore it
+            tagData = xmlData.getElementsByTagName(xmlTagName)[0].firstChild.data
+        else:
+            if sectionCheck(xmlData, secondXMLTagName):
+                tagData = xmlData.getElementsByTagName(xmlTagName)[0].getElementsByTagName(secondXMLTagName)[0].firstChild.data
+                xmlTagName = secondXMLTagName #For Exception Handling below
+            else:
+                raise Exception ("XML input Error: " + secondXMLTagName + " section not found")
+    else:
+        raise Exception ("XML input Error: " + xmlTagName + " section not found")
+
+    return tagData
+
+def getXMLValue(xmlStr, xmlTagName, xmlValueName):    #Used for getting values contained within a tag
+    tagValue = ""
+    if sectionCheck(xmlStr, xmlTagName):
+        try:
+            tagValue = xmlStr.getElementsByTagName(xmlTagName)[0].attributes[xmlValueName].value
+        except Exception, e:
+            xmlLogger.error('XML input Error: ' + xmlValueName + ' not found in section ' + xmlTagName + str(e))
+            return 'XML input Error: ' + xmlValueName + ' not found in section ' + xmlTagName
+    else:
+        raise Exception ("XML input Error: " + xmlTagName + " section not found")
+    return tagValue
+
+def getModuleArgs (moduleType, moduleName, resourceType):
+    moduleArgs = []
+    argsLimitsDict = None
+
+    try:
+        moduleMethod = getArgsModule(moduleName, moduleType)
+        argsLimitsDict = moduleMethod(resourceType)
+
+        try:
+            moduleArgs = argsLimitsDict.keys()
+        except Exception, e:
+            xmlLogger.error(moduleType + ' "' + str(moduleName) + '" does not support resource type "' + str(resourceType) + '"')
+            return moduleType + ' "' + str(moduleName) + '" does not support resource type "' + str(resourceType) + '"'
+
+    except Exception, e:
+        error = "Error: " + str(e) + "\nUnable to find " + moduleType + " module name: " + str(moduleName)
+        xmlLogger.error(error)
+        return error
+
+    return moduleArgs
+
+def getArgsModule(moduleName, moduleType):
+    if moduleType == "Distribution":
+        moduleMethod = Library.loadDistributionArgNames(moduleName)
+    elif moduleType == "Emulation":
+        moduleMethod = Library.loadEmulatorArgNames(moduleName)
+    return moduleMethod
+
+def getArgs (xmlStr, moduleType, moduleName, resourceType):
+    moduleArgsDict = {}
+    moduleArgsNotes = []
+    checkNote = "\nOK"
+
+    moduleArgs = getModuleArgs(moduleType, moduleName, resourceType)
     
-    xmlParser(xmlData)
+    moduleMethod = getArgsModule(moduleName, moduleType)
+    if (type(moduleMethod) is str):
+        print moduleMethod
+        sys.exit(0)
+    else:
+        if type(moduleArgs) is list: #If the list is returned
+            
+            for arg in moduleArgs:
+                arg = arg.lower()
+    #            xmlArg = getXMLData(xmlStr, "distributions", arg)
+                xmlArg = getXMLData(xmlStr, arg, "")
     
+                #Convert stress values mem to real values (if given in %)
+                if ((moduleType == "distributions") and (resourceType == "mem") and (str(xmlArg[-1]) == "%")):
+                    sysMemory = Library.getTotalMem()
+                    xmlArg = int(str(xmlArg[:-1])) * sysMemory
+        
+                moduleArgsNotes.append(checkNote)
+                moduleArgsNotes.append(xmlArg)
+        
+                moduleArgsDict.update({arg:xmlArg})
+    
+        else:
+            errorStr = moduleArgs + "\nXML Error: Cannot get " + moduleType + " arguments, check if 'href' and 'name' exist in XML"
+            xmlLogger.error(errorStr)
+            raise Exception (errorStr)
+    return (moduleArgsDict, moduleArgsNotes)
+
+def getDistributionDetails(xmlStr):
+    distroList = []
+    xmlDistroList = []
+
+    numDistributions = len(xmlStr.getElementsByTagName('distributions'))
+    for i in xrange(numDistributions):
+        xmlDistroList.append(xmlStr.getElementsByTagName('distributions')[i])
+
+    for xmlDistro in xmlDistroList:
+        distributionsName = getXMLData(xmlDistro, "name", "")
+        startTimeDistro = getXMLData(xmlDistro, "starttime", "")
+        distrType = getXMLValue(xmlDistro, "distribution", "name")
+        emulatorName = getXMLValue(xmlDistro, "emulator", "name")
+        resourceType = getXMLData(xmlDistro, "emulator-params", "resourcetype")
+
+        (distroArgs, distroArgsNotes) = getArgs (xmlDistro, "Distribution", distrType, resourceType)
+        (emulatorArg, emulatorArgNotes) = getArgs (xmlDistro, "Emulation", emulatorName, resourceType)
+
+        def removeFromDict(dictionary, key):
+            itemValue = 0
+            if dictionary.has_key(key):
+                itemValue = dictionary[key]
+                del dictionary[key]
+            return dictionary, itemValue
+        
+        distroArgs, granularity = removeFromDict(distroArgs, "granularity")
+        distroArgs, durationDistro = removeFromDict(distroArgs, "duration")
+
+        distroDict = {"distributionsName":distributionsName, "startTimeDistro":startTimeDistro, "durationDistro":durationDistro,
+                    "granularity":granularity, "distrType":distrType, "distroArgs":distroArgs,
+                    "emulatorName":emulatorName, "emulatorArg":emulatorArg, "resourceTypeDist":resourceType,
+                    "emulatorArgNotes":emulatorArgNotes, "distroArgsNotes":distroArgsNotes}
+        distroList.append(distroDict)
+    return distroList
+
+def sectionCheck(xmlStr, sectionName):
+    sectionFound = False
+    try:
+        section = xmlStr.getElementsByTagName(sectionName)
+        if len(section) > 0:
+            sectionFound = True
+    except Exception, e:
+        xmlLogger.error("XML input Error:" + str(e))
+        return 'XML input Error: ' + sectionName + ' section not found'
+
+    return sectionFound
+
+def resTypeCheck(emulationResType, distroList):
+    for distro in distroList:
+        if not (emulationResType.lower() == distro["resourceTypeDist"].lower()) and not emulationResType.lower() == "mix":
+            raise Exception ("Emulation should only contain distributions of type: " + emulationResType.upper())
+
+def setLoggerDetails(fileName):
+    global xmlLogger
+    if xmlLogger is None:
+        xmlLogger = Library.loggerSet("XML Parser")
+    xmlLogger.info("###This is XML Parser for : " + fileName)
+
+def getLoggerDetails(xmlStr):
+    #Set logger details to Default values
+    emulationLog = "0"    
+    emulationLogFrequency = "3"
+    emulationLogLevel = "info"
+
+    try:
+        emulationLog = xmlStr.getElementsByTagName('enable')[0].firstChild.data
+    
+        try:
+            emulationLogFrequency = xmlStr.getElementsByTagName('frequency')[0].firstChild.data
+        except Exception, e:
+            if int(emulationLog) == 1:
+                xmlLogger.info("Log frequency not set in XML setting to 3s")
+
+        try:
+            newEmulationLogLevel = xmlStr.getElementsByTagName('loglevel')[0].firstChild.data
+            if newEmulationLogLevel == "debug":
+                emulationLogLevel = newEmulationLogLevel
+        except Exception, e:
+            xmlLogger.info("Setting logging to INFO")
+
+    except Exception, e:
+            xmlLogger.info("enable Log not set, setting to 0")
+    return (emulationLog, emulationLogFrequency, emulationLogLevel)
+
+def getEmulationDetails(xmlStr):
+    emuName = getXMLData(xmlStr, "emuname", "")
+    emuType = getXMLData(xmlStr, "emutype", "")
+    emuResourceType = getXMLData(xmlStr, "emuresourcetype", "")
+    emuStartTime = getXMLData(xmlStr, "emustarttime", "")
+    emuStopTime = getXMLData(xmlStr, "emustoptime", "")
+
+    return (emuName, emuType, emuResourceType, emuStartTime, emuStopTime)
+
+def getMQDetails(xmlStr):
+    MQproducerValues = {}
+
+    MQproducerValues["emulationMQenable"] = getXMLData(xmlStr, "enable", "")
+    MQproducerValues["emulationMQvhost"] = getXMLData(xmlStr, "vhost", "")
+    MQproducerValues["emulationMQexchange"] = getXMLData(xmlStr, "exchange", "")
+    MQproducerValues["emulationMQuser"] = getXMLData(xmlStr, "user", "")
+    MQproducerValues["emulationMQpassword"] = getXMLData(xmlStr, "password", "")
+    MQproducerValues["emulationMQhost"] = getXMLData(xmlStr, "host", "")
+    MQproducerValues["emulationMQtopic"] = getXMLData(xmlStr, "topic", "")
+
+    return MQproducerValues
+
+if __name__ == '__main__': #For testing purposes
+    xmlFileParser("/home/jordan/git/cocoma/tests/MALICIOUS-HTTP_1000-10000.xml")
+#    xmlReader("/home/jordan/Desktop/XMLfail.xml")  #REMOVE
     pass

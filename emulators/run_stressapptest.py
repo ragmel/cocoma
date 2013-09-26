@@ -93,18 +93,22 @@ from signal import *
 from subprocess import *
 import random
 
+from Library import getHomepath
+
 #perhaps needs to be set somewhere else
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 try:
-    HOMEPATH= os.environ['COCOMA']
+#    HOMEPATH= os.environ['COCOMA']
+    HOMEPATH = getHomepath()
 except:
-    print "no $COCOMA environmental variable set"    
+    print "no $COCOMA environmental variable set"
 
-class emulatorMod(object):
-    
+sys.path.insert(0, getHomepath() + '/emulators/') #Adds dir to PYTHONPATH, needed to import abstract_emu
+from abstract_emu import *
+
+class emulatorMod(abstract_emu):
     
     def __init__(self,emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg, stressValues,runNo,emuDuration):
-        #emulationID,emulationLifetimeID,duration, stressValue,runNo
         self.emulationID = emulationID
         self.emulationLifetimeID = emulationLifetimeID
         self.duration = duration
@@ -113,176 +117,82 @@ class emulatorMod(object):
         self.runNo=runNo
         self.distributionID=distributionID
         
-        
-        
-        
-        #print "Hello this is run_stressapptest: emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo: ",emulationID,emulationLifetimeID,resourceTypeDist,duration, stressValues,runNo
-
-        
         if resourceTypeDist.lower() == "mem":
-            #print "MEM load selected"
             memMulti = multiprocessing.Process(target = memLoad, args=(distributionID,runNo,stressValues,emulatorArg["memthreads"],duration))
             memMulti.start()
             print(memMulti.is_alive())
             memMulti.join()
 
         if resourceTypeDist.lower() == "io":
-            #print "IO load selected"
-            ioMulti = multiprocessing.Process(target = ioLoad, args=(distributionID,runNo,stressValues,emulatorArg["memsize"],emulatorArg["memthreads"],duration))
+            ioMulti = multiprocessing.Process(target = ioLoad, args=(distributionID,runNo,stressValues,emulatorArg["memsize"],duration))
             ioMulti.start()
             print(ioMulti.is_alive())
             ioMulti.join()
 
-
-def pidFinder(PROCNAME):
-        for proc in psutil.process_iter():
-            if proc.name == PROCNAME:
-                p = proc.pid
-                print "Process found on PID: ",p
-                return p
-        
-        
 def memLoad(distributionID,runNo,memSize,memThreads,duration):
     runStressapptestPidNo=0
             
     try:
-        #print "\n\nthis is mem load:memSize,memThreads,duration",memSize,memThreads,duration,"\n\n"
-        
         if int(memThreads) ==0 :
             cmd="stressapptest "+" -M "+str(memSize)+" -s "+str(duration)+"&"
-            #print cmd
-            #runStressapptest = subprocess.Popen(["stressapptest", "-M",memSize,"-s",duration])
-            
             runStressapptest=os.system(cmd)
-            #runStressapptestPidNo =runStressapptest.pid
-            
             runStressapptestPidNo =pidFinder("stressapptest")
             
             print "Started Stressapptest on PID No: ",runStressapptestPidNo
         else:
-            cmd="stressapptest "+" -M "+str(memSize)+" -i "+str(memThreads)+" -s "+str(duration)+"&"
-            
-            #print cmd
-            
-            #runStressapptest = subprocess.Popen(["stressapptest","-M",memSize,"-i",memThreads,"-s",duration])
-            
+            cmd="stressapptest "+" -M "+str(memSize)+" -m "+str(memThreads)+" -s "+str(duration)+"&"
             runStressapptest=os.system(cmd)
-            
-            #runStressapptestPidNo =runStressapptest.pid
             runStressapptestPidNo =pidFinder("stressapptest")
-            
-            #print "Started Stressapptest on PID No: ",runStressapptestPidNo
-    
             
     except Exception, e:
         return "run_Stressapptest job memLoad exception: ", e
         
-   
-        
     #catching failed runs
-    
     if zombieBuster(runStressapptestPidNo):
-        #print "Job failed, sending wait()."
         runStressapptest.wait()
-        #print "writing fail into DB..."
         message="Fail"
         executed="False"
     else:
-        #print "writing success into DB..."
         message="Success"
         executed="True"
-    ###write to log###
-    #str(emulationID)+"-"+str(emulationName)+"-syslog"+"_"+str(startTimeEmu)+".csv"    
     dbWriter(distributionID,runNo,message,executed)
-    time.sleep(duration)            
+    time.sleep(float(duration))            
            
-def ioLoad(distributionID,runNo,fileQty,memSize,memThreads,duration):
+def ioLoad(distributionID,runNo,fileQty,memSize,duration):
     runStressapptestPidNo=0
             
     try:
-        #print "\n\nthis is ioLoad load:memSize,fileQty,duration,memThreads",memSize,fileQty,duration,memThreads,"\n\n"
-            
-        if int(fileQty) ==0 and int(memThreads) != 0 :
-            #print "\n\n\n\n!!!!zer_o!!!!!\n\n\n\n"
-            
-            cmd="stressapptest "+" -M "+str(memSize)+" -i "+str(memThreads)+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))+" -s "+str(duration)+"&"
-            #print cmd
+        if int(fileQty) ==0:
+            cmd="stressapptest "+" -m 0"+" -M "+str(memSize)+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))+" -s "+str(duration)+"&"
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
-            #print "Started Stressapptest on PID No: ",runStressapptestPidNo
         
-        elif int(fileQty) !=0 and int(memThreads) == 0 :
-            #print "\n\n\n\n!!!!one!!!!!\n\n\n\n"
-    
+        elif int(fileQty) !=0:
             fileStr=""
-            
             fileQty=int(fileQty)
     
             while fileQty !=0:
-                fileStr=fileStr+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))
+                fileStr=fileStr+" -m 0"+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))
                 fileQty =fileQty-1            
-            #print "fileStr: ",fileStr
             
             cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -s "+str(duration)+" --stop_on_errors&"
-            #print cmd
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
-            #print "Started Stressapptest on PID No: ",runStressapptestPidNo
-    
-    
-    
-        
-        elif int(fileQty) == 0 and int(memThreads) == 0 :
-            #print "\n\n\n\n!!!!two!!!!!\n\n\n\n"
-    
-            cmd="stressapptest "+" -M "+str(memSize)+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))+" -s "+str(duration)+" --stop_on_errors&"
-            #print cmd
-            runStressapptest=os.system(cmd)
-            runStressapptestPidNo =pidFinder("stressapptest")
-            #print "Started Stressapptest on PID No: ",runStressapptestPidNo
-            
-        elif int(memThreads) !=0 and int(fileQty) !=0 :
-            print "\n\n\n\n!!!!else!!!!!\n\n\n\n"
-        
-            
-            fileStr=""
-            
-            fileQty=int(fileQty)
-            
-            
-            
-            while fileQty !=0:
-                fileStr=fileStr+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))
-                fileQty =fileQty-1
-                
-            #print "fileStr: ",fileStr
-            cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -i "+str(memThreads)+" -s "+str(duration)+" --stop_on_errors&"
-            #print cmd
-            runStressapptest=os.system(cmd)
-            runStressapptestPidNo =pidFinder("stressapptest")
-            #print "Started Stressapptest on PID No: ",runStressapptestPidNo    
 
     except Exception, e:
         "run_Stressapptest job memLoad exception: ", e
         
-   
-        
     #catching failed runs
-    
     if zombieBuster(runStressapptestPidNo):
-        #print "Job failed, sending wait()."
         runStressapptest.wait()
-        #print "writing fail into DB..."
         message="Fail"
         executed="False"
     else:
-        #print "writing success into DB..."
         message="Success"
         executed="True"
         
     dbWriter(distributionID,runNo,message,executed)
-    time.sleep(duration)           
-        
+    time.sleep(float(duration))
         
 def emulatorHelp():
 
@@ -309,7 +219,6 @@ def emulatorHelp():
     <emulator-params>
         <resourceType>IO</resourceType>
         <memSize>100</memSize>
-        <memThreads>0</memThreads>
     </emulator-params>
     
     """
@@ -317,61 +226,24 @@ def emulatorHelp():
 '''
 here we specify how many arguments emulator instance require to run properly
 '''
-def emulatorArgNames(Rtype):
+def emulatorArgNames(Rtype=None):
     '''
     type = <MEM,IO>
     
     IMPORTANT: All argument variable names must be in lower case
     
     '''
+    if Rtype == None:
+        argNames = ["io","mem"]
+        return argNames
     
     if Rtype.lower() == "mem":
         argNames={"memthreads":{"upperBound":10,"lowerBound":0}}
-        #print "Use Arg's: ",argNames
         return argNames
     
     if Rtype.lower() == "io":
-        argNames={"memsize":{"upperBound":99999,"lowerBound":50},"memthreads":{"upperBound":10,"lowerBound":0}}
-        #print "Use Arg's: ",argNames
+        argNames={"memsize":{"upperBound":99999,"lowerBound":50}}
         return argNames
 
-
-def dbWriter(distributionID,runNo,message,executed):
-        #connecting to the DB and storing parameters
-        try:
-            if HOMEPATH:
-                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-            else:
-                conn = sqlite.connect('./data/cocoma.sqlite')
-                
-            c = conn.cursor()
-                    
-            # 1. Populate "emulation"
-            c.execute('UPDATE runLog SET executed=? ,message=? WHERE distributionID =? and runNo=?',(executed,message,distributionID,runNo))
-            
-            conn.commit()
-            c.close()
-        except sqlite.Error, e:
-            print "Error %s:" % e.args[0]
-            print e
-            sys.exit(1)             
-
-
-def zombieBuster(PID_ID):
-
-    #catching failed runs
-    p = psutil.Process(PID_ID)
-    #print "Process name: ",p.name,"\nProcess status: ",p.status
-    if str(p.status) =="zombie":
-        return True
-    else:
-        return False
-
-
-
 if __name__ == '__main__':
-
     pass
-
-
-    

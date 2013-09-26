@@ -13,7 +13,7 @@
 
 
 \title{COCOMA Documentation}
-\date{April 22, 2013}
+\date{June 06, 2013}
 \release{1}
 \author{Carmelo Ragusa, Philip Robinson, Sergej Svorobej}
 \newcommand{\sphinxlogo}{}
@@ -473,6 +473,7 @@ Displays emulators list. The returned \emph{200- OK} XML:
 
 \code{http:method:: GET /emulators/\{name\}}
 \begin{quote}
+\begin{quote}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 :arg name: Name of emulator that you want to get more info
@@ -481,32 +482,103 @@ Displays emulators list. The returned \emph{200- OK} XML:
 Displays information about emulator by name. The returned \emph{200- OK} XML:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cp}{\PYGZlt{}?xml version=\PYGZdq{}1.0\PYGZdq{} ?\PYGZgt{}}
-\PYG{n+nt}{\PYGZlt{}emulator} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulator/lookbusy\PYGZdq{}} \PYG{n+na}{xmlns=}\PYG{l+s}{\PYGZdq{}http://127.0.0.1/cocoma\PYGZdq{}}\PYG{n+nt}{\PYGZgt{}}
-        \PYG{n+nt}{\PYGZlt{}info}\PYG{n+nt}{\PYGZgt{}}
-                Emulator lookbusy can be used for following resources:
-                1)Loads CPU with parameters:
-                ncpus \PYGZhy{} Number of CPUs to keep busy (default: autodetected)
-
-                2)Loads Memory(MEM) with parameters:
-                memSleep \PYGZhy{} Time to sleep between iterations, in usec (default 1000)
-
-                3)Changing size of files to use during IO with parameters:
-                ioBlockSize \PYGZhy{} Size of blocks to use for I/O in MB
-                ioSleep \PYGZhy{} Time to sleep between iterations, in msec (default 100)
-
-
-                XML block example:
-                \PYG{n+ni}{\PYGZam{}lt;}emulator\PYGZhy{}params\PYG{n+ni}{\PYGZam{}gt;}
-                \PYG{n+ni}{\PYGZam{}lt;}resourceType\PYG{n+ni}{\PYGZam{}gt;}CPU\PYG{n+ni}{\PYGZam{}lt;}/resourceType\PYG{n+ni}{\PYGZam{}gt;}
-                \PYG{n+ni}{\PYGZam{}lt;}ncpus\PYG{n+ni}{\PYGZam{}gt;}0\PYG{n+ni}{\PYGZam{}lt;}/ncpus\PYG{n+ni}{\PYGZam{}gt;}
-                \PYG{n+ni}{\PYGZam{}lt;}/emulator\PYGZhy{}params\PYG{n+ni}{\PYGZam{}gt;}
-
-        \PYG{n+nt}{\PYGZlt{}/info\PYGZgt{}}
-        \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
-        \PYG{n+nt}{\PYGZlt{}link} \PYG{n+na}{href=}\PYG{l+s}{\PYGZdq{}/emulators\PYGZdq{}} \PYG{n+na}{rel=}\PYG{l+s}{\PYGZdq{}parent\PYGZdq{}} \PYG{n+na}{type=}\PYG{l+s}{\PYGZdq{}application/vnd.bonfire+xml\PYGZdq{}}\PYG{n+nt}{/\PYGZgt{}}
-\PYG{n+nt}{\PYGZlt{}/emulator\PYGZgt{}}
 \end{Verbatim}
+\end{quote}
+
+\textless{}?xml version=''1.0'' ?\textgreater{}
+\textless{}emulator href=''/emulators/lookbusy'' xmlns=''\href{http://127.0.0.1/cocoma}{http://127.0.0.1/cocoma}``\textgreater{}
+\begin{quote}
+\begin{description}
+\item[{\textless{}info\textgreater{}}] \leavevmode
+\textless{}help\textgreater{}
+Emulator lookbusy can be used for following resources:
+1)Loads CPU with parameters:
+\begin{quote}
+
+ncpus - Number of CPUs to keep busy (default: autodetected)
+\end{quote}
+\begin{description}
+\item[{2)Loads Memory(MEM) with parameters:}] \leavevmode
+memSleep - Time to sleep between iterations, in usec (default 1000)
+
+\item[{3)Changing size of files to use during IO with parameters:}] \leavevmode
+ioBlockSize - Size of blocks to use for I/O in MB
+ioSleep - Time to sleep between iterations, in msec (default 100)
+
+\end{description}
+
+XML block example:
+\&lt;emulator-params\&gt;
+\begin{quote}
+
+\&lt;resourceType\&gt;CPU\&lt;/resourceType\&gt;
+\&lt;ncpus\&gt;0\&lt;/ncpus\&gt;
+\end{quote}
+
+\&lt;/emulator-params\&gt;
+
+\textless{}/help\textgreater{}
+\textless{}resources\textgreater{}
+\begin{quote}
+\begin{description}
+\item[{\textless{}cpu\textgreater{}}] \leavevmode\begin{description}
+\item[{\textless{}ncpus\textgreater{}}] \leavevmode
+\textless{}upperBound\textgreater{}100\textless{}/upperBound\textgreater{}
+\textless{}lowerBound\textgreater{}100\textless{}/lowerBound\textgreater{}
+
+\end{description}
+
+\textless{}/ncpus\textgreater{}
+
+\end{description}
+
+\textless{}/cpu\textgreater{}
+\textless{}io\textgreater{}
+\begin{quote}
+\begin{description}
+\item[{\textless{}iosleep\textgreater{}}] \leavevmode
+\textless{}upperBound\textgreater{}999999999\textless{}/upperBound\textgreater{}
+\textless{}lowerBound\textgreater{}999999999\textless{}/lowerBound\textgreater{}
+
+\end{description}
+
+\textless{}/iosleep\textgreater{}
+\textless{}ioblocksize\textgreater{}
+\begin{quote}
+
+\textless{}upperBound\textgreater{}9999999\textless{}/upperBound\textgreater{}
+\textless{}lowerBound\textgreater{}9999999\textless{}/lowerBound\textgreater{}
+\end{quote}
+
+\textless{}/ioblocksize\textgreater{}
+\end{quote}
+
+\textless{}/io\textgreater{}
+\textless{}mem\textgreater{}
+\begin{quote}
+\begin{description}
+\item[{\textless{}memsleep\textgreater{}}] \leavevmode
+\textless{}upperBound\textgreater{}999999999\textless{}/upperBound\textgreater{}
+\textless{}lowerBound\textgreater{}999999999\textless{}/lowerBound\textgreater{}
+
+\end{description}
+
+\textless{}/memsleep\textgreater{}
+\end{quote}
+
+\textless{}/mem\textgreater{}
+\end{quote}
+
+\textless{}/resources\textgreater{}
+
+\end{description}
+
+\textless{}/info\textgreater{}
+\textless{}link href=''/'' rel=''parent'' type=''application/vnd.bonfire+xml''/\textgreater{}
+\textless{}link href=''/emulators'' rel=''parent'' type=''application/vnd.bonfire+xml''/\textgreater{}
+\end{quote}
+
+\textless{}/emulator\textgreater{}
 \end{quote}
 
 \code{http:method:: GET /distributions}

@@ -29,24 +29,12 @@ from json import dumps
 from xml.etree import ElementTree
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
-import zipfile
+import zipfile, Library
 
 PORT_ADDR=0
 IP_ADDR=0
 INTERFACE=""
-Pyro4.config.HMAC_KEY='pRivAt3Key'
-
-
-def prettify(elem):
-    """
-    Return a pretty-printed XML string for the Element.
-    """
-    
-    
-    rough_string = ET.tostring(elem, encoding="utf-8", method='xml')
-    
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")
+#Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 
 
@@ -55,6 +43,15 @@ try:
 except:
     print "no $COCOMA environmental variable set"
 
+
+def prettify(elem):
+    """
+    Return a pretty-printed XML string for the Element.
+    """
+    rough_string = ET.tostring(elem, encoding="utf-8", method='xml')
+    
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ")
 
 
 '''
@@ -95,6 +92,16 @@ GET emulation
 #######
 '''
 
+#webpage host #ronan killough
+
+@route('/<filename>')
+def server_static(filename):
+    
+    return static_file(filename, root= HOMEPATH+'/bin/webcontent')
+    
+       
+
+
 
 @route('/emulations/', method ='GET')
 @route('/emulations', method ='GET')
@@ -106,7 +113,7 @@ def get_emulations():
     
     response.set_header('Allow', 'GET, HEAD, POST')
     response.set_header('Accept', '*/*')
-    emuList=EmulationManager.getActiveEmulationList("all")#[{'State': 'active', 'ID': 11, 'Name': u'myMixEmu'}, {'State': 'active', 'ID': 12, 'Name': u'myMixEmu'}]
+    emuList=Library.getEmulationList("all")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     
     '''
@@ -146,7 +153,7 @@ def get_emulation_details(name=""):
     response.set_header('Allow', 'GET, HEAD') 
     
     try:
-        (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(name)
+        (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,logging,logFrequency,logLevel,enabled,vhost,exchange,user,password,host,topic)=EmulationManager.getEmulation(name)
     
     except Exception,e:
             
@@ -176,7 +183,7 @@ def get_emulation_details(name=""):
     #<resourceType>Mix</resourceType>
     resourceTypeXml =ET.SubElement(emulation,'resourceType')
     resourceTypeXml.text = str(resourceTypeEmulation)
-        
+    
     #<startTime>now</startTime>
     startTimeEmuXml =ET.SubElement(emulation,'emuStartTime')
     startTimeEmuXml.text = str(startTimeEmu)    
@@ -185,9 +192,8 @@ def get_emulation_details(name=""):
     stopTimeEmuXml =ET.SubElement(emulation,'emuStopTime')
     stopTimeEmuXml.text = str(stopTimeEmu)
     
-    
     scheduledJobsXml = ET.SubElement(emulation,'scheduledJobs')
-    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":"+str(EmulationManager.readLogLevel("schedport"))
+    uri ="PYRO:scheduler.daemon@"+str(Library.readIfaceIP("schedinterface"))+":"+str(Library.readLogLevel("schedport"))
     daemon=Pyro4.Proxy(uri)    
     
     #create active jobs list
@@ -195,7 +201,7 @@ def get_emulation_details(name=""):
         n=1
         for job in daemon.listJobs():    
             #6-6-0-CPU-stable-lookbusy-CPU
-            if job.name[len(str(emulationID))-1]==str(emulationID):
+            if job[len(str(emulationID))-1]==str(emulationID):
                 jobXml = ET.SubElement(scheduledJobsXml,"job"+str(n))
                 print 
                 jobXml.text=str(job)
@@ -212,7 +218,7 @@ def get_emulation_details(name=""):
     
     try:
         #create distributions list
-        for distro in distroList :
+        for distro in distroList:
             #<distributions ID="1" name="myMixEmu-dis-1" >
             distributionsXml = ET.SubElement(emulation,'distributions', { 'ID':str(distro['distributionsID']),'name':distro['distributionsName']})
             
@@ -222,6 +228,11 @@ def get_emulation_details(name=""):
             startTimeDistroXml=ET.SubElement(distributionsXml,'granularity')
             startTimeDistroXml.text = str(distro['granularity'])
             
+            #distroNameXml = ET.SubElement(distributionsXml,'distribution', { 'href':'/emulators/'+ str(distro['distributionName']),'name':str(distro['distributionName'])})
+            #<distribution href="/distributions/geometric" name="geometric" />
+            
+            distributionXml = ET.SubElement(distributionsXml,'distribution', { 'href':'/distributions/'+ str(distro['distrType']),'name':str(distro['distrType'])})
+            
             durationDistroXml=ET.SubElement(distributionsXml,'duration')
             durationDistroXml.text = str(distro['durationDistro'])
             
@@ -229,34 +240,74 @@ def get_emulation_details(name=""):
             for distroArg in distroArgs:
                 distroArgXml =ET.SubElement(distributionsXml,distroArg) 
                 distroArgXml.text = str(distroArgs[distroArg])
+        
+            #<emulator href="/emulators/wireshark" name="wireshark" />
+            emulatorXml = ET.SubElement(distributionsXml,'emulator', { 'href':'/emulators/'+ str(distro['emulatorName']),'name':str(distro['emulatorName'])})
+            
+            
+            emulatorParamsXml = ET.SubElement(distributionsXml,'emulator-params')
+            
+            resourceTypeXml=ET.SubElement(emulatorParamsXml,'resourceType')
+            resourceTypeXml.text = str(distro['resourceTypeDist'])
+        
+        
+            emulatorArg = distro['emulatorArg']
+            for emuArg in emulatorArg:
+                emuArgXml =ET.SubElement(emulatorParamsXml,emuArg) 
+                emuArgXml.text = str(emulatorArg[emuArg])
+            
+            
     except Exception,e:
-        print "Distro list error",e
+        print "Distro list errorr",e
         
-        
-        #<distribution href="/distributions/geometric" name="geometric" />
-        distributionXml = ET.SubElement(distributionsXml,'distribution', { 'href':'/distributions/'+ str(distro['distrType']),'name':str(distro['distrType'])})
-        
-        #<emulator href="/emulators/wireshark" name="wireshark" />
-        emulatorXml = ET.SubElement(distributionsXml,'emulator', { 'href':'/emulators/'+ str(distro['emulatorName']),'name':str(distro['emulatorName'])})
-        
-        emulatorParamsXml = ET.SubElement(distributionsXml,'emulator-params')
 
-        resourceTypeXml=ET.SubElement(emulatorParamsXml,'resourceType')
-        resourceTypeXml.text = str(distro['resourceTypeDist'])
-        
-        
-        emulatorArg = distro['emulatorArg']
-        for emuArg in emulatorArg:
-            emuArgXml =ET.SubElement(emulatorParamsXml,emuArg) 
-            emuArgXml.text = str(emulatorArg[emuArg])
 
+        
+    logXML = ET.SubElement(emulation,'log')
     
+    
+    enableXML= ET.SubElement(logXML,'enable')
+    enableXML.text=str(logging)
+    
+    frequencyXML=ET.SubElement(logXML,'frequency')
+    frequencyXML.text=str(logFrequency)
+    
+    logLevelXML= ET.SubElement(logXML,'logLevel')
+    logLevelXML.text=str(logLevel)        
+
+    mqXML = ET.SubElement(emulation,'mq')
+    
+    
+    enabledXML= ET.SubElement(mqXML,'enabled')
+    enabledXML.text=str(enabled)
+    
+    vhostXML=ET.SubElement(mqXML,'vhost')
+    vhostXML.text=str(vhost)
+    
+    exchangeXML= ET.SubElement(mqXML,'exchange')
+    exchangeXML.text=str(exchange)             
+    
+    userXML= ET.SubElement(mqXML,'user')
+    userXML.text=str(user)   
+
+    passwordXML= ET.SubElement(mqXML,'password')
+    passwordXML.text=str(password)  
+
+    hostXML= ET.SubElement(mqXML,'host')
+    hostXML.text=str(host)  
+
+    topicXML= ET.SubElement(mqXML,'topic')
+    topicXML.text=str(topic)  
+
+
+    #<xmlData>xml body content</xmlData>
+    #xmlDataXml =ET.SubElement(emulation,'xmlData')
+    #xmlDataXml.text = str(xmlData)
+
     #<link href="/" rel="parent" type="application/vnd.cocoma+xml"/>
     lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
     #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
     lk0 = ET.SubElement(emulation, 'link', {'rel':'parent', 'href':'/emulations', 'type':'application/vnd.bonfire+xml'})
-    
-    
     
     return prettify(emulation)    
 
@@ -271,8 +322,8 @@ def get_emulators():
     response.set_header('Accept', '*/*')
     response.set_header('Allow', 'GET, HEAD')     
     
-    emuList=DistributionManager.listEmulators("all")
-    print "emulist",emuList
+    emuList=Library.listEmulators("all")
+    #print "emulist",emuList
     '''
     XML namespaces are used for providing uniquely named elements and attributes in an XML document.
     '''
@@ -303,23 +354,50 @@ def get_emulator(name=""):
     Display emulator by name
     '''
     
+    ET.register_namespace("test", "http://127.0.0.1/cocoma")
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD')
+        
+        
+             
+        
+        
     try:
-        ET.register_namespace("test", "http://127.0.0.1/cocoma")
-        response.set_header('Content-Type', 'application/vnd.bonfire+xml')
-        response.set_header('Accept', '*/*')
-        response.set_header('Allow', 'GET, HEAD')     
-        helpMod=DistributionManager.loadEmulatorHelp(name)
+        helpMod=Library.loadEmulatorHelp(name)
+        argMod=Library.loadEmulatorArgNames(name)
     
+        emulatorXml = ET.Element('emulator', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulators/'+str(name)})
     
-        emulatorXml = ET.Element('emulator', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulator/'+str(name)})
+        emulatorInfoXml=ET.SubElement(emulatorXml,'info')
+        emulatorHelpXml=ET.SubElement(emulatorInfoXml,'help')
+        emulatorHelpXml.text = str(helpMod())
+        
+        emulatorResourcesListXml=ET.SubElement(emulatorInfoXml,'resources')
+        
+        #get list of resources
+        resList=argMod()
+        
+        #get arguments for every resource { "mem":[startLoad,stopLoad,malloc]}, "io":[...]}
+        for resource in resList:
+            argNames=argMod(resource)
+            
+            #<mem>
+            emulatorResourceXml=ET.SubElement(emulatorResourcesListXml,resource)
+            #<startLoad>
+            #{"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}}
+            for args in argNames:
+                emulatorArgsXml=ET.SubElement(emulatorResourceXml,args)
+                
+                #<upperBound>
+                emulatorUpperBound=ET.SubElement(emulatorArgsXml,"upperBound")
+                
+                emulatorUpperBound.text = str(argNames[args]["upperBound"])
+                
+                emulatorLowerBound=ET.SubElement(emulatorArgsXml,"lowerBound")
+                emulatorLowerBound.text = str(argNames[args]["upperBound"])
     
-        emulatorHelpXml=ET.SubElement(emulatorXml,'info')
-        emulatorHelpXml.text = str(helpMod())    
 
-    
-        #distroArgXml=ET.SubElement(distributionXml,'arguments')
-        #distroArgXml.text = str(argMod())    
-    
         lk0 = ET.SubElement(emulatorXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
         #<link href="/emulations" rel="parent" type="application/vnd.cocoma+xml"/>
         lk0 = ET.SubElement(emulatorXml, 'link', {'rel':'parent', 'href':'/emulators', 'type':'application/vnd.bonfire+xml'})
@@ -346,8 +424,8 @@ def get_distributions():
     response.set_header('Accept', '*/*')
     response.set_header('Allow', 'GET, HEAD')     
     
-    distroList=DistributionManager.listDistributions("all")
-    print "distroList",distroList
+    distroList=Library.listDistributions("all")
+    #print "distroList",distroList
     '''
     XML namespaces are used for providing uniquely named elements and attributes in an XML document.
     '''
@@ -378,7 +456,30 @@ def get_distributions():
 def get_distribution(name=""):
     '''
     Display distribution by name
+    
+    
+    #example return
+    <info>
+        <help>Linear distribution takes in start and stop load parameters and gradually increasing resource workload. Can be used with CPU,MEM,IO,NET resource types.</help>
+        <resources>
+            <mem>
+                <startLoad>
+                    <upperBound>1</upperBound>
+                    <lowerBound>2</lowerBound>
+                </startLoad>
+                
+                <stopLoad>
+                    <upperBound>1</upperBound>
+                    <lowerBound>2</lowerBound>
+                </stopLoad>                
+            </mem>
+            <io>
+            ...
+            </io>
+        </resources>
+    </info>
     '''
+    
     #curl -k -i http://10.55.164.232:8050/distributions/linear
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
@@ -387,13 +488,38 @@ def get_distribution(name=""):
     response.set_header('Allow', 'GET, HEAD') 
     
     try:
-        helpMod=DistributionManager.loadDistributionHelp(name)
-        
+        helpMod=Library.loadDistributionHelp(name)
+        argMod=Library.loadDistributionArgNames(name)
     
         distributionXml = ET.Element('distribution', { 'xmlns':'http://127.0.0.1/cocoma','href':'/distributions/'+str(name)})
     
-        distroHelpXml=ET.SubElement(distributionXml,'info')
-        distroHelpXml.text = str(helpMod())        
+        distroInfoXml=ET.SubElement(distributionXml,'info')
+        distroHelpXml=ET.SubElement(distroInfoXml,'help')
+        distroHelpXml.text = str(helpMod())
+        
+        distroResourcesListXml=ET.SubElement(distroInfoXml,'resources')
+        
+        #get list of resources
+        resList=argMod()
+        
+        #get arguments for every resource { "mem":[startLoad,stopLoad,malloc]}, "io":[...]}
+        for resource in resList:
+            argNames=argMod(resource)
+            
+            #<mem>
+            distroResourceXml=ET.SubElement(distroResourcesListXml,resource)
+            #<startLoad>
+            #{"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}}
+            for args in argNames:
+                distroArgsXml=ET.SubElement(distroResourceXml,args)
+                
+                #<upperBound>
+                distroUpperBound=ET.SubElement(distroArgsXml,"upperBound")
+                
+                distroUpperBound.text = str(argNames[args]["upperBound"])
+                
+                distroLowerBound=ET.SubElement(distroArgsXml,"lowerBound")
+                distroLowerBound.text = str(argNames[args]["upperBound"])
     
         lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
         lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})
@@ -422,8 +548,8 @@ def get_tests():
     response.set_header('Accept', '*/*')
     response.set_header('Allow', 'GET, HEAD, POST')     
     
-    testsList=DistributionManager.listTests("all")
-    print "testsList",testsList
+    testsList=Library.listTests("all")
+    #print "testsList",testsList
     '''
     XML namespaces are used for providing uniquely named elements and attributes in an XML document.
     '''
@@ -463,7 +589,7 @@ def show_test(name=""):
     
     try:
         filename=open(HOMEPATH+"/tests/"+name,'r')
-        print "filename to show: ",filename
+        #print "filename to show: ",filename
         xmlFileContent = filename.read()
         filename.close()
         #xmlFileContent=XmlParser.xmlReader(filename)
@@ -521,24 +647,24 @@ def start_test():
             response.status = 400
             return "<error>"+str(e)+"</error>"
         
-        print "File data detected:\n",fileName_stream
+        #print "File data detected:\n",fileName_stream
         #return fileName_stream
         try:
              
-            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(filename)
+            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(filename)
             if startTimeEmu.lower() =="now":
-                startTimeEmu = EmulationManager.emulationNow(2)
-                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                startTimeEmu = Library.emulationNow(2)
+                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
             else:
                 
-                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
         
         except Exception,e:
             print e
             response.status = 400
             return "<error>Cannot parse:"+str(e)+"</error>"
     else:
-        print "xml_stream_body:\n",fileName_stream_body
+        #print "xml_stream_body:\n",fileName_stream_body
         
         try:   
             filename=HOMEPATH+"/tests/"+str(fileName_stream_body)
@@ -548,15 +674,15 @@ def start_test():
             response.status = 400
             return "<error>Cannot parse body:"+str(e)+"</error>"        
         
-        print "Body data detected:\n", filename
+        #print "Body data detected:\n", filename
         try:
 
-            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(filename)
+            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(filename)
             if startTimeEmu.lower() =="now":
-                startTimeEmu = EmulationManager.emulationNow(2)
-                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                startTimeEmu = Library.emulationNow(2)
+                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
             else:
-                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
     
         except Exception,e:
             print e
@@ -605,7 +731,7 @@ def show_all_results():
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     response.set_header('Accept', '*/*')
     response.set_header('Allow', 'GET, HEAD') 
-    emuList=EmulationManager.getActiveEmulationList("all")
+    emuList=Library.getEmulationList("all")
     
     #root element
     resultsCollection = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/results'})
@@ -616,7 +742,7 @@ def show_all_results():
         failedRunsInfo=elem["failedRunsInfo"]
         
         
-        print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
+        #print "---->\nID: "+str(elem["ID"])+"\nName: "+str(elem["Name"])+"\nState: "+str(elem["State"])+"\nTotal Runs: "+str(elem["runsTotal"])+"\nExecuted Runs: "+str(elem["runsExecuted"])+"\nFailed Runs: "+str(len(failedRunsInfo))
         
         emuResults = ET.SubElement(items,'results', { 'href':'/results/'+str(elem["Name"]),'failedRuns':str(len(failedRunsInfo)),'name':str(elem["Name"]),'state':str(elem["State"])})
 
@@ -647,7 +773,7 @@ def show_results(name=""):
     
     
     try:    
-        emuList=EmulationManager.getActiveEmulationList(name)
+        emuList=Library.getEmulationList(name)
         
         
         for elem in emuList :
@@ -682,7 +808,7 @@ def show_results(name=""):
             
                 failedRunsDetails= ET.SubElement(resultsEmulation,'failedRunsDetails')
             
-                print "###Failed Runs Info###"
+                #print "###Failed Runs Info###"
                 for Runs in failedRunsInfo:
                     runNo= ET.SubElement(failedRunsDetails,'runNo',{'runNo':str(Runs["runNo"])})
                     #runNo.text=str(Runs["runNo"])
@@ -699,12 +825,12 @@ def show_results(name=""):
                     message= ET.SubElement(runNo,'message')
                     message.text=str(Runs["message"])
                     
-                    print "#\nRun No: ", Runs["runNo"]
-                    print "Distribution ID: ",Runs["distributionID"]
-                    print "Distribution Name: ",Runs["distributionName"]
+                    #print "#\nRun No: ", Runs["runNo"]
+                    #print "Distribution ID: ",Runs["distributionID"]
+                    #print "Distribution Name: ",Runs["distributionName"]
                     
-                    print "Stress Value: ", Runs["stressValue"]
-                    print "Error Message: ", Runs["message"]
+                    #print "Stress Value: ", Runs["stressValue"]
+                    #print "Error Message: ", Runs["message"]
         
             return prettify(resultsEmulation)
         
@@ -758,36 +884,36 @@ def create_emu():
     
     xml_stream =request.files.data
     xml_stream_body =request.body.read()
-    
+
     if xml_stream:
         
-        print "File data detected:\n",xml_stream
+        #print "File data detected:\n",xml_stream
         return xml_stream
         try:
-            (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(xml_stream)
+            (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(xml_stream)
         except Exception,e:
             print e
             response.status = 400
             
     else:    
         try:
-            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlParser(xml_stream_body)
+            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlReader(xml_stream_body)
         except Exception,e:
             response.status = 400
             #proper way to return web API error
             emuError=ET.Element('error')
-            emuError.text = str(XmlParser.xmlParser(xml_stream_body))
+            emuError.text = str(XmlParser.xmlReader(xml_stream_body))
             return prettify(emuError)
             
-    
+
     #create emulation
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
     response.set_header('Content-Type', 'application/vnd.bonfire+xml')
     try:
-        emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+        emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
         paramsArray=re.split(r"-",str(emulationID))
-        print "paramsArray[0]",paramsArray[0]
+        #print "paramsArray[0]",paramsArray[0]
         if isStr(paramsArray[0]):
             
             response.status = 400
@@ -816,9 +942,7 @@ def create_emu():
                 
             for dnotes in items['distroArgsNotes']:
                     distroNotesStr+=str(dnotes)                
-        
-            
-        
+                    
         emulationEmuNotesXml.text = emuNotesStr
         emulationDistroNotesXml.text= distroNotesStr
         
@@ -990,18 +1114,10 @@ def zip_files(fileName_wo_zip):
 
     return static_file(zipFilename, root=dirPath, download=zipFilename)
 
-def getifip(ifn):
-    '''
-    Provided network interface returns IP adress to bind on
-    '''
-    import socket, fcntl, struct
-    sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(sck.fileno(),0x8915,struct.pack('256s', ifn[:15]))[20:24])
-
 
 def startAPI(IP_ADDR,PORT_ADDR):
 
-    if ccmsh.daemonCheck() ==0:
+    if Library.daemonCheck() ==0:
             print "\n---Check if Scheduler Daemon is started. Connection error---"
             sys.exit(0)
   
@@ -1020,7 +1136,7 @@ if __name__ == '__main__':
         elif sys.argv[1] == "-i":
             INTERFACE = sys.argv[2]
             print "Interface: ",sys.argv[2]
-            IP_ADDR=getifip(sys.argv[2])
+            IP_ADDR=Library.getifip(sys.argv[2])
             try:
                 if sys.argv[3] == "-p":
                     PORT_ADDR = int(sys.argv[4])
@@ -1031,7 +1147,7 @@ if __name__ == '__main__':
                 print "No port specified using 5050 as default"
 
             #writing config to db
-            EmulationManager.writeInterfaceData(INTERFACE,"apiinterface")
+            Library.writeInterfaceData(INTERFACE,"apiinterface")
             #starting API module
             startAPI(IP_ADDR,PORT_ADDR)
      
@@ -1041,8 +1157,8 @@ if __name__ == '__main__':
         print "API exception error:",e
         INTERFACE ="eth0"
         print "Interface: ","eth0"
-        IP_ADDR=getifip("eth0")
-        EmulationManager.writeInterfaceData("eth0","apiinterface")
+        IP_ADDR=Library.getifip("eth0")
+        Library.writeInterfaceData("eth0","apiinterface")
         startAPI(IP_ADDR,PORT_ADDR)
         
     

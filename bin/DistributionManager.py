@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#Copyright 2012-2013 SAP Ltd
+# Copyright 2012-2013 SAP Ltd
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -19,297 +19,242 @@
 #
 
 
-import Pyro4,imp,time,sys,os,EmulationManager
+import imp,time,sys,os,EmulationManager
 import datetime as dt
 import sqlite3 as sqlite
+import logging
+import EMQproducer, Library
+from EMQproducer import Producer
+from Distribution import distribution
+from Logger import singleLogger
 
-#perhaps needs to be set somewhere else
+import Pyro4
 Pyro4.config.HMAC_KEY='pRivAt3Key'
+#Pyro4.config.SERIALIZER='pickle'
+#perhaps needs to be set somewhere else
+
 distLoggerDM=None
 
-try:
-    HOMEPATH= os.environ['COCOMA']
-except:
-    print "no $COCOMA environmental variable set"    
+global producer
+producer = Producer()
+# EMQproducer.StreamAndBroadcastHandler("Distribution Manager",producer,logging.INFO)
 
-def distributionManager(emulationID,emulationLifetimeID,emulationName,distributionName,startTime,startTimeDistro,duration,emulator, distributionGranularity,distributionType,resourceTypeDist,distributionArg,emulatorArg):   
-        
-        #emulation run log record initiation
-        global distLoggerDM
-        if distLoggerDM is None:
-            distLoggerDM=EmulationManager.loggerSet("Distriburion Manager",str(emulationID)+"-"+str(emulationName)+"-syslog"+"_"+str(startTime)+".csv")
+global HOMEPATH
+HOMEPATH = Library.getHomepath()
+   
 
-        #print "this is distributionManager"
-            
-        try:
-            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-            c = conn.cursor()
-                
-            # 1. We populate "distribution" table      
-            c.execute('INSERT INTO distribution (distributionGranularity, distributionType,emulator,distributionName,startTime,duration,emulationID) VALUES (?, ?, ?, ?,?, ?,?)', [distributionGranularity, distributionType, emulator,distributionName,startTimeDistro,duration,emulationID])
-        
-            distributionID=c.lastrowid
-            '''
-            {'startLoad': u'10', 'stopLoad': u'90'}
-            '''
-            #print "distributionArg:", distributionArg
-            #print "emulatorArg:",emulatorArg
-            
-            #2. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
-            for d in distributionArg :
-                c.execute('INSERT INTO DistributionParameters (paramName,value,distributionID) VALUES (?, ?, ?)',[d,distributionArg[d],distributionID])
-            distributionParametersID=c.lastrowid
-            
-            
-            c.execute('UPDATE distribution SET distributionParametersID=? WHERE distributionID =?',(distributionParametersID,distributionID))
-            
-            
-            for emu in emulatorArg :
-                c.execute('INSERT INTO EmulatorParameters (paramName,value,resourceType,distributionID) VALUES (?, ?, ?,?)',[emu,emulatorArg[emu],resourceTypeDist,distributionID])
-            distributionParametersID=c.lastrowid
-            
-            conn.commit()
-            c.close()
-        except sqlite.Error, e:
-            print "Error %s:" % e.args[0]
-            print e
-            sys.exit(1)                        
-               
-        startTime= timeConv(startTime)
-        startTimesec=timestamp(startTime)+float(startTimeDistro)
-        #print "startTime:",startTime
-        
-        #make sure it is integer
-        distributionGranularity = int(distributionGranularity)
-         
-        # This has to be moved inside the dist_linear
-#        runDuration = int(duration)/distributionGranularity
-#        print "Duration is seconds:"
-#        print duration
-        duration = int(duration)
-          
-        '''
-        1. Load the module according to Distribution Type to create runs
-        '''
-                              
-        #1. Get required module loaded
-        modhandleMy=loadDistribution(distributionType)
-        #2. Use this module for calculation and run creation   
-        (stressValues,runStartTime,runDurations)=modhandleMy(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH)
-        
-        uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":"+str(EmulationManager.readLogLevel("schedport"))
+def createDistribution(newEmulation):
+    daemon=Library.getDaemon()
     
-        daemon=Pyro4.Proxy(uri)
-        
-        n=0
-        for vals in stressValues:
-            #print "stressValues: ",vals
-            try:
-                #print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
-                daemon.hello()
-                #Sending emulation name already including ID stamp
-                emulationNameID =str(emulationID)+"-"+str(emulationName)
-                
-                schedulerReply = str(daemon.createJob(emulationID,emulationNameID,distributionID,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n),runDurations[n]))
-                
+    global producer
+    if producer is None:
+        # print "In distributionManager, copying producer"
+        producer = producer()
 
-                distLoggerDM.info("Scheduler reply: "+str(schedulerReply))
+    # print "Who calls "+sys._getframe(0).f_code.co_name+": "+sys._getframe(1).f_code.co_name
+#    distLoggerDM = ""
+    
+    # if distLoggerDM is None:
+    #        distLoggerDM=Library.loggerSet("Distribution Manager",str(newEmulation.emulationID)+"-"+str(newEmulation.emulationName)+"-syslog"+"_"+str(newEmulation.startTimeEmu)+".csv")
+
+
+
+    # connecting to the DB and storing parameters
+    loggerJobReply = "No logger scheduled"
+    try:
+
+        conn = Library.dbconn()
+        c = conn.cursor()
                 
-                
-                #adding values to the table for recovery
-                try:
-                    conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
-                    c = conn.cursor()
+        # 1. Populate "emulation"
+        c.execute('INSERT INTO emulation (emulationName,emulationType,resourceType,active,logging,logFrequency,logLevel,xmlData) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [newEmulation.emulationName, newEmulation.emulationType, newEmulation.resourceTypeEmulation, 1, newEmulation.emulationLog, newEmulation.emulationLogFrequency, newEmulation.emulationLogLevel, newEmulation.xmlData])
+        newEmulation.setEmulationID(c.lastrowid)
+        # start logger here once we know emulation ID
+#        distLoggerDM = singleLogger("Distribution Manager", None, str(newEmulation.emulationID) + "-" + str(newEmulation.emulationName) + "-syslog" + "_" + str(newEmulation.startTimeEmu) + ".csv")
+        
+        c.execute('UPDATE emulation SET emulationName=? WHERE emulationID =?', (str(newEmulation.emulationID) + "-" + newEmulation.emulationName, newEmulation.emulationID))
+        
+        # 2. We populate "emulationLifetime" table  
+        c.execute('INSERT INTO emulationLifetime (startTime,stopTime,emulationID) VALUES (?,?,?)', [newEmulation.startTimeEmu, newEmulation.stopTimeEmu, newEmulation.emulationID])
+        emulationLifetimeID = c.lastrowid
+
+        newEmulation.setEmulationLifetimeID(emulationLifetimeID)
+        c.execute('UPDATE emulationLifetime SET stopTime=? WHERE emulationLifetimeID =?',(newEmulation.stopTimeEmu,emulationLifetimeID))
+        c.execute('UPDATE emulation SET emulationLifetimeID=? WHERE emulationID=?',(emulationLifetimeID,newEmulation.emulationID))
+        
+        conn.commit()
+        c.close()
+        
+        """
+        # Here we create runs
+        """
+
+#        raise Exception ("newEmulation.emulationLog = " + str(newEmulation.emulationLog))
+        if newEmulation.emulationLog == "1":
+            
+            # creating run for logger with probe interval of 2 seconds
+            distLoggerDM = singleLogger("Distribution Manager", None, str(newEmulation.emulationID) + "-" + str(newEmulation.emulationName) + "-syslog" + "_" + str(newEmulation.startTimeEmu) + ".csv")
+            interval = int(newEmulation.emulationLogFrequency)
+            singleRunStartTime = Library.timestamp(Library.timeConv(newEmulation.startTimeEmu))
+            loggerJobReply = daemon.createLoggerJob(singleRunStartTime, newEmulation.stopTimeEmu, interval, newEmulation.emulationID, newEmulation.emulationName, newEmulation.startTimeEmu)       
+        
+        createEndJob(daemon, newEmulation)
+        
+    except sqlite.Error, e:
+        print e
+        return "SQL error:", e
+        sys.exit(1)
+
+    createDistributionRuns(newEmulation)
+
+def createEndJob (daemon, newEmulation):
+    duration = []
+    startTime = []
+    granularity = []
+    
+    for distroItem in newEmulation.distroList:
+        startTime.append(int(distroItem.getStartTime()))
+        if distroItem.getDuration() > 0:
+            duration.append(int(distroItem.getDuration()))
+        else:
+            duration.append(1)
+        if distroItem.getGranularity() > 0:
+            granularity.append(int(distroItem.getGranularity()))
+        else:
+            granularity.append(1)
+    
+    maxStartTime = max(startTime)
+    maxStartTimeIndex = startTime.index(maxStartTime)
+    runInterval = duration[maxStartTimeIndex] // granularity[maxStartTimeIndex]
+    
+    returnEmulationName = (str(newEmulation.emulationID) + "-" + newEmulation.emulationName)
+    emulationEndTime = Library.timestamp(Library.timeConv(newEmulation.startTimeEmu)) + float(newEmulation.stopTimeEmu) + (runInterval + 2)
+    emulationEndJobReply = daemon.createEmulationEndJob(emulationEndTime, returnEmulationName)
+
+def createDistributionRuns(newEmulation):
+    
+    daemon=Library.getDaemon()
+    daemon.setEmuObject(newEmulation)
+    
+    for distro in newEmulation.distroList:
+
+        if distro.getDistributionID() != "none":
+            #do nothing continue to next element, because this distribution was already scheduled.
+            print "Already scheduled"
+
+        else:
                         
-                    # 1. We populate "distribution" table :stressValue,runStartTime,runNo     
-                    c.execute('INSERT INTO runLog (stressValue, runStartTime,runNo,distributionID, runDuration) VALUES (?, ?, ?, ?,?)', [vals, runStartTime[n],str(n),distributionID,runDurations[n]])
+            try:
+                conn = Library.dbconn()
+                c = conn.cursor()
+                    
+                # 1. We populate "distribution" table      
                 
-                                    
-                    conn.commit()
-                    c.close()
-                except sqlite.Error, e:
-                    print "Error %s:" % e.args[0]
-                    print e
-                    sys.exit(1)                         
+    
+                c.execute('INSERT INTO distribution (distributionGranularity, distributionType,emulator,distributionName,startTime,duration,emulationID) VALUES (?, ?, ?, ?,?, ?,?)', [distro.granularity, distro.type, distro.emulatorName,distro.name,distro.startTime,distro.duration,newEmulation.emulationID])
+                distro.setDistributionID(c.lastrowid)
+                '''
+                {'startLoad': u'10', 'stopLoad': u'90'}
+                '''
+                #print "distributionArg:", distributionArg
+                #print "emulatorArg:",emulatorArg
                 
-                n= n+1
+                #2. populate DistributionParameters, of table determined by distributionType name in our test it is "linearDistributionParameters"
+                for d in distro.distroArgs :
+                    c.execute('INSERT INTO DistributionParameters (paramName,value,distributionID) VALUES (?, ?, ?)',[d,distro.distroArgs[d],distro.ID])
+                distributionParametersID=c.lastrowid
                 
                 
+                c.execute('UPDATE distribution SET distributionParametersID=? WHERE distributionID =?',(distributionParametersID,distro.ID))
                 
-            except  Pyro4.errors.CommunicationError, e:
+                
+                for emu in distro.emulatorArg :
+                    c.execute('INSERT INTO EmulatorParameters (paramName,value,resourceType,distributionID) VALUES (?, ?, ?,?)',[emu,distro.emulatorArg[emu],distro.resourceType,distro.ID])
+                distributionParametersID=c.lastrowid
+                
+                conn.commit()
+                c.close()
+            except sqlite.Error, e:
+                print "Error %s:" % e.args[0]
                 print e
-                print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
-        
-
-'''
-###############################
-Handling Distribution module load
-##############################
-'''
-def loadDistribution(modName):
+                sys.exit(1)                        
+                   
+            startTime= Library.timeConv(newEmulation.startTimeEmu)
+            startTimesec=Library.timestamp(startTime)+float(distro.startTime)
+            
+            #making sure that the run after event has valid date for scheduling
+            nowTime=Library.timestamp(Library.timeConv(Library.emulationNow(5)))
+            if startTimesec < nowTime:
+                startTimesec = nowTime+float(distro.startTime)
+               
             '''
-            We are Loading module by file name. File name will be determined by distribution type (i.e. linear)
+            1. Load the module according to Distribution Type to create runs
             '''
-            if HOMEPATH:
-                modfile = HOMEPATH+"/distributions/dist_"+modName+".py"
-                modname = "dist_"+modName
-            else:
-                modfile = "./distributions/dist_"+modName+".py"
-                modname = "dist_"+modName
+    
+            #1. Get required module loaded
+            modhandleMy=Library.loadDistribution(distro.type)
+            #Check if error returned
+            if (type(modhandleMy) is str):
+                raise Exception (modhandleMy)
+             
+            #2. Use this module for calculation and run creation   
+            stressValues,runStartTime,runDurations,triggerType=modhandleMy(newEmulation.emulationID,newEmulation.emulationName,newEmulation.getEmulationLifetimeID(),startTimesec,distro.duration, int(distro.granularity),distro.distroArgs,distro.resourceType,HOMEPATH)
+            
+            #event and time type disro's separation
+            try :
                 
-            modhandle = imp.load_source(modname, modfile)    
-            return modhandle.functionCount
-
-def loadDistributionHelp(modName):
-            '''
-            We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
-            '''
-            if HOMEPATH:
-                modfile = HOMEPATH+"/distributions/dist_"+modName+".py"
-                modname = "dist_"+modName
-            else:
-                modfile = "./distributions/dist_"+modName+".py"
-                modname = "dist_"+modName
+                    n=0
+                    for vals in stressValues:
+                        #print "stressValues: ",vals
+                        try:
+                            #print "Things that are sent to daemon:\n",emulationID,emulationName,distributionName,emulationLifetimeID,runDurations[n],emulator,emulatorArg,resourceTypeDist,vals,runStartTime[n],str(n)
+                            daemon.hello()
+                            #Sending emulation name already including ID stamp
+                            emulationNameID =str(newEmulation.emulationID)+"-"+str(newEmulation.emulationName)
+                            
+                            schedulerReply = str(daemon.createJob(newEmulation.emulationID,emulationNameID,distro.ID,distro.name,newEmulation.getEmulationLifetimeID(),runDurations[n],distro.emulatorName,distro.emulatorArg,distro.resourceType,vals,runStartTime[n],str(n),runDurations[n]))
+                            distLoggerDM=singleLogger("Distribution Manager",None,str(newEmulation.emulationID)+"-"+str(newEmulation.emulationName)+"-syslog"+"_"+str(newEmulation.startTimeEmu)+".csv")
+                            distLoggerDM.info("Job Created: "+schedulerReply)
+            
+                            
+                            
+                            #adding values to the table for recovery
+                            try:
+                                conn = Library.dbconn()
+                                c = conn.cursor()
+                                    
+                                # 1. We populate "distribution" table :stressValue,runStartTime,runNo     
+                                c.execute('INSERT INTO runLog (executed, stressValue, runStartTime,runNo,distributionID, runDuration) VALUES (?, ?, ?, ?, ?,?)', ["Pending", vals, runStartTime[n],str(n),distro.ID,runDurations[n]])
+                           
+                                conn.commit()
+                                c.close()
+                            except sqlite.Error, e:
+                                print "Error %s:" % e.args[0]
+                                print e
+                                sys.exit(1)                         
+                            
+                            n= n+1
+                            
+                            
+                            
+                        except  Pyro4.errors.CommunicationError, e:
+                            print e
+                            print "\n---Check if SchedulerDaemon is started. Connection error cannot create jobs---"
+                            
                 
-            modhandle = imp.load_source(modname, modfile)
-            #print modhandle
-          
-            return modhandle.distHelp   
+                    if triggerType=="time":
+                        #schedule the next distro right after this will end 
+                        pass#maybe break
+                    else:
+                        raise Exception("Found trigger type '%s' in distribution '%s'.Stopping job scheduling" % (triggerType,distro.name))    
         
-def loadDistributionArgNames(modName):
-            '''
-            We are Loading module by file name for Help content. File name will be determined by distribution type (i.e. linear)
-            '''
-            if HOMEPATH:
-                modfile = HOMEPATH+"/distributions/dist_"+modName+".py"
-                modname = "dist_"+modName
-            else:
-                modfile = "./distributions/dist_"+modName+".py"
-                modname = "dist_"+modName
+            except Exception, e:
+                #send copy of emulation object to daemon
+                print "set emu exception:",e
+                daemon.setEmuObject(newEmulation)            
+                break
+                #"do something with remaining distributions to transfer them to the end of event driven distro"    
                 
-            modhandle = imp.load_source(modname, modfile)
-            #print modhandle             
-            return modhandle.argNames  
-
-def listDistributions(name):
-    
-    distroList=[]
-    if name.lower()=="all":
-        if HOMEPATH:
-            path=HOMEPATH+"/distributions/"  # root folder of project
-        else:
-            path="./distributions/"  # root folder of project
-            
-        dirList=os.listdir(path)
-        for fname in dirList:
-            if fname.startswith("dist_") and fname.endswith(".py"):
-                distName = str(fname[5:-3])
-                distroList.append(distName)
-        
-        return distroList 
-    else:
-        loadMod=loadDistributionHelp(name)
-        return loadMod()
-
-def listTests(name):
-    
-    testsList=[]
-    #print "This is listTests\n"
-    if name.lower()=="all":
-        if HOMEPATH:
-            path=HOMEPATH+"/tests/"  # root folder of project
-        else:
-            path="./tests/"  # root folder of project
-            
-        dirList=os.listdir(path)
-        for fname in dirList:
-            if fname.endswith(".xml") or fname.endswith(".XML"):
-                distName = str(fname)#str(fname[0:-4])
-                testsList.append(distName)
-        
-        return testsList 
-    else:
-        print "Display XML content"
-    
-def listEmulators(name):
-    
-    emulatorList=[]
-    if name.lower()=="all":
-        if HOMEPATH:
-            path=HOMEPATH+"/emulators/"  # root folder of project
-        else:
-            path="./emulators/"  # root folder of project
-            
-        dirList=os.listdir(path)
-        for fname in dirList:
-            if fname.startswith("run_") and fname.endswith(".py"):
-                distName = str(fname[4:-3])
-                emulatorList.append(distName)
-        
-        return emulatorList
-    
-    else:
-        
-        EmuhelpMod=loadEmulatorHelp(name)
-        return EmuhelpMod()   
-
-'''
-###############################
-Emulator ARG module load
-##############################
-'''
-def loadEmulatorArgNames(modName):
-    '''
-    We are Loading module by file name. File name will be determined by emulator type (i.e. stressapptest)
-    '''
-    if HOMEPATH:
-        modfile = HOMEPATH+"/emulators/run_"+modName+".py"
-        modname = "run_"+modName
-    else:
-        modfile = "./emulators/run_"+modName+".py"
-        modname = "run_"+modName
-    
-    modhandle = imp.load_source(modname, modfile)
-        
-    return modhandle.emulatorArgNames
-
-def loadEmulatorHelp(modName):
-    '''
-    We are Loading module by file name. File name will be determined by emulator type (i.e. stressapptest)
-    '''
-    if HOMEPATH:
-        modfile = HOMEPATH+"/emulators/run_"+modName+".py"
-        modname = "run_"+modName
-    else:
-        modfile = "./emulators/run_"+modName+".py"
-        modname = "run_"+modName
-    
-    modhandle = imp.load_source(modname, modfile)
-        
-    return modhandle.emulatorHelp
-
-def timeConv(dbtimestamp):
-        #print "this is timeConv!!!"
-        Year = int(dbtimestamp[0:4])
-        Month = int(dbtimestamp[4+1:7])
-        Day = int(dbtimestamp[7+1:10])
-        Hour =int(dbtimestamp[11:13])
-        Min =int(dbtimestamp[14:16])
-        Sec =int(dbtimestamp[17:19])
-        #convert date from DB to python date
-        
-        try:
-            pytime=dt.datetime(Year,Month,Day,Hour,Min,Sec)
-            return pytime
-        
-        except ValueError:
-            print "Date incorrect use YYYY-MM-DDTHH:MM:SS format"
-            sys.exit(0) 
-            
-#convert date to seconds
-def timestamp(date):
-    gmtTime=(date-dt.datetime(1970,1,1)).total_seconds()
-    return gmtTime
 
 if __name__ == "__main__":
     

@@ -30,15 +30,28 @@ runStartTimeList=[]
 runDurations = []
 
 RESTYPE = "null"
+MALLOC_LIMIT = 1000000
 
-def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,HOMEPATH):
+import sys
+from Library import getHomepath
+sys.path.insert(0, getHomepath() + '/distributions/')
+from abstract_dist import *
+
+class dist_trapezoiddal(abstract_dist):
+    pass
+
+def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,resType,HOMEPATH):
     
     startLoad = int(distributionArg["startload"])
     stopLoad = int(distributionArg["stopload"])
+    triggerType="time"
     
     # we check that the resource type is mem, if not we give malloc limit a value 1000000, because is not used for the other resource types
-    MALLOC_LIMIT = 1000000
-    if RESTYPE == "MEM":
+    global MALLOC_LIMIT
+    global RESTYPE
+    
+    RESTYPE = resType
+    if RESTYPE == "mem":
         MALLOC_LIMIT = int(distributionArg["malloclimit"])
         
     
@@ -55,21 +68,23 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     runStartTime = startTimesec
     # check for the start load value if it's higher than malloc limit
     if startLoad < stopLoad:
-        insertLoad(startLoad, runStartTime, duration, MALLOC_LIMIT)
+        insertLoad(startLoad, runStartTime, duration)
     else:
-        insertLoad(stopLoad, runStartTime, duration, MALLOC_LIMIT)
+        insertLoad(stopLoad, runStartTime, duration)
 
     if int(distributionGranularity)==1:
-        return stressValues, runStartTimeList, runDurations
+        return stressValues, runStartTimeList, runDurations, triggerType
     
     else:
         runNo=int(1)
         
         #runStartTime=startTimesec+(duration*upperBoundary)
         # linearStep does not change, can be calculated just once
-        linearStep=((int(stopLoad)-int(startLoad))/(int(distributionGranularity)-1))
+        linearStep=(float(stopLoad-startLoad)/(distributionGranularity-1))
+        linearStepRemainder = linearStep % 1
+        linearStepRemainderSum = 0
 
-        linearStep=math.fabs(linearStep)#making positive value
+        linearStep=math.fabs(math.floor(linearStep))#making positive value
         linearStep=int(linearStep)
 
         upperBoundary= int(distributionGranularity)-1
@@ -78,15 +93,25 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
 #            print "Run No: ", runNo
 #            print "self.startTimesec",startTimesec
             
+            linearStepRemainderSum += linearStepRemainder
+            linearStepincr = False
+            if linearStepRemainderSum > 1:
+                linearStepincr = True
+                linearStep += 1
+                linearStepRemainderSum -= 1
+            
             if startLoad < stopLoad:
                 runStartTime=startTimesec+(runDuration*runNo)/2
                 runDuration2 = duration - runDuration*runNo
             else:
                 runDuration2 = (duration - runDuration*runNo)/2
                 translatedStartTimesec = startTimesec + duration - runDuration2
-                insertLoad(linearStep, translatedStartTimesec, runDuration2, MALLOC_LIMIT)
+                insertLoad(linearStep, translatedStartTimesec, runDuration2)
 
-            insertLoad(linearStep,runStartTime, runDuration2, MALLOC_LIMIT)
+            insertLoad(linearStep,runStartTime, runDuration2)
+            
+            if linearStepincr == True:
+                linearStep -= 1
 
             #increasing to next run            
             runNo=int(runNo)+1
@@ -94,34 +119,35 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
 #        print "Final Run"
         if startLoad < stopLoad:
             runStartTime = startTimesec+runDuration*upperBoundary/2
-            insertLoad(linearStep, runStartTime, runDuration, MALLOC_LIMIT)
+            insertLoad(linearStep, runStartTime, runDuration)
         else:
             runDuration2 = (duration - runDuration*upperBoundary)/2
-            insertLoad(linearStep, runStartTime, runDuration2, MALLOC_LIMIT)
+            insertLoad(linearStep, runStartTime, runDuration2)
             translatedStartTimesec = startTimesec + duration - runDuration2
-            insertLoad(linearStep, translatedStartTimesec, runDuration2, MALLOC_LIMIT)
+            insertLoad(linearStep, translatedStartTimesec, runDuration2)
         
         
 #        print "These are run stress Values:", stressValues
 #        print "These are run start times:", runStartTimeList
 #        print "These are run durations:", runDurations
-            
-        return stressValues, runStartTimeList, runDurations
+        
+        
+        return stressValues, runStartTimeList, runDurations, triggerType
 
-def insertRun(stressValue, startTime, runRuration):
+def insertRun(stressValue, startTime, runDuration):
     stressValues.append(stressValue)
     runStartTimeList.append(startTime)
-    runDurations.append(runRuration)
-    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runRuration
+    runDurations.append(runDuration)
+#    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runDuration
 
 # this function checks if the load is higher than the malloc limit. In that case creates smaller runs
-def insertLoad(load, startTime, duration, mallocLimit):
+def insertLoad(load, startTime, duration):
     # if not a resource tyme MEM we just insert it
-    if load > mallocLimit and RESTYPE == "MEM":
-        div = int(load // mallocLimit)
-        rest = load - (div * mallocLimit)
+    if load > MALLOC_LIMIT and RESTYPE == "mem":
+        div = int(load // MALLOC_LIMIT)
+        rest = load - (div * MALLOC_LIMIT)
         for _ in range(0,div):
-            insertRun(mallocLimit, startTime, duration)
+            insertRun(MALLOC_LIMIT, startTime, duration)
         if rest > 0:
             insertRun(rest, startTime, duration)
     else:
@@ -137,12 +163,18 @@ def distHelp():
     return "Trapezoidal distribution takes in start and stop load (plus malloclimit for MEM) parameters and gradually increasing resource workload by spawning jobs in parallel. Can be used with MEM,IO,NET resource types."
     
 
-def argNames(Rtype):
+def argNames(Rtype=None):
     '''
     We specify how many arguments distribution instance require to run properly
     Rtype = <MEM, IO, NET>
     IMPORTANT: All argument variable names must be in lower case
     '''
+
+    #discovery of supported resources
+    if Rtype == None:
+        argNames = ["mem","io","net"]
+        
+        return argNames
    
     #get free amount of memory and set it to upper bound
     if Rtype.lower() == "mem":
@@ -150,19 +182,19 @@ def argNames(Rtype):
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
 
-        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}}
+        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
         RESTYPE = "MEM"
 #        print "Use Arg's: ",argNames," with mem"
         return argNames
         
     if Rtype.lower() == "io":
-        argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}}
+        argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
         RESTYPE = "IO"
 #        print "Use Arg's: ",argNames," with io"
         return argNames
     
     if Rtype.lower() == "net":
-        argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}}
+        argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
         RESTYPE = "NET"
 #        print "Use Arg's: ",argNames," with net"
         return argNames

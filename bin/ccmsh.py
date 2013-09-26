@@ -19,16 +19,31 @@
 #
 
 
-
-import optparse,sys,Pyro4,os,ConfigParser
+"""
+import optparse,Pyro4
 import sqlite3 as sqlite
 #import argparse - new version of optparlse
-import EmulationManager,XmlParser,DistributionManager,subprocess,ccmshAPI
+import EmulationManager,XmlParser,DistributionManager,subprocess
 import logging
+import EMQproducer
+from EMQproducer import *
 
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 logging.basicConfig(level=logging.INFO)
+
+
+"""
+
+import Library,optparse,os,sys,EMQproducer,EmulationManager,XmlParser
+
+#MQ setup
+from EMQproducer import Producer
+global producer
+producer = Producer()
+global myName
+myName = "ccmsh"
+
 
 def main():
     '''
@@ -36,10 +51,7 @@ def main():
     For full list of commands please use "ccmsh -h".
     '''
     
-    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":"+str(EmulationManager.readLogLevel("schedport"))
-    #perhaps needs to be setup somewhere else
-    
-    daemon=Pyro4.Proxy(uri)    
+    daemon=Library.getDaemon()    
 
     #Grouping Options
     #a usage string for your program
@@ -52,6 +64,12 @@ def main():
     
     parser.add_option('-v','--version', action='store_true', default=False,dest='version',help='show version information')
     
+    config = optparse.OptionGroup(parser, 'COCOMA configurations')
+    config.add_option('-q', '--mq', action='store_true', default=False,dest='addConfig',help='add configuration parameters for message queue:      enabled vhost exchange user password host topic ')
+    config.add_option('-m', '--rmq', action='store_true', default=False,dest='rmConfig',help='remove configuration parameters for message queue')
+    config.add_option('-a', '--enl', action='store_true', default=False,dest='enConfig',help='enable configuration parameters for message queue')
+    config.add_option('-s', '--smq', action='store_true', default=False,dest='showConfig',help='show configuration parameters for message queue')
+    config.add_option('-b', '--bfz', action='store_true', default=False,dest='setBackfuzzPath',help='Update the location of the backfuzz emulator')
     
     listEmu = optparse.OptionGroup(parser, 'List existing resources')
     listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='list all emulations or specific emulation by name')
@@ -77,7 +95,7 @@ def main():
     listEmulator = optparse.OptionGroup(parser, 'List available emulators')  
     listEmulator.add_option('-e', '--emu', action='store_true', default=False,dest='listAllEmulators',help='lists all available emulators and gives emulator details by name')
     
-        
+    parser.add_option_group(config)        
     parser.add_option_group(listEmu)
     parser.add_option_group(listDistro)
     parser.add_option_group(listEmulator)
@@ -146,9 +164,9 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                         n+=1
                 except Exception,e :
                     print "No additional arguments were supplied to scheduler:",e
-                    EmulationManager.services_control("scheduler","start"," ")
+                    Library.services_control("scheduler","start"," ")
                 
-                EmulationManager.services_control("scheduler","start",cliCommand)
+                Library.services_control("scheduler","start",cliCommand)
                     
                 
                 
@@ -170,25 +188,25 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                         n+=1
                 except Exception,e :
                     print "No additional arguments were supplied to API:",e
-                    EmulationManager.services_control("api","start"," ")        
+                    Library.services_control("api","start"," ")        
                     
                     
                     
                 print "Starting ",arguments[0],cliCommand
-                EmulationManager.services_control("api","start",cliCommand)
+                Library.services_control("api","start",cliCommand)
         else:
             print "No arguments supplied, check help"
                     
-            #EmulationManager.services_control("api","start","")
+            #Library.services_control("api","start","")
 
                 
     if options.stopServices:
         if len(arguments)>0:
             if arguments[0] == "scheduler":
-                EmulationManager.services_control("scheduler","stop"," ")
+                Library.services_control("scheduler","stop"," ")
             
             elif arguments[0] == "api":
-                EmulationManager.services_control("api","stop"," ")
+                Library.services_control("api","stop"," ")
             
             else:
                 print "Wrong arguments check help"
@@ -199,16 +217,60 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
     if options.showServices:
         if len(arguments)>0:
             if arguments[0] == "scheduler":
-                EmulationManager.services_control("scheduler","show"," ")
+                Library.services_control("scheduler","show"," ")
             
             elif arguments[0] == "api":
-                EmulationManager.services_control("api","show"," ")
+                Library.services_control("api","show"," ")
             else:
                 print "Wrong arguments, check help"
         else:
             print "No arguments supplied, check help"
         
-              
+    '''
+    ################################
+    config
+    ###############################
+    '''
+
+
+    if options.addConfig:
+	mqarguments = {}
+	mqarguments["emulationMQenable"] = arguments[0]
+	mqarguments["emulationMQvhost"] = arguments[1]
+	mqarguments["emulationMQexchange"] = arguments[2]
+	mqarguments["emulationMQuser"] = arguments[3]
+	mqarguments["emulationMQpassword"] = arguments[4]
+	mqarguments["emulationMQhost"] = arguments[5]
+	mqarguments["emulationMQtopic"] = arguments[6]
+	
+	EMQproducer.MQconfig(mqarguments)
+
+    if options.rmConfig:
+	#print "rmConfig"
+        if len(arguments)==0:
+            #print "got 1 arguments"
+            EMQproducer.MQconfigDelete()
+        else:
+            print "Not all arguments supplied, check help"
+    
+    if options.enConfig:
+	#print "rmConfig"
+        if (len(arguments)==1): 
+		if (arguments[0]=="yes") or (arguments[0]=="no") :
+            		EMQproducer.MQconfigEnable(arguments[0])
+		else:
+			print "Enabled parameter accepts either 'yes' or 'no'"
+        else:
+            print "Not all arguments supplied, check help"
+    
+    if options.showConfig:
+        #print "rmConfig"
+        if len(arguments)==0:
+            #print "got 1 arguments"
+            EMQproducer.MQconfigShow()
+        else:
+            print "Not all arguments supplied, check help"
+
                  
     '''
     ################################
@@ -216,10 +278,19 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
     ###############################
     '''
     
+    if options.setBackfuzzPath:
+        if len(arguments)>0:
+            try:
+                Library.writeInterfaceData(arguments[0],"backfuzz_path")
+                print "backfuzz_path updated to: ", arguments[0]
+            except Exception, e:
+                print "unable to update backfuzz_path"
+                sys.exit(0)
+    
     if options.resAll:
         if len(arguments)>0:
             try:
-                emuList=EmulationManager.getActiveEmulationList(arguments[0])
+                emuList=Library.getEmulationList(arguments[0])
                 for elem in emuList :
                     failedRunsInfo=elem["failedRunsInfo"]
                     totalFailedRuns = int(elem["runsTotal"])-int(elem["runsExecuted"])
@@ -246,7 +317,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
 
         else:
             
-            emuList=EmulationManager.getActiveEmulationList("all")
+            emuList=Library.getEmulationList("all")
             
             
             for elem in emuList :
@@ -275,15 +346,20 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
     if options.listAll:
         
         if len(arguments)>0:
-            try:
-                (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList)=EmulationManager.getEmulation(arguments[0])
+            try: 
+                (emulationID,emulationName,emulationType, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,logging,logFrequency,logLevel,enabled,vhost,exchange,user,password,host,topic)=EmulationManager.getEmulation(arguments[0])
                 print "--->\nID: "+str(emulationID)+"\nName: "+str(emulationName)+"\nType: "+str(emulationType)+"\nResourceType: "+str(resourceTypeEmulation)+"\nStartTime: "+str(startTimeEmu)+"\nstopTime: "+str(stopTimeEmu)
 
 
                 for dist in distroList:
                     print "---\nDistrName: "+str(dist['distributionsName'])+"\nDistrType: "+str(dist['distrType'])+"\nDistrResourceType: "+str(dist['resourceTypeDist'])+"\nDistroStartTime: "+str(dist['startTimeDistro'])+"\nDistroDuration: "+str(dist['durationDistro'])+"\nDistroArgs: "+str(dist['distroArgs'])+"\nEmulatorName: "+str(dist['emulatorName'])+"\nEmulatorArgs: "+str(dist['emulatorArg'])
                 
+                print "---\nLogging: "+logging+"\nlogFrequency: "+logFrequency+"\nlogLevel: "+logLevel+"\nenabled: "+enabled+"\nvhost: "+vhost+"\nexchange: "+exchange+"\nuser: "+user+"\npassword: "+password+"\nhost: "+host+"\ntopic: "+topic
                 
+                
+                #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" list "+arguments[0])
+                msg = {"Action":"USER REQUEST list Emulation","ID":arguments[0]}
+                producer.sendmsg(myName,msg)
                 
             except Exception,e:
            
@@ -293,7 +369,8 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
             
                         
         else:
-            emuList=EmulationManager.getActiveEmulationList("all")
+
+            emuList=Library.getEmulationList("all")
             
             
             for elem in emuList :
@@ -314,29 +391,23 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
                         
                         print "Stress Value: ", Runs["stressValue"]
                         print "Error Message: ", Runs["message"]
-            
+
+        try:
+            #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" list all")
+            msg = {"Action":"USER REQUEST list all Emulations"}
+            producer.sendmsg(myName,msg)
+        except Exception,e:
+            print "NO USER INPUT"
 
                 
     if options.listJobs:
-        connectionCheck=daemonCheck()
+        connectionCheck=Library.daemonCheck()
         if  connectionCheck !=1:
             sys.exit(1)
-             
-        if len(daemon.listJobs())>0:
-            if len(arguments)>0:
-                n=0   
-                for job in daemon.listJobs():
-                    if job.name==arguments[0]:
-                        n+=1
-                        print job
-                if n==0:        
-                    print "Job \""+str(arguments[0])+"\" was not found" 
-        
-             
-        
-            else:
-                for job in daemon.listJobs():
-                    print "job",job
+        listJobs=daemon.listJobs()
+        if len(listJobs)>0:
+            for job in listJobs:
+                print "Job: ",job
         else:
             print "\nNo jobs are scheduled\n"
                 
@@ -352,6 +423,12 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
             #TO-DO: List inactive values with 0 param
             print "Deleting emulation: ",arguments[0]
             EmulationManager.deleteEmulation(arguments[0])
+        try:
+            #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" delete "+arguments[0])
+            msg = {"Action":"USER REQUEST delete Emulation","ID":arguments[0]}
+            producer.sendmsg(myName,msg)
+        except Exception,e:
+            print "NO USER INPUT"
         else:
             print "Specify emulation ID or name. See help for details"
     
@@ -363,13 +440,17 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
         try:
             choice = raw_input().lower()
             if choice in yes:
-                EmulationManager.purgeAll()
+                Library.purgeAll()
+                #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" purge all")
+                msg = {"Action":"USER REQUEST purge all Emulations"}
+                producer.sendmsg(myName,msg)
                 return True
             elif choice in no:
                 print "Action cancelled"
                 return False
             else:
                 print "Please respond with 'yes' or 'no'"
+
         except KeyboardInterrupt,e:
             print "\nAction cancelled"
 
@@ -384,13 +465,13 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
     if options.listAllDistro:
         if len(arguments)>0:
             try:
-                distroList=DistributionManager.listDistributions(arguments[0])
+                distroList=Library.listDistributions(arguments[0])
                 print distroList
             except Exception, e:
                 print "Error: ",e
                 print "Distribution \"%s\" not found. Check name."%(arguments[0])
         else:
-            distroList=DistributionManager.listDistributions("all")
+            distroList=Library.listDistributions("all")
 
             print "\nAvailable distributions:"
             for distName in distroList:
@@ -407,13 +488,13 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
     if options.listAllEmulators:
         if len(arguments)>0:
             try:
-                emuList2=DistributionManager.listEmulators(arguments[0])
+                emuList2=Library.listEmulators(arguments[0])
                 print emuList2
             except Exception, e:
                 print "Error: ",e
                 print "Emulator \"%s\" not found. Check name."%(arguments[0]) 
         else:
-            emuList=DistributionManager.listEmulators("all")
+            emuList=Library.listEmulators("all")
             print "\nAvailable Emulators:"
             for emuName in emuList:
                 print emuName
@@ -430,73 +511,48 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
     if options.xml and not options.emuNow:  
             if len(arguments)>0:
                 
-                if daemonCheck()!=False:
+                if Library.daemonCheck()!=False:
                     try:
                         
-                        (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(arguments[0])
+                        (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0])
                         
                         if startTimeEmu.lower() =="now":
-                            startTimeEmu1 = EmulationManager.emulationNow(2)
-                            messageReturn=  EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+
+                            startTimeEmu1 = Library.emulationNow(2)
+                            #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" create "+arguments[0])
+                            msg = {"Action":"USER REQUEST Create Emulation","File":arguments[0]}
+                            producer.sendmsg(myName,msg)
+                            messageReturn = EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu1,stopTimeEmu, distroList,xmlData, MQproducerValues)
+
                             print messageReturn
                         else:
-                            messageReturn= EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
+                            messageReturn = EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
                             print messageReturn
                     except Exception, e:
-                        try:
-                            errorReturn = XmlParser.xmlReader(arguments[0])
-                            print errorReturn
-                        except Exception,e:
-                                logging.exception("Problem description:")
-                        
-                        
-                        
-           
+                        error = XmlParser.xmlFileParser(arguments[0])
+                        print error
             else:
                 print "Specify XML file location. See help for details"
 
     
     if options.emuNow and options.xml:
         try:
-            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData) = XmlParser.xmlReader(arguments[0])
-            startTimeEmu = EmulationManager.emulationNow(2)
-            print EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData)
-        except:
-            try:
-                errorReturn = XmlParser.xmlReader(arguments[0])
-                print errorReturn
-            except Exception,e:
-                logging.exception("Problem description:")
-                
-                
-        
-        
-        
-    #else:
-        #parser.print_help()
+
+            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0])
+            startTimeEmu = Library.emulationNow(2)
+            #producer.sendmsg(myName,'USER REQUEST: '+sys._getframe().f_code.co_name+' create '+arguments[0])
+            msg = {"Action":"USER REQUEST Create Emulation","File":arguments[0]}
+            producer.sendmsg(myName,msg)
+            messageReturn=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
+            print messageReturn
+        except Exception,e:
+            print "\n\nERROR2\n\n"
+            error = XmlParser.xmlFileParser(arguments[0])
+            print error
+
 
         
-def daemonCheck():
-    '''
-    Checking if Scheduler Daemon(bin/Scheduler.py is running. Returning "1" if true and "0" if not.
-    '''
-    
-    uri ="PYRO:scheduler.daemon@"+str(EmulationManager.readIfaceIP("schedinterface"))+":"+str(EmulationManager.readLogLevel("schedport"))
-    #perhaps needs to be setup somewhere else
-    
-    daemon=Pyro4.Proxy(uri)
-    
-    try:
-        
-        daemon.hello()
-        return(1)
-    
-    except  Pyro4.errors.CommunicationError, e:
-        
-        print e
 
-        print "\n---Unable to find Scheduler on remote IP.---"
-        return False
     
 
 if __name__ == '__main__':
