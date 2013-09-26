@@ -19,18 +19,18 @@
 
 import os,sys,subprocess,imp
 import sqlite3 as sqlite
-import threading,psutil
+import threading,psutil, Library
 from threading import Thread
-
 
     
 def createRun(emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist, stressValue,runNo,emuDuration):
-    
         try:
             HOMEPATH= os.environ['COCOMA']
         except:
             print "no $COCOMA environmental variable set"
-               
+            
+        dbWriter(distributionID,runNo,"Currently executing","Executing")
+        
         duration=str(duration)
         stressValue = str(stressValue)
 #        print duration
@@ -65,11 +65,22 @@ def createRun(emulationID,distributionID,emulationLifetimeID,duration,emulator,e
         modhandleMy=loadEmulator(str(emulator))
         #2. Use this module for executing the stress   
         newEmulatorSelect=modhandleMy(emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg,stressValue,runNo,emuDuration)
-        
 
+def dbWriter (distributionID,runNo,message,executed):
+    try:
+        conn =Library.dbconn()
+        c = conn.cursor()
+        c.execute('UPDATE runLog SET executed=? ,message=? WHERE distributionID =? and runNo=?',(executed,message,distributionID,runNo))
+        conn.commit()
+    except sqlite.Error, e:
+        c.close()
+        conn.close()
+        schedFileLogger.debug("Values: "+str(distributionID)+"-"+str(runNo)+"-"+str(message)+"-"+str(executed))
+        schedFileLogger.error("Unable to connect to DB")
+        schedFileLogger.exception(str(e))
+        sys.exit(1)
+    c.close()
 
-            
-           
 if __name__ == '__main__':
     print "main"
     

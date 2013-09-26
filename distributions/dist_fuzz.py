@@ -65,7 +65,7 @@ def argNames(Rtype=None):
             return argNames
 
         if Rtype.lower() == "net":
-            argNames = {"startload":{"upperBound":1000000,"lowerBound":0}}
+            argNames = {"startload":{"upperBound":1000000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
             return argNames
 
 

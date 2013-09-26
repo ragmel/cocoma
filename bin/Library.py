@@ -448,8 +448,8 @@ def listEmulators(name):
         dirList = os.listdir(path)
         for fname in dirList:
             if fname.startswith("run_") and fname.endswith(".py"):
-                distName = str(fname[4:-3])
-                emulatorList.append(distName)
+                 distName = str(fname[4:-3])
+                 emulatorList.append(distName)
         
         return emulatorList
     
@@ -713,3 +713,24 @@ def boundsCompare(xmlValue, LimitsDictValues, variableName = None):
             
 def getTotalMem():  #Returns an integer value of the total physical memory
     return psutil.TOTAL_PHYMEM / (1024 ** 2)
+
+def getCurrentJobs():
+    currentJobs = []
+    try:
+        conn = dbconn()
+        c = conn.cursor()
+        c.execute('SELECT distributionID, runNo, message, runStartTime, runDuration, stressValue FROM runLog WHERE message="Currently executing"')
+        runLogs = c.fetchall()
+        for runLog in runLogs:
+            c.execute("SELECT emulation.emulationName, distribution.distributionID, distribution.distributionName, EmulatorParameters.resourceType FROM emulation INNER JOIN distribution ON emulation.emulationID=distribution.emulationID INNER JOIN EmulatorParameters ON distribution.distributionID=EmulatorParameters.distributionID WHERE distribution.distributionID=?", [str(runLog[0])])
+            currentRuns = c.fetchall()
+            for currentRun in currentRuns:
+                jobName = currentRun[0] + "-" + str(runLog[0]) + "-" + str(runLog[1]) + "-" + currentRun[2]
+                jobInfo = "startTime: " + dt.fromtimestamp(float(runLog[3])).strftime('%Y-%m-%d %H:%M:%S') + ", duration: " + runLog[4] + ", stopTime: " + dt.fromtimestamp(float(runLog[3]) + float(runLog[4])).strftime('%Y-%m-%d %H:%M:%S') + ", resourceType: " + currentRun[3].upper() + ", stressValue: " + runLog[5]
+                job = "Job: " + jobName + " { " + jobInfo + " }"
+                currentJobs.append(job)
+    except sqlite.Error, e:
+        sys.exit(1)
+    conn.commit()
+    c.close()
+    return currentJobs

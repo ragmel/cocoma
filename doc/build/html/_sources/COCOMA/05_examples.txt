@@ -257,9 +257,8 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
         <duration>150</duration>
         <granularity>10</granularity>
         <distribution href="/distributions/linear_incr" name="linear_incr" />
-        <!--cpu utilization distribution range-->
+        <!--set target bandwidth to bits per sec-->
         <startLoad>100</startLoad>
-        <!-- set target bandwidth to bits per sec -->
         <stopLoad>1000</stopLoad>
         <emulator href="/emulators/iperf" name="iperf" />
         <emulator-params>
@@ -300,8 +299,6 @@ In the following example a different emulator named *backfuzz* will be used with
        <name>MAL_Distro1</name>
        <startTime>0</startTime>
        <duration>120</duration>
-       <!-- Granularity isn't required, can be any value -->
-       <granularity>0</granularity>
        <distribution href="/distributions/fuzz" name="fuzz" />
        <startLoad>100</startLoad>
        <emulator href="/emulators/backfuzz" name="backfuzz" />
@@ -309,7 +306,7 @@ In the following example a different emulator named *backfuzz* will be used with
            <resourceType>NET</resourceType>
            <!-- Difference between MIN and MAX fuzz values -->
            <fuzzRange>900</fuzzRange>
-           <!-- IP and port of remote COCOMA instance -->
+           <!-- IP and port of server to fuzz -->
            <serverip>10.55.168.238</serverip>
            <serverport>51889</serverport>
            <!-- Type of packet to use for fuzzing -->
@@ -482,3 +479,5 @@ The interaction of the various emulators used in COCOMA can cause unexpected iss
 
 .. figure:: MEM_NET-Problem.png
     :align: center
+
+* When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command 'ccmsh -j') may not be correct

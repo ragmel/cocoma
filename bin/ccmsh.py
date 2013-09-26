@@ -408,6 +408,11 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
         if len(listJobs)>0:
             for job in listJobs:
                 print "Job: ",job
+            currentJobs = Library.getCurrentJobs()
+            if len(currentJobs) > 0:
+                print "\n---***### Currently running jobs are listed below ###***---\n"
+                for currentJob in currentJobs:
+                    print currentJob
         else:
             print "\nNo jobs are scheduled\n"
                 

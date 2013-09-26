@@ -492,8 +492,7 @@
 36
 37
 38
-39
-40</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+39</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>NET_emu<span class="nt">&lt;/emuname&gt;</span>
   <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>NET<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -509,9 +508,8 @@
      <span class="nt">&lt;duration&gt;</span>150<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>10<span class="nt">&lt;/granularity&gt;</span>
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear_incr&quot;</span> <span class="na">name=</span><span class="s">&quot;linear_incr&quot;</span> <span class="nt">/&gt;</span>
-     <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
+     <span class="c">&lt;!--set target bandwidth to bits per sec--&gt;</span>
      <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
-     <span class="c">&lt;!-- set target bandwidth to bits per sec --&gt;</span>
      <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/iperf&quot;</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span> <span class="nt">/&gt;</span>
      <span class="nt">&lt;emulator-params&gt;</span>
@@ -576,9 +574,7 @@
 38
 39
 40
-41
-42
-43</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+41</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
  <span class="nt">&lt;emuname&gt;</span>MAL_EMU<span class="nt">&lt;/emuname&gt;</span>
  <span class="nt">&lt;emuType&gt;</span>NET<span class="nt">&lt;/emuType&gt;</span>
  <span class="nt">&lt;emuresourceType&gt;</span>NET<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -591,8 +587,6 @@
     <span class="nt">&lt;name&gt;</span>MAL_Distro1<span class="nt">&lt;/name&gt;</span>
     <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
     <span class="nt">&lt;duration&gt;</span>120<span class="nt">&lt;/duration&gt;</span>
-    <span class="c">&lt;!-- Granularity isn&#39;t required, can be any value --&gt;</span>
-    <span class="nt">&lt;granularity&gt;</span>0<span class="nt">&lt;/granularity&gt;</span>
     <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/fuzz&quot;</span> <span class="na">name=</span><span class="s">&quot;fuzz&quot;</span> <span class="nt">/&gt;</span>
     <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
     <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/backfuzz&quot;</span> <span class="na">name=</span><span class="s">&quot;backfuzz&quot;</span> <span class="nt">/&gt;</span>
@@ -600,7 +594,7 @@
         <span class="nt">&lt;resourceType&gt;</span>NET<span class="nt">&lt;/resourceType&gt;</span>
         <span class="c">&lt;!-- Difference between MIN and MAX fuzz values --&gt;</span>
         <span class="nt">&lt;fuzzRange&gt;</span>900<span class="nt">&lt;/fuzzRange&gt;</span>
-        <span class="c">&lt;!-- IP and port of remote COCOMA instance --&gt;</span>
+        <span class="c">&lt;!-- IP and port of server to fuzz --&gt;</span>
         <span class="nt">&lt;serverip&gt;</span>10.55.168.238<span class="nt">&lt;/serverip&gt;</span>
         <span class="nt">&lt;serverport&gt;</span>51889<span class="nt">&lt;/serverport&gt;</span>
         <span class="c">&lt;!-- Type of packet to use for fuzzing --&gt;</span>
@@ -888,6 +882,9 @@
 <div class="figure align-center">
 <img alt="../_images/MEM_NET-Problem.png" src="../_images/MEM_NET-Problem.png" />
 </div>
+<ul class="simple">
+<li>When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command &#8216;ccmsh -j&#8217;) may not be correct</li>
+</ul>
 </div>
 </div>
 
