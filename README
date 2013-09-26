@@ -18,6 +18,6 @@ xml files examples can be found in the xml-examples/ and xml-examples/tests/ (th
 
 You can check that jobs have been scheduled by running
 
-	ccmsh --list-jobs all
+	ccmsh -j
 
 To understand if the jobs are running properly, you can use "top" or "iostat -x 3" commands
