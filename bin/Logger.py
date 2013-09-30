@@ -67,7 +67,7 @@ def singleLogger(elementName,level=None,filename=None):
         #adding producer handler
         #bHandler= EMQproducer.BroadcastLogHandler(elementName,producer)
         #fileLogger.addHandler(bHandler)
-        EMQproducer.StreamAndBroadcastHandler("TEST",producer)
+        #EMQproducer.StreamAndBroadcastHandler("TEST",producer)
         
         if filename == None:
             #setting log rotation for 10 files each up to 10000000 bytes (10MB)

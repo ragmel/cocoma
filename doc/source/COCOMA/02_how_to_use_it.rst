@@ -76,8 +76,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
     
 .. cmdoption:: -j, --list-jobs 
 
-      Queries the scheduler for the list of jobs that have to be executed. For each one, it gives the job name and the planned execution time 
-  
+      Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name and the planned execution time
 .. cmdoption:: -i, --dist <distribution name>
 
       Scans the *"/usr/share/pyshared/cocoma/distributions"* folder and displays all available distribution modules. If a distribution name is provided, then it shows the help information for that specific distribution 
@@ -92,7 +91,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
 .. cmdoption:: -n, --now (used with -x option only)
 
-      Override any start date in the local XML emulation file without modifying the file, i.e. ``ccmsh -x <file name> -n``  
+      Override any start date in the local XML emulation file without modifying the file, i.e. ``ccmsh -x <file name> -n``
 
 .. cmdoption:: -d, --delete <emulation name>
 

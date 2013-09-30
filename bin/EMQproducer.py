@@ -33,6 +33,8 @@ try:
 except:
     print "no $COCOMA environmental variable set"
 
+logging.getLogger('pika').setLevel(logging.DEBUG)
+
 
 class Producer():
   
@@ -50,6 +52,7 @@ class Producer():
             self.password = mqconfig[0][4]
             self.host = mqconfig[0][5]
             self.topic = mqconfig[0][6]
+            
         except:
             self.enabled = "no"
             self.vhost = ""
