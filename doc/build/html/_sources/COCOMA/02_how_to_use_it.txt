@@ -62,6 +62,23 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
       Display installed version information of COCOMA
 
+.. cmdoption:: -q, --mq
+
+      add configuration parameters for message queue:
+      enabled vhost exchange user password host topic
+
+.. cmdoption:: -m, --rmq
+
+      remove configuration parameters for message queue
+
+.. cmdoption:: -a, --enl
+
+      enable configuration parameters for message queue
+
+.. cmdoption:: -s, --smq
+
+      show configuration parameters for message queue
+
 .. cmdoption:: -b, --bfz  
 
       Update the path of to the backfuzz emulator (stored in database)

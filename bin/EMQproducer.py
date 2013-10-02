@@ -33,9 +33,6 @@ try:
 except:
     print "no $COCOMA environmental variable set"
 
-logging.getLogger('pika').setLevel(logging.DEBUG)
-
-
 class Producer():
   
     def __init__(self):

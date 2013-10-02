@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -53,6 +51,15 @@
             
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>One of the main common characteristics of cloud computing is resource sharing amongst multiple users, through which providers can optimise utilization and efficiency of their system.</p>
+<p>However, at the same time this raises some concerns for performance predictability, reliability and security:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Resource (i.e. CPU, storage and network) sharing inevitably creates contention, which affects applications&#8217; performance and reliability</li>
+<li>Workloads and applications of different users residing on the same physical machine, storage and network are more vulnerable to malicious attacks</li>
+</ul>
+</div></blockquote>
+<p>Studying the effect of resource contention and maliciousness in a cloud environment can be of interest for different stakeholders. Experimenters may want to evaluate the performance and security mechanisms of their system under test (SuT). On the other hand cloud providers may want to assess their mechanisms to enforce performance isolation and security.</p>
 <p>In order to use COCOMA, an experimenter defines an <cite>emulation</cite> which embeds all environment operational conditions as shown in the figure below. The actual operational conditions are defined in what are called <cite>distributions</cite>, which create specific workloads over the targeted resource of a specific resource type. For example, <cite>distribution 1</cite> targets the CPU creating an exponential trend over a specific time range within the whole emulation. Each distribution time is divided into multiple time-slots based on the distribution granularity then broken down into multiple runs each one injecting a different load level per time slot, which depends on the discrete function of the distribution.</p>
 <blockquote>
 <div><div class="figure align-center">
@@ -112,7 +119,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, SAP.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

@@ -92,7 +92,7 @@ class emulation(object):
             if resourceTypeEmulation.lower() == resType:
                 return resourceTypeEmulation
             
-        raise Exception("Wrong value for log level, can be only: " + str(resourceTypes))        
+        raise Exception("Wrong value for resourceTypeEmulation, can be only: " + str(resourceTypes))        
             
     def addDistribution(self, newDistribution):
         

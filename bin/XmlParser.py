@@ -190,9 +190,9 @@ def getArgs (xmlStr, moduleType, moduleName, resourceType):
                 xmlArg = getXMLData(xmlStr, arg, "")
     
                 #Convert stress values mem to real values (if given in %)
-                if ((moduleType == "distributions") and (resourceType == "mem") and (str(xmlArg[-1]) == "%")):
+                if ((moduleType.lower() == "distribution") and (resourceType == "mem") and (str(xmlArg[-1]) == "%")):
                     sysMemory = Library.getTotalMem()
-                    xmlArg = int(str(xmlArg[:-1])) * sysMemory
+                    xmlArg = (int(str(xmlArg[:-1])) * sysMemory)/100
         
                 moduleArgsNotes.append(checkNote)
                 moduleArgsNotes.append(xmlArg)
@@ -312,6 +312,6 @@ def getMQDetails(xmlStr):
     return MQproducerValues
 
 if __name__ == '__main__': #For testing purposes
-    xmlFileParser("/home/jordan/git/cocoma/tests/MALICIOUS-HTTP_1000-10000.xml")
+    xmlFileParser("/home/jordan/git/cocoma/tests/MEM-Linear-Lookbusy_100-1000.xml")
 #    xmlReader("/home/jordan/Desktop/XMLfail.xml")  #REMOVE
     pass

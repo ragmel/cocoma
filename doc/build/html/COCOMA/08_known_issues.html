@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &mdash; COCOMA 1 documentation</title>
+    <title>Known Issues &mdash; COCOMA 1 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -23,7 +23,8 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="COCOMA 1 documentation" href="../index.html" /> 
+    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="prev" title="Additional Features" href="06_additional_features.html" /> 
   </head>
   <body>
     <div class="related">
@@ -32,6 +33,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="06_additional_features.html" title="Additional Features"
+             accesskey="P">previous</a> |</li>
         <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -41,61 +45,20 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="20%" />
-<col width="80%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Term</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>Emulation</td>
-<td>Process that imitates a specific behaviour specified in the emulation type, over a resource type, using one or more distributions during the emulation lifetime</td>
-</tr>
-<tr class="row-odd"><td>Emulation type</td>
-<td><p class="first">An emulation can be of the following types:</p>
-<blockquote class="last">
-<div><ul class="simple">
-<li>Contentiousness</li>
-<li>Maliciousness</li>
-<li>Faultiness (not yet implemented)</li>
-<li>Mixed (a combination of the above types)</li>
+  <div class="section" id="known-issues">
+<h1>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h1>
+<p>The interaction of the various emulators used in COCOMA can cause unexpected issues. Some of these issues are listed below (This is <em>not</em> an exhaustive list, and will be updated as new issues are discovered)</p>
+<ul class="simple">
+<li>Stressapptest uses ~100% CPU, regardless of what resource it is being ran on.</li>
+<li>If a Linear increase distribution is run on memory using stressapptest at the same time as Iperf is being used to load the Network, then the Network resource may not reach its target load. This problem is usually encountered when the memory usage reaches over ~80% (as shown in the graph below)</li>
 </ul>
-</div></blockquote>
-</td>
-</tr>
-<tr class="row-even"><td>Resource type</td>
-<td><p class="first">A resource can be of the following types:</p>
-<blockquote class="last">
-<div><ul class="simple">
-<li>CPU</li>
-<li>RAM</li>
-<li>I/O</li>
-<li>Network</li>
+<div class="figure align-center">
+<img alt="../_images/MEM_NET-Problem.png" src="../_images/MEM_NET-Problem.png" />
+</div>
+<ul class="simple">
+<li>When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command &#8216;ccmsh -j&#8217;) may not be correct</li>
 </ul>
-</div></blockquote>
-</td>
-</tr>
-<tr class="row-odd"><td>Emulator</td>
-<td>Specific mechanism/tool that is used to create an emulation type. For example load generators, stress generators, fault generators and malicious payload creation.</td>
-</tr>
-<tr class="row-even"><td>Distribution</td>
-<td>In the case of contention, it is a discrete function of a specific resource type over a specific time within the emulation lifetime. The distribution time is divided into multiple timeslots (t0, .. , tn) based on the distribution granularity. A distribution is broken down into multiple runs each one injecting a different load level per time slot depending on the discrete function of the distribution. In the case of malicious, it is a straight mapping to the emulator</td>
-</tr>
-<tr class="row-odd"><td>Distribution granularity</td>
-<td>Number of runs for the distribution</td>
-</tr>
-<tr class="row-even"><td>Emulation lifetime</td>
-<td>Duration of the emulation</td>
-</tr>
-<tr class="row-odd"><td>Run</td>
-<td>Basic emulator instantiation</td>
-</tr>
-</tbody>
-</table>
+</div>
 
 
           </div>
@@ -103,9 +66,12 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="06_additional_features.html"
+                        title="previous chapter">Additional Features</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/COCOMA/glossary.txt"
+    <li><a href="../_sources/COCOMA/08_known_issues.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -131,6 +97,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="06_additional_features.html" title="Additional Features"
+             >previous</a> |</li>
         <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
       </ul>
     </div>

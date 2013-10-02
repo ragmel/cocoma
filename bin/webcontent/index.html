@@ -872,7 +872,7 @@
 						xml += "<distribution href='/distributions/"+ dist +"' name='"+ dist +"' />";
 						for(var i=0; i<distParams[j].length; i++)
 						{
-							var n= "#"+distParams[j][i];
+							var n= "#"+distParams[j][i]+j;
 							xml += CE(distParams[j][i], $(n).val());
 						}
 						var emu = $("#emulatorSelect"+j+" :selected").text();
@@ -880,7 +880,7 @@
 						xml += CE("resourceType", convertRType($("#resourceSelect"+j+" :selected").text()));
 						for(var i=0; i<emuParams[j].length; i++)
 						{
-							var n = "#"+emuParams[j][i];
+							var n = "#"+emuParams[j][i]+j;
 							xml += CE(emuParams[j][i], $(n).val());
 						}
 						xml += "</emulator-params>";

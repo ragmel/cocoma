@@ -728,7 +728,7 @@ def getCurrentJobs():
                 jobName = currentRun[0] + "-" + str(runLog[0]) + "-" + str(runLog[1]) + "-" + currentRun[2]
                 jobInfo = "startTime: " + dt.fromtimestamp(float(runLog[3])).strftime('%Y-%m-%d %H:%M:%S') + ", duration: " + runLog[4] + ", stopTime: " + dt.fromtimestamp(float(runLog[3]) + float(runLog[4])).strftime('%Y-%m-%d %H:%M:%S') + ", resourceType: " + currentRun[3].upper() + ", stressValue: " + runLog[5]
                 job = "Job: " + jobName + " { " + jobInfo + " }"
-                currentJobs.append(job)
+                if not(job in currentJobs): currentJobs.append(job) #Add the job to the list , if it isn't already in the list
     except sqlite.Error, e:
         sys.exit(1)
     conn.commit()
