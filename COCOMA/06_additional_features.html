@@ -1,0 +1,474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Additional Features &mdash; COCOMA 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="next" title="Known Issues" href="08_known_issues.html" />
+    <link rel="prev" title="Adding a new emulator" href="09_adding_distributions_emulators.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="08_known_issues.html" title="Known Issues"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="09_adding_distributions_emulators.html" title="Adding a new emulator"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="additional-features">
+<h1>Additional Features<a class="headerlink" href="#additional-features" title="Permalink to this headline">¶</a></h1>
+<p>In this section the additional features of COCOMA will be discussed</p>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>COCOMA has two main sets of tests supplied with it; <strong>API Tests</strong> and <strong>Command Line Interface (CLI) Tests</strong>. Both of which are implemented using python&#8217;s unit testing framework (pyUnit)</p>
+<p>The test files (<strong>TestAPI</strong> and <strong>TestCLI</strong>) are located in <em>&#8220;/usr/share/pyshared/cocoma/unitTest&#8221;</em></p>
+<p>To run a set of tests on the API or CLI, navigate to the <em>unitTest</em> folder and use on of the commands:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -m unittest -v TestAPI
+<span class="nv">$ </span>python -m unittest -v TestCLI
+</pre></div>
+</div>
+<p>The <em>-v</em> argument gives more verbose output, and may be omitted if required</p>
+<p>Individual test results are output to the terminal in the format <tt class="docutils literal"><span class="pre">test_Emulators</span> <span class="pre">(TestAPI.TestAPI)</span> <span class="pre">...</span> <span class="pre">ok</span></tt> if the test was successful
+An unsuccessful test will produce the same outoput, with <em>ERROR</em> or <em>FAIL</em> instead of <em>ok</em></p>
+<p>Once all the tests in the  file have run, a summary of the results will be printed. This will indicate which (if any) tests were unsuccessful, and attempt to give a reason why the test failed</p>
+<div class="section" id="cli-testing">
+<h3>CLI Testing<a class="headerlink" href="#cli-testing" title="Permalink to this headline">¶</a></h3>
+<p>Individual tests can be run on the CLI using the syntax</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -m unittest TestCLI.TestCLI.test_Name
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">test_Name</span></tt> is replaced by one of the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test_EMU_CPU</span>
+<span class="n">test_EMU_IO</span>
+<span class="n">test_EMU_IOTrap</span>
+<span class="n">test_EMU_MEM</span>
+<span class="n">test_EMU_MEMTrap</span>
+<span class="n">test_EMU_MULTI1</span>
+<span class="n">test_EMU_MULTI2</span>
+<span class="n">test_EMU_NETWORK</span>
+<span class="n">test_EMU_NowOperator</span>
+
+<span class="n">test_Scheduler_Start</span>
+<span class="n">test_Scheduler_Show</span>
+<span class="n">test_Scheduler_Stop</span>
+
+<span class="n">test_API_Start</span>
+<span class="n">test_API_Show</span>
+<span class="n">test_API_Stop</span>
+
+<span class="n">test_Help</span>
+<span class="n">test_Version</span>
+<span class="n">test_List</span>
+<span class="n">test_Result</span>
+<span class="n">test_Distributions</span>
+<span class="n">test_Emulators</span>
+<span class="n">test_Purge</span>
+<span class="n">test_Jobs</span>
+</pre></div>
+</div>
+<p>This will produce output similar to running the entire set of tests</p>
+</div>
+<div class="section" id="api-testing">
+<h3>API Testing<a class="headerlink" href="#api-testing" title="Permalink to this headline">¶</a></h3>
+<p>Individual tests can be run on the API using the syntax</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -m unittest TestAPI.TestAPI.test_Name
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">test_Name</span></tt> is replaced by one of the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">test_List_Emulation</span>
+<span class="n">test_List_Emulator</span>
+<span class="n">test_List_Distributions</span>
+<span class="n">test_List_Results</span>
+<span class="n">test_List_Logs</span>
+<span class="n">test_List_SysLogs</span>
+<span class="n">test_List_EmuLogs</span>
+<span class="n">test_List_Tests</span>
+
+<span class="n">test_EMU_Logs</span>
+<span class="n">test_EMUcr_IO</span>
+<span class="n">test_EMUcr_IOtrap</span>
+<span class="n">test_EMUcr_MEM</span>
+<span class="n">test_EMUcr_MEMtrap</span>
+<span class="n">test_EMUcr_NETWORK</span>
+<span class="n">test_EMUcr_MULTI1</span>
+<span class="n">test_EMUcr_MULTI2</span>
+</pre></div>
+</div>
+<p>This will produce output similar to running the entire set of tests</p>
+</div>
+</div>
+<div class="section" id="resource-overloading">
+<h2>Resource Overloading<a class="headerlink" href="#resource-overloading" title="Permalink to this headline">¶</a></h2>
+<p>In order to prevent resources from becoming Overloaded (using more than 100% of a resource at a point in time,) the system calculates the resource usage before any Emulation is run.</p>
+<p>If an Emulation would cause any of the resources to become overloaded, then that emulation will not run and an exception will be raised with the format:</p>
+<div class="highlight-python"><pre>Unable to create distribution:
+CPU resource will become Overloaded: Stopping execution</pre>
+</div>
+</div>
+<div class="section" id="abstract-classes">
+<h2>Abstract Classes<a class="headerlink" href="#abstract-classes" title="Permalink to this headline">¶</a></h2>
+<p>When adding a new Emulator or Distribution class they should extend their respective abstract class. This requires the new class to contain the following code:</p>
+<ul>
+<li><p class="first">For Emulators</p>
+<blockquote>
+<div><div class="highlight-python"><pre>sys.path.insert(0, getHomepath() + '/emulators/')
+from abstract_emu import *
+
+class run_yourEmulatorName(abstract_emu):
+pass</pre>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">For Distributions</p>
+<blockquote>
+<div><div class="highlight-python"><pre>sys.path.insert(0, getHomepath() + '/distributions/')
+from abstract_dist import *
+
+class dist_yourDistributionName(abstract_dist):
+pass</pre>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>This feature was added to minimize problems caused by adding new emulators or distributions</p>
+</div>
+<div class="section" id="message-queue-use">
+<h2>Message queue use<a class="headerlink" href="#message-queue-use" title="Permalink to this headline">¶</a></h2>
+<p>COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a timestamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the <em>camel</em> notation in case of multi-words. Below is the set of messages:</p>
+<div class="highlight-python"><pre>{"Timestamp": 1378893008.422242, "Message": {"Action": "Scheduler started",
+"Interface": "eth0", "Port": "51889"}, "From": "Scheduler"}
+
+{"Timestamp": 1378893809.897368, "Message": {"Action": "USER REQUEST Create
+Emulation", "File": "tests/02-MEM-Linear_incr-Stressapptest_100-1000.xml"},
+"From": "ccmsh"}
+
+{"Timestamp": 1378893810.206373, "Message": {"Action": "Emulation request
+received", "UserEmulationName": "MEM_EMU"}, "From": "Emulation Manager"}
+
+{"Timestamp": 1378893810.744948, "Message": {"ResourceTypeDist": "mem",
+"JobName": "2-MEM_EMU-2-0-mem_distro-lookbusy-mem", "DistributionName":
+"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo":
+"0", "EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU",
+"DistributionID": 2, "StressValue": 100, "StartTime": "2013-09-11 10:03:31",
+"Duration": 60.0}, "From": "Scheduler"}
+
+{"Timestamp": 1378893811.128323, "Message": {"ResourceTypeDist": "mem",
+"JobName": "2-MEM_EMU-2-1-mem_distro-lookbusy-mem", "DistributionName":
+"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo":
+"1", "EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU",
+"DistributionID": 2, "StressValue": 75, "StartTime": "2013-09-11 10:03:43",
+"Duration": 48.0}, "From": "Scheduler"}
+
+{"Timestamp": 1378893811.479812, "Message": {"ResourceTypeDist": "mem",
+"JobName": "2-MEM_EMU-2-2-mem_distro-lookbusy-mem", "DistributionName":
+"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo": "2",
+"EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU",
+"DistributionID": 2, "StressValue": 75, "StartTime": "2013-09-11 10:03:55",
+"Duration": 36.0}, "From": "Scheduler"}
+
+{"Timestamp": 1378893811.838568, "Message": {"ResourceTypeDist": "mem",
+"JobName": "2-MEM_EMU-2-3-mem_distro-lookbusy-mem", "DistributionName":
+"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo":
+"3", "EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU",
+"DistributionID": 2, "StressValue": 75, "StartTime": "2013-09-11 10:04:07",
+"Duration": 24.0}, "From": "Scheduler"}
+
+{"Timestamp": 1378893812.189469, "Message": {"ResourceTypeDist": "mem",
+"JobName": "2-MEM_EMU-2-4-mem_distro-lookbusy-mem", "DistributionName":
+"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo":
+"4", "EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU",
+"DistributionID": 2, "StressValue": 75, "StartTime": "2013-09-11 10:04:19",
+"Duration": 12.0}, "From": "Scheduler"}
+
+{"Timestamp": 1378893812.621874, "Message": {"Action": "Emulation created",
+"EmulationName": "MEM_EMU"}, "From": "Emulation Manager"}
+
+{"Timestamp": 1378893871.00535, "Message": {"Action": "Emulation finished",
+"EmulationName": "2-MEM_EMU"}, "From": "Logger"}
+
+{"Timestamp": 1378893871.163372, "Message": {"Action": "Job Executed Successfully",
+"StartTime": "2013-09-11 10:04:07", "Duration": 24.0,
+"EndTime": "2013-09-11 10:04:31", "StressValue": 75, "JobName":
+"2-MEM_EMU-2-3-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+
+{"Timestamp": 1378893871.274156, "Message": {"Action": "Job Executed Successfully",
+"StartTime": "2013-09-11 10:04:19", "Duration": 12.0, "EndTime":
+"2013-09-11 10:04:31", "StressValue": 75, "JobName":
+"2-MEM_EMU-2-4-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+
+{"Timestamp": 1378893871.398665, "Message": {"Action": "Job Executed Successfully",
+"StartTime": "2013-09-11 10:03:55", "Duration": 36.0, "EndTime":
+"2013-09-11 10:04:31", "StressValue": 75, "JobName":
+"2-MEM_EMU-2-2-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+
+{"Timestamp": 1378893871.493218, "Message": {"Action": "Job Executed Successfully",
+"StartTime": "2013-09-11 10:03:43", "Duration": 48.0,
+"EndTime": "2013-09-11 10:04:31", "StressValue": 75, "JobName":
+"2-MEM_EMU-2-1-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+
+{"Timestamp": 1378893871.628944, "Message": {"Action": "Job Executed Successfully",
+"StartTime": "2013-09-11 10:03:31", "Duration": 60.0, "EndTime":
+"2013-09-11 10:04:31", "StressValue": 100, "JobName":
+"2-MEM_EMU-2-0-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+
+{"Timestamp": 1378893913.604134, "Message": {"Action":
+"USER REQUEST list all Emulations"}, "From": "ccmsh"}
+
+{"Timestamp": 1378893929.615051, "Message": {"Action":
+"USER REQUEST list Emulation", "EmulationName": "2-MEM_EMU"}, "From": "ccmsh"}
+
+{"Timestamp": 1378894024.729127, "Message": {"Action":
+"USER REQUEST delete Emulation", "EmulationName": "2-MEM_EMU"}, "From": "ccmsh"}
+
+{"Timestamp": 1378894042.969776, "Message": {"Action":
+"USER REQUEST purge all Emulations"}, "From": "ccmsh"}</pre>
+</div>
+</div>
+<div class="section" id="real-trace-parse">
+<h2>Real trace parse<a class="headerlink" href="#real-trace-parse" title="Permalink to this headline">¶</a></h2>
+<p>This feature allows a user to create a distribution from a real trace file. The format of the trace file has to be as follow:</p>
+<div class="highlight-python"><pre>NCPUS 2
+MEMTOTAL 2074448
+TIMESTAMP 1378900076312
+POLLFR 1
+CPU%    MEMUSED%
+2               34
+2               34
+2               34
+2               34</pre>
+</div>
+<p>The first 4 lines provide information about the machine the trace was recorded from. This allows to scale the usage to the machine that has to reply it. As it can be seen, for now only <strong>CPU</strong> and <strong>MEM</strong> are supported. In the future, <strong>IO</strong> and <strong>NET</strong> might be supported too.
+Below is a xml snippet showing a new tag called <strong>trace</strong> which provides the path to the trace file from which the distribution <strong>real_trace</strong> creates the runs:</p>
+<div class="highlight-python"><pre>&lt;distributions &gt;
+        &lt;name&gt;realTrace&lt;/name&gt;
+        &lt;startTime&gt;0&lt;/startTime&gt;
+        &lt;!--duration in seconds --&gt;
+        &lt;duration&gt;60&lt;/duration&gt;
+        &lt;granularity&gt;1&lt;/granularity&gt;
+        &lt;distribution href="/distributions/real_trace" name="real_trace" /&gt;
+        &lt;trace&gt;/path/to/real-trace_1.txt&lt;/trace&gt;
+        &lt;emulator href="/emulators/lookbusy" name="lookbusy" /&gt;
+        &lt;emulator-params&gt;
+                &lt;resourceType&gt;MEM&lt;/resourceType&gt;
+                &lt;!--time between iterations in usec (default 1000)--&gt;
+                &lt;malloclimit&gt;4004&lt;/malloclimit&gt;
+                &lt;memSleep&gt;0&lt;/memSleep&gt;
+        &lt;/emulator-params&gt;
+&lt;/distributions&gt;</pre>
+</div>
+<p>The <strong>duration</strong> is not used as the actual duration is calculated from the trace itself. So if the emulation ends before the distribution, all jobs left (running and scheduled) will be stopped.</p>
+<p>As the concept of distribution in COCOMA relates to a single resource (CPU, RAM, IO, NET), if a mixed (CPU and RAM) real trace emulation wanted to be performed, 2 distributions can be added in the xml, each targeting one of the resources, but having the same <em>startTime</em> and <em>trace</em>.</p>
+<div class="section" id="recording-a-real-trace">
+<h3>Recording a real trace<a class="headerlink" href="#recording-a-real-trace" title="Permalink to this headline">¶</a></h3>
+<p>COCOMA ships with a script called <em>rec_res_usage.sh</em> which can be used to create a trace file with CPU and MEM used. The script can get as option the recording frequency, which by default is 1 sec. As the script can be used also as a live monitoring tool, in order to save the data into a file, the output redirection should be uses, such as:</p>
+<div class="highlight-python"><pre>$ rec_res_usage.sh 2 &gt; trace_file.txt
+        this uses a polling time of 2 seconds
+
+$ timeout 30s rec_res_usage.sh 2 &gt; trace_file.txt
+        this uses the command *timeout* in front of the script so that
+        it will run for the specified (30 seconds) amount of time</pre>
+</div>
+</div>
+<div class="section" id="event-driven-approach">
+<h3>Event-driven approach<a class="headerlink" href="#event-driven-approach" title="Permalink to this headline">¶</a></h3>
+<p>COCOMA offers 2 different ways to manage events. One is time-based, where a distribution is run for a finite and known amount of time. In this case when having two time-based distributions, where the second one has to run right after the first one has finished, given that the duration of the distribution is explicetely specified, it is possible to calculate the exact ending time of the first distribution and therefore schedule the start of the second one accordingly. However, there might be cases that the duration of a distribution is not known, e.g. in malicious distributions. In this case, say for example that out of the two distributions that want to be run sequentially, the first one doesn&#8217;t have a duration, it would be impossible to schedule the second one since the end time of the first one is unknown. Therefore, we introduced the event-driven approach, where the first one creates an end-job event that triggers the schedule of the second distribution. This allows to take into account these duration-less distribution. An example is in the xml snippet below:</p>
+<div class="highlight-python"><pre>&lt;distributions&gt;
+        &lt;name&gt;Fuzzer_Distro1&lt;/name&gt;
+        &lt;nextevent&gt;Fuzzer_Distro2&lt;/nextevent&gt;
+        &lt;!--duration in seconds --&gt;
+        &lt;starttime&gt;0&lt;/starttime&gt;
+        &lt;granularity&gt;0&lt;/granularity&gt;
+        &lt;duration&gt;0&lt;/duration&gt;
+        &lt;distribution href="/distributions/event" name="event" /&gt;
+        &lt;emulator href="/emulators/backfuzz" name="backfuzz" /&gt;
+
+        &lt;emulator-params&gt;
+                &lt;resourceType&gt;NET&lt;/resourceType&gt;
+                &lt;serverip&gt;10.55.164.181&lt;/serverip&gt;
+                &lt;serverport&gt;80&lt;/serverport&gt;
+                &lt;min&gt;100&lt;/min&gt;
+                &lt;max&gt;104&lt;/max&gt;
+                &lt;packettype&gt;HTTP&lt;/packettype&gt;
+                &lt;timedelay&gt;0&lt;/timedelay&gt;
+                &lt;salt&gt;2&lt;/salt&gt;
+        &lt;/emulator-params&gt;
+&lt;/distributions&gt;
+
+&lt;distributions&gt;
+        &lt;name&gt;Fuzzer_Distro2&lt;/name&gt;
+        &lt;!--duration in seconds --&gt;
+        &lt;nextevent&gt;Fuzzer_Distro2&lt;/nextevent&gt;
+        &lt;starttime&gt;0&lt;/starttime&gt;
+        &lt;granularity&gt;0&lt;/granularity&gt;
+        &lt;duration&gt;0&lt;/duration&gt;
+        &lt;distribution href="/distributions/event" name="event" /&gt;
+        &lt;emulator href="/emulators/backfuzz" name="backfuzz" /&gt;
+
+        &lt;emulator-params&gt;
+                &lt;resourceType&gt;NET&lt;/resourceType&gt;
+                &lt;serverip&gt;10.55.164.181&lt;/serverip&gt;
+                &lt;serverport&gt;22&lt;/serverport&gt;
+                &lt;min&gt;100&lt;/min&gt;
+                &lt;max&gt;104&lt;/max&gt;
+                &lt;packettype&gt;SSH&lt;/packettype&gt;
+                &lt;timedelay&gt;0&lt;/timedelay&gt;
+                &lt;salt&gt;2&lt;/salt&gt;
+        &lt;/emulator-params&gt;
+&lt;/distributions&gt;</pre>
+</div>
+<p>The new distribution format in this case has a new tag <strong>nextevent</strong>, which allows the scheduler to understand that the following distribution to be scheduled, once the first distribution finishes, is the one in this tag. The example relates to a malicious distribution, which is further explained in a dedicated section of this document. Please note that in this case, although they are specified, the <em>starttime</em>, <em>granularity</em> and <em>duration</em> are not actually used as they don&#8217;t apply in the event-driven context. Finally, the <em>emustopTime</em> still sets the emulation ends, so in case a distribution hasn&#8217;t finished within the emulation time range specified, the jobs left (running and scheduled) will be stopped.</p>
+</div>
+</div>
+<div class="section" id="malicious-module">
+<h2>Malicious module<a class="headerlink" href="#malicious-module" title="Permalink to this headline">¶</a></h2>
+<p>The malicious module allows users to create distributions that can target a specific machine by sending fuzzing data over a chosen protocol. As the emulator supporting our malicious module is <em>backfuzz</em> <a class="footnote-reference" href="#f1" id="id1">[1]</a> <a class="footnote-reference" href="#f2" id="id2">[2]</a>, it offers fuzzing over various known protocol such as <em>HTTP</em>, <em>SSH</em>, <em>FTP</em>, <em>IMAP</em>, etc. The nice thing that all protocols are added to the tool as plugins, so if a new protocol wants to be tested, a new plugin for it can be created and added to the tool for the purpose.
+The fuzzing process time cannot be known a priori as it depends from factors out of the user control, such as the network between COCOMA and the SuT to target. Therefore, the <strong>event-driven</strong> approach was introduced to support this. The xml snippet below (the same of the event-driven section) shows a maliciuos distribution using backfuzz:</p>
+<div class="highlight-python"><pre>&lt;distributions&gt;
+        &lt;name&gt;Fuzzer_Distro1&lt;/name&gt;
+        &lt;nextevent&gt;Fuzzer_Distro2&lt;/nextevent&gt;
+        &lt;!--duration in seconds --&gt;
+        &lt;starttime&gt;0&lt;/starttime&gt;
+        &lt;granularity&gt;0&lt;/granularity&gt;
+        &lt;duration&gt;0&lt;/duration&gt;
+        &lt;distribution href="/distributions/event" name="event" /&gt;
+        &lt;emulator href="/emulators/backfuzz" name="backfuzz" /&gt;
+
+        &lt;emulator-params&gt;
+                &lt;resourceType&gt;NET&lt;/resourceType&gt;
+                &lt;serverip&gt;10.55.164.181&lt;/serverip&gt;
+                &lt;serverport&gt;80&lt;/serverport&gt;
+                &lt;min&gt;100&lt;/min&gt;
+                &lt;max&gt;104&lt;/max&gt;
+                &lt;packettype&gt;HTTP&lt;/packettype&gt;
+                &lt;timedelay&gt;0&lt;/timedelay&gt;
+                &lt;salt&gt;2&lt;/salt&gt;
+        &lt;/emulator-params&gt;
+&lt;/distributions&gt;</pre>
+</div>
+<p>In the emulator parameters part we can specify the server IP and its port, the minimum and maximum lenght of the fuzzing string sent, the type of protocol and the time after which the fuzz starts.</p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="f1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://github.com/localh0t/backfuzz">https://github.com/localh0t/backfuzz</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="http://www.darknet.org.uk/2012/03/backfuzz-multi-protocol-fuzzing-toolkit-supports-httpftpimap-etc/">http://www.darknet.org.uk/2012/03/backfuzz-multi-protocol-fuzzing-toolkit-supports-httpftpimap-etc/</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Additional Features</a><ul>
+<li><a class="reference internal" href="#testing">Testing</a><ul>
+<li><a class="reference internal" href="#cli-testing">CLI Testing</a></li>
+<li><a class="reference internal" href="#api-testing">API Testing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resource-overloading">Resource Overloading</a></li>
+<li><a class="reference internal" href="#abstract-classes">Abstract Classes</a></li>
+<li><a class="reference internal" href="#message-queue-use">Message queue use</a></li>
+<li><a class="reference internal" href="#real-trace-parse">Real trace parse</a><ul>
+<li><a class="reference internal" href="#recording-a-real-trace">Recording a real trace</a></li>
+<li><a class="reference internal" href="#event-driven-approach">Event-driven approach</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#malicious-module">Malicious module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="09_adding_distributions_emulators.html"
+                        title="previous chapter">Adding a new emulator</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="08_known_issues.html"
+                        title="next chapter">Known Issues</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/COCOMA/06_additional_features.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="08_known_issues.html" title="Known Issues"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="09_adding_distributions_emulators.html" title="Adding a new emulator"
+             >previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, SAP.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

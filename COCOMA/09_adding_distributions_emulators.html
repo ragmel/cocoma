@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &mdash; COCOMA 1 documentation</title>
+    <title>Adding a new emulator &mdash; COCOMA 1 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -41,61 +41,28 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="20%" />
-<col width="80%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Term</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>Emulation</td>
-<td>Process that imitates a specific behaviour specified in the emulation type, over a resource type, using one or more distributions during the emulation lifetime</td>
-</tr>
-<tr class="row-odd"><td>Emulation type</td>
-<td><p class="first">An emulation can be of the following types:</p>
-<blockquote class="last">
+  <div class="section" id="adding-a-new-emulator">
+<h1>Adding a new emulator<a class="headerlink" href="#adding-a-new-emulator" title="Permalink to this headline">¶</a></h1>
+<p>In order to add a new emulator, a new wrapper has to be implemented. This needs to inherit from the relative abstract class, which can be found in the same <em>emulators</em> directory. The class needs 3 different methods:</p>
+<blockquote>
 <div><ul class="simple">
-<li>Contentiousness</li>
-<li>Maliciousness</li>
-<li>Faultiness (not yet implemented)</li>
-<li>Mixed (a combination of the above types)</li>
+<li><strong>emulatorHelp</strong>: Used for displaying help about an emulator (eg. what parameters it needs)</li>
+<li><strong>emulatorArgNames</strong>: Used for returning the names of the arguments that a given emulator takes</li>
 </ul>
 </div></blockquote>
-</td>
-</tr>
-<tr class="row-even"><td>Resource type</td>
-<td><p class="first">A resource can be of the following types:</p>
-<blockquote class="last">
+<p>Specific methods to execute the wanted emulator instance with the relative needed parameters will have to be added. Checking the existing emulator wrappers should give a clear view on how the wrapping process can be carried out.</p>
+</div>
+<div class="section" id="adding-a-new-distribution">
+<h1>Adding a new distribution<a class="headerlink" href="#adding-a-new-distribution" title="Permalink to this headline">¶</a></h1>
+<p>In order to add a new distribution, it needs to inherit from the relative abstract class, which can be found in the same <em>distributions</em> directory. The class needs 3 different methods:</p>
+<blockquote>
 <div><ul class="simple">
-<li>CPU</li>
-<li>RAM</li>
-<li>I/O</li>
-<li>Network</li>
+<li><strong>distHelp</strong>: Used for displaying help about a distribution (eg. what Resources types it can use)</li>
+<li><strong>functionCount</strong>: Used for getting values for: stressValues, runStartTimeList, runDurations. The actual algorithm (which calculates those values) goes in this function</li>
+<li><strong>argNames</strong>: Used for returning the names of the arguments that a given resource takes</li>
 </ul>
 </div></blockquote>
-</td>
-</tr>
-<tr class="row-odd"><td>Emulator</td>
-<td>Specific mechanism/tool that is used to create an emulation type. For example load generators, stress generators, fault generators and malicious payload creation.</td>
-</tr>
-<tr class="row-even"><td>Distribution</td>
-<td>In the case of contention, it is a discrete function of a specific resource type over a specific time within the emulation lifetime. The distribution time is divided into multiple timeslots (t0, .. , tn) based on the distribution granularity. A distribution is broken down into multiple runs each one injecting a different load level per time slot depending on the discrete function of the distribution. In the case of malicious, it is a straight mapping to the emulator</td>
-</tr>
-<tr class="row-odd"><td>Distribution granularity</td>
-<td>Number of runs for the distribution</td>
-</tr>
-<tr class="row-even"><td>Emulation lifetime</td>
-<td>Duration of the emulation</td>
-</tr>
-<tr class="row-odd"><td>Run</td>
-<td>Basic emulator instantiation</td>
-</tr>
-</tbody>
-</table>
+</div>
 
 
           </div>
@@ -103,9 +70,15 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Adding a new emulator</a></li>
+<li><a class="reference internal" href="#adding-a-new-distribution">Adding a new distribution</a></li>
+</ul>
+
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/COCOMA/glossary.txt"
+    <li><a href="../_sources/COCOMA/09_adding_distributions_emulators.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">

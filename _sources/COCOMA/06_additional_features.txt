@@ -1,0 +1,372 @@
+Additional Features
+===================
+In this section the additional features of COCOMA will be discussed
+
+Testing
+-------
+
+COCOMA has two main sets of tests supplied with it; **API Tests** and **Command Line Interface (CLI) Tests**. Both of which are implemented using python's unit testing framework (pyUnit)
+
+The test files (**TestAPI** and **TestCLI**) are located in *"/usr/share/pyshared/cocoma/unitTest"*
+
+To run a set of tests on the API or CLI, navigate to the *unitTest* folder and use on of the commands:
+
+.. code-block:: bash
+
+    $ python -m unittest -v TestAPI
+    $ python -m unittest -v TestCLI
+
+The *-v* argument gives more verbose output, and may be omitted if required
+
+Individual test results are output to the terminal in the format ``test_Emulators (TestAPI.TestAPI) ... ok`` if the test was successful
+An unsuccessful test will produce the same outoput, with *ERROR* or *FAIL* instead of *ok*
+
+Once all the tests in the  file have run, a summary of the results will be printed. This will indicate which (if any) tests were unsuccessful, and attempt to give a reason why the test failed
+
+CLI Testing
+...........
+Individual tests can be run on the CLI using the syntax
+
+.. code-block:: bash
+
+    $ python -m unittest TestCLI.TestCLI.test_Name
+    
+Where ``test_Name`` is replaced by one of the following:
+
+::
+
+	test_EMU_CPU
+	test_EMU_IO
+	test_EMU_IOTrap
+	test_EMU_MEM
+	test_EMU_MEMTrap
+	test_EMU_MULTI1
+	test_EMU_MULTI2
+	test_EMU_NETWORK
+	test_EMU_NowOperator
+
+	test_Scheduler_Start
+	test_Scheduler_Show
+	test_Scheduler_Stop
+
+	test_API_Start
+	test_API_Show
+	test_API_Stop
+
+	test_Help
+	test_Version
+	test_List
+	test_Result
+	test_Distributions
+	test_Emulators
+	test_Purge
+	test_Jobs
+
+This will produce output similar to running the entire set of tests
+
+API Testing
+...........
+
+Individual tests can be run on the API using the syntax
+
+.. code-block:: bash
+
+    $ python -m unittest TestAPI.TestAPI.test_Name
+
+Where ``test_Name`` is replaced by one of the following:
+
+::
+
+	test_List_Emulation
+        test_List_Emulator
+        test_List_Distributions
+        test_List_Results
+        test_List_Logs
+        test_List_SysLogs
+        test_List_EmuLogs
+        test_List_Tests
+
+	test_EMU_Logs
+	test_EMUcr_IO
+        test_EMUcr_IOtrap
+        test_EMUcr_MEM
+        test_EMUcr_MEMtrap
+        test_EMUcr_NETWORK
+        test_EMUcr_MULTI1
+        test_EMUcr_MULTI2
+
+This will produce output similar to running the entire set of tests
+
+Resource Overloading
+--------------------
+
+In order to prevent resources from becoming Overloaded (using more than 100% of a resource at a point in time,) the system calculates the resource usage before any Emulation is run.
+
+If an Emulation would cause any of the resources to become overloaded, then that emulation will not run and an exception will be raised with the format:
+
+::
+
+    Unable to create distribution:
+    CPU resource will become Overloaded: Stopping execution
+    
+Abstract Classes
+----------------
+
+When adding a new Emulator or Distribution class they should extend their respective abstract class. This requires the new class to contain the following code:
+
+* For Emulators
+
+	::
+
+		sys.path.insert(0, getHomepath() + '/emulators/')
+		from abstract_emu import *
+		
+		class run_yourEmulatorName(abstract_emu):
+		pass
+
+* For Distributions
+
+	::
+
+		sys.path.insert(0, getHomepath() + '/distributions/')
+		from abstract_dist import *
+
+		class dist_yourDistributionName(abstract_dist):
+		pass
+
+This feature was added to minimize problems caused by adding new emulators or distributions
+
+Message queue use
+-----------------
+COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a timestamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the *camel* notation in case of multi-words. Below is the set of messages::
+
+        {"Timestamp": 1378893008.422242, "Message": {"Action": "Scheduler started",
+        "Interface": "eth0", "Port": "51889"}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893809.897368, "Message": {"Action": "USER REQUEST Create 
+        Emulation", "File": "tests/02-MEM-Linear_incr-Stressapptest_100-1000.xml"}, 
+        "From": "ccmsh"}
+        
+        {"Timestamp": 1378893810.206373, "Message": {"Action": "Emulation request 
+        received", "UserEmulationName": "MEM_EMU"}, "From": "Emulation Manager"}
+        
+        {"Timestamp": 1378893810.744948, "Message": {"ResourceTypeDist": "mem", 
+        "JobName": "2-MEM_EMU-2-0-mem_distro-lookbusy-mem", "DistributionName": 
+        "mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo": 
+        "0", "EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU", 
+        "DistributionID": 2, "StressValue": 100, "StartTime": "2013-09-11 10:03:31", 
+        "Duration": 60.0}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893811.128323, "Message": {"ResourceTypeDist": "mem", 
+        "JobName": "2-MEM_EMU-2-1-mem_distro-lookbusy-mem", "DistributionName": 
+        "mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo": 
+        "1", "EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU", 
+        "DistributionID": 2, "StressValue": 75, "StartTime": "2013-09-11 10:03:43", 
+        "Duration": 48.0}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893811.479812, "Message": {"ResourceTypeDist": "mem", 
+        "JobName": "2-MEM_EMU-2-2-mem_distro-lookbusy-mem", "DistributionName": 
+        "mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo": "2", 
+        "EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU", 
+        "DistributionID": 2, "StressValue": 75, "StartTime": "2013-09-11 10:03:55", 
+        "Duration": 36.0}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893811.838568, "Message": {"ResourceTypeDist": "mem", 
+        "JobName": "2-MEM_EMU-2-3-mem_distro-lookbusy-mem", "DistributionName": 
+        "mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo": 
+        "3", "EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU", 
+        "DistributionID": 2, "StressValue": 75, "StartTime": "2013-09-11 10:04:07", 
+        "Duration": 24.0}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893812.189469, "Message": {"ResourceTypeDist": "mem", 
+        "JobName": "2-MEM_EMU-2-4-mem_distro-lookbusy-mem", "DistributionName": 
+        "mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo": 
+        "4", "EndTime": "2013-09-11 10:04:31", "EmulationName": "2-MEM_EMU", 
+        "DistributionID": 2, "StressValue": 75, "StartTime": "2013-09-11 10:04:19", 
+        "Duration": 12.0}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893812.621874, "Message": {"Action": "Emulation created", 
+        "EmulationName": "MEM_EMU"}, "From": "Emulation Manager"}
+        
+        {"Timestamp": 1378893871.00535, "Message": {"Action": "Emulation finished", 
+        "EmulationName": "2-MEM_EMU"}, "From": "Logger"}
+        
+        {"Timestamp": 1378893871.163372, "Message": {"Action": "Job Executed Successfully", 
+        "StartTime": "2013-09-11 10:04:07", "Duration": 24.0, 
+        "EndTime": "2013-09-11 10:04:31", "StressValue": 75, "JobName": 
+        "2-MEM_EMU-2-3-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+
+        {"Timestamp": 1378893871.274156, "Message": {"Action": "Job Executed Successfully", 
+        "StartTime": "2013-09-11 10:04:19", "Duration": 12.0, "EndTime": 
+        "2013-09-11 10:04:31", "StressValue": 75, "JobName": 
+        "2-MEM_EMU-2-4-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893871.398665, "Message": {"Action": "Job Executed Successfully", 
+        "StartTime": "2013-09-11 10:03:55", "Duration": 36.0, "EndTime": 
+        "2013-09-11 10:04:31", "StressValue": 75, "JobName": 
+        "2-MEM_EMU-2-2-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893871.493218, "Message": {"Action": "Job Executed Successfully", 
+        "StartTime": "2013-09-11 10:03:43", "Duration": 48.0, 
+        "EndTime": "2013-09-11 10:04:31", "StressValue": 75, "JobName": 
+        "2-MEM_EMU-2-1-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893871.628944, "Message": {"Action": "Job Executed Successfully", 
+        "StartTime": "2013-09-11 10:03:31", "Duration": 60.0, "EndTime": 
+        "2013-09-11 10:04:31", "StressValue": 100, "JobName": 
+        "2-MEM_EMU-2-0-mem_distro-lookbusy-mem"}, "From": "Scheduler"}
+        
+        {"Timestamp": 1378893913.604134, "Message": {"Action": 
+        "USER REQUEST list all Emulations"}, "From": "ccmsh"}
+        
+        {"Timestamp": 1378893929.615051, "Message": {"Action": 
+        "USER REQUEST list Emulation", "EmulationName": "2-MEM_EMU"}, "From": "ccmsh"}
+        
+        {"Timestamp": 1378894024.729127, "Message": {"Action": 
+        "USER REQUEST delete Emulation", "EmulationName": "2-MEM_EMU"}, "From": "ccmsh"}
+        
+        {"Timestamp": 1378894042.969776, "Message": {"Action": 
+        "USER REQUEST purge all Emulations"}, "From": "ccmsh"}
+
+
+Real trace parse
+----------------
+This feature allows a user to create a distribution from a real trace file. The format of the trace file has to be as follow:
+::
+
+        NCPUS 2
+        MEMTOTAL 2074448
+        TIMESTAMP 1378900076312
+        POLLFR 1
+        CPU%    MEMUSED%
+        2               34
+        2               34
+        2               34
+        2               34
+
+The first 4 lines provide information about the machine the trace was recorded from. This allows to scale the usage to the machine that has to reply it. As it can be seen, for now only **CPU** and **MEM** are supported. In the future, **IO** and **NET** might be supported too.
+Below is a xml snippet showing a new tag called **trace** which provides the path to the trace file from which the distribution **real_trace** creates the runs:
+
+::
+
+        <distributions >
+                <name>realTrace</name>
+                <startTime>0</startTime>
+                <!--duration in seconds -->
+                <duration>60</duration>
+                <granularity>1</granularity>
+                <distribution href="/distributions/real_trace" name="real_trace" />
+                <trace>/path/to/real-trace_1.txt</trace>
+                <emulator href="/emulators/lookbusy" name="lookbusy" />
+                <emulator-params>
+                        <resourceType>MEM</resourceType>
+                        <!--time between iterations in usec (default 1000)-->
+                        <malloclimit>4004</malloclimit>
+                        <memSleep>0</memSleep>
+                </emulator-params>
+        </distributions>
+
+The **duration** is not used as the actual duration is calculated from the trace itself. So if the emulation ends before the distribution, all jobs left (running and scheduled) will be stopped.
+
+As the concept of distribution in COCOMA relates to a single resource (CPU, RAM, IO, NET), if a mixed (CPU and RAM) real trace emulation wanted to be performed, 2 distributions can be added in the xml, each targeting one of the resources, but having the same *startTime* and *trace*.
+
+Recording a real trace
+......................
+COCOMA ships with a script called *rec_res_usage.sh* which can be used to create a trace file with CPU and MEM used. The script can get as option the recording frequency, which by default is 1 sec. As the script can be used also as a live monitoring tool, in order to save the data into a file, the output redirection should be uses, such as:
+
+::
+
+        $ rec_res_usage.sh 2 > trace_file.txt
+                this uses a polling time of 2 seconds
+        
+        $ timeout 30s rec_res_usage.sh 2 > trace_file.txt
+                this uses the command *timeout* in front of the script so that
+                it will run for the specified (30 seconds) amount of time
+        
+Event-driven approach
+.....................
+COCOMA offers 2 different ways to manage events. One is time-based, where a distribution is run for a finite and known amount of time. In this case when having two time-based distributions, where the second one has to run right after the first one has finished, given that the duration of the distribution is explicetely specified, it is possible to calculate the exact ending time of the first distribution and therefore schedule the start of the second one accordingly. However, there might be cases that the duration of a distribution is not known, e.g. in malicious distributions. In this case, say for example that out of the two distributions that want to be run sequentially, the first one doesn't have a duration, it would be impossible to schedule the second one since the end time of the first one is unknown. Therefore, we introduced the event-driven approach, where the first one creates an end-job event that triggers the schedule of the second distribution. This allows to take into account these duration-less distribution. An example is in the xml snippet below:
+
+::
+
+        <distributions>
+                <name>Fuzzer_Distro1</name>
+                <nextevent>Fuzzer_Distro2</nextevent>
+                <!--duration in seconds -->
+                <starttime>0</starttime>
+                <granularity>0</granularity>
+                <duration>0</duration>
+                <distribution href="/distributions/event" name="event" />
+                <emulator href="/emulators/backfuzz" name="backfuzz" />
+
+                <emulator-params>
+                        <resourceType>NET</resourceType>
+                        <serverip>10.55.164.181</serverip>
+                        <serverport>80</serverport>
+                        <min>100</min>
+                        <max>104</max>
+                        <packettype>HTTP</packettype>
+                        <timedelay>0</timedelay>
+                        <salt>2</salt>
+                </emulator-params>
+        </distributions>
+
+        <distributions>
+                <name>Fuzzer_Distro2</name>
+                <!--duration in seconds -->
+                <nextevent>Fuzzer_Distro2</nextevent>
+                <starttime>0</starttime>
+                <granularity>0</granularity>
+                <duration>0</duration>
+                <distribution href="/distributions/event" name="event" />
+                <emulator href="/emulators/backfuzz" name="backfuzz" />
+
+                <emulator-params>
+                        <resourceType>NET</resourceType>
+                        <serverip>10.55.164.181</serverip>
+                        <serverport>22</serverport>
+                        <min>100</min>
+                        <max>104</max>
+                        <packettype>SSH</packettype>
+                        <timedelay>0</timedelay>
+                        <salt>2</salt>
+                </emulator-params>
+        </distributions>
+
+The new distribution format in this case has a new tag **nextevent**, which allows the scheduler to understand that the following distribution to be scheduled, once the first distribution finishes, is the one in this tag. The example relates to a malicious distribution, which is further explained in a dedicated section of this document. Please note that in this case, although they are specified, the *starttime*, *granularity* and *duration* are not actually used as they don't apply in the event-driven context. Finally, the *emustopTime* still sets the emulation ends, so in case a distribution hasn't finished within the emulation time range specified, the jobs left (running and scheduled) will be stopped.
+
+Malicious module
+----------------
+The malicious module allows users to create distributions that can target a specific machine by sending fuzzing data over a chosen protocol. As the emulator supporting our malicious module is *backfuzz* [#f1]_ [#f2]_, it offers fuzzing over various known protocol such as *HTTP*, *SSH*, *FTP*, *IMAP*, etc. The nice thing that all protocols are added to the tool as plugins, so if a new protocol wants to be tested, a new plugin for it can be created and added to the tool for the purpose.
+The fuzzing process time cannot be known a priori as it depends from factors out of the user control, such as the network between COCOMA and the SuT to target. Therefore, the **event-driven** approach was introduced to support this. The xml snippet below (the same of the event-driven section) shows a maliciuos distribution using backfuzz:
+
+::
+        
+        <distributions>
+                <name>Fuzzer_Distro1</name>
+                <nextevent>Fuzzer_Distro2</nextevent>
+                <!--duration in seconds -->
+                <starttime>0</starttime>
+                <granularity>0</granularity>
+                <duration>0</duration>
+                <distribution href="/distributions/event" name="event" />
+                <emulator href="/emulators/backfuzz" name="backfuzz" />
+
+                <emulator-params>
+                        <resourceType>NET</resourceType>
+                        <serverip>10.55.164.181</serverip>
+                        <serverport>80</serverport>
+                        <min>100</min>
+                        <max>104</max>
+                        <packettype>HTTP</packettype>
+                        <timedelay>0</timedelay>
+                        <salt>2</salt>
+                </emulator-params>
+        </distributions>
+        
+In the emulator parameters part we can specify the server IP and its port, the minimum and maximum lenght of the fuzzing string sent, the type of protocol and the time after which the fuzz starts.
+
+.. rubric:: Footnotes
+
+.. [#f1] https://github.com/localh0t/backfuzz
+.. [#f2] http://www.darknet.org.uk/2012/03/backfuzz-multi-protocol-fuzzing-toolkit-supports-httpftpimap-etc/

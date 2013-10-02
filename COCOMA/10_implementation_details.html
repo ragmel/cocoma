@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Implementation details &mdash; COCOMA 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="prev" title="Known Issues" href="08_known_issues.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="08_known_issues.html" title="Known Issues"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="implementation-details">
+<h1>Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h1>
+<p>The Controlled Contentious and Malicious patterns (COCOMA) framework aims to provide experimenters the ability to create specific contentious and malicious payloads and workloads in a controlled fashion. The experimenter is able to use pre-defined common distributions or specify new payloads and workloads. In the table below we present the terminology introduced by COCOMA.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Term</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Emulation</td>
+<td>Process that imitates a specific behaviour specified in the emulation type, over a resource type, using one or more distributions during the emulation lifetime</td>
+</tr>
+<tr class="row-odd"><td>Emulation type</td>
+<td><p class="first">An emulation can be of the following types:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Contentiousness</li>
+<li>Maliciousness</li>
+<li>Faultiness (not yet implemented)</li>
+<li>Mixed (a combination of the above types)</li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-even"><td>Resource type</td>
+<td><p class="first">A resource can be of the following types:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>CPU</li>
+<li>RAM</li>
+<li>I/O</li>
+<li>Network</li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td>Emulator</td>
+<td>Specific mechanism/tool that is used to create an emulation type. For example load generators, stress generators, fault generators and malicious payload creation.</td>
+</tr>
+<tr class="row-even"><td>Distribution</td>
+<td>In the case of contention, it is a discrete function of a specific resource type over a specific time within the emulation lifetime. The distribution time is divided into multiple timeslots (t0, .. , tn) based on the distribution granularity. A distribution is broken down into multiple runs each one injecting a different load level per time slot depending on the discrete function of the distribution. In the case of malicious, it is a straight mapping to the emulator</td>
+</tr>
+<tr class="row-odd"><td>Distribution granularity</td>
+<td>Number of runs for the distribution</td>
+</tr>
+<tr class="row-even"><td>Emulation lifetime</td>
+<td>Duration of the emulation</td>
+</tr>
+<tr class="row-odd"><td>Run</td>
+<td>Basic emulator instantiation</td>
+</tr>
+</tbody>
+</table>
+<p>When a user defines an emulation, he needs to specify pairs of distribution-emulator. When specifying an emulator it is bound to a specific resource type. For more complex scenarios users can specify multiple pairs which can also overlap from the time point of view.</p>
+<p>COCOMA is provided within a BonFIRE VM, which is interfaced with the BonFIRE aggregator as shown in the figure below:</p>
+<div class="figure align-center" id="cocoma-design">
+<a class="reference internal image-reference" href="../_images/cocoma-design.png"><img alt="../_images/cocoma-design.png" src="../_images/cocoma-design.png" /></a>
+<p class="caption">COCOMA design and components interactions</p>
+</div>
+<p>The different functions provided by the COCOMA components and their interactions are explained below:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>ccmsh</strong>: this is the command line interface (CLI) to interact with COCOMA. Users can specify an emulation in an XML file, which is interpreted by the <em>XMLParser</em> component. Also, the CLI allows to check and control the current running emulations (list, delete, etc.) by interacting directly with the DB</li>
+<li><strong>REST API</strong>: COCOMA provides also a REST API to interact with the framework programmatically</li>
+<li><strong>XMLParser</strong>: it checks xml correct format and return interpreted values to create an emulation. It is used by both <em>CLI</em> and <em>API</em></li>
+<li><strong>emulationManager</strong>: the <em>emulationManager</em> receives input from the ccmsh or the REST API to create/query/delete an emulation</li>
+<li><strong>distributionManager</strong>: the <em>distributionManager</em> receives input from the <em>emulationManager</em> to load the distribution(s) and apply the relative algorithm in the distribution(s). It basically calculates how many runs (individual basic emulator instances) are needed, and the parameters values of each run.  These are then passed to the <em>scheduler</em></li>
+<li><strong>scheduler</strong>: it creates the runs using the values obtained from the <em>distributionManager</em> at due time</li>
+<li><strong>DB</strong>: it holds information about running emulations, registered emulators, distributions and some configurations</li>
+<li><strong>Logger</strong>: it creates 2 different log files, one with all events relative to the runs created and the other one with the resource usage</li>
+</ul>
+</div></blockquote>
+<p>COCOMA is designed to work with different emulators. To add a new emulator a user needs to install the new emulator where COCOMA is installed, create a python wrapper for the specific parameters of the emulator and place this wrapper into the <em>emulators</em> COCOMA directory. A similar approach is for distributions. Users can specify their desired discrete functions in a python file and place it in the <em>distributions</em> directory. Emulators and distributions that are in the those directories are automatically available to be used. In the next sections we provide details of how to create both emulators and distributions.</p>
+<div class="section" id="code-structure">
+<h2>Code structure<a class="headerlink" href="#code-structure" title="Permalink to this headline">¶</a></h2>
+<p>COCOMA code structure is shown below:</p>
+<div class="highlight-python"><pre>/bin
+/data
+/distributions
+/doc
+/emulators
+/logs
+/rb-examples
+/scripts
+/tests
+/unitTest
+__init__.py
+LICENSE
+NEWS
+NOTICE
+README</pre>
+</div>
+<p>The bin directory contains the main components presented in the <a class="reference internal" href="#cocoma-design"><em>COCOMA design and components interactions</em></a> figure. It also contains 3 more files</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>Job.py</cite>: used to create and manage the <cite>scheduler</cite> jobs</li>
+<li><cite>Library.py</cite>: contains the common functions used by various components</li>
+<li><cite>Logger.py</cite>: implements the logging mechanisms</li>
+</ul>
+</div></blockquote>
+<p>The <cite>webUI</cite> files are also contained within the <cite>bin</cite> directory, specifically in a subdirectory called <cite>webcontent</cite>.</p>
+<p>The <cite>data</cite> folder contains the SQLite database file. The <cite>distributions</cite> directory contains the distributions currently available, while the emulators wrappers are in the <cite>emulators</cite> folder. In the <cite>rb-examples</cite> there are <cite>restufully</cite> examples to create emulations using the <cite>COCOMA API</cite>. In the <cite>scripts</cite> directory there is the <cite>rec_res_usage</cite> script that can be used to record a real trace from a system and replayed in COCOMA. Example xml tests are in the <cite>tests</cite> directory, while the automated tests are in the <cite>unitTest</cite> folder.</p>
+</div>
+<div class="section" id="building-process">
+<h2>Building process<a class="headerlink" href="#building-process" title="Permalink to this headline">¶</a></h2>
+<p>COCOMA is implemented in <cite>python</cite>, while the <cite>webUI</cite> in <cite>Javascripts</cite>, therefore there is no need for building anything. On the other hand a deb package has been created to install the software along with some of the dependencies. A building script is provided along with the debian files (<cite>control</cite>, <cite>postinst</cite> and <cite>postrm</cite>). The script uses 4 specific commands in order:</p>
+<blockquote>
+<div><ul class="simple">
+<li><em>sdist</em>: this is used by python <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">sdist</span></tt> to create a python source distribution as <cite>tar.gz</cite> file format <a class="footnote-reference" href="#f3" id="id1">[3]</a>. In order to use the command, a <cite>setup.py</cite> is provided as well <a class="footnote-reference" href="#f4" id="id2">[4]</a>. To use the <cite>setuptools</cite> in the <cite>setup.py</cite>, a <cite>distribute_setup.py</cite> is also needed. This is provided too</li>
+<li><em>py2dsc</em>: this generates a debian source package from a Python package <a class="footnote-reference" href="#f5" id="id3">[5]</a></li>
+<li><em>dch</em>: this adds a new revision at the top of the Debian changelog file <a class="footnote-reference" href="#f6" id="id4">[6]</a></li>
+<li><em>debuild</em>: this buils the debian package <a class="footnote-reference" href="#f7" id="id5">[7]</a></li>
+</ul>
+</div></blockquote>
+<p>The building script pulls the cocoma source code from the <cite>github</cite> repository <a class="footnote-reference" href="#f8" id="id6">[8]</a>. It takes as argument the version of the debian package that one wants to built such as:</p>
+<div class="highlight-python"><pre>./build_cocoma-deb 1.7.4</pre>
+</div>
+<p>The building script, along the other needed python scripts (setup.py, distribute_setup.py) and the directory structure needed can be found in the BonFIRE svn repository <a class="footnote-reference" href="#f12" id="id7">[12]</a>. Once the directory is checked out, the script can be run from that directory and the deb package will be created in the <tt class="docutils literal"><span class="pre">dist/deb_dist</span></tt> folder.</p>
+</div>
+<div class="section" id="dependencies-and-other-tools">
+<h2>Dependencies and other tools<a class="headerlink" href="#dependencies-and-other-tools" title="Permalink to this headline">¶</a></h2>
+<p>In order for COCOMA to work as required, a number of dependencies and tools are needed. Dependecies are:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><strong>python</strong> version is <strong>v2.7x</strong>. Version v3.x hasn&#8217;t been tested. <cite>python-support</cite> and <cite>python-dev</cite> are also needed</p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>python modules</strong> used by the componenents to implement various functionalities</dt>
+<dd><ul class="first last simple">
+<li><strong>bottle</strong>: <cite>is a fast, simple and lightweight WSGI micro web-framework</cite>. Latest tested version is <strong>v0.11.6</strong></li>
+<li><strong>psutil</strong>: <cite>is a module providing an interface for retrieving information on all running processes and system utilization (CPU, memory, disks, network)</cite>. Latest tested version is <strong>v1.0.1</strong></li>
+<li><strong>pyro4</strong>: <cite>it is a library that enables you to build applications in which objects can talk to eachother over the network</cite>. Working tested version is <strong>v4.20</strong> is required. Later versions give serialization problems for the scheduler. This is a known issue by the pyro developers. If fixed, later versions should work</li>
+<li><strong>apscheduler</strong>: <cite>is a light but powerful in-process task scheduler that lets you schedule functions (or any other python callables) to be executed at times of your choosing</cite>. Latest tested version is <strong>v2.1.1</strong></li>
+<li><strong>pika</strong>: <cite>is a pure-Python implementation of the AMQP 0-9-1 protocol</cite>. Latest tested version is <strong>v0.9.13</strong></li>
+<li><strong>PyUnit</strong>: <cite>Python language version of unit testing framework JUnit</cite>. Latest tested version is <strong>v1.4.1</strong></li>
+<li><strong>requests</strong>: <cite>it is a HTTP library</cite>. Latest tested version is <strong>v2.0.0</strong></li>
+<li><strong>numpy</strong>: <cite>is a general-purpose array-processing package designed to efficiently manipulate large multi-dimensional arrays of arbitrary records</cite>. Latest tested version is <strong>v1.7.1</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><strong>pip</strong>: <cite>A tool for installing and managing Python packages</cite></p>
+</li>
+</ul>
+</div></blockquote>
+<p>As tools, COCOMA uses some as emulators, such as <cite>stressapptest</cite> <a class="footnote-reference" href="#f9" id="id8">[9]</a>, <cite>lookbusy</cite> <a class="footnote-reference" href="#f10" id="id9">[10]</a>, <cite>backfuzz</cite> <a class="footnote-reference" href="#f1" id="id10">[1]</a> <a class="footnote-reference" href="#f2" id="id11">[2]</a>, <cite>iperf</cite> <a class="footnote-reference" href="#f11" id="id12">[11]</a>. Other used tools are for installation, such as <tt class="docutils literal"><span class="pre">curl,</span> <span class="pre">bc,</span> <span class="pre">unzip,</span> <span class="pre">gcc,</span> <span class="pre">g++,</span> <span class="pre">make</span></tt>.</p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="f1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[1]</a></td><td><a class="reference external" href="https://github.com/localh0t/backfuzz">https://github.com/localh0t/backfuzz</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[2]</a></td><td><a class="reference external" href="http://www.darknet.org.uk/2012/03/backfuzz-multi-protocol-fuzzing-toolkit-supports-httpftpimap-etc/">http://www.darknet.org.uk/2012/03/backfuzz-multi-protocol-fuzzing-toolkit-supports-httpftpimap-etc/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[3]</a></td><td><a class="reference external" href="http://docs.python.org/distutils/sourcedist.html">http://docs.python.org/distutils/sourcedist.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[4]</a></td><td><a class="reference external" href="http://docs.python.org/2/distutils/setupscript.html">http://docs.python.org/2/distutils/setupscript.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[5]</a></td><td><a class="reference external" href="https://pypi.python.org/pypi/stdeb">https://pypi.python.org/pypi/stdeb</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[6]</a></td><td><a class="reference external" href="http://www.debian.org/doc/manuals/maint-guide/update.en.html">http://www.debian.org/doc/manuals/maint-guide/update.en.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[7]</a></td><td><a class="reference external" href="http://www.debian.org/doc/manuals/maint-guide/build.en.html">http://www.debian.org/doc/manuals/maint-guide/build.en.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[8]</a></td><td><a class="reference external" href="https://github.com/cragusa/cocoma">https://github.com/cragusa/cocoma</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[9]</a></td><td><a class="reference external" href="https://code.google.com/p/stressapptest/">https://code.google.com/p/stressapptest/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[10]</a></td><td><a class="reference external" href="http://devin.com/lookbusy/">http://devin.com/lookbusy/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[11]</a></td><td><a class="reference external" href="https://code.google.com/p/iperf/">https://code.google.com/p/iperf/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[12]</a></td><td><a class="reference external" href="https://scm.gforge.inria.fr/svn/bonfire-dev/cocoma/build-deb/">https://scm.gforge.inria.fr/svn/bonfire-dev/cocoma/build-deb/</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Implementation details</a><ul>
+<li><a class="reference internal" href="#code-structure">Code structure</a></li>
+<li><a class="reference internal" href="#building-process">Building process</a></li>
+<li><a class="reference internal" href="#dependencies-and-other-tools">Dependencies and other tools</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="08_known_issues.html"
+                        title="previous chapter">Known Issues</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/COCOMA/10_implementation_details.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="08_known_issues.html" title="Known Issues"
+             >previous</a> |</li>
+        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, SAP.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

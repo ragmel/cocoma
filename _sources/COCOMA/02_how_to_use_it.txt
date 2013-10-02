@@ -62,6 +62,27 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
       Display installed version information of COCOMA
 
+.. cmdoption:: -q, --mq
+
+      add configuration parameters for message queue:
+      enabled vhost exchange user password host topic
+
+.. cmdoption:: -m, --rmq
+
+      remove configuration parameters for message queue
+
+.. cmdoption:: -a, --enl
+
+      enable configuration parameters for message queue
+
+.. cmdoption:: -s, --smq
+
+      show configuration parameters for message queue
+
+.. cmdoption:: -b, --bfz  
+
+      Update the path of to the backfuzz emulator (stored in database)
+
 .. cmdoption:: -l, --list <emulation name>  
 
       Display list of all emulations that are scheduled or already finished. If emulation name is provided then it lists information for that specific emulation
@@ -72,8 +93,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
     
 .. cmdoption:: -j, --list-jobs 
 
-      Queries the scheduler for the list of jobs that have to be executed. For each one, it gives the job name and the planned execution time 
-  
+      Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name and the planned execution time
 .. cmdoption:: -i, --dist <distribution name>
 
       Scans the *"/usr/share/pyshared/cocoma/distributions"* folder and displays all available distribution modules. If a distribution name is provided, then it shows the help information for that specific distribution 
@@ -88,7 +108,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
 .. cmdoption:: -n, --now (used with -x option only)
 
-      Override any start date in the local XML emulation file without modifying the file, i.e. ``ccmsh -x <file name> -n``  
+      Override any start date in the local XML emulation file without modifying the file, i.e. ``ccmsh -x <file name> -n``
 
 .. cmdoption:: -d, --delete <emulation name>
 
@@ -657,7 +677,9 @@ The XML document defines the emulation experiment details, which consists of thr
      <emustopTime>60</emustopTime>
      ...
    </emulation>
-   
+
+The 'emuresourceType' value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions use 'MIX'
+
 * **Distribution**
 
 .. code-block:: xml

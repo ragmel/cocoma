@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -51,8 +49,8 @@
 <h1>COCOMA<a class="headerlink" href="#cocoma" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="controlled-contentious-and-malicious-framework">
 <h2>Controlled Contentious and Malicious framework<a class="headerlink" href="#controlled-contentious-and-malicious-framework" title="Permalink to this headline">¶</a></h2>
-<p>The aim of COCOMA framework is to create, monitor and control contentious and malicious system workload. By using this framework experimenters are able to create operational conditions under which tests and experiments can be carried out. This allows more insight into the testing process so that various scenarios of the cloud infrastructure behaviour can be analysed by collecting and correlate metrics of the emulated environment with the test results.</p>
-<p>COCOMA is provided by BonFIRE as a service within a VM already configured that can be added to an experiment and used.</p>
+<p>The aim of COCOMA framework is to create, monitor and control contentious and malicious system workload. By using this framework experimenters are able to create operational conditions for their System under Test (SuT) under which tests and experiments can be carried out. This allows more insight into the testing process of the SuT so that various scenarios of the cloud infrastructure behaviour can be analysed by collecting and correlate metrics of the emulated environment with the test results.</p>
+<p><tt class="docutils literal"><span class="pre">In</span> <span class="pre">the</span> <span class="pre">context</span> <span class="pre">of</span> <span class="pre">BonFIRE,</span> <span class="pre">COCOMA</span> <span class="pre">is</span> <span class="pre">provided</span> <span class="pre">as</span> <span class="pre">a</span> <span class="pre">service</span> <span class="pre">within</span> <span class="pre">a</span> <span class="pre">VM</span> <span class="pre">already</span> <span class="pre">configured</span> <span class="pre">that</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">added</span> <span class="pre">to</span> <span class="pre">an</span> <span class="pre">experiment</span> <span class="pre">and</span> <span class="pre">used.</span></tt></p>
 </div>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
@@ -77,12 +75,48 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="COCOMA/03_cli_examples.html">Creating Emulation via CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="COCOMA/04_api_examples.html">Creating Emulation via API Client (Restfully)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COCOMA/07_webUI.html">The Web UI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/07_webUI.html#opening-the-ui">Opening the UI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/07_webUI.html#creating-an-emulation">Creating an emulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/07_webUI.html#distribution-parameters">Distribution Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/07_webUI.html#logging-and-message-queue">Logging and Message Queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/07_webUI.html#running-the-emulation">Running the emulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/07_webUI.html#working-with-existing-emulations">Working with existing emulations</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="COCOMA/05_examples.html">XML Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="COCOMA/05_examples.html#cpu">CPU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="COCOMA/05_examples.html#i-o">I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="COCOMA/05_examples.html#memory">Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="COCOMA/05_examples.html#network">Network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="COCOMA/05_examples.html#multiple-distributions-emulation">Multiple distributions emulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/05_examples.html#known-issues">Known Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="COCOMA/09_adding_distributions_emulators.html">Adding a new emulator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COCOMA/09_adding_distributions_emulators.html#adding-a-new-distribution">Adding a new distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COCOMA/06_additional_features.html">Additional Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/06_additional_features.html#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="COCOMA/06_additional_features.html#cli-testing">CLI Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="COCOMA/06_additional_features.html#api-testing">API Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/06_additional_features.html#resource-overloading">Resource Overloading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/06_additional_features.html#abstract-classes">Abstract Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/06_additional_features.html#message-queue-use">Message queue use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/06_additional_features.html#real-trace-parse">Real trace parse</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="COCOMA/06_additional_features.html#recording-a-real-trace">Recording a real trace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="COCOMA/06_additional_features.html#event-driven-approach">Event-driven approach</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/06_additional_features.html#malicious-module">Malicious module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="COCOMA/08_known_issues.html">Known Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COCOMA/10_implementation_details.html">Implementation details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/10_implementation_details.html#code-structure">Code structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/10_implementation_details.html#building-process">Building process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="COCOMA/10_implementation_details.html#dependencies-and-other-tools">Dependencies and other tools</a></li>
 </ul>
 </li>
 </ul>
@@ -94,7 +128,7 @@
 <li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
 </ul>
 <ul class="simple">
-<li><a class="reference external" href="COCOMA/glossary">Glossary</a></li>
+<li><a class="reference external" href="COCOMA/glossary.html">Glossary</a></li>
 </ul>
 </div>
 </div>
@@ -156,7 +190,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, SAP.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -105,6 +103,37 @@ To check if the scheduler is running use the following:</p>
 </dd></dl>
 
 <dl class="cmdoption">
+<dt id="cmdoption-ccmsh-q">
+<tt class="descname">-q</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--mq</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>add configuration parameters for message queue:
+enabled vhost exchange user password host topic</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-m">
+<tt class="descname">-m</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--rmq</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-m" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove configuration parameters for message queue</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-a">
+<tt class="descname">-a</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--enl</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-a" title="Permalink to this definition">¶</a></dt>
+<dd><p>enable configuration parameters for message queue</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-s">
+<tt class="descname">-s</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--smq</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>show configuration parameters for message queue</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-b">
+<tt class="descname">-b</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--bfz</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the path of to the backfuzz emulator (stored in database)</p>
+</dd></dl>
+
+<dl class="cmdoption">
 <dt id="cmdoption-ccmsh-l">
 <tt class="descname">-l</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list</tt><tt class="descclassname"> &lt;emulation name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-l" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display list of all emulations that are scheduled or already finished. If emulation name is provided then it lists information for that specific emulation</p>
@@ -119,7 +148,7 @@ To check if the scheduler is running use the following:</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-j">
 <tt class="descname">-j</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list-jobs</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-j" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the scheduler for the list of jobs that have to be executed. For each one, it gives the job name and the planned execution time</p>
+<dd><p>Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name and the planned execution time</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -717,6 +746,7 @@ The file with CSV extention will contain the system resource data, and the file 
 <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
+<p>The &#8216;emuresourceType&#8217; value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions use &#8216;MIX&#8217;</p>
 <ul class="simple">
 <li><strong>Distribution</strong></li>
 </ul>
@@ -856,7 +886,7 @@ The file with CSV extention will contain the system resource data, and the file 
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, SAP.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

@@ -1,5 +1,14 @@
 Introduction
 ============
+One of the main common characteristics of cloud computing is resource sharing amongst multiple users, through which providers can optimise utilization and efficiency of their system.
+
+However, at the same time this raises some concerns for performance predictability, reliability and security:
+
+        * Resource (i.e. CPU, storage and network) sharing inevitably creates contention, which affects applications\' performance and reliability
+        * Workloads and applications of different users residing on the same physical machine, storage and network are more vulnerable to malicious attacks
+
+Studying the effect of resource contention and maliciousness in a cloud environment can be of interest for different stakeholders. Experimenters may want to evaluate the performance and security mechanisms of their system under test (SuT). On the other hand cloud providers may want to assess their mechanisms to enforce performance isolation and security.
+
 In order to use COCOMA, an experimenter defines an `emulation` which embeds all environment operational conditions as shown in the figure below. The actual operational conditions are defined in what are called `distributions`, which create specific workloads over the targeted resource of a specific resource type. For example, `distribution 1` targets the CPU creating an exponential trend over a specific time range within the whole emulation. Each distribution time is divided into multiple time-slots based on the distribution granularity then broken down into multiple runs each one injecting a different load level per time slot, which depends on the discrete function of the distribution.
 
 	.. figure:: emulation2.png
