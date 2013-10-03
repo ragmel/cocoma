@@ -74,7 +74,7 @@ def main():
     listEmu = optparse.OptionGroup(parser, 'List existing resources')
     listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='list all emulations or specific emulation by name')
     listEmu.add_option('-r', '--results', action='store_true', default=False,dest='resAll',help='list all emulations results or specific emulation results by name')
-    listEmu.add_option('-j', '--list-jobs', action='store_true', default=False,dest='listJobs', help='List of all scheduled jobs')
+    listEmu.add_option('-j', '--list-jobs', action='store_true', default=False,dest='listJobs', help='List of all scheduled and currently running jobs')
         
     createEmu = optparse.OptionGroup(parser, 'Create new emulations')
     createEmu.add_option('-x', '--xml', action='store_true', dest='xml',default=False, help='provide path to XML file with emulation details')
