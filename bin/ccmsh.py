@@ -36,13 +36,20 @@ logging.basicConfig(level=logging.INFO)
 """
 
 import Library,optparse,os,sys,EMQproducer,EmulationManager,XmlParser
-
+import sqlite3 as sqlite
 #MQ setup
 from EMQproducer import Producer
 global producer
 producer = Producer()
 global myName
 myName = "ccmsh"
+
+global HOMEPATH
+#HOMEPATH = Library.getHomepath()
+try:
+    HOMEPATH= os.environ['COCOMA']
+except:
+    print "no $COCOMA environmental variable set"
 
 
 def main():
@@ -107,18 +114,17 @@ def main():
     options, arguments = parser.parse_args()
 
 
-
     if options.version:
+	VERSION = getVersion()
         os.system("clear")
-        print '''
+        text = '''
             
       ___  _____  ___  _____  __  __    __       
      / __)(  _  )/ __)(  _  )(  \/  )  /__\     
     ( (__  )(_)(( (__  )(_)(  )    (  /(__)\    
-     \___)(_____)\___)(_____)(_/\/\_)(__)(__) Ver. RC1.0
-                                                                                  
-                                                                                  
-Copyright 2012-2013 SAP Ltd
+     \___)(_____)\___)(_____)(_/\/\_)(__)(__) '''+ "v"+VERSION+'''                                                                              
+
+   Copyright 2012-2013 SAP Ltd
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -132,11 +138,12 @@ Copyright 2012-2013 SAP Ltd
    See the License for the specific language governing permissions and
    limitations under the License.
 
- 
-COCOMA is a framework for COntrolled COntentious and MAlicious patterns
-                                                                                  
+
+COCOMA is a framework for COntrolled COntentious and MAlicious patterns.
+More info @ https://github.com/cragusa/cocoma          
 
             '''
+	print text
         sys.exit(1) 
     
     #catch empty arguments
@@ -556,7 +563,29 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns
             print error
 
 
-        
+def getVersion():
+     try:
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+
+        c = conn.cursor()
+        #print "In producer MQconfig: "+enabled+" "+vhost+" "+exchange+" "+user+" "+password+" "+host+" "+topic
+        c.execute('SELECT version from config')
+        config = c.fetchall()
+        #for par in config:
+            #print "version in config: "+str(par[0])
+            #for i in range(0,6):
+            #print "enabled: "+str(par[0])+", vhost: "+par[1]+", exchange: "+par[2]+", user: "+par[3]+", password: "+par[4]+", host: "+par[5]+", topic: "+par[6]
+        #print "version in config: "+str(config[0][0])
+        conn.commit()
+        return str(config[0][0])
+        c.close()
+
+     except sqlite.Error, e:
+        print " SQL Error %s:" % e.args[0]
+        print e
+        return "<error>str(e)</error>"
+        sys.exit(1)        
 
     
 
