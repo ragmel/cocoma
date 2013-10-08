@@ -15,8 +15,8 @@
      <granularity>1</granularity>
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
      <!--Megabytes for memory -->
-      <startLoad>100</startLoad>
-      <stopLoad>1000</stopLoad>
+      <startLoad>50</startLoad>
+      <stopLoad>100</stopLoad>
       <malloclimit>4000</malloclimit>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
@@ -28,7 +28,7 @@
 
   <log>
    <!-- Use value "1" to enable logging(by default logging is off)  -->
-   <enable>1</enable>
+   <enable>0</enable>
    <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
    <frequency>1</frequency>
    <logLevel>debug</logLevel>

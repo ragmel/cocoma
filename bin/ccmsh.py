@@ -76,7 +76,7 @@ def main():
     config.add_option('-m', '--rmq', action='store_true', default=False,dest='rmConfig',help='remove configuration parameters for message queue')
     config.add_option('-a', '--enl', action='store_true', default=False,dest='enConfig',help='enable configuration parameters for message queue')
     config.add_option('-s', '--smq', action='store_true', default=False,dest='showConfig',help='show configuration parameters for message queue')
-    config.add_option('-b', '--bfz', action='store_true', default=False,dest='setBackfuzzPath',help='Update the location of the backfuzz emulator')
+    config.add_option('-b', '--bfz', action='store_true', default=False,dest='setBackfuzzPath',help='Update/Show location of Backfuzz emulator')
     
     listEmu = optparse.OptionGroup(parser, 'List existing resources')
     listEmu.add_option('-l', '--list', action='store_true', default=False,dest='listAll',help='list all emulations or specific emulation by name')
@@ -86,6 +86,7 @@ def main():
     createEmu = optparse.OptionGroup(parser, 'Create new emulations')
     createEmu.add_option('-x', '--xml', action='store_true', dest='xml',default=False, help='provide path to XML file with emulation details')
     createEmu.add_option('-n', '--now', action='store_true', dest='emuNow',default=False, help='add to the "-x" argument to override emulation start date and execute test immediately')
+    createEmu.add_option('-f', '--force', action='store_true', dest='emuForce',default=False, help='add to the "-x" argument to force running of emulation (when resources are near, but not over their limit)')
         
     deleteEmu = optparse.OptionGroup(parser, 'Delete emulations')
     deleteEmu.add_option('-d', '--delete', action='store_true',default=False, dest='deleteID', help='delete emulation by name')
@@ -293,6 +294,9 @@ More info @ https://github.com/cragusa/cocoma
             except Exception, e:
                 print "unable to update backfuzz_path"
                 sys.exit(0)
+        else:
+            print "backfuzz_path = " + Library.readBackfuzzPath()
+            sys.exit(0)
     
     if options.resAll:
         if len(arguments)>0:
@@ -365,7 +369,7 @@ More info @ https://github.com/cragusa/cocoma
                 
                 
                 #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" list "+arguments[0])
-                msg = {"Action":"USER REQUEST list Emulation","ID":arguments[0]}
+                msg = {"Action":"USER REQUEST list Emulation","EmulationName":arguments[0]}
                 producer.sendmsg(myName,msg)
                 
             except Exception,e:
@@ -399,12 +403,12 @@ More info @ https://github.com/cragusa/cocoma
                         print "Stress Value: ", Runs["stressValue"]
                         print "Error Message: ", Runs["message"]
 
-        try:
-            #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" list all")
-            msg = {"Action":"USER REQUEST list all Emulations"}
-            producer.sendmsg(myName,msg)
-        except Exception,e:
-            print "NO USER INPUT"
+                try:
+                    #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" list all")
+                    msg = {"Action":"USER REQUEST list all Emulations"}
+                    producer.sendmsg(myName,msg)
+                except Exception,e:
+                    print "NO USER INPUT"
 
                 
     if options.listJobs:
@@ -437,7 +441,7 @@ More info @ https://github.com/cragusa/cocoma
             EmulationManager.deleteEmulation(arguments[0])
         try:
             #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" delete "+arguments[0])
-            msg = {"Action":"USER REQUEST delete Emulation","ID":arguments[0]}
+            msg = {"Action":"USER REQUEST delete Emulation","EmulationName":arguments[0]}
             producer.sendmsg(myName,msg)
         except Exception,e:
             print "NO USER INPUT"
@@ -525,8 +529,11 @@ More info @ https://github.com/cragusa/cocoma
                 
                 if Library.daemonCheck()!=False:
                     try:
-                        
-                        (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0])
+                        if options.emuForce:
+                            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], True)
+                            if (type(distroList) == unicode): sys.exit()
+                        elif not options.emuForce:
+                            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], False)
                         
                         if startTimeEmu.lower() =="now":
 
@@ -541,7 +548,8 @@ More info @ https://github.com/cragusa/cocoma
                             messageReturn = EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
                             print messageReturn
                     except Exception, e:
-                        error = XmlParser.xmlFileParser(arguments[0])
+                        print e
+                        error = XmlParser.xmlFileParser(arguments[0], False)
                         print error
             else:
                 print "Specify XML file location. See help for details"
@@ -549,8 +557,10 @@ More info @ https://github.com/cragusa/cocoma
     
     if options.emuNow and options.xml:
         try:
-
-            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0])
+            if options.emuForce:
+                (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], True)
+            elif not options.emuForce:
+                (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], False)
             startTimeEmu = Library.emulationNow(2)
             #producer.sendmsg(myName,'USER REQUEST: '+sys._getframe().f_code.co_name+' create '+arguments[0])
             msg = {"Action":"USER REQUEST Create Emulation","File":arguments[0]}
@@ -559,7 +569,7 @@ More info @ https://github.com/cragusa/cocoma
             print messageReturn
         except Exception,e:
             print "\n\nERROR2\n\n"
-            error = XmlParser.xmlFileParser(arguments[0])
+            error = XmlParser.xmlFileParser(arguments[0], True)
             print error
 
 
@@ -591,5 +601,3 @@ def getVersion():
 
 if __name__ == '__main__':
     main()
-
-

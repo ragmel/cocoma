@@ -83,6 +83,7 @@ FILE : File Fuzzer | Generate multiple files with payload | Author: localh0t
 '''
 import math,time,multiprocessing
 import Pyro4,imp,time,sys,os,psutil
+import Library
 import sqlite3 as sqlite
 import datetime as dt
 import subprocess
@@ -114,6 +115,9 @@ class emulatorMod(abstract_emu):
 
     def __init__(self,emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg, stressValues,runNo,emuDuration):
         
+        if not (os.path.isfile(Library.readBackfuzzPath())):
+            print "Backfuzz_path is incorrect. Use 'ccmsh -b' to set it"
+            sys.exit(0)
         
         if resourceTypeDist.lower() == "net":
             netFuzzProc = multiprocessing.Process(target = fuzzLoad, args=(emulationID, distributionID, runNo, emulatorArg["min"],emulatorArg["fuzzrange"], emulatorArg["serverip"], emulatorArg["serverport"], emulatorArg["packettype"], emulatorArg["salt"], emulatorArg["timedelay"], duration))

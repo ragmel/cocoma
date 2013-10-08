@@ -5,18 +5,18 @@
   <!--date format: 2014-10-10T10:10:10 -->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>120</emustopTime>
+  <emustopTime>10</emustopTime>
 
   <distributions>
    <name>CPU_Distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>120</duration>
-     <granularity>24</granularity>
+     <duration>10</duration>
+     <granularity>2</granularity>
      <distribution href="/distributions/linear" name="linear" />
      <!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
-      <stopLoad>75</stopLoad>
+      <stopLoad>95</stopLoad>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
 
       <emulator-params>

@@ -17,7 +17,7 @@
         <resourceType>NET</resourceType>
 	<min>100</min>
 	<fuzzRange>900</fuzzRange>
-        <serverip>10.55.168.238</serverip>
+        <serverip>10.55.164.24</serverip>
         <serverport>5050</serverport>      
         <packettype>TCP</packettype>
         <timedelay>1</timedelay>

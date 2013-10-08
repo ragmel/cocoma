@@ -9,6 +9,7 @@
 		<link href="style.css" rel="stylesheet" type="text/css">
 	
 		<div id="topBar">
+		<img src='COCOMA_LOGO.png' height='50' style="padding:15px;">
 		<h2 style="color:white;padding:15px;">
 			Cocoma
 		</h2>
@@ -552,7 +553,8 @@
 						alert("Emulation is running");
 						showEmus();
 					}).error(function(e){
-						alert(e.responseText)
+						if (e.responseText == "Resource close to maximum value. Re-send with force ('-f') to run") runWithForce("now");
+						else alert(e.responseText);
 					});
 			}
 		}
@@ -582,13 +584,37 @@
 								}).error(function(e){
 									//var error = xml2json.parser(e.responseText);
 									//alert(error.error)
-									alert(e.statusText)
+									if (e.responseText == "Resource close to maximum value. Re-send with force ('-f') to run") runWithForce(DT);
+									else alert(e.statusText);
 								});
 						}
 					}
 				}
 			}
 		}
+		
+		function runWithForce(startTime)
+        {
+            var exml = writeEmuXML(startTime);
+            
+            if(validateForm())
+            {
+                var runIfOverloaded = confirm("Some Resource(s) close to their limit(s). Re-Run with force?")
+                if (runIfOverloaded) runIfOverloaded="Y"
+                else runIfOverloaded = "N"
+                
+                var requestDict = {XML:exml, runifOverloaded:runIfOverloaded};
+                $.post(cocomaIP + "emulations", requestDict, function(response){
+                        var serializer = new XMLSerializer();               //transform xml response into json
+                        var str = serializer.serializeToString(response);
+                        //console.log(str);
+                        alert("Emulation will run at: " + startTime);
+                        showEmus();
+                    }).error(function(e){
+                        if (e.responseText != "Resource close to maximum value. Re-send with force ('-f') to run") alert(e.responseText);
+                    });
+            }
+        }
 		
 		function parseDate(date, time)   //parse date into xml legal string
 		{

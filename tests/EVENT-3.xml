@@ -61,7 +61,7 @@
         <emulator href="/emulators/lookbusy" name="lookbusy" />
          <emulator-params>
              <resourceType>MEM</resourceType>
-             <memSleep>0</memsleep>
+             <memSleep>0</memSleep>
         </emulator-params>
      </distributions>
 

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -58,6 +60,13 @@
 <li><strong>emulatorArgNames</strong>: Used for returning the names of the arguments that a given emulator takes</li>
 </ul>
 </div></blockquote>
+<p>As well as the following code:</p>
+<div class="highlight-python"><pre> sys.path.insert(0, getHomepath() + '/emulators/')
+ from abstract_emu import *
+
+ class run_yourEmulatorName(abstract_emu):
+pass</pre>
+</div>
 <p>Specific methods to execute the wanted emulator instance with the relative needed parameters will have to be added. Checking the existing emulator wrappers should give a clear view on how the wrapping process can be carried out.</p>
 </div>
 <div class="section" id="adding-a-new-distribution">
@@ -70,6 +79,13 @@
 <li><strong>argNames</strong>: Used for returning the names of the arguments that a given resource takes</li>
 </ul>
 </div></blockquote>
+<p>As well as the following code:</p>
+<div class="highlight-python"><pre> sys.path.insert(0, getHomepath() + '/distributions/')
+ from abstract_dist import *
+
+class dist_yourDistributionName(abstract_dist):
+pass</pre>
+</div>
 </div>
 
 
@@ -78,9 +94,6 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/Logo_Red_with_black_borders_7.png" alt="Logo"/>
-            </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Adding a new emulator</a></li>
@@ -132,7 +145,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, SAP.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

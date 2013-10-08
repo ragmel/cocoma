@@ -55,6 +55,13 @@ class TestCLI (unittest.TestCase):
           XML = "XMLExamples/shortTests/Overload_CPU.xml"
           result = EMUTests.testCLICalls(runEmulation + XML, "resource will become Overloaded")
           self.assertNotEquals(result, -1, "CPU Overload test Failed")
+          
+    def test_EMU_Force(self): #Tries to run an emulation which requires '-f' to run
+          EMUTests = EmulationTests()
+          XML = "XMLExamples/shortTests/Force_CPU.xml"
+          result = EMUTests.testCLICalls(runEmulation + XML, "Re-send with force")
+#          result = EMUTests.testCLICalls(runEmulation + XML + " -f", "Re-send with force")
+          self.assertNotEquals(result, -1, "Use of force operator (-f) failed")
            
     def test_EMU_CPU(self):  # Creates a CPU emulation using CLI
           EMUTests = EmulationTests()
@@ -178,11 +185,6 @@ class TestCLI (unittest.TestCase):
           EMUTests = EmulationTests()
           result = EMUTests.testCLICalls("ccmsh -h", "Usage: ccmsh [option] arg")
           self.assertNotEquals(result, -1, "Call to open Help Failed")
-                 
-    def test_Version(self):  # Tests the call to open Version info
-          EMUTests = EmulationTests()
-          result = EMUTests.testCLICalls("ccmsh -v", "Ver. RC1.0")  # Needs changed if version changes
-          self.assertNotEquals(result, -1, "Call to open Version info Failed")
                    
     def test_List(self):  # Tests the call to open Emulation List
           EMUTests = EmulationTests()

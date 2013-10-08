@@ -2,7 +2,7 @@ import Pyro4, os, sys, imp
 import sqlite3 as sqlite
 import subprocess, psutil
 from subprocess import PIPE
-import datetime
+import datetime, time
 from datetime import datetime as dt
 import logging
 from logging import handlers
@@ -714,6 +714,17 @@ def boundsCompare(xmlValue, LimitsDictValues, variableName = None):
 def getTotalMem():  #Returns an integer value of the total physical memory
     return psutil.TOTAL_PHYMEM / (1024 ** 2)
 
+def getMemUsed():
+    return int(psutil.phymem_usage().used / (1024 ** 2))
+
+def getResourceLimit(ResourceName):
+    if ResourceName.upper() == "MEM":
+        return getTotalMem()
+    elif ResourceName.upper() == "CPU":
+        return 100
+    else:
+        return 999999
+
 def getCurrentJobs():
     currentJobs = []
     try:
@@ -726,7 +737,9 @@ def getCurrentJobs():
             currentRuns = c.fetchall()
             for currentRun in currentRuns:
                 jobName = currentRun[0] + "-" + str(runLog[0]) + "-" + str(runLog[1]) + "-" + currentRun[2]
-                jobInfo = "startTime: " + dt.fromtimestamp(float(runLog[3])).strftime('%Y-%m-%d %H:%M:%S') + ", duration: " + runLog[4] + ", stopTime: " + dt.fromtimestamp(float(runLog[3]) + float(runLog[4])).strftime('%Y-%m-%d %H:%M:%S') + ", resourceType: " + currentRun[3].upper() + ", stressValue: " + runLog[5]
+                startTime = float(runLog[3]) - 3600
+                stopTime = startTime + float(runLog[4])
+                jobInfo = "startTime: " + dt.fromtimestamp(startTime).strftime('%Y-%m-%d %H:%M:%S') + ", duration: " + runLog[4] + " sec, stopTime: " + dt.fromtimestamp(stopTime).strftime('%Y-%m-%d %H:%M:%S') + ", resourceType: " + currentRun[3].upper() + ", stressValue: " + runLog[5]
                 job = "Job: " + jobName + " { " + jobInfo + " }"
                 if not(job in currentJobs): currentJobs.append(job) #Add the job to the list , if it isn't already in the list
     except sqlite.Error, e:

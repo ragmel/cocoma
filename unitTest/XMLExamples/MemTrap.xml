@@ -15,8 +15,8 @@
      <granularity>5</granularity>
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
      <!--Megabytes for memory -->
-      <startLoad>100</startLoad>
-      <stopLoad>1000</stopLoad>
+      <startLoad>50</startLoad>
+      <stopLoad>100</stopLoad>
       <malloclimit>4000</malloclimit>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>

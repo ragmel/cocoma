@@ -1,4 +1,4 @@
-.TH "COCOMA" "1" "October 07, 2013" "1" "COCOMA"
+.TH "COCOMA" "1" "June 13, 2013" "1" "COCOMA"
 .SH NAME
 COCOMA \- man page
 .
@@ -32,27 +32,11 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .
 .SH CONTROLLED CONTENTIOUS AND MALICIOUS FRAMEWORK
 .sp
-The aim of COCOMA framework is to create, monitor and control contentious and malicious system workload. By using this framework experimenters are able to create operational conditions for their System under Test (SuT) under which tests and experiments can be carried out. This allows more insight into the testing process of the SuT so that various scenarios of the cloud infrastructure behaviour can be analysed by collecting and correlate metrics of the emulated environment with the test results.
+The aim of COCOMA framework is to create, monitor and control contentious and malicious system workload. By using this framework experimenters are able to create operational conditions under which tests and experiments can be carried out. This allows more insight into the testing process so that various scenarios of the cloud infrastructure behaviour can be analysed by collecting and correlate metrics of the emulated environment with the test results.
 .sp
-\fBIn the context of BonFIRE, COCOMA is provided as a service within a VM already configured that can be added to an experiment and used.\fP
+COCOMA is provided by BonFIRE as a service within a VM already configured that can be added to an experiment and used.
 .SH CONTENTS
 .SS Introduction
-.sp
-One of the main common characteristics of cloud computing is resource sharing amongst multiple users, through which providers can optimise utilization and efficiency of their system.
-.sp
-However, at the same time this raises some concerns for performance predictability, reliability and security:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-Resource (i.e. CPU, storage and network) sharing inevitably creates contention, which affects applications\(aq performance and reliability
-.IP \(bu 2
-Workloads and applications of different users residing on the same physical machine, storage and network are more vulnerable to malicious attacks
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-Studying the effect of resource contention and maliciousness in a cloud environment can be of interest for different stakeholders. Experimenters may want to evaluate the performance and security mechanisms of their system under test (SuT). On the other hand cloud providers may want to assess their mechanisms to enforce performance isolation and security.
 .sp
 In order to use COCOMA, an experimenter defines an \fIemulation\fP which embeds all environment operational conditions as shown in the figure below. The actual operational conditions are defined in what are called \fIdistributions\fP, which create specific workloads over the targeted resource of a specific resource type. For example, \fIdistribution 1\fP targets the CPU creating an exponential trend over a specific time range within the whole emulation. Each distribution time is divided into multiple time\-slots based on the distribution granularity then broken down into multiple runs each one injecting a different load level per time slot, which depends on the discrete function of the distribution.
 .INDENT 0.0
@@ -163,32 +147,6 @@ Display installed version information of COCOMA
 .UNINDENT
 .INDENT 0.0
 .TP
-.B \-q, \-\-mq
-add configuration parameters for message queue:
-enabled vhost exchange user password host topic
-.UNINDENT
-.INDENT 0.0
-.TP
-.B \-m, \-\-rmq
-remove configuration parameters for message queue
-.UNINDENT
-.INDENT 0.0
-.TP
-.B \-a, \-\-enl
-enable configuration parameters for message queue
-.UNINDENT
-.INDENT 0.0
-.TP
-.B \-s, \-\-smq
-show configuration parameters for message queue
-.UNINDENT
-.INDENT 0.0
-.TP
-.B \-b, \-\-bfz
-Update the path of to the backfuzz emulator (stored in database)
-.UNINDENT
-.INDENT 0.0
-.TP
 .B \-l, \-\-list <emulation name>
 Display list of all emulations that are scheduled or already finished. If emulation name is provided then it lists information for that specific emulation
 .UNINDENT
@@ -200,7 +158,7 @@ Display list of results of all emulations that are scheduled or already finished
 .INDENT 0.0
 .TP
 .B \-j, \-\-list\-jobs
-Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name and the planned execution time
+Queries the scheduler for the list of jobs that have to be executed. For each one, it gives the job name and the planned execution time
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -250,7 +208,7 @@ Show OS information on Scheduler or API daemon, displays PID numbers
 .SS Logging
 .SS Event Logging
 .sp
-COCOMA provides two levels of event logging, \fIINFO\fP which is set by default, and \fIDEBUG\fP which can be enabled if more detailed feedback is required:
+COCOMA has two modes of event logging \fIINFO\fP which is set by default and \fIDEBUG\fP which can be enabled if more detailed feedback is required:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -262,9 +220,9 @@ $ ccmsh \-\-start scheduler eth1 55555 debug
 .UNINDENT
 .UNINDENT
 .sp
-Timestamped events are then saved in the \fBlogs/COCOMAlogfile.csv\fP file.
+Timestamped events are then saved in the \fB/logs/COCOMAlogfile.csv\fP file.
 .sp
-Both \fIScheduler\fP and \fIAPI\fP also save their CLI output in the \fBlogs/COCOMAlogfile_Scheduler_sout.txt\fP and \fBlogs/COCOMAlogfile_API_sout.txt\fP accordingly.
+Both \fIScheduler\fP and \fIAPI\fP also save their CLI output in the \fB/logs/COCOMAlogfile_Scheduler_sout.txt\fP and \fB/logs/COCOMAlogfile_API_sout.txt\fP accordingly.
 All above files can be retrieved as ZIP archive through COCOMA web API URI:
 .INDENT 0.0
 .INDENT 3.5
@@ -297,8 +255,8 @@ Optionally the CPU, Memory and Network consumption of COCOMA VM can be recorded 
 .UNINDENT
 .UNINDENT
 .sp
-If the logging was enabled, once the emulation is finished, COCOMA will produce two files named after the emulation (e.g. \fBlogs/4\-CPU_EMU\-res_2013\-04\-09T18:51:09.csv\fP and \fBlogs/4\-CPU_EMU\-config_2013\-04\-09T18:51:09.xml\fP).
-The file with CSV extention will contain the system resource data, and the file with XML extention will have the exact copy of the payload used for that emulation.
+If the logging was enabled, once experiment is finished COCOMA will produce two files named after emulation (e.g. \fB/logs/4\-CPU_EMU\-res_2013\-04\-09T18:51:09.csv\fP and \fB/logs/4\-CPU_EMU\-config_2013\-04\-09T18:51:09.xml\fP).
+The file with CSV extention will contain the system resource data and file with XML extention will have the exact copy of the payload for verification.
 .sp
 Both files can be retrieved as ZIP archive through COCOMA web API URI by emulation name:
 .INDENT 0.0
@@ -1016,8 +974,6 @@ The XML document defines the emulation experiment details, which consists of thr
 .fi
 .UNINDENT
 .UNINDENT
-.sp
-The \(aqemuresourceType\(aq value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions use \(aqMIX\(aq
 .INDENT 0.0
 .IP \(bu 2
 \fBDistribution\fP
@@ -1327,70 +1283,6 @@ $ restfully \-c cocoma.yml
 .UNINDENT
 .sp
 To get more client tutorials check the \fI\%restfully\fP page.
-.SS The Web UI
-.sp
-Here we explain how to use the web UI to create and manage emulations and view their results.
-.SS Opening the UI
-.sp
-Provided that the API is running, the web UI will be accessible at
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-http://[COCOMA API IP]:5050/index.html
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-The \fICOCOMA API IP\fP refers to the IP of the interface on which the API have been started. The page is compatible with Chrome, Firefox and Safari web browsers, while it is not with Internet Explorer. The page will automatically load in available emulators, distributions and resources. It will detect which distributions and resources are compatible with the given emulator so that the user needs not worry about creating XML the framework cannot process. Any emulations which already exist will also be displayed in the right hand bar.
-.INDENT 0.0
-.INDENT 2.5
-[image]
-COCOMA webUI.UNINDENT
-.UNINDENT
-.SS Creating an emulation
-.sp
-Each emulation requires a name and at least one distribution, although as many distributions as required can be added. Each distribution requires a name and all required fields to be filled, this data will vary as per the emulation, distribution or resource selected. Distribution windows can be minimized for overall readability or removed entirely (not added to the emulation) by clicking the \(aqx\(aq in the top right corner:
-.INDENT 0.0
-.INDENT 2.5
-[image]
-Multi\-distribution interface.UNINDENT
-.UNINDENT
-.SS Distribution Parameters
-.sp
-\fIStart time\fP determines how long (in seconds) after the overall emulation has begun, this particular distribution will begin. \fIDuration\fP is how long the distribution will last for. \fIGranularity\fP refers to the number of the steps taken from \fIstartLoad\fP through to \fIstopLoad\fP over the course of the distributions run. For example a 60 second duration CPU stressing distribution with a granularity of 10 will move from \fIstartLoad\fP to \fIstopLoad\fP in steps of 6 seconds. More information on the emulator or distribution currently selected and the specific parameters they require can be viewed by hovering over the blue question mark beside it:
-.INDENT 0.0
-.INDENT 2.5
-[image]
-Help pop\-ups.UNINDENT
-.UNINDENT
-.SS Logging and Message Queue
-.sp
-After the distributions have been created and specified, there is an option to enable or disable logging. Enabling logging give 2 more options, the \fIfrequency\fP in seconds and the \fIlevel\fP, which dictates the amount of output the logs will contain. Below this is the option to enable or disable the message queue followed by various parameters allowing for it\(aqs setup
-.INDENT 0.0
-.INDENT 2.5
-[image]
-Logging and EMQ settings.UNINDENT
-.UNINDENT
-.SS Running the emulation
-.sp
-Once all the parameters are set there are two options; run the emulation right away by clicking the \fIRun now\fP button, or schedule the emulation to begin running at a set time in the future by clicking the \fIRun at\fP button:
-.INDENT 0.0
-.INDENT 2.5
-[image]
-Set time for emulation.UNINDENT
-.UNINDENT
-.SS Working with existing emulations
-.sp
-Any existing emulations in your system will be listed on the right hand side of the screen. The UI also displays the total number of runs, how many of those failed and the current state of the emulation (\fIactive\fP or \fIinactive\fP). Hovering over the emulation name will display the information on that emulation in a popup and by clicking on it the emulation data
-can be loaded into the creation screen on the left where its parameters can be edited or simply run again right away. Clicking the small download icon to the right of each emulation will prompt the download of a zip file to your system. This zip file contains the .xml used to create the emulation as well as .csv files with the system logs and the logs for that specific emulation.
-.INDENT 0.0
-.INDENT 2.5
-[image]
-Emulations interface.UNINDENT
-.UNINDENT
 .SS XML Examples
 .sp
 This section provides XML payload examples for creating different emulations over various resources.
@@ -1424,6 +1316,7 @@ Emulation XML for CPU contention:
       <emulator href="/emulators/lookbusy" name="lookbusy" />
 
       <emulator\-params>
+        <!\-\-more parameters will be added \-\->
         <resourceType>CPU</resourceType>
        <!\-\-Number of CPUs to keep busy (default: autodetected)\-\->
        <ncpus>1</ncpus>
@@ -1468,16 +1361,17 @@ Emulation XML for I/O contention:
      <duration>60</duration>
      <granularity>5</granularity>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
-     <startLoad>1</startLoad>
-     <stopLoad>10</stopLoad>
-     <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <startLoad>1</startLoad>
+      <stopLoad>10</stopLoad>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
 
       <emulator\-params>
+        <!\-\-more parameters will be added \-\->
         <resourceType>IO</resourceType>
-        <!\-\-Size of mem in MB used\-\->
-        <memsize>1000</memsize>
-        <!\-\-Number of threads\-\->
-        <memThreads>10</memThreads>
+       <!\-\-Size of mem in MB used\-\->
+       <memsize>1000</memsize>
+       <!\-\-Number of threads\-\->
+       <memThreads>10</memThreads>
       </emulator\-params>
 
   </distributions>
@@ -1519,16 +1413,17 @@ In this example we use a different distribution called \fItrapezoidal\fP:
      <duration>60</duration>
      <granularity>5</granularity>
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
-     <startLoad>1</startLoad>
-     <stopLoad>10</stopLoad>
-     <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <startLoad>1</startLoad>
+      <stopLoad>10</stopLoad>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
 
       <emulator\-params>
+        <!\-\-more parameters will be added \-\->
         <resourceType>IO</resourceType>
-        <!\-\-Size of mem in MB used\-\->
-        <memsize>1000</memsize>
-        <!\-\-Number of threads\-\->
-        <memThreads>10</memThreads>
+       <!\-\-Size of mem in MB used\-\->
+       <memsize>1000</memsize>
+       <!\-\-Number of threads\-\->
+       <memThreads>10</memThreads>
       </emulator\-params>
 
   </distributions>
@@ -1570,15 +1465,15 @@ Emulation XML for memory contention:
      <duration>60</duration>
      <granularity>5</granularity>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
-     <!\-\-Memory usage (Megabytes) \-\->
-     <startLoad>100</startLoad>
-     <stopLoad>1000</stopLoad>
-     <malloclimit>4095</malloclimit>
-     <emulator href="/emulators/stressapptest" name="stressapptest" />
-     <emulator\-params>
-         <resourceType>MEM</resourceType>
-         <memThreads>0</memThreads>
-     </emulator\-params>
+     <!\-\-Megabytes for memory \-\->
+      <startLoad>100</startLoad>
+      <stopLoad>1000</stopLoad>
+              <malloclimit>4095</malloclimit>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator\-params>
+                     <resourceType>MEM</resourceType>
+                     <memThreads>0</memThreads>
+      </emulator\-params>
   </distributions>
 
   <log>
@@ -1618,14 +1513,14 @@ Example for memory emulation using \fItrapezoidal\fP distribution:
      <granularity>5</granularity>
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
      <!\-\-Megabytes for memory \-\->
-     <startLoad>100</startLoad>
-     <stopLoad>1000</stopLoad>
-     <malloclimit>4095</malloclimit>
-     <emulator href="/emulators/stressapptest" name="stressapptest" />
-     <emulator\-params>
-         <resourceType>MEM</resourceType>
-         <memThreads>0</memThreads>
-     </emulator\-params>
+      <startLoad>100</startLoad>
+      <stopLoad>1000</stopLoad>
+      <malloclimit>4095</malloclimit>
+      <emulator href="/emulators/stressapptest" name="stressapptest" />
+      <emulator\-params>
+                     <resourceType>MEM</resourceType>
+                     <memThreads>0</memThreads>
+      </emulator\-params>
   </distributions>
 
   <log>
@@ -1659,25 +1554,26 @@ The newtork emulation needs two COCOMA VM\(aqs, one that acts as a client and th
   <emustopTime>155</emustopTime>
 
   <distributions>
-     <name>NET_distro</name>
+   <name>NET_distro</name>
      <startTime>0</startTime>
      <!\-\-duration in seconds \-\->
      <duration>150</duration>
      <granularity>10</granularity>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
-     <!\-\-set target bandwidth to bits per sec\-\->
-     <startLoad>100</startLoad>
-     <stopLoad>1000</stopLoad>
-     <emulator href="/emulators/iperf" name="iperf" />
-     <emulator\-params>
+   <!\-\-cpu utilization distribution range\-\->
+      <startLoad>100</startLoad>
+      <!\-\- set target bandwidth to bits per sec \-\->
+      <stopLoad>1000</stopLoad>
+      <emulator href="/emulators/iperf" name="iperf" />
+    <emulator\-params>
         <resourceType>NET</resourceType>
         <serverip>172.18.254.234</serverip>
-        <!\-\-Leave "0" for default 5001 port \-\->
-        <serverport>5001</serverport>
-        <clientip>172.18.254.236</clientip>
-        <clientport>5001</clientport>
-        <packettype>UDP</packettype>
-        </emulator\-params>
+                <!\-\-Leave "0" for default 5001 port \-\->
+                <serverport>5001</serverport>
+                <clientip>172.18.254.236</clientip>
+                <clientport>5001</clientport>
+                <packettype>UDP</packettype>
+                </emulator\-params>
   </distributions>
 
   <log>
@@ -1692,61 +1588,9 @@ The newtork emulation needs two COCOMA VM\(aqs, one that acts as a client and th
 .fi
 .UNINDENT
 .UNINDENT
-.sp
-In the following example a different emulator named \fIbackfuzz\fP will be used with its proprietary distribution \fIfuzz\fP. This combination is used to simulate malicious network activity by sending a series of random requests and data to the specified server
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<emulation>
- <emuname>MAL_EMU</emuname>
- <emuType>NET</emuType>
- <emuresourceType>NET</emuresourceType>
- <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
- <emustartTime>now</emustartTime>
- <!\-\-duration in seconds \-\->
- <emustopTime>120</emustopTime>
-
- <distributions>
-    <name>MAL_Distro1</name>
-    <startTime>0</startTime>
-    <duration>120</duration>
-    <distribution href="/distributions/fuzz" name="fuzz" />
-    <startLoad>100</startLoad>
-    <emulator href="/emulators/backfuzz" name="backfuzz" />
-    <emulator\-params>
-        <resourceType>NET</resourceType>
-        <!\-\- Difference between MIN and MAX fuzz values \-\->
-        <fuzzRange>900</fuzzRange>
-        <!\-\- IP and port of server to fuzz \-\->
-        <serverip>10.55.168.238</serverip>
-        <serverport>51889</serverport>
-        <!\-\- Type of packet to use for fuzzing \-\->
-        <packettype>HTTP</packettype>
-        <!\-\- Time to pause on each fuzz value in s (leave as 0 for default of 0.8s) \-\->
-        <timedelay>1</timedelay>
-        <!\-\- Value to increment by \-\->
-        <salt>50</salt>
-    </emulator\-params>
- </distributions>
-
- <log>
-  <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
-  <enable>0</enable>
-  <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
-  <frequency>3</frequency>
-  <logLevel>debug</logLevel>
- </log>
-
-</emulation>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
 .SS Multiple distributions emulation
 .sp
-An important feature of COCOMA is the ability to combine multiple distributions within the same emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource. Distributions can overlap, meaning two distributions can run at the same time frame. If distributions for the same resource overlap and they exceed the available resources, the runs might crash.
+A good feature of COCOMA is the ability to combine multiple distributions within the same emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource. Distributions can overlap, meaning two distributions can run at the same time frame. If distributions for the same resource overlap and they exceed the available resources, the runs might crash.
 .INDENT 0.0
 .IP \(bu 2
 CPU and Memory example
@@ -1756,57 +1600,58 @@ CPU and Memory example
 .sp
 .nf
 .ft C
- <emulation>
-     <emuname>CPU_and_Mem</emuname>
-     <emutype>Mix</emutype>
-     <emuresourceType>MIX</emuresourceType>
-     <emustartTime>now</emustartTime>
-     <!\-\-duration in seconds \-\->
-     <emustopTime>80</emustopTime>
+       <emulation>
+           <emuname>CPU_and_Mem</emuname>
+           <emutype>Mix</emutype>
+           <emuresourceType>CPU</emuresourceType>
+           <emustartTime>now</emustartTime>
+           <!\-\-duration in seconds \-\->
+           <emustopTime>80</emustopTime>
 
-     <distributions>
-        <name>CPU_distro</name>
-        <startTime>0</startTime>
-        <!\-\-duration in seconds \-\->
-        <duration>60</duration>
-        <granularity>1</granularity>
-        <distribution href="/distributions/linear" name="linear" />
-        <!\-\-cpu utilization distribution range\-\->
-        <startLoad>10</startLoad>
-        <stopLoad>95</stopLoad>
-        <emulator href="/emulators/lookbusy" name="lookbusy" />
-        <emulator\-params>
-             <resourceType>CPU</resourceType>
-             <!\-\-Number of CPUs to keep busy (default: autodetected)\-\->
-             <ncpus>0</ncpus>
-        </emulator\-params>
-     </distributions>
+           <distributions>
+            <name>CPU_distro</name>
+            <startTime>0</startTime>
+            <!\-\-duration in seconds \-\->
+            <duration>60</duration>
+            <granularity>1</granularity>
+            <distribution href="/distributions/linear" name="linear" />
+            <!\-\-cpu utilization distribution range\-\->
+            <startLoad>10</startLoad>
+            <stopLoad>95</stopLoad>
+            <emulator href="/emulators/lookbusy" name="lookbusy" />
+            <emulator\-params>
+                 <!\-\-more parameters will be added \-\->
+                 <resourceType>CPU</resourceType>
+                 <!\-\-Number of CPUs to keep busy (default: autodetected)\-\->
+                 <ncpus>0</ncpus>
+            </emulator\-params>
+          </distributions>
 
-     <distributions>
-         <name>MEM_Distro</name>
-         <startTime>20</startTime>
-         <!\-\-duration in seconds \-\->
-         <duration>60</duration>
-         <granularity>5</granularity>
-         <distribution href="/distributions/linear_incr" name="linear_incr" />
-         <!\-\-Megabytes for memory \-\->
-         <startLoad>100</startLoad>
-         <stopLoad>1000</stopLoad>
-         <malloclimit>4095</malloclimit>
-         <emulator href="/emulators/stressapptest" name="stressapptest" />
-         <emulator\-params>
-           <resourceType>MEM</resourceType>
-           <memThreads>0</memThreads>
-         </emulator\-params>
-     </distributions>
+           <distributions >
+              <name>MEM_Distro</name>
+              <startTime>20</startTime>
+              <!\-\-duration in seconds \-\->
+              <duration>60</duration>
+              <granularity>5</granularity>
+              <distribution href="/distributions/linear_incr" name="linear_incr" />
+              <!\-\-Megabytes for memory \-\->
+               <startLoad>100</startLoad>
+               <stopLoad>1000</stopLoad>
+               <malloclimit>4095</malloclimit>
+                               <emulator href="/emulators/stressapptest" name="stressapptest" />
+                               <emulator\-params>
+                                     <resourceType>MEM</resourceType>
+                                     <memThreads>0</memThreads>
+                               </emulator\-params>
+           </distributions>
 
-     <log>
-        <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
-        <enable>1</enable>
-        <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
-        <frequency>3</frequency>
-     </log>
- </emulation>
+          <log>
+            <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
+            <enable>1</enable>
+            <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
+            <frequency>3</frequency>
+          </log>
+       </emulation>
 .ft P
 .fi
 .UNINDENT
@@ -1820,864 +1665,83 @@ CPU, MEM and IO example
 .sp
 .nf
 .ft C
- <emulation>
-     <emuname>CPU_and_Mem</emuname>
-     <emutype>Mix</emutype>
-     <emuresourceType>MIX</emuresourceType>
-     <emustartTime>now</emustartTime>
-     <!\-\-duration in seconds \-\->
-     <emustopTime>80</emustopTime>
+       <emulation>
+           <emuname>CPU_and_Mem</emuname>
+           <emutype>Mix</emutype>
+           <emuresourceType>CPU</emuresourceType>
+           <emustartTime>now</emustartTime>
+           <!\-\-duration in seconds \-\->
+           <emustopTime>80</emustopTime>
 
-     <distributions>
-         <name>CPU_distro</name>
-         <startTime>0</startTime>
-         <!\-\-duration in seconds \-\->
-         <duration>60</duration>
-         <granularity>1</granularity>
-         <distribution href="/distributions/linear" name="linear" />
-         <!\-\-cpu utilization distribution range\-\->
-         <startLoad>10</startLoad>
-         <stopLoad>95</stopLoad>
-         <emulator href="/emulators/lookbusy" name="lookbusy" />
-         <emulator\-params>
-              <resourceType>CPU</resourceType>
-              <!\-\-Number of CPUs to keep busy (default: autodetected)\-\->
-              <ncpus>0</ncpus>
-         </emulator\-params>
-      </distributions>
+           <distributions>
+            <name>CPU_distro</name>
+            <startTime>0</startTime>
+            <!\-\-duration in seconds \-\->
+            <duration>60</duration>
+            <granularity>1</granularity>
+            <distribution href="/distributions/linear" name="linear" />
+            <!\-\-cpu utilization distribution range\-\->
+            <startLoad>10</startLoad>
+            <stopLoad>95</stopLoad>
+            <emulator href="/emulators/lookbusy" name="lookbusy" />
+            <emulator\-params>
+                 <!\-\-more parameters will be added \-\->
+                 <resourceType>CPU</resourceType>
+                 <!\-\-Number of CPUs to keep busy (default: autodetected)\-\->
+                 <ncpus>0</ncpus>
+            </emulator\-params>
+          </distributions>
 
-      <distributions >
-         <name>MEM_Distro</name>
-         <startTime>20</startTime>
-         <!\-\-duration in seconds \-\->
-         <duration>60</duration>
-         <granularity>5</granularity>
-         <distribution href="/distributions/linear_incr" name="linear_incr" />
-         <!\-\-Megabytes for memory \-\->
-         <startLoad>100</startLoad>
-         <stopLoad>1000</stopLoad>
-         <malloclimit>4095</malloclimit>
-         <emulator href="/emulators/stressapptest" name="stressapptest" />
-         <emulator\-params>
-            <resourceType>MEM</resourceType>
-            <memThreads>0</memThreads>
-         </emulator\-params>
-      </distributions>
+           <distributions >
+              <name>MEM_Distro</name>
+              <startTime>20</startTime>
+              <!\-\-duration in seconds \-\->
+              <duration>60</duration>
+              <granularity>5</granularity>
+              <distribution href="/distributions/linear_incr" name="linear_incr" />
+              <!\-\-Megabytes for memory \-\->
+               <startLoad>100</startLoad>
+               <stopLoad>1000</stopLoad>
+               <malloclimit>4095</malloclimit>
+                               <emulator href="/emulators/stressapptest" name="stressapptest" />
+                               <emulator\-params>
+                                     <resourceType>MEM</resourceType>
+                                     <memThreads>0</memThreads>
+                               </emulator\-params>
+           </distributions>
 
-     <distributions>
-         <name>IO_Distro</name>
-         <startTime>0</startTime>
-         <!\-\-duration in seconds \-\->
-         <duration>60</duration>
-         <granularity>5</granularity>
-         <distribution href="/distributions/linear_incr" name="linear_incr" />
-         <startLoad>1</startLoad>
-         <stopLoad>10</stopLoad>
-         <emulator href="/emulators/lookbusy" name="lookbusy" />
-         <emulator\-params>
-             <resourceType>IO</resourceType>
-             <!\-\-Size of blocks to use for I/O, in MB\-\->
-             <ioBlockSize>10</ioBlockSize>
-             <!\-\-Time to sleep between iterations, in msec\-\->
-            <ioSleep>100</ioSleep>
-        </emulator\-params>
-    </distributions>
+           <distributions>
+            <name>IO_Distro</name>
+              <startTime>0</startTime>
+              <!\-\-duration in seconds \-\->
+              <duration>60</duration>
+              <granularity>5</granularity>
+              <distribution href="/distributions/linear_incr" name="linear_incr" />
+               <startLoad>1</startLoad>
+               <stopLoad>10</stopLoad>
+               <emulator href="/emulators/lookbusy" name="lookbusy" />
 
-    <log>
-       <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
-       <enable>1</enable>
-       <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
-       <frequency>3</frequency>
-    </log>
- </emulation>
+               <emulator\-params>
+                 <!\-\-more parameters will be added \-\->
+                 <resourceType>IO</resourceType>
+                <!\-\-Size of blocks to use for I/O, in MB\-\->
+                <ioBlockSize>10</ioBlockSize>
+                <!\-\-Time to sleep between iterations, in msec\-\->
+                <ioSleep>100</ioSleep>
+               </emulator\-params>
+            </distributions>
+
+          <log>
+            <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
+            <enable>1</enable>
+            <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
+            <frequency>3</frequency>
+          </log>
+       </emulation>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
-.SS Known Issues
-.sp
-The interaction of the various emulators used in COCOMA can cause unexpected issues. Some of these issues are listed below (This is \fInot\fP an exhaustive list, and will be updated as new issues are discovered)
-.INDENT 0.0
-.IP \(bu 2
-Stressapptest uses ~100% CPU, regardless of what resource it is being ran on.
-.IP \(bu 2
-If a Linear increase distribution is run on memory using stressapptest at the same time as Iperf is being used to load the Network, then the Network resource may not reach its target load. This problem is usually encountered when the memory usage reaches over ~80% (as shown in the graph below)
-.UNINDENT
-.INDENT 0.0
-.INDENT 2.5
-[image]
-.UNINDENT
-.UNINDENT
-.INDENT 0.0
-.IP \(bu 2
-When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command \(aqccmsh \-j\(aq) may not be correct
-.UNINDENT
-.SS Adding a new emulator
-.sp
-In order to add a new emulator, a new wrapper has to be implemented. This needs to inherit from the relative abstract class, which can be found in the same \fIemulators\fP directory. The class needs 3 different methods:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fBemulatorHelp\fP: Used for displaying help about an emulator (eg. what parameters it needs)
-.IP \(bu 2
-\fBemulatorArgNames\fP: Used for returning the names of the arguments that a given emulator takes
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-Specific methods to execute the wanted emulator instance with the relative needed parameters will have to be added. Checking the existing emulator wrappers should give a clear view on how the wrapping process can be carried out.
-.SS Adding a new distribution
-.sp
-In order to add a new distribution, it needs to inherit from the relative abstract class, which can be found in the same \fIdistributions\fP directory. The class needs 3 different methods:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fBdistHelp\fP: Used for displaying help about a distribution (eg. what Resources types it can use)
-.IP \(bu 2
-\fBfunctionCount\fP: Used for getting values for: stressValues, runStartTimeList, runDurations. The actual algorithm (which calculates those values) goes in this function
-.IP \(bu 2
-\fBargNames\fP: Used for returning the names of the arguments that a given resource takes
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.SS Additional Features
-.sp
-In this section the additional features of COCOMA will be discussed
-.SS Testing
-.sp
-COCOMA has two main sets of tests supplied with it; \fBAPI Tests\fP and \fBCommand Line Interface (CLI) Tests\fP. Both of which are implemented using python\(aqs unit testing framework (pyUnit)
-.sp
-The test files (\fBTestAPI\fP and \fBTestCLI\fP) are located in \fI"/usr/share/pyshared/cocoma/unitTest"\fP
-.sp
-To run a set of tests on the API or CLI, navigate to the \fIunitTest\fP folder and use on of the commands:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-$ python \-m unittest \-v TestAPI
-$ python \-m unittest \-v TestCLI
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-The \fI\-v\fP argument gives more verbose output, and may be omitted if required
-.sp
-Individual test results are output to the terminal in the format \fBtest_Emulators (TestAPI.TestAPI) ... ok\fP if the test was successful
-An unsuccessful test will produce the same outoput, with \fIERROR\fP or \fIFAIL\fP instead of \fIok\fP
-.sp
-Once all the tests in the  file have run, a summary of the results will be printed. This will indicate which (if any) tests were unsuccessful, and attempt to give a reason why the test failed
-.SS CLI Testing
-.sp
-Individual tests can be run on the CLI using the syntax
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-$ python \-m unittest TestCLI.TestCLI.test_Name
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-Where \fBtest_Name\fP is replaced by one of the following:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-test_EMU_CPU
-test_EMU_IO
-test_EMU_IOTrap
-test_EMU_MEM
-test_EMU_MEMTrap
-test_EMU_MULTI1
-test_EMU_MULTI2
-test_EMU_NETWORK
-test_EMU_NowOperator
-
-test_Scheduler_Start
-test_Scheduler_Show
-test_Scheduler_Stop
-
-test_API_Start
-test_API_Show
-test_API_Stop
-
-test_Help
-test_Version
-test_List
-test_Result
-test_Distributions
-test_Emulators
-test_Purge
-test_Jobs
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-This will produce output similar to running the entire set of tests
-.SS API Testing
-.sp
-Individual tests can be run on the API using the syntax
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-$ python \-m unittest TestAPI.TestAPI.test_Name
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-Where \fBtest_Name\fP is replaced by one of the following:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-test_List_Emulation
-test_List_Emulator
-test_List_Distributions
-test_List_Results
-test_List_Logs
-test_List_SysLogs
-test_List_EmuLogs
-test_List_Tests
-
-test_EMU_Logs
-test_EMUcr_IO
-test_EMUcr_IOtrap
-test_EMUcr_MEM
-test_EMUcr_MEMtrap
-test_EMUcr_NETWORK
-test_EMUcr_MULTI1
-test_EMUcr_MULTI2
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-This will produce output similar to running the entire set of tests
-.SS Resource Overloading
-.sp
-In order to prevent resources from becoming Overloaded (using more than 100% of a resource at a point in time,) the system calculates the resource usage before any Emulation is run.
-.sp
-If an Emulation would cause any of the resources to become overloaded, then that emulation will not run and an exception will be raised with the format:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-Unable to create distribution:
-CPU resource will become Overloaded: Stopping execution
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SS Abstract Classes
-.sp
-When adding a new Emulator or Distribution class they should extend their respective abstract class. This requires the new class to contain the following code:
-.INDENT 0.0
-.IP \(bu 2
-For Emulators
-.INDENT 2.0
-.INDENT 3.5
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-sys.path.insert(0, getHomepath() + \(aq/emulators/\(aq)
-from abstract_emu import *
-
-class run_yourEmulatorName(abstract_emu):
-pass
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.IP \(bu 2
-For Distributions
-.INDENT 2.0
-.INDENT 3.5
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-sys.path.insert(0, getHomepath() + \(aq/distributions/\(aq)
-from abstract_dist import *
-
-class dist_yourDistributionName(abstract_dist):
-pass
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-This feature was added to minimize problems caused by adding new emulators or distributions
-.SS Message queue use
-.sp
-COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a timestamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the \fIcamel\fP notation in case of multi\-words. Below is the set of messages:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-{"Timestamp": 1378893008.422242, "Message": {"Action": "Scheduler started",
-"Interface": "eth0", "Port": "51889"}, "From": "Scheduler"}
-
-{"Timestamp": 1378893809.897368, "Message": {"Action": "USER REQUEST Create
-Emulation", "File": "tests/02\-MEM\-Linear_incr\-Stressapptest_100\-1000.xml"},
-"From": "ccmsh"}
-
-{"Timestamp": 1378893810.206373, "Message": {"Action": "Emulation request
-received", "UserEmulationName": "MEM_EMU"}, "From": "Emulation Manager"}
-
-{"Timestamp": 1378893810.744948, "Message": {"ResourceTypeDist": "mem",
-"JobName": "2\-MEM_EMU\-2\-0\-mem_distro\-lookbusy\-mem", "DistributionName":
-"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo":
-"0", "EndTime": "2013\-09\-11 10:04:31", "EmulationName": "2\-MEM_EMU",
-"DistributionID": 2, "StressValue": 100, "StartTime": "2013\-09\-11 10:03:31",
-"Duration": 60.0}, "From": "Scheduler"}
-
-{"Timestamp": 1378893811.128323, "Message": {"ResourceTypeDist": "mem",
-"JobName": "2\-MEM_EMU\-2\-1\-mem_distro\-lookbusy\-mem", "DistributionName":
-"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo":
-"1", "EndTime": "2013\-09\-11 10:04:31", "EmulationName": "2\-MEM_EMU",
-"DistributionID": 2, "StressValue": 75, "StartTime": "2013\-09\-11 10:03:43",
-"Duration": 48.0}, "From": "Scheduler"}
-
-{"Timestamp": 1378893811.479812, "Message": {"ResourceTypeDist": "mem",
-"JobName": "2\-MEM_EMU\-2\-2\-mem_distro\-lookbusy\-mem", "DistributionName":
-"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo": "2",
-"EndTime": "2013\-09\-11 10:04:31", "EmulationName": "2\-MEM_EMU",
-"DistributionID": 2, "StressValue": 75, "StartTime": "2013\-09\-11 10:03:55",
-"Duration": 36.0}, "From": "Scheduler"}
-
-{"Timestamp": 1378893811.838568, "Message": {"ResourceTypeDist": "mem",
-"JobName": "2\-MEM_EMU\-2\-3\-mem_distro\-lookbusy\-mem", "DistributionName":
-"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo":
-"3", "EndTime": "2013\-09\-11 10:04:31", "EmulationName": "2\-MEM_EMU",
-"DistributionID": 2, "StressValue": 75, "StartTime": "2013\-09\-11 10:04:07",
-"Duration": 24.0}, "From": "Scheduler"}
-
-{"Timestamp": 1378893812.189469, "Message": {"ResourceTypeDist": "mem",
-"JobName": "2\-MEM_EMU\-2\-4\-mem_distro\-lookbusy\-mem", "DistributionName":
-"mem_distro", "Emulator": "lookbusy", "Action": "Job Created", "RunNo":
-"4", "EndTime": "2013\-09\-11 10:04:31", "EmulationName": "2\-MEM_EMU",
-"DistributionID": 2, "StressValue": 75, "StartTime": "2013\-09\-11 10:04:19",
-"Duration": 12.0}, "From": "Scheduler"}
-
-{"Timestamp": 1378893812.621874, "Message": {"Action": "Emulation created",
-"EmulationName": "MEM_EMU"}, "From": "Emulation Manager"}
-
-{"Timestamp": 1378893871.00535, "Message": {"Action": "Emulation finished",
-"EmulationName": "2\-MEM_EMU"}, "From": "Logger"}
-
-{"Timestamp": 1378893871.163372, "Message": {"Action": "Job Executed Successfully",
-"StartTime": "2013\-09\-11 10:04:07", "Duration": 24.0,
-"EndTime": "2013\-09\-11 10:04:31", "StressValue": 75, "JobName":
-"2\-MEM_EMU\-2\-3\-mem_distro\-lookbusy\-mem"}, "From": "Scheduler"}
-
-{"Timestamp": 1378893871.274156, "Message": {"Action": "Job Executed Successfully",
-"StartTime": "2013\-09\-11 10:04:19", "Duration": 12.0, "EndTime":
-"2013\-09\-11 10:04:31", "StressValue": 75, "JobName":
-"2\-MEM_EMU\-2\-4\-mem_distro\-lookbusy\-mem"}, "From": "Scheduler"}
-
-{"Timestamp": 1378893871.398665, "Message": {"Action": "Job Executed Successfully",
-"StartTime": "2013\-09\-11 10:03:55", "Duration": 36.0, "EndTime":
-"2013\-09\-11 10:04:31", "StressValue": 75, "JobName":
-"2\-MEM_EMU\-2\-2\-mem_distro\-lookbusy\-mem"}, "From": "Scheduler"}
-
-{"Timestamp": 1378893871.493218, "Message": {"Action": "Job Executed Successfully",
-"StartTime": "2013\-09\-11 10:03:43", "Duration": 48.0,
-"EndTime": "2013\-09\-11 10:04:31", "StressValue": 75, "JobName":
-"2\-MEM_EMU\-2\-1\-mem_distro\-lookbusy\-mem"}, "From": "Scheduler"}
-
-{"Timestamp": 1378893871.628944, "Message": {"Action": "Job Executed Successfully",
-"StartTime": "2013\-09\-11 10:03:31", "Duration": 60.0, "EndTime":
-"2013\-09\-11 10:04:31", "StressValue": 100, "JobName":
-"2\-MEM_EMU\-2\-0\-mem_distro\-lookbusy\-mem"}, "From": "Scheduler"}
-
-{"Timestamp": 1378893913.604134, "Message": {"Action":
-"USER REQUEST list all Emulations"}, "From": "ccmsh"}
-
-{"Timestamp": 1378893929.615051, "Message": {"Action":
-"USER REQUEST list Emulation", "EmulationName": "2\-MEM_EMU"}, "From": "ccmsh"}
-
-{"Timestamp": 1378894024.729127, "Message": {"Action":
-"USER REQUEST delete Emulation", "EmulationName": "2\-MEM_EMU"}, "From": "ccmsh"}
-
-{"Timestamp": 1378894042.969776, "Message": {"Action":
-"USER REQUEST purge all Emulations"}, "From": "ccmsh"}
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SS Real trace parse
-.sp
-This feature allows a user to create a distribution from a real trace file. The format of the trace file has to be as follow:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-NCPUS 2
-MEMTOTAL 2074448
-TIMESTAMP 1378900076312
-POLLFR 1
-CPU%    MEMUSED%
-2               34
-2               34
-2               34
-2               34
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-The first 4 lines provide information about the machine the trace was recorded from. This allows to scale the usage to the machine that has to reply it. As it can be seen, for now only \fBCPU\fP and \fBMEM\fP are supported. In the future, \fBIO\fP and \fBNET\fP might be supported too.
-Below is a xml snippet showing a new tag called \fBtrace\fP which provides the path to the trace file from which the distribution \fBreal_trace\fP creates the runs:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<distributions >
-        <name>realTrace</name>
-        <startTime>0</startTime>
-        <!\-\-duration in seconds \-\->
-        <duration>60</duration>
-        <granularity>1</granularity>
-        <distribution href="/distributions/real_trace" name="real_trace" />
-        <trace>/path/to/real\-trace_1.txt</trace>
-        <emulator href="/emulators/lookbusy" name="lookbusy" />
-        <emulator\-params>
-                <resourceType>MEM</resourceType>
-                <!\-\-time between iterations in usec (default 1000)\-\->
-                <malloclimit>4004</malloclimit>
-                <memSleep>0</memSleep>
-        </emulator\-params>
-</distributions>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-The \fBduration\fP is not used as the actual duration is calculated from the trace itself. So if the emulation ends before the distribution, all jobs left (running and scheduled) will be stopped.
-.sp
-As the concept of distribution in COCOMA relates to a single resource (CPU, RAM, IO, NET), if a mixed (CPU and RAM) real trace emulation wanted to be performed, 2 distributions can be added in the xml, each targeting one of the resources, but having the same \fIstartTime\fP and \fItrace\fP.
-.SS Recording a real trace
-.sp
-COCOMA ships with a script called \fIrec_res_usage.sh\fP which can be used to create a trace file with CPU and MEM used. The script can get as option the recording frequency, which by default is 1 sec. As the script can be used also as a live monitoring tool, in order to save the data into a file, the output redirection should be uses, such as:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-$ rec_res_usage.sh 2 > trace_file.txt
-        this uses a polling time of 2 seconds
-
-$ timeout 30s rec_res_usage.sh 2 > trace_file.txt
-        this uses the command *timeout* in front of the script so that
-        it will run for the specified (30 seconds) amount of time
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SS Event\-driven approach
-.sp
-COCOMA offers 2 different ways to manage events. One is time\-based, where a distribution is run for a finite and known amount of time. In this case when having two time\-based distributions, where the second one has to run right after the first one has finished, given that the duration of the distribution is explicetely specified, it is possible to calculate the exact ending time of the first distribution and therefore schedule the start of the second one accordingly. However, there might be cases that the duration of a distribution is not known, e.g. in malicious distributions. In this case, say for example that out of the two distributions that want to be run sequentially, the first one doesn\(aqt have a duration, it would be impossible to schedule the second one since the end time of the first one is unknown. Therefore, we introduced the event\-driven approach, where the first one creates an end\-job event that triggers the schedule of the second distribution. This allows to take into account these duration\-less distribution. An example is in the xml snippet below:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<distributions>
-        <name>Fuzzer_Distro1</name>
-        <nextevent>Fuzzer_Distro2</nextevent>
-        <!\-\-duration in seconds \-\->
-        <starttime>0</starttime>
-        <granularity>0</granularity>
-        <duration>0</duration>
-        <distribution href="/distributions/event" name="event" />
-        <emulator href="/emulators/backfuzz" name="backfuzz" />
-
-        <emulator\-params>
-                <resourceType>NET</resourceType>
-                <serverip>10.55.164.181</serverip>
-                <serverport>80</serverport>
-                <min>100</min>
-                <max>104</max>
-                <packettype>HTTP</packettype>
-                <timedelay>0</timedelay>
-                <salt>2</salt>
-        </emulator\-params>
-</distributions>
-
-<distributions>
-        <name>Fuzzer_Distro2</name>
-        <!\-\-duration in seconds \-\->
-        <nextevent>Fuzzer_Distro2</nextevent>
-        <starttime>0</starttime>
-        <granularity>0</granularity>
-        <duration>0</duration>
-        <distribution href="/distributions/event" name="event" />
-        <emulator href="/emulators/backfuzz" name="backfuzz" />
-
-        <emulator\-params>
-                <resourceType>NET</resourceType>
-                <serverip>10.55.164.181</serverip>
-                <serverport>22</serverport>
-                <min>100</min>
-                <max>104</max>
-                <packettype>SSH</packettype>
-                <timedelay>0</timedelay>
-                <salt>2</salt>
-        </emulator\-params>
-</distributions>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-The new distribution format in this case has a new tag \fBnextevent\fP, which allows the scheduler to understand that the following distribution to be scheduled, once the first distribution finishes, is the one in this tag. The example relates to a malicious distribution, which is further explained in a dedicated section of this document. Please note that in this case, although they are specified, the \fIstarttime\fP, \fIgranularity\fP and \fIduration\fP are not actually used as they don\(aqt apply in the event\-driven context. Finally, the \fIemustopTime\fP still sets the emulation ends, so in case a distribution hasn\(aqt finished within the emulation time range specified, the jobs left (running and scheduled) will be stopped.
-.SS Malicious module
-.sp
-The malicious module allows users to create distributions that can target a specific machine by sending fuzzing data over a chosen protocol. As the emulator supporting our malicious module is \fIbackfuzz\fP [1] [2], it offers fuzzing over various known protocol such as \fIHTTP\fP, \fISSH\fP, \fIFTP\fP, \fIIMAP\fP, etc. The nice thing that all protocols are added to the tool as plugins, so if a new protocol wants to be tested, a new plugin for it can be created and added to the tool for the purpose.
-The fuzzing process time cannot be known a priori as it depends from factors out of the user control, such as the network between COCOMA and the SuT to target. Therefore, the \fBevent\-driven\fP approach was introduced to support this. The xml snippet below (the same of the event\-driven section) shows a maliciuos distribution using backfuzz:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<distributions>
-        <name>Fuzzer_Distro1</name>
-        <nextevent>Fuzzer_Distro2</nextevent>
-        <!\-\-duration in seconds \-\->
-        <starttime>0</starttime>
-        <granularity>0</granularity>
-        <duration>0</duration>
-        <distribution href="/distributions/event" name="event" />
-        <emulator href="/emulators/backfuzz" name="backfuzz" />
-
-        <emulator\-params>
-                <resourceType>NET</resourceType>
-                <serverip>10.55.164.181</serverip>
-                <serverport>80</serverport>
-                <min>100</min>
-                <max>104</max>
-                <packettype>HTTP</packettype>
-                <timedelay>0</timedelay>
-                <salt>2</salt>
-        </emulator\-params>
-</distributions>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-In the emulator parameters part we can specify the server IP and its port, the minimum and maximum lenght of the fuzzing string sent, the type of protocol and the time after which the fuzz starts.
-.SH FOOTNOTES
-.IP [1] 5
-\fI\%https://github.com/localh0t/backfuzz\fP
-.IP [2] 5
-\fI\%http://www.darknet.org.uk/2012/03/backfuzz-multi-protocol-fuzzing-toolkit-supports-httpftpimap-etc/\fP
-.SS Known Issues
-.sp
-The interaction of the various emulators used in COCOMA can cause unexpected issues. Some of these issues are listed below (This is \fInot\fP an exhaustive list, and will be updated as new issues are discovered)
-.INDENT 0.0
-.IP \(bu 2
-Stressapptest uses ~100% CPU, regardless of what resource it is being ran on.
-.IP \(bu 2
-If a Linear increase distribution is run on memory using stressapptest at the same time as Iperf is being used to load the Network, then the Network resource may not reach its target load. This problem is usually encountered when the memory usage reaches over ~80% (as shown in the graph below)
-.UNINDENT
-.INDENT 0.0
-.INDENT 2.5
-[image]
-.UNINDENT
-.UNINDENT
-.INDENT 0.0
-.IP \(bu 2
-When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command \(aqccmsh \-j\(aq) may not be correct
-.UNINDENT
-.SS Implementation details
-.sp
-The Controlled Contentious and Malicious patterns (COCOMA) framework aims to provide experimenters the ability to create specific contentious and malicious payloads and workloads in a controlled fashion. The experimenter is able to use pre\-defined common distributions or specify new payloads and workloads. In the table below we present the terminology introduced by COCOMA.
-.TS
-center;
-|l|l|.
-_
-T{
-Term
-T}	T{
-Description
-T}
-_
-T{
-Emulation
-T}	T{
-Process that imitates a specific behaviour specified in the emulation type, over a resource type, using one or more distributions during the emulation lifetime
-T}
-_
-T{
-Emulation type
-T}	T{
-An emulation can be of the following types:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-Contentiousness
-.IP \(bu 2
-Maliciousness
-.IP \(bu 2
-Faultiness (not yet implemented)
-.IP \(bu 2
-Mixed (a combination of the above types)
-.UNINDENT
-.UNINDENT
-.UNINDENT
-T}
-_
-T{
-Resource type
-T}	T{
-A resource can be of the following types:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-CPU
-.IP \(bu 2
-RAM
-.IP \(bu 2
-I/O
-.IP \(bu 2
-Network
-.UNINDENT
-.UNINDENT
-.UNINDENT
-T}
-_
-T{
-Emulator
-T}	T{
-Specific mechanism/tool that is used to create an emulation type. For example load generators, stress generators, fault generators and malicious payload creation.
-T}
-_
-T{
-Distribution
-T}	T{
-In the case of contention, it is a discrete function of a specific resource type over a specific time within the emulation lifetime. The distribution time is divided into multiple timeslots (t0, .. , tn) based on the distribution granularity. A distribution is broken down into multiple runs each one injecting a different load level per time slot depending on the discrete function of the distribution. In the case of malicious, it is a straight mapping to the emulator
-T}
-_
-T{
-Distribution granularity
-T}	T{
-Number of runs for the distribution
-T}
-_
-T{
-Emulation lifetime
-T}	T{
-Duration of the emulation
-T}
-_
-T{
-Run
-T}	T{
-Basic emulator instantiation
-T}
-_
-.TE
-.sp
-When a user defines an emulation, he needs to specify pairs of distribution\-emulator. When specifying an emulator it is bound to a specific resource type. For more complex scenarios users can specify multiple pairs which can also overlap from the time point of view.
-.sp
-COCOMA is provided within a BonFIRE VM, which is interfaced with the BonFIRE aggregator as shown in the figure below:
-.INDENT 0.0
-.INDENT 2.5
-[image]
-COCOMA design and components interactions.UNINDENT
-.UNINDENT
-.sp
-The different functions provided by the COCOMA components and their interactions are explained below:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fBccmsh\fP: this is the command line interface (CLI) to interact with COCOMA. Users can specify an emulation in an XML file, which is interpreted by the \fIXMLParser\fP component. Also, the CLI allows to check and control the current running emulations (list, delete, etc.) by interacting directly with the DB
-.IP \(bu 2
-\fBREST API\fP: COCOMA provides also a REST API to interact with the framework programmatically
-.IP \(bu 2
-\fBXMLParser\fP: it checks xml correct format and return interpreted values to create an emulation. It is used by both \fICLI\fP and \fIAPI\fP
-.IP \(bu 2
-\fBemulationManager\fP: the \fIemulationManager\fP receives input from the ccmsh or the REST API to create/query/delete an emulation
-.IP \(bu 2
-\fBdistributionManager\fP: the \fIdistributionManager\fP receives input from the \fIemulationManager\fP to load the distribution(s) and apply the relative algorithm in the distribution(s). It basically calculates how many runs (individual basic emulator instances) are needed, and the parameters values of each run.  These are then passed to the \fIscheduler\fP
-.IP \(bu 2
-\fBscheduler\fP: it creates the runs using the values obtained from the \fIdistributionManager\fP at due time
-.IP \(bu 2
-\fBDB\fP: it holds information about running emulations, registered emulators, distributions and some configurations
-.IP \(bu 2
-\fBLogger\fP: it creates 2 different log files, one with all events relative to the runs created and the other one with the resource usage
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-COCOMA is designed to work with different emulators. To add a new emulator a user needs to install the new emulator where COCOMA is installed, create a python wrapper for the specific parameters of the emulator and place this wrapper into the \fIemulators\fP COCOMA directory. A similar approach is for distributions. Users can specify their desired discrete functions in a python file and place it in the \fIdistributions\fP directory. Emulators and distributions that are in the those directories are automatically available to be used. In the next sections we provide details of how to create both emulators and distributions.
-.SS Code structure
-.sp
-COCOMA code structure is shown below:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-/bin
-/data
-/distributions
-/doc
-/emulators
-/logs
-/rb\-examples
-/scripts
-/tests
-/unitTest
-__init__.py
-LICENSE
-NEWS
-NOTICE
-README
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-The bin directory contains the main components presented in the \fIcocoma\-design\fP figure. It also contains 3 more files
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fIJob.py\fP: used to create and manage the \fIscheduler\fP jobs
-.IP \(bu 2
-\fILibrary.py\fP: contains the common functions used by various components
-.IP \(bu 2
-\fILogger.py\fP: implements the logging mechanisms
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-The \fIwebUI\fP files are also contained within the \fIbin\fP directory, specifically in a subdirectory called \fIwebcontent\fP.
-.sp
-The \fIdata\fP folder contains the SQLite database file. The \fIdistributions\fP directory contains the distributions currently available, while the emulators wrappers are in the \fIemulators\fP folder. In the \fIrb\-examples\fP there are \fIrestufully\fP examples to create emulations using the \fICOCOMA API\fP. In the \fIscripts\fP directory there is the \fIrec_res_usage\fP script that can be used to record a real trace from a system and replayed in COCOMA. Example xml tests are in the \fItests\fP directory, while the automated tests are in the \fIunitTest\fP folder.
-.SS Building process
-.sp
-COCOMA is implemented in \fIpython\fP, while the \fIwebUI\fP in \fIJavascripts\fP, therefore there is no need for building anything. On the other hand a deb package has been created to install the software along with some of the dependencies. A building script is provided along with the debian files (\fIcontrol\fP, \fIpostinst\fP and \fIpostrm\fP). The script uses 4 specific commands in order:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fIsdist\fP: this is used by python \fBpython setup.py sdist\fP to create a python source distribution as \fItar.gz\fP file format [3]. In order to use the command, a \fIsetup.py\fP is provided as well [4]. To use the \fIsetuptools\fP in the \fIsetup.py\fP, a \fIdistribute_setup.py\fP is also needed. This is provided too
-.IP \(bu 2
-\fIpy2dsc\fP: this generates a debian source package from a Python package [5]
-.IP \(bu 2
-\fIdch\fP: this adds a new revision at the top of the Debian changelog file [6]
-.IP \(bu 2
-\fIdebuild\fP: this buils the debian package [7]
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-The building script pulls the cocoma source code from the \fIgithub\fP repository [8]. It takes as argument the version of the debian package that one wants to built such as:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-\&./build_cocoma\-deb 1.7.4
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-The building script, along the other needed python scripts (setup.py, distribute_setup.py) and the directory structure needed can be found in the BonFIRE svn repository [12]. Once the directory is checked out, the script can be run from that directory and the deb package will be created in the \fBdist/deb_dist\fP folder.
-.SS Dependencies and other tools
-.sp
-In order for COCOMA to work as required, a number of dependencies and tools are needed. Dependecies are:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fBpython\fP version is \fBv2.7x\fP. Version v3.x hasn\(aqt been tested. \fIpython\-support\fP and \fIpython\-dev\fP are also needed
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBpython modules\fP used by the componenents to implement various functionalities
-.INDENT 7.0
-.IP \(bu 2
-\fBbottle\fP: \fIis a fast, simple and lightweight WSGI micro web\-framework\fP. Latest tested version is \fBv0.11.6\fP
-.IP \(bu 2
-\fBpsutil\fP: \fIis a module providing an interface for retrieving information on all running processes and system utilization (CPU, memory, disks, network)\fP. Latest tested version is \fBv1.0.1\fP
-.IP \(bu 2
-\fBpyro4\fP: \fIit is a library that enables you to build applications in which objects can talk to eachother over the network\fP. Working tested version is \fBv4.20\fP is required. Later versions give serialization problems for the scheduler. This is a known issue by the pyro developers. If fixed, later versions should work
-.IP \(bu 2
-\fBapscheduler\fP: \fIis a light but powerful in\-process task scheduler that lets you schedule functions (or any other python callables) to be executed at times of your choosing\fP. Latest tested version is \fBv2.1.1\fP
-.IP \(bu 2
-\fBpika\fP: \fIis a pure\-Python implementation of the AMQP 0\-9\-1 protocol\fP. Latest tested version is \fBv0.9.13\fP
-.IP \(bu 2
-\fBPyUnit\fP: \fIPython language version of unit testing framework JUnit\fP. Latest tested version is \fBv1.4.1\fP
-.IP \(bu 2
-\fBrequests\fP: \fIit is a HTTP library\fP. Latest tested version is \fBv2.0.0\fP
-.IP \(bu 2
-\fBnumpy\fP: \fIis a general\-purpose array\-processing package designed to efficiently manipulate large multi\-dimensional arrays of arbitrary records\fP. Latest tested version is \fBv1.7.1\fP
-.UNINDENT
-.UNINDENT
-.IP \(bu 2
-\fBpip\fP: \fIA tool for installing and managing Python packages\fP
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-As tools, COCOMA uses some as emulators, such as \fIstressapptest\fP [9], \fIlookbusy\fP [10], \fIbackfuzz\fP [1] [2], \fIiperf\fP [11]. Other used tools are for installation, such as \fBcurl, bc, unzip, gcc, g++, make\fP.
-.SH FOOTNOTES
-.IP [1] 5
-\fI\%https://github.com/localh0t/backfuzz\fP
-.IP [2] 5
-\fI\%http://www.darknet.org.uk/2012/03/backfuzz-multi-protocol-fuzzing-toolkit-supports-httpftpimap-etc/\fP
-.IP [3] 5
-\fI\%http://docs.python.org/distutils/sourcedist.html\fP
-.IP [4] 5
-\fI\%http://docs.python.org/2/distutils/setupscript.html\fP
-.IP [5] 5
-\fI\%https://pypi.python.org/pypi/stdeb\fP
-.IP [6] 5
-\fI\%http://www.debian.org/doc/manuals/maint-guide/update.en.html\fP
-.IP [7] 5
-\fI\%http://www.debian.org/doc/manuals/maint-guide/build.en.html\fP
-.IP [8] 5
-\fI\%https://github.com/cragusa/cocoma\fP
-.IP [9] 5
-\fI\%https://code.google.com/p/stressapptest/\fP
-.IP [10] 5
-\fI\%http://devin.com/lookbusy/\fP
-.IP [11] 5
-\fI\%https://code.google.com/p/iperf/\fP
-.IP [12] 5
-\fI\%https://scm.gforge.inria.fr/svn/bonfire-dev/cocoma/build-deb/\fP
 .SH INDICES AND TABLES
 .INDENT 0.0
 .IP \(bu 2

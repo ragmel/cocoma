@@ -44,6 +44,7 @@ Where ``test_Name`` is replaced by one of the following:
 	test_EMU_MULTI2
 	test_EMU_NETWORK
 	test_EMU_NowOperator
+	test_EMU_Force
 
 	test_Scheduler_Start
 	test_Scheduler_Show
@@ -54,7 +55,6 @@ Where ``test_Name`` is replaced by one of the following:
 	test_API_Stop
 
 	test_Help
-	test_Version
 	test_List
 	test_Result
 	test_Distributions
@@ -108,33 +108,25 @@ If an Emulation would cause any of the resources to become overloaded, then that
 
     Unable to create distribution:
     CPU resource will become Overloaded: Stopping execution
-    
-Abstract Classes
-----------------
 
-When adding a new Emulator or Distribution class they should extend their respective abstract class. This requires the new class to contain the following code:
+If a distribution would cause a resource to run near its maximum value, then the emulation will not run. Instead the user will be informed of this, and asked to re-send the job with force if they want it to run.
+For the CLI this process would look like:
 
-* For Emulators
+::
 
-	::
+    ccmsh -x CPU.xml
+    ...
+    CPU close to maximum value. Re-send with force ('-f') to run
+    ...
+    ccmsh -x CPU.xml -f
 
-		sys.path.insert(0, getHomepath() + '/emulators/')
-		from abstract_emu import *
-		
-		class run_yourEmulatorName(abstract_emu):
-		pass
+To add the force argument to a emulation, ran via a REST client, a parameter called ``runifOverloaded`` needs to be added to the request. This is done by sending an **encoded dictionary** from the client:
 
-* For Distributions
+::
 
-	::
+    XML = XML_GOES_HERE & runIfOverloaded = Y
 
-		sys.path.insert(0, getHomepath() + '/distributions/')
-		from abstract_dist import *
-
-		class dist_yourDistributionName(abstract_dist):
-		pass
-
-This feature was added to minimize problems caused by adding new emulators or distributions
+*Note*: Spaces should not be included in the request (they are shown here for readability). You may need to manually select an option in order to encode the dictionary.
 
 Message queue use
 -----------------

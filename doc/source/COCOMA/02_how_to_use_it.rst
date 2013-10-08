@@ -81,7 +81,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
 .. cmdoption:: -b, --bfz  
 
-      Update the path of to the backfuzz emulator (stored in database)
+      Update/Show location of Backfuzz emulator (stored in database)
 
 .. cmdoption:: -l, --list <emulation name>  
 

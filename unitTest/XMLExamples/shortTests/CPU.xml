@@ -16,7 +16,7 @@
      <distribution href="/distributions/linear" name="linear" />
      <!--cpu utilization distribution range-->
       <startLoad>10</startLoad>
-      <stopLoad>95</stopLoad>
+      <stopLoad>75</stopLoad>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
 
       <emulator-params>
@@ -29,7 +29,7 @@
 
   <log>
    <!-- Use value "1" to enable logging(by default logging is off)  -->
-   <enable>1</enable>
+   <enable>0</enable>
    <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
    <frequency>1</frequency>
    <logLevel>debug</logLevel>

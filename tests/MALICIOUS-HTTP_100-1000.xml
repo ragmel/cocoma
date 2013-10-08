@@ -18,7 +18,7 @@
 	<min>100</min>
 	<fuzzRange>900</fuzzRange>
         <serverip>10.55.164.204</serverip>
-        <serverport>51889</serverport>      
+        <serverport>8083</serverport>      
         <packettype>HTTP</packettype>
         <timedelay>1</timedelay>
         <salt>50</salt>

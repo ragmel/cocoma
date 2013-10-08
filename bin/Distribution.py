@@ -46,6 +46,7 @@ class distribution(object):
         self.resourceType= self.setResourceTypeDist(resourceTypeDist)
         self.distroArgs= self.setDistroArgs(distroArgs)
         self.distroArgsNotes= self.setDistroArgsNotes(distroArgsNotes)
+        self.runIfOverloaded = ""
 
         """
         #SETTERS
@@ -115,6 +116,9 @@ class distribution(object):
     def setRunDurations(self, RunDurations):
         self.runDurations = RunDurations
         
+    def setRunIfOverloaded(self, RunIfOverloaded):
+        #runIfOverloaded is a y/n char
+        self.runIfOverloaded = RunIfOverloaded
         """
         #GETTERS
         """
@@ -145,3 +149,6 @@ class distribution(object):
     
     def getStartTime(self):
         return self.startTime
+    
+    def getRunIfOverloaded(self):
+        return self.runIfOverloaded

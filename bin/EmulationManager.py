@@ -306,6 +306,8 @@ def createEmulation(emulationName, emulationType, emulationLog, emulationLogFreq
 
     distroObjList = []
     resourceOverloaded = False
+    if (type(distroList)==unicode):
+        sys.exit()
     try:
         for n in distroList:
             emulatorName = n["emulatorName"]
@@ -400,17 +402,12 @@ def splitDistroList(distroList):    #Splits a list of distribution objects, grou
 def checkResourceOverload(distroList):  # Checks whether an emulation will exhaust system resources
         resourceOverlap = False
         overloadedResource = ""
-        maxResourceLoad = 100  # Needs fixed
-
+        maxResourceLoad = 999999  # Needs fixed
+        
         for index, distroItem in enumerate(distroList):
 
             overloadedResource = distroItem.getResourceType().upper()
-            
-            if str(overloadedResource) == "MEM":
-                maxResourceLoad = Library.getTotalMem()  # Sets maxResourceLoad to the system's amount of physical memory
-            elif str(overloadedResource) == "NET" or str(overloadedResource) == "IO":
-                return resourceOverlap, overloadedResource  # Stops method's execution, as Network has no max value
-
+            maxResourceLoad = Library.getResourceLimit(overloadedResource)  # Sets maxResourceLoad to the system's amount of physical memory
             startTimeCurrent = int(distroItem.getStartTime())
             endTimeCurrent = startTimeCurrent + int(distroItem.getDuration())
             
@@ -450,9 +447,7 @@ def checkResourceOverload(distroList):  # Checks whether an emulation will exhau
                                                 
 	return resourceOverlap, overloadedResource  # False if no resources overlap
 
-
-
 if __name__ == '__main__':
     distroList = [{"durationDistro": "60", "distrType": "linear_incr", "granularity": "20", "startTimeDistro": "0", "emulatorArg": {"memsleep": "0"}, "emulatorArgNotes": ["\nOK", "0"], "emulatorName": "lookbusy", "resourceTypeDist": "mem", "distroArgs": {"startload": "1000", "stopload": "100", "malloclimit": "4095"}, "distroArgsNotes": ["\nOK", "1000", "\nOK", "100"], "distributionsName": "mem_distro"}]
-    createEmulation("MEM_EM", "mix", "0", "3", "debug", "mem", "now", "60", distroList, "XML", {}) #REMOVE
+    createEmulation("MEM_EM", "mix", "0", "3", "debug", "mem", "now", "60", distroList, "XML", {}) # <REMOVE^
     pass

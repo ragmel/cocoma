@@ -23,19 +23,22 @@ from xml.dom.minidom import parseString
 import Library
 
 xmlLogger = None
+runOverloaded = False
 
-def xmlFileParser (xmlFileName):
+def xmlFileParser (xmlFileName, runIfOverloaded):
     global xmlLogger
     xmlLogger = Library.loggerSet("XML Parser")
     xmlStr = getXMLFile(xmlFileName)
     if xmlStr.lstrip()[:1] == "<":  #Does if XML File Exists
 #        xmlStr = getXMLString(fileName)
         xmlData = getXMLString(xmlStr)
-        return xmlReader(xmlStr)
+        return xmlReader(xmlStr, runIfOverloaded)
     else:
         raise Exception ("Cannot parse XML, see documentation for required sections \n Printing xmlData: \n" + xmlStr)
 
-def xmlReader(xmlParam):
+def xmlReader(xmlParam, runIfOverloaded):
+    global runOverloaded
+    runOverloaded = runIfOverloaded
     setLoggerDetails(xmlParam)
     xmlStr = getXMLString(xmlParam)
 #    
@@ -57,7 +60,9 @@ def xmlReader(xmlParam):
     (emulationName, emulationType, resourceTypeEmulation, startTimeEmu, stopTimeEmu) = getEmulationDetails(xmlStr)
     emulationName = emulationName.upper()
 
-    distroList = getDistributionDetails(xmlStr)
+#    distroList = getDistributionDetails(xmlStr)
+#    if not (type(distroList) == list):
+#        return (emulationName, emulationType, emulationLog, emulationLogFrequency, emulationLogLevel, resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList, xmlParam, MQproducerValues)
 
     if sectionCheck(xmlStr, "log"):
         (emulationLog, emulationLogFrequency, emulationLogLevel) = getLoggerDetails(xmlStr.getElementsByTagName('log')[0])
@@ -67,6 +72,10 @@ def xmlReader(xmlParam):
     MQproducerValues = {}
     if sectionCheck(xmlStr, "mq"):
         MQproducerValues = getMQDetails(xmlStr.getElementsByTagName('mq')[0])
+
+    distroList = getDistributionDetails(xmlStr)
+    if (type(distroList) == unicode):
+        return (emulationName, emulationType, emulationLog, emulationLogFrequency, emulationLogLevel, resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList, xmlParam, MQproducerValues)
 
     xmlLogger.info("##########################")
     xmlLogger.info("emulation name: " + str(emulationName))
@@ -84,6 +93,7 @@ def xmlReader(xmlParam):
     resTypeCheck(resourceTypeEmulation, distroList)
 
     xmlLogger.info("XML parsing done")
+
 
     return (emulationName, emulationType, emulationLog, emulationLogFrequency, emulationLogLevel,
             resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList, xmlParam, MQproducerValues)
@@ -233,6 +243,11 @@ def getDistributionDetails(xmlStr):
         distroArgs, granularity = removeFromDict(distroArgs, "granularity")
         distroArgs, durationDistro = removeFromDict(distroArgs, "duration")
 
+        if not runOverloaded:
+            overloadedResource = checkLoadValues (resourceType, distroArgs)
+            if (type(overloadedResource) == unicode):
+                return overloadedResource
+
         distroDict = {"distributionsName":distributionsName, "startTimeDistro":startTimeDistro, "durationDistro":durationDistro,
                     "granularity":granularity, "distrType":distrType, "distroArgs":distroArgs,
                     "emulatorName":emulatorName, "emulatorArg":emulatorArg, "resourceTypeDist":resourceType,
@@ -311,7 +326,26 @@ def getMQDetails(xmlStr):
 
     return MQproducerValues
 
+def checkLoadValues(resourceType, distArgs):
+    maxResourceLoad = Library.getResourceLimit(resourceType)
+    loads = []
+    if distArgs.has_key("startload"):
+        loads.append(int(distArgs["startload"]))
+    if distArgs.has_key("stopload"):
+        loads.append(int(distArgs["stopload"]))
+    
+    #Subtracts current MEM usage from maximum system MEM
+    if (resourceType.upper() == "MEM"):
+        maxResourceLoad -= Library.getMemUsed();
+        
+    for load in loads:
+        if (load > (maxResourceLoad * 0.9)):
+            errorStr = resourceType.upper() + " close to maximum value. Re-send with force ('-f') to run"
+            print errorStr
+            return errorStr
+    return False
+
 if __name__ == '__main__': #For testing purposes
-    xmlFileParser("/home/jordan/git/cocoma/tests/MEM-Linear-Lookbusy_100-1000.xml")
+    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", False)
 #    xmlReader("/home/jordan/Desktop/XMLfail.xml")  #REMOVE
     pass

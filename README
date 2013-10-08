@@ -1,6 +1,6 @@
 COCOMA is a tool for creating deliberate contention, malicious and faulty load in a controlled way.
 
-Please note that the location of the backfuzz emulator must be specified prior to trying to run any emulations using it. This is done with the command:
+Please note that the location of the backfuzz emulator must be specified prior to trying to run any emulations using it (could not be included due to copyright/IP concerns). This is done with the command:
     ccmsh -b "YOUR/PATH/HERE/backfuzz.py"
 
 Quick start

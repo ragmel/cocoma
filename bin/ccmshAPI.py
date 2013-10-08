@@ -651,7 +651,7 @@ def start_test():
         #return fileName_stream
         try:
              
-            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(filename)
+            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(filename, True)
             if startTimeEmu.lower() =="now":
                 startTimeEmu = Library.emulationNow(2)
                 emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
@@ -677,7 +677,7 @@ def start_test():
         #print "Body data detected:\n", filename
         try:
 
-            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(filename)
+            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(filename, True)
             if startTimeEmu.lower() =="now":
                 startTimeEmu = Library.emulationNow(2)
                 emulationID=EmulationManager.createEmulation(emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues)
@@ -884,28 +884,44 @@ def create_emu():
     
     xml_stream =request.files.data
     xml_stream_body =request.body.read()
+    xml_stream_body=urllib.unquote(xml_stream_body).decode('utf8')
+    xml_stream_body = xml_stream_body.replace(unicode("+"), unicode(" "))
+    
+    searchString = "&runifOverloaded="
+    searchIndex = xml_stream_body.rfind(searchString)
+    runIfOverloaded = False
+    if (searchIndex > 0):
+        runIfOverloadedChar = xml_stream_body[searchIndex+len(searchString)]
+        xml_stream_body = xml_stream_body [4:searchIndex]
+        if (runIfOverloadedChar.upper() == "Y"):
+            runIfOverloaded = True
 
+    
     if xml_stream:
-        
         #print "File data detected:\n",xml_stream
         return xml_stream
         try:
-            (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(xml_stream)
+            (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(xml_stream, runIfOverloaded)
+            if ("Re-send with force ('-f')" in distroList):
+                response.status = 500
+                return "Resource close to maximum value. Re-send with force ('-f') to run"
         except Exception,e:
             print e
             response.status = 400
             
     else:    
         try:
-            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlReader(xml_stream_body)
+            (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlReader(xml_stream_body, runIfOverloaded)
+            if ("Re-send with force ('-f')" in distroList):
+                response.status = 500
+                return "Resource close to maximum value. Re-send with force ('-f') to run"
         except Exception,e:
             response.status = 400
             #proper way to return web API error
             emuError=ET.Element('error')
-            emuError.text = str(XmlParser.xmlReader(xml_stream_body))
+            emuError.text = str(XmlParser.xmlReader(xml_stream_body, runIfOverloaded))
             return prettify(emuError)
             
-
     #create emulation
     
     ET.register_namespace("test", "http://127.0.0.1/cocoma")
@@ -935,13 +951,13 @@ def create_emu():
         
         distroNotesStr=""
         emuNotesStr=""
-        print "distroList",distroList
+
         for items in distroList:
             for enotes in items['emulatorArgNotes']:
                     emuNotesStr+=str(enotes)
                 
             for dnotes in items['distroArgsNotes']:
-                    distroNotesStr+=str(dnotes)                
+                    distroNotesStr+=str(dnotes)
                     
         emulationEmuNotesXml.text = emuNotesStr
         emulationDistroNotesXml.text= distroNotesStr
