@@ -158,7 +158,7 @@ def fuzzLoad(emulationID, distributionID, runNo, min, fuzzRange, serverip, serve
             print "Success! waiting on process to finish running"
             runBackfuzz.wait()
             
-            #os.kill(runBackfuzzPidNo.pid, signal.SIGINT)
+            os.kill(runBackfuzzPidNo.pid, signal.SIGINT)
             #print "writing success into DB..."
             message="Success"
             executed="True"
