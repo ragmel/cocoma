@@ -308,6 +308,7 @@ def createEmulation(emulationName, emulationType, emulationLog, emulationLogFreq
     resourceOverloaded = False
     if (type(distroList)==unicode):
         sys.exit()
+
     try:
         for n in distroList:
             emulatorName = n["emulatorName"]
@@ -331,14 +332,11 @@ def createEmulation(emulationName, emulationType, emulationLog, emulationLogFreq
                 raise Exception (modhandleMy)
             
 	        # 2. Use this module for calculation and run creation   
-            timeSinceEpoch = Library.timestamp(dt.now()) #Finds the current time in seconds
-            
-            (stressValues, runStartTime, runDurations, triggerType) = modhandleMy(newEmulation.emulationID, newEmulation.emulationName, 0, timeSinceEpoch, durationDistro, int(granularity), distroArgs, resourceTypeDist, HOMEPATH)
+            (stressValues, runStartTime, runDurations, triggerType) = modhandleMy(newEmulation.emulationID, newEmulation.emulationName, 0, Library.timeSinceEpoch(0), durationDistro, int(granularity), distroArgs, resourceTypeDist, HOMEPATH)
             
             newDistribution.setStressValues(stressValues)
             newDistribution.setRunStartTime(runStartTime)
             newDistribution.setRunDurations(runDurations)
-
             
             distroObjList.append(newDistribution)
 #            resourceOverloaded, overloadedResource = checkResourceOverload(distroObjList)

@@ -337,7 +337,7 @@ def checkLoadValues(resourceType, distArgs):
     #Subtracts current MEM usage from maximum system MEM
     if (resourceType.upper() == "MEM"):
         maxResourceLoad -= Library.getMemUsed();
-        
+        print Library.getMemUsed();
     for load in loads:
         if (load > (maxResourceLoad * 0.9)):
             errorStr = resourceType.upper() + " close to maximum value. Re-send with force ('-f') to run"

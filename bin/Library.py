@@ -1,4 +1,4 @@
-import Pyro4, os, sys, imp
+import Pyro4, os, sys, imp, glob
 import sqlite3 as sqlite
 import subprocess, psutil
 from subprocess import PIPE
@@ -737,7 +737,7 @@ def getCurrentJobs():
             currentRuns = c.fetchall()
             for currentRun in currentRuns:
                 jobName = currentRun[0] + "-" + str(runLog[0]) + "-" + str(runLog[1]) + "-" + currentRun[2]
-                startTime = float(runLog[3]) - 3600
+                startTime = float(runLog[3])
                 stopTime = startTime + float(runLog[4])
                 jobInfo = "startTime: " + dt.fromtimestamp(startTime).strftime('%Y-%m-%d %H:%M:%S') + ", duration: " + runLog[4] + " sec, stopTime: " + dt.fromtimestamp(stopTime).strftime('%Y-%m-%d %H:%M:%S') + ", resourceType: " + currentRun[3].upper() + ", stressValue: " + runLog[5]
                 job = "Job: " + jobName + " { " + jobInfo + " }"
@@ -747,3 +747,18 @@ def getCurrentJobs():
     conn.commit()
     c.close()
     return currentJobs
+
+def removeLogs():
+    logFiles = glob.glob("/home/jordan/git/cocoma/logs/*.csv")
+    logFiles = logFiles + glob.glob("/home/jordan/git/cocoma/logs/*.xml")
+    logFiles = logFiles + glob.glob("/home/jordan/git/cocoma/logs/*.txt")
+    if (len(logFiles) > 0):
+        for logfile in logFiles:
+            os.remove(logfile)
+    else:
+        print "No Log files found"
+        
+def timeSinceEpoch(extraSeconds):
+    procTrace = subprocess.Popen("date +%s", shell = True, stdout = PIPE, stderr = PIPE)
+    procTraceOutput = int(procTrace.communicate()[0]) + int(extraSeconds)
+    return procTraceOutput

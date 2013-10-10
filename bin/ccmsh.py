@@ -91,6 +91,7 @@ def main():
     deleteEmu = optparse.OptionGroup(parser, 'Delete emulations')
     deleteEmu.add_option('-d', '--delete', action='store_true',default=False, dest='deleteID', help='delete emulation by name')
     deleteEmu.add_option('-p','--purge', action='store_true',default=False, dest='purge_all', help='wipes all DB entries and removes all scheduled jobs')
+    deleteEmu.add_option('-c','--clear-logs', action='store_true',default=False, dest='clear_logs', help='Removes COCOMA log files')
     
     listDistro = optparse.OptionGroup(parser, 'List available distributions')  
     listDistro.add_option('-i', '--dist', action='store_true', default=False,dest='listAllDistro',help='lists all available distributions and gives distribution details by name')
@@ -450,7 +451,7 @@ More info @ https://github.com/cragusa/cocoma
     
     
     if options.purge_all:
-        print "WARNING:\nThis action will wipe every single log file, scheduled job and database entry do you wish to proceed?\n(y/n)"
+        print "WARNING:\nThis action will wipe every scheduled job and database entry do you wish to proceed?\n(y/n)"
         yes = set(['yes','y', 'ye','yey'])
         no = set(['no','n','nay'])
         try:
@@ -469,9 +470,23 @@ More info @ https://github.com/cragusa/cocoma
 
         except KeyboardInterrupt,e:
             print "\nAction cancelled"
-
-
-
+    
+    if options.clear_logs:
+        print "WARNING:\nThis action will wipe every file in the COCOMA/logs directory, do you wish to proceed?\n(y/n)"
+        yes = set(['yes','y', 'ye','yey', 'Y', 'YES'])
+        no = set(['no','n','nay', 'NO', 'N'])
+        try:
+            choice = raw_input().lower()
+            if choice in yes:
+                Library.removeLogs()
+            elif choice in no:
+                print "Action cancelled"
+                return False
+            else:
+                print "Please respond with 'yes' or 'no'"
+        except KeyboardInterrupt,e:
+            print "\nAction cancelled"
+            
     '''
     ################################
     listDistro

@@ -226,7 +226,7 @@ class TestCLI (unittest.TestCase):
                          
     def test_Purge(self):  # Tests the call to Delete an Emulation
           EMUTests = EmulationTests()
-          result = EMUTests.testCLIInputCalls("ccmsh -p", "y", "This action will wipe every single log file")
+          result = EMUTests.testCLIInputCalls("ccmsh -p", "y", "This action will wipe every scheduled job")
           self.assertNotEquals(result, -1, "Call to Purge system Failed")
                         
     def test_Jobs(self):  # Tests the call to show jobs

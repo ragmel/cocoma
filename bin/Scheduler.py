@@ -164,7 +164,8 @@ class schedulerDaemon(object):
         schedFileLogger.debug("-> createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration)")
         
         try:
-            schedFileLogger.debug("Job added with: StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))))
+            runStartTimeDT = dt.datetime.fromtimestamp(runStartTime).strftime('%Y-%m-%d %H:%M:%S')
+            schedFileLogger.debug("Job added with: StartTime:"+str(runStartTimeDT))
             
             schedFileLogger.debug("emulationID "+str(emulationID))
             schedFileLogger.debug("emulationLifetimeID "+str(emulationLifetimeID))
@@ -174,23 +175,22 @@ class schedulerDaemon(object):
             schedFileLogger.debug("runNo "+str(runNo))
             
             #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)  
-            runEndTimeStr=str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime+float(duration))))
+            runEndTimeStr=str(dt.datetime.fromtimestamp(runStartTime + float(duration)).strftime('%Y-%m-%d %H:%M:%S'))
             
             partName=str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)
-            jobNameData = {"JobName":partName,"StressValue":stressValue,"StartTime":time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)),"Duration":duration,"EndTime":runEndTimeStr}
+            jobNameData = {"JobName":partName,"StressValue":stressValue,"StartTime":runStartTimeDT,"Duration":duration,"EndTime":runEndTimeStr}
             #jobNameJSON = json.dumps(jobNameData, ensure_ascii=False, encoding="utf-8", separators=(',', ': '))
             jobNameJSON = json.JSONEncoder().encode(jobNameData)
             
             #jobName = str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec. EndTime: "+runEndTimeStr
-            
-            self.sched.add_date_job(Job.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=jobNameJSON)
+            self.sched.add_date_job(Job.createRun, runStartTimeDT, args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=jobNameJSON)
             schedFileLogger.debug(str(sys.stdout))
-            #valBack=str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec."+"StartTime: "+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)))+" EndTime: "+runEndTimeStr
-            #valBackJSON={"emulationName":str(emulationName),"distributionID":str(distributionID),"runNo":str(runNo),"distributionName":distributionName,"emulator":str(emulator),"resourceTypeDist":str(resourceTypeDist),"stressValue":str(stressValue),"duration":str(duration),"StartTime":str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))),"EndTime":runEndTimeStr}
+            #valBack=str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue)+" Duration: "+str(duration)+"sec."+"StartTime: "+str(time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(runStartTime)))+" EndTime: "+runEndTimeStr
+            #valBackJSON={"emulationName":str(emulationName),"distributionID":str(distributionID),"runNo":str(runNo),"distributionName":distributionName,"emulator":str(emulator),"resourceTypeDist":str(resourceTypeDist),"stressValue":str(stressValue),"duration":str(duration),"StartTime":str(time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(runStartTime))),"EndTime":runEndTimeStr}
             
             #maybe needed later to wrap into the proper json call
-            #valBackJSON=json.dumps({"emulationName":str(emulationName), "distributionID":str(distributionID), "runNo":str(runNo), "distributionName":distributionName, "emulator":str(emulator), "resourceTypeDist":str(resourceTypeDist), "stressValue":str(stressValue), "duration":str(duration), "StartTime":str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime))), "EndTime":runEndTimeStr}, sort_keys=True, separators=(',',':'))#indent=4,
-            data = {"Action":"Job Created", "JobName":partName, "EmulationName":emulationName, "DistributionID":distributionID, "RunNo":runNo, "DistributionName":distributionName, "Emulator":emulator, "ResourceTypeDist":resourceTypeDist, "StressValue":stressValue, "Duration":duration, "StartTime":time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(runStartTime)), "EndTime":runEndTimeStr}
+            #valBackJSON=json.dumps({"emulationName":str(emulationName), "distributionID":str(distributionID), "runNo":str(runNo), "distributionName":distributionName, "emulator":str(emulator), "resourceTypeDist":str(resourceTypeDist), "stressValue":str(stressValue), "duration":str(duration), "StartTime":str(time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(runStartTime))), "EndTime":runEndTimeStr}, sort_keys=True, separators=(',',':'))#indent=4,
+            data = {"Action":"Job Created", "JobName":partName, "EmulationName":emulationName, "DistributionID":distributionID, "RunNo":runNo, "DistributionName":distributionName, "Emulator":emulator, "ResourceTypeDist":resourceTypeDist, "StressValue":stressValue, "Duration":duration, "StartTime":runStartTimeDT, "EndTime":runEndTimeStr}
             #valBackJSON = json.dumps(data, ensure_ascii=False, encoding="utf-8", separators=(',', ': '))
             #valBackJSON = json.JSONEncoder().encode(data)
             valBackJSON = json.dumps(data)
@@ -212,30 +212,29 @@ class schedulerDaemon(object):
         
         loggedJobName=str(emulationID)+"-"+str(emulationName)+"-logger interval-"+str(interval)+"sec."
         try:
-            self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)), args=[duration,interval,emulationID,emulationName,emuStartTime], name=loggedJobName)
-            schedFileLogger.debug("Started logger:"+loggedJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime))))
-            return "Started logger:"+loggedJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)))
+            self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(singleRunStartTime)), args=[duration,interval,emulationID,emulationName,emuStartTime], name=loggedJobName)
+            schedFileLogger.debug("Started logger:"+loggedJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(singleRunStartTime))))
+            return "Started logger:"+loggedJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(singleRunStartTime)))
         except Exception,e :
-            valReturn="Error starting logger:"+loggedJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(singleRunStartTime)))
+            valReturn="Error starting logger:"+loggedJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(singleRunStartTime)))
             schedFileLogger.debug(valReturn)
             schedFileLogger.error("Scheduler createLoggerJob(): error creating Job ")
             schedFileLogger.exception(str(e))
             return valReturn+" Error:"+str(e)
 
-    def createEmulationEndJob(self,emulationEndTime,EmulationName):
+    def createEmulationEndJob(self,emulationEndTimeDT,EmulationName):
         """
         IN: Emulation end time and emulation name
         DURING: Creates job that executes at the very end of emulation
         """
-
+        
         jobName = str(EmulationName)+"-Emulation"
         try:
-
-            self.sched.add_date_job(Logger.emulationEnd, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(emulationEndTime)), args=[EmulationName], name=jobName)
-            schedFileLogger.debug("Started Emulation:"+jobName+" StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(emulationEndTime))))
-            return "Started Emulation: "+jobName+" StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(emulationEndTime)))
+            self.sched.add_date_job(Logger.emulationEnd, emulationEndTimeDT, args=[EmulationName], name=jobName)
+            schedFileLogger.debug("Started Emulation:"+jobName+" StartTime:"+str(emulationEndTimeDT))
+            return "Started Emulation: "+jobName+" StartTime:"+str(emulationEndTimeDT)
         except Exception,e :
-            valReturn="Error starting Emulation:"+jobName+" StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(emulationEndTime)))
+            valReturn="Error starting Emulation:"+jobName+" StartTime:"+str(emulationEndTimeDT)
             schedFileLogger.debug(valReturn)
             schedFileLogger.error("Scheduler createEmulationEndJob(): error creating Job ")
             schedFileLogger.exception(str(e))
@@ -263,7 +262,7 @@ class schedulerDaemon(object):
             return 2
         else:
             try:
-                self.sched.add_date_job(Job.createRun, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(Library.timeConv(Library.emulationNow(2))))), args=[emulationID,distributionID,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runNo,emuDuration], name=str(emulationID)+distributionName+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
+                self.sched.add_date_job(Job.createRun, time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(self.timestamp(Library.timeConv(Library.emulationNow(2))))), args = [emulationID, distributionID, emulationLifetimeID, duration, emulator, emulatorArg, resourceTypeDist, stressValue, runNo, emuDuration], name = str(emulationID) + distributionName + "-" + str(distributionID) + "-" + str(runNo) + "-" + distributionName + "-" + str(emulator) + "-" + str(resourceTypeDist) + ": " + str(stressValue))
                 schedFileLogger.info("Created Custom Job: "+str(emulationID)+distributionName+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
                 return 1
             except Exception,e:
@@ -344,7 +343,8 @@ class schedulerDaemon(object):
                     emulationLifetimeID = row[2]
                     #Compare starting times and re-launch 
                     #TO-DO: We can recover some individual runs if the emulation lifetime end date is still in future
-                    if self.timestamp(self.timeConv(startTime))>self.timestamp(dt.datetime.now()):
+                    timeNow = Library.timeSinceEpoch(0)
+                    if time.mktime(self.timeConv(startTime).timetuple()) > timeNow:
                         schedFileLogger.info("Recovery Emulation found. ID: "+str(emulationID))
                         #If active emulation is found starting logger
                         #2sec interval
@@ -355,7 +355,7 @@ class schedulerDaemon(object):
                             
                             if str(row[0]) =="1":
                                 interval=int(row[1])                                                                                                                                                                              
-                                self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.timestamp(self.timeConv(startTime)))), args=[emuDuration,interval,emulationID], name=str(emulationID)+"-"+str(emulationName)+"-logger interval-"+str(interval)+"sec.")
+                                self.sched.add_date_job(Logger.loadMon, time.mktime(self.timeConv(startTime)), args=[emuDuration,interval,emulationID], name=str(emulationID)+"-"+str(emulationName)+"-logger interval-"+str(interval)+"sec.")
                         
                         #If active emulation is found. Getting info from active emulation to restore runs 
                         c.execute('SELECT distributionID,distributionName,duration,emulator FROM distribution WHERE emulationID=?',[str(emulationID)])

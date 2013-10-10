@@ -104,7 +104,6 @@ def createDistribution(newEmulation):
         print e
         return "SQL error:", e
         sys.exit(1)
-
     createDistributionRuns(newEmulation)
 
 def createEndJob (daemon, newEmulation):
@@ -128,11 +127,11 @@ def createEndJob (daemon, newEmulation):
     runInterval = duration[maxStartTimeIndex] // granularity[maxStartTimeIndex]
     
     returnEmulationName = (str(newEmulation.emulationID) + "-" + newEmulation.emulationName)
-    emulationEndTime = Library.timestamp(Library.timeConv(newEmulation.startTimeEmu)) + float(newEmulation.stopTimeEmu) + (runInterval + 2)
+    extraEndTime = dt.timedelta(0, (float(newEmulation.stopTimeEmu) + (runInterval + 2)))
+    emulationEndTime = (Library.timeConv(newEmulation.startTimeEmu)) + extraEndTime
     emulationEndJobReply = daemon.createEmulationEndJob(emulationEndTime, returnEmulationName)
 
 def createDistributionRuns(newEmulation):
-    
     daemon=Library.getDaemon()
     daemon.setEmuObject(newEmulation)
     
@@ -149,8 +148,6 @@ def createDistributionRuns(newEmulation):
                 c = conn.cursor()
                     
                 # 1. We populate "distribution" table      
-                
-    
                 c.execute('INSERT INTO distribution (distributionGranularity, distributionType,emulator,distributionName,startTime,duration,emulationID) VALUES (?, ?, ?, ?,?, ?,?)', [distro.granularity, distro.type, distro.emulatorName,distro.name,distro.startTime,distro.duration,newEmulation.emulationID])
                 distro.setDistributionID(c.lastrowid)
                 '''
@@ -180,13 +177,12 @@ def createDistributionRuns(newEmulation):
                 sys.exit(1)                        
                    
             startTime= Library.timeConv(newEmulation.startTimeEmu)
-            startTimesec=Library.timestamp(startTime)+float(distro.startTime)
-            
+            startTimesec=time.mktime(startTime.timetuple()) + float(distro.startTime)
             #making sure that the run after event has valid date for scheduling
-            nowTime=Library.timestamp(Library.timeConv(Library.emulationNow(5)))
+            nowTime = Library.timeSinceEpoch(5)
             if startTimesec < nowTime:
-                startTimesec = nowTime+float(distro.startTime)
-               
+                startTimesec = nowTime + float(distro.startTime)
+                
             '''
             1. Load the module according to Distribution Type to create runs
             '''
@@ -199,7 +195,7 @@ def createDistributionRuns(newEmulation):
              
             #2. Use this module for calculation and run creation   
             stressValues,runStartTime,runDurations,triggerType=modhandleMy(newEmulation.emulationID,newEmulation.emulationName,newEmulation.getEmulationLifetimeID(),startTimesec,distro.duration, int(distro.granularity),distro.distroArgs,distro.resourceType,HOMEPATH)
-            
+
             #event and time type disro's separation
             try :
                 

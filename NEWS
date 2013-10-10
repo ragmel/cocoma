@@ -1,3 +1,22 @@
+cocoma (2.0) RELEASED; urgency=low
+
+  * Resorce contention over CPU RAM IO(Disk) and NETWORK is available
+  * Malicious module and relative distribution
+  * Event-based approach
+  * Real system workload traces parsing and replay capability
+  * Script to record system traces in a COCOMA compatible format
+  * Web UI to manage the framework
+  * Known issues:
+  * - Some distribution doesn't load properly in the Web UI
+  * - warning of resource exceed at emulation creation time, works from ccmsh not from Web UI
+  * Wanted features:
+  * - Distributed COCOMA solution to enable large complex distributed scenarios 
+  * - Contention at CPU cache level
+  * - Extend emulation analyser for distributed version to get warning for large scenarios' emulations
+  * - removing log files from ccmsh
+
+ -- Carmelo Ragusa <carmelo.ragusa@sap.com>  Fri, 04 Oct 2013 14:01:08 +0100
+
 cocoma (1.7.3) UNRELEASED; urgency=low
 
   * modified rec_res_usage to have option to specify a filename, filename is lowered automatically
