@@ -213,7 +213,7 @@ More info @ https://github.com/cragusa/cocoma
         if len(arguments)>0:
             if arguments[0] == "scheduler":
                 Library.services_control("scheduler","stop"," ")
-            
+                Library.killRemainingProcesses()
             elif arguments[0] == "api":
                 Library.services_control("api","stop"," ")
             
@@ -458,6 +458,7 @@ More info @ https://github.com/cragusa/cocoma
             choice = raw_input().lower()
             if choice in yes:
                 Library.purgeAll()
+                Library.killRemainingProcesses()
                 #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" purge all")
                 msg = {"Action":"USER REQUEST purge all Emulations"}
                 producer.sendmsg(myName,msg)

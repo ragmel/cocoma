@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Additional Features &mdash; COCOMA 1 documentation</title>
+    <title>Additional Features &mdash; COCOMA v2.0 - Secundus documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1',
+        VERSION:     'v2.0 - Secundus',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="top" title="COCOMA v2.0 - Secundus documentation" href="../index.html" />
     <link rel="next" title="Known Issues" href="08_known_issues.html" />
     <link rel="prev" title="Adding a new emulator" href="09_adding_distributions_emulators.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="09_adding_distributions_emulators.html" title="Adding a new emulator"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">COCOMA v2.0 - Secundus documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -289,82 +289,200 @@ $ timeout 30s rec_res_usage.sh 2 &gt; trace_file.txt
         it will run for the specified (30 seconds) amount of time</pre>
 </div>
 </div>
-<div class="section" id="event-driven-approach">
-<h3>Event-driven approach<a class="headerlink" href="#event-driven-approach" title="Permalink to this headline">¶</a></h3>
-<p>COCOMA offers 2 different ways to manage events. One is time-based, where a distribution is run for a finite and known amount of time. In this case when having two time-based distributions, where the second one has to run right after the first one has finished, given that the duration of the distribution is explicetely specified, it is possible to calculate the exact ending time of the first distribution and therefore schedule the start of the second one accordingly. However, there might be cases that the duration of a distribution is not known, e.g. in malicious distributions. In this case, say for example that out of the two distributions that want to be run sequentially, the first one doesn&#8217;t have a duration, it would be impossible to schedule the second one since the end time of the first one is unknown. Therefore, we introduced the event-driven approach, where the first one creates an end-job event that triggers the schedule of the second distribution. This allows to take into account these duration-less distribution. An example is in the xml snippet below:</p>
-<div class="highlight-python"><pre>&lt;distributions&gt;
-        &lt;name&gt;Fuzzer_Distro1&lt;/name&gt;
-        &lt;nextevent&gt;Fuzzer_Distro2&lt;/nextevent&gt;
-        &lt;!--duration in seconds --&gt;
-        &lt;starttime&gt;0&lt;/starttime&gt;
-        &lt;granularity&gt;0&lt;/granularity&gt;
-        &lt;duration&gt;0&lt;/duration&gt;
-        &lt;distribution href="/distributions/event" name="event" /&gt;
-        &lt;emulator href="/emulators/backfuzz" name="backfuzz" /&gt;
-
-        &lt;emulator-params&gt;
-                &lt;resourceType&gt;NET&lt;/resourceType&gt;
-                &lt;serverip&gt;10.55.164.181&lt;/serverip&gt;
-                &lt;serverport&gt;80&lt;/serverport&gt;
-                &lt;min&gt;100&lt;/min&gt;
-                &lt;max&gt;104&lt;/max&gt;
-                &lt;packettype&gt;HTTP&lt;/packettype&gt;
-                &lt;timedelay&gt;0&lt;/timedelay&gt;
-                &lt;salt&gt;2&lt;/salt&gt;
-        &lt;/emulator-params&gt;
-&lt;/distributions&gt;
-
-&lt;distributions&gt;
-        &lt;name&gt;Fuzzer_Distro2&lt;/name&gt;
-        &lt;!--duration in seconds --&gt;
-        &lt;nextevent&gt;Fuzzer_Distro2&lt;/nextevent&gt;
-        &lt;starttime&gt;0&lt;/starttime&gt;
-        &lt;granularity&gt;0&lt;/granularity&gt;
-        &lt;duration&gt;0&lt;/duration&gt;
-        &lt;distribution href="/distributions/event" name="event" /&gt;
-        &lt;emulator href="/emulators/backfuzz" name="backfuzz" /&gt;
-
-        &lt;emulator-params&gt;
-                &lt;resourceType&gt;NET&lt;/resourceType&gt;
-                &lt;serverip&gt;10.55.164.181&lt;/serverip&gt;
-                &lt;serverport&gt;22&lt;/serverport&gt;
-                &lt;min&gt;100&lt;/min&gt;
-                &lt;max&gt;104&lt;/max&gt;
-                &lt;packettype&gt;SSH&lt;/packettype&gt;
-                &lt;timedelay&gt;0&lt;/timedelay&gt;
-                &lt;salt&gt;2&lt;/salt&gt;
-        &lt;/emulator-params&gt;
-&lt;/distributions&gt;</pre>
 </div>
-<p>The new distribution format in this case has a new tag <strong>nextevent</strong>, which allows the scheduler to understand that the following distribution to be scheduled, once the first distribution finishes, is the one in this tag. The example relates to a malicious distribution, which is further explained in a dedicated section of this document. Please note that in this case, although they are specified, the <em>starttime</em>, <em>granularity</em> and <em>duration</em> are not actually used as they don&#8217;t apply in the event-driven context. Finally, the <em>emustopTime</em> still sets the emulation ends, so in case a distribution hasn&#8217;t finished within the emulation time range specified, the jobs left (running and scheduled) will be stopped.</p>
-</div>
+<div class="section" id="event-based-scheduling">
+<h2>Event Based Scheduling<a class="headerlink" href="#event-based-scheduling" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the regular, time based, scheduling COCOMA offers Event based scheduling (Only usable with the backfuzz emulator at present). This was introduced as the amount of time it takes for a network distribution to run can vary depending on a number of unknown factors (for example a slower network would take longer to send data over).
+In Event based scheduling the order of distributions in the supplied XML is used to determine which order distributions will run in. Below is a short explanation of how distributions are scheduled when using events:</p>
+<ul class="simple">
+<li>Run time based distributions as normal (if there are any) until an Event is reached</li>
+<li>Stop scheduling any further distributions until the Event finishes</li>
+<li>Resume Scheduling distributions, using their start time as a delay after the event finishes. (A distribution with a start time of 5 would start 5 seconds after the event finishes)</li>
+<li>Repeat until all distributions are scheduled or emuStopTime expires (at which point all running jobs will be killed, and scheduling will stop)</li>
+</ul>
+<p>Event Based Emulation example:</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</pre></div></td><td class="code"><div class="highlight"><pre> <span class="nt">&lt;emulation&gt;</span>
+   <span class="nt">&lt;emuname&gt;</span>MAL_EMU<span class="nt">&lt;/emuname&gt;</span>
+   <span class="nt">&lt;emuType&gt;</span>MIX<span class="nt">&lt;/emuType&gt;</span>
+   <span class="nt">&lt;emuresourceType&gt;</span>MIX<span class="nt">&lt;/emuresourceType&gt;</span>
+   <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
+   <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+   <span class="c">&lt;!--duration in seconds --&gt;</span>
+   <span class="nt">&lt;emustopTime&gt;</span>35<span class="nt">&lt;/emustopTime&gt;</span>
+
+   <span class="nt">&lt;distributions&gt;</span>
+      <span class="nt">&lt;name&gt;</span>MAL_Distro1<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/event&quot;</span> <span class="na">name=</span><span class="s">&quot;event&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/backfuzz&quot;</span> <span class="na">name=</span><span class="s">&quot;backfuzz&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;emulator-params&gt;</span>
+         <span class="nt">&lt;resourceType&gt;</span>NET<span class="nt">&lt;/resourceType&gt;</span>
+         <span class="nt">&lt;min&gt;</span>100<span class="nt">&lt;/min&gt;</span>
+         <span class="nt">&lt;fuzzRange&gt;</span>900<span class="nt">&lt;/fuzzRange&gt;</span>
+         <span class="nt">&lt;serverip&gt;</span>10.55.168.142<span class="nt">&lt;/serverip&gt;</span>
+         <span class="nt">&lt;serverport&gt;</span>5050<span class="nt">&lt;/serverport&gt;</span>
+         <span class="nt">&lt;packettype&gt;</span>TCP<span class="nt">&lt;/packettype&gt;</span>
+         <span class="nt">&lt;timedelay&gt;</span>1<span class="nt">&lt;/timedelay&gt;</span>
+         <span class="nt">&lt;salt&gt;</span>100<span class="nt">&lt;/salt&gt;</span>
+      <span class="nt">&lt;/emulator-params&gt;</span>
+   <span class="nt">&lt;/distributions&gt;</span>
+
+   <span class="nt">&lt;distributions&gt;</span>
+    <span class="nt">&lt;name&gt;</span>CPU_Distro<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;startTime&gt;</span>5<span class="nt">&lt;/startTime&gt;</span>
+      <span class="c">&lt;!--duration in seconds --&gt;</span>
+      <span class="nt">&lt;duration&gt;</span>10<span class="nt">&lt;/duration&gt;</span>
+      <span class="nt">&lt;granularity&gt;</span>2<span class="nt">&lt;/granularity&gt;</span>
+      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
+      <span class="nt">&lt;stopLoad&gt;</span>50<span class="nt">&lt;/stopLoad&gt;</span>
+      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;emulator-params&gt;</span>
+        <span class="nt">&lt;resourceType&gt;</span>CPU<span class="nt">&lt;/resourceType&gt;</span>
+        <span class="nt">&lt;ncpus&gt;</span>0<span class="nt">&lt;/ncpus&gt;</span>
+      <span class="nt">&lt;/emulator-params&gt;</span>
+    <span class="nt">&lt;/distributions&gt;</span>
+
+   <span class="nt">&lt;log&gt;</span>
+         <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+         <span class="nt">&lt;enable&gt;</span>0<span class="nt">&lt;/enable&gt;</span>
+         <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+         <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
+         <span class="nt">&lt;logLevel&gt;</span>debug<span class="nt">&lt;/logLevel&gt;</span>
+   <span class="nt">&lt;/log&gt;</span>
+
+ <span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>In the above example the Event based distributiopn would first run to completion, then the time (CPU) distribution would be run 5 secounds after the event finishes</p>
 </div>
 <div class="section" id="malicious-module">
 <h2>Malicious module<a class="headerlink" href="#malicious-module" title="Permalink to this headline">¶</a></h2>
 <p>The malicious module allows users to create distributions that can target a specific machine by sending fuzzing data over a chosen protocol. As the emulator supporting our malicious module is <em>backfuzz</em> <a class="footnote-reference" href="#f1" id="id1">[1]</a> <a class="footnote-reference" href="#f2" id="id2">[2]</a>, it offers fuzzing over various known protocol such as <em>HTTP</em>, <em>SSH</em>, <em>FTP</em>, <em>IMAP</em>, etc. The nice thing that all protocols are added to the tool as plugins, so if a new protocol wants to be tested, a new plugin for it can be created and added to the tool for the purpose.
 The fuzzing process time cannot be known a priori as it depends from factors out of the user control, such as the network between COCOMA and the SuT to target. Therefore, the <strong>event-driven</strong> approach was introduced to support this. The xml snippet below (the same of the event-driven section) shows a maliciuos distribution using backfuzz:</p>
-<div class="highlight-python"><pre>&lt;distributions&gt;
-        &lt;name&gt;Fuzzer_Distro1&lt;/name&gt;
-        &lt;nextevent&gt;Fuzzer_Distro2&lt;/nextevent&gt;
-        &lt;!--duration in seconds --&gt;
-        &lt;starttime&gt;0&lt;/starttime&gt;
-        &lt;granularity&gt;0&lt;/granularity&gt;
-        &lt;duration&gt;0&lt;/duration&gt;
-        &lt;distribution href="/distributions/event" name="event" /&gt;
-        &lt;emulator href="/emulators/backfuzz" name="backfuzz" /&gt;
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+ <span class="nt">&lt;emuname&gt;</span>MAL_EMU<span class="nt">&lt;/emuname&gt;</span>
+ <span class="nt">&lt;emuType&gt;</span>NET<span class="nt">&lt;/emuType&gt;</span>
+ <span class="nt">&lt;emuresourceType&gt;</span>NET<span class="nt">&lt;/emuresourceType&gt;</span>
+ <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
+ <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
+ <span class="c">&lt;!--duration in seconds --&gt;</span>
+ <span class="nt">&lt;emustopTime&gt;</span>120<span class="nt">&lt;/emustopTime&gt;</span>
 
-        &lt;emulator-params&gt;
-                &lt;resourceType&gt;NET&lt;/resourceType&gt;
-                &lt;serverip&gt;10.55.164.181&lt;/serverip&gt;
-                &lt;serverport&gt;80&lt;/serverport&gt;
-                &lt;min&gt;100&lt;/min&gt;
-                &lt;max&gt;104&lt;/max&gt;
-                &lt;packettype&gt;HTTP&lt;/packettype&gt;
-                &lt;timedelay&gt;0&lt;/timedelay&gt;
-                &lt;salt&gt;2&lt;/salt&gt;
-        &lt;/emulator-params&gt;
-&lt;/distributions&gt;</pre>
-</div>
+<span class="nt">&lt;distributions&gt;</span>
+  <span class="nt">&lt;name&gt;</span>MAL_Distro<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
+  <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/event&quot;</span> <span class="na">name=</span><span class="s">&quot;event&quot;</span> <span class="nt">/&gt;</span>
+   <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/backfuzz&quot;</span> <span class="na">name=</span><span class="s">&quot;backfuzz&quot;</span> <span class="nt">/&gt;</span>
+   <span class="nt">&lt;emulator-params&gt;</span>
+     <span class="nt">&lt;resourceType&gt;</span>NET<span class="nt">&lt;/resourceType&gt;</span>
+     <span class="nt">&lt;min&gt;</span>100<span class="nt">&lt;/min&gt;</span>
+     <span class="nt">&lt;fuzzRange&gt;</span>900<span class="nt">&lt;/fuzzRange&gt;</span>
+     <span class="nt">&lt;serverip&gt;</span>10.55.168.142<span class="nt">&lt;/serverip&gt;</span>
+     <span class="nt">&lt;serverport&gt;</span>5050<span class="nt">&lt;/serverport&gt;</span>
+     <span class="nt">&lt;packettype&gt;</span>TCP<span class="nt">&lt;/packettype&gt;</span>
+     <span class="c">&lt;!-- Timeout (default 0.8s)--&gt;</span>
+     <span class="nt">&lt;timedelay&gt;</span>1<span class="nt">&lt;/timedelay&gt;</span>
+     <span class="nt">&lt;salt&gt;</span>10<span class="nt">&lt;/salt&gt;</span>
+  <span class="nt">&lt;/emulator-params&gt;</span>
+<span class="nt">&lt;/distributions&gt;</span>
+
+ <span class="nt">&lt;log&gt;</span>
+  <span class="c">&lt;!-- Use value &quot;1&quot; to enable logging(by default logging is off)  --&gt;</span>
+  <span class="nt">&lt;enable&gt;</span>0<span class="nt">&lt;/enable&gt;</span>
+  <span class="c">&lt;!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  --&gt;</span>
+  <span class="nt">&lt;frequency&gt;</span>3<span class="nt">&lt;/frequency&gt;</span>
+  <span class="nt">&lt;logLevel&gt;</span>debug<span class="nt">&lt;/logLevel&gt;</span>
+ <span class="nt">&lt;/log&gt;</span>
+
+<span class="nt">&lt;/emulation&gt;</span>
+</pre></div>
+</td></tr></table></div>
 <p>In the emulator parameters part we can specify the server IP and its port, the minimum and maximum lenght of the fuzzing string sent, the type of protocol and the time after which the fuzz starts.</p>
 <p class="rubric">Footnotes</p>
 <table class="docutils footnote" frame="void" id="f1" rules="none">
@@ -403,9 +521,9 @@ The fuzzing process time cannot be known a priori as it depends from factors out
 <li><a class="reference internal" href="#message-queue-use">Message queue use</a></li>
 <li><a class="reference internal" href="#real-trace-parse">Real trace parse</a><ul>
 <li><a class="reference internal" href="#recording-a-real-trace">Recording a real trace</a></li>
-<li><a class="reference internal" href="#event-driven-approach">Event-driven approach</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#event-based-scheduling">Event Based Scheduling</a></li>
 <li><a class="reference internal" href="#malicious-module">Malicious module</a></li>
 </ul>
 </li>
@@ -451,7 +569,7 @@ The fuzzing process time cannot be known a priori as it depends from factors out
         <li class="right" >
           <a href="09_adding_distributions_emulators.html" title="Adding a new emulator"
              >previous</a> |</li>
-        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">COCOMA v2.0 - Secundus documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

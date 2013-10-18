@@ -148,7 +148,7 @@ def memLoad(distributionID,runNo,memSize,memThreads,duration):
         return "run_Stressapptest job memLoad exception: ", e
         
     #catching failed runs
-    if zombieBuster(runStressapptestPidNo):
+    if zombieBuster(runStressapptestPidNo, "stressapptest"):
         runStressapptest.wait()
         message="Fail"
         executed="False"
@@ -183,7 +183,7 @@ def ioLoad(distributionID,runNo,fileQty,memSize,duration):
         "run_Stressapptest job memLoad exception: ", e
         
     #catching failed runs
-    if zombieBuster(runStressapptestPidNo):
+    if zombieBuster(runStressapptestPidNo, "stressapptest"):
         runStressapptest.wait()
         message="Fail"
         executed="False"

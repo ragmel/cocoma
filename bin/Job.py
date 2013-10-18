@@ -65,6 +65,7 @@ def createRun(emulationID,distributionID,emulationLifetimeID,duration,emulator,e
         modhandleMy=loadEmulator(str(emulator))
         #2. Use this module for executing the stress   
         newEmulatorSelect=modhandleMy(emulationID,distributionID,emulationLifetimeID,resourceTypeDist,duration,emulatorArg,stressValue,runNo,emuDuration)
+#        print "\njob - retruned: ", str(newEmulatorSelect)
 
 def dbWriter (distributionID,runNo,message,executed):
     try:

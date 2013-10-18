@@ -281,53 +281,6 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
      
    </emulation>
 
-In the following example a different emulator named *backfuzz* will be used with its proprietary distribution *fuzz*. This combination is used to simulate malicious network activity by sending a series of random requests and data to the specified server
-
-.. code-block:: xml
-   :linenos:
-
-   <emulation>
-    <emuname>MAL_EMU</emuname>
-    <emuType>NET</emuType>
-    <emuresourceType>NET</emuresourceType>
-    <!--date format: 2014-10-10T10:10:10 -->
-    <emustartTime>now</emustartTime>
-    <!--duration in seconds -->
-    <emustopTime>120</emustopTime>
-    
-    <distributions>
-       <name>MAL_Distro1</name>
-       <startTime>0</startTime>
-       <duration>120</duration>
-       <distribution href="/distributions/fuzz" name="fuzz" />
-       <startLoad>100</startLoad>
-       <emulator href="/emulators/backfuzz" name="backfuzz" />
-       <emulator-params>
-           <resourceType>NET</resourceType>
-           <!-- Difference between MIN and MAX fuzz values -->
-           <fuzzRange>900</fuzzRange>
-           <!-- IP and port of server to fuzz -->
-           <serverip>10.55.168.238</serverip>
-           <serverport>51889</serverport>
-           <!-- Type of packet to use for fuzzing -->
-           <packettype>HTTP</packettype>
-           <!-- Time to pause on each fuzz value in s (leave as 0 for default of 0.8s) -->
-           <timedelay>1</timedelay>
-           <!-- Value to increment by -->
-           <salt>50</salt>
-       </emulator-params>
-    </distributions>
-    
-    <log>
-     <!-- Use value "1" to enable logging(by default logging is off)  -->
-     <enable>0</enable>
-     <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
-     <frequency>3</frequency>
-     <logLevel>debug</logLevel>
-    </log>
-    
-   </emulation>
-
 
 Multiple distributions emulation
 --------------------------------
@@ -468,6 +421,73 @@ An important feature of COCOMA is the ability to combine multiple distributions 
           <frequency>3</frequency>
        </log>
     </emulation>
+
+Event Based Scheduling
+----------------------
+In addition to the regular, time based, scheduling there is Event based scheduling. In Event based scheduling the order of jobs ioin the xml is used to determine which order jobs will run in. Below is a short explanation of how jobs are scheduled when using events:
+
+* Run time based jobs as normal (if there are any) until an Event is reached
+* Stop scheduling any further jobs unitl the Event finishes
+* Resume Scheduling jobs, using their start time as a delay after the event finishes. (A job with a start time of 5 would start 5 secounds after the event finishes)
+* Repeat until all distribuitons are scheduled or emuStopTime expires (at whcih point all running jobs will be killed, and scheduling will stop)
+
+Event Based Emulation example:
+
+.. code-block:: xml
+   :linenos:
+
+    <emulation>
+      <emuname>MAL_EMU</emuname>
+      <emuType>MIX</emuType>
+      <emuresourceType>MIX</emuresourceType>
+      <!--date format: 2014-10-10T10:10:10 -->
+      <emustartTime>now</emustartTime>
+      <!--duration in seconds -->
+      <emustopTime>35</emustopTime>
+    
+      <distributions>
+         <name>MAL_Distro1</name>
+         <startTime>0</startTime>
+         <distribution href="/distributions/event" name="event" />
+          <emulator href="/emulators/backfuzz" name="backfuzz" />
+          <emulator-params>
+            <resourceType>NET</resourceType>
+            <min>100</min>
+            <fuzzRange>900</fuzzRange>
+            <serverip>10.55.168.142</serverip>
+            <serverport>5050</serverport>
+            <packettype>TCP</packettype>
+            <timedelay>1</timedelay>
+            <salt>100</salt>
+         </emulator-params>
+      </distributions>
+    
+      <distributions>
+       <name>CPU_Distro</name>
+         <startTime>5</startTime>
+         <!--duration in seconds -->
+         <duration>10</duration>
+         <granularity>2</granularity>
+         <distribution href="/distributions/linear" name="linear" />
+         <startLoad>10</startLoad>
+         <stopLoad>50</stopLoad>
+         <emulator href="/emulators/lookbusy" name="lookbusy" />
+         <emulator-params>
+           <resourceType>CPU</resourceType>
+           <ncpus>0</ncpus>
+         </emulator-params>
+       </distributions>
+    
+      <log>
+            <!-- Use value "1" to enable logging(by default logging is off)  -->
+            <enable>0</enable>
+            <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+            <frequency>3</frequency>
+            <logLevel>debug</logLevel>
+      </log>
+    
+    </emulation>
+
 
 Known Issues
 ------------

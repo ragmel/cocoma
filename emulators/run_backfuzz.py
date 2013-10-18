@@ -120,17 +120,16 @@ class emulatorMod(abstract_emu):
             sys.exit(0)
         
         if resourceTypeDist.lower() == "net":
-            netFuzzProc = multiprocessing.Process(target = fuzzLoad, args=(emulationID, distributionID, runNo, emulatorArg["min"],emulatorArg["fuzzrange"], emulatorArg["serverip"], emulatorArg["serverport"], emulatorArg["packettype"], emulatorArg["salt"], emulatorArg["timedelay"], duration))
-
+            netFuzzProc = multiprocessing.Process(target = fuzzLoad, args=(emulationID, distributionID, runNo, emulatorArg["min"],emulatorArg["fuzzrange"], emulatorArg["serverip"], emulatorArg["serverport"], emulatorArg["packettype"], emulatorArg["salt"], emulatorArg["timedelay"]))
             netFuzzProc.start()
-
+            
+            wrtiePIDtable (netFuzzProc.pid, "Scheduler") #Stops event based scheduling once EMU time expires
+            
             print(netFuzzProc.is_alive())
             netFuzzProc.join()
 
 
-def fuzzLoad(emulationID, distributionID, runNo, min, fuzzRange, serverip, serverport, packettype, salt, timedelay, duration):
-    #turning string to float
-    sl=float(duration)
+def fuzzLoad(emulationID, distributionID, runNo, min, fuzzRange, serverip, serverport, packettype, salt, timedelay):
     runBackfuzzPidNo=0
 
     if timedelay == "0":
@@ -143,11 +142,8 @@ def fuzzLoad(emulationID, distributionID, runNo, min, fuzzRange, serverip, serve
         runBackfuzz.stdin.flush()
         runBackfuzz.stdin.write("\r\n")
         runBackfuzzPidNo =runBackfuzz.pid
-        print "Sleeping",sl,"s"
-        time.sleep(sl)
 
-        print "\nWaking up!\n"
-        if zombieBuster(runBackfuzzPidNo):
+        if zombieBuster(runBackfuzzPidNo, "backfuzz"):
             print "Job failed, sending wait()."
             runBackfuzz.wait()
             message="Error in the emulator execution"
@@ -158,13 +154,12 @@ def fuzzLoad(emulationID, distributionID, runNo, min, fuzzRange, serverip, serve
             print "Success! waiting on process to finish running"
             runBackfuzz.wait()
             
-            os.kill(runBackfuzzPidNo.pid, signal.SIGINT)
-            #print "writing success into DB..."
+            print "Process finished, writing into DB"
             message="Success"
             executed="True"
             dbWriter(distributionID,runNo,message,executed)
             
-            print "Process stopped now, scheduling next job"
+            print "Process stopped, trying to schedule next job"
             try:
                 import Library,DistributionManager 
             
@@ -180,13 +175,16 @@ def fuzzLoad(emulationID, distributionID, runNo, min, fuzzRange, serverip, serve
         return "run_backfuzzer job exception: ", e
 
     #catching failed runs
-    if zombieBuster(runBackfuzzPidNo):
-        runBackfuzz.wait()
-        message="Fail"
-        executed="False"
-    else:
-        message="Success"
-        executed="True"
+    try:
+        if zombieBuster(runBackfuzzPidNo, "backfuzz"):
+            runBackfuzz.wait()
+            message="Fail"
+            executed="False"
+        else:
+            message="Success"
+            executed="True"
+    except Exception, e:
+        print "No failed runs to catch"
     dbWriter(distributionID,runNo,message,executed)
 
 def emulatorHelp():

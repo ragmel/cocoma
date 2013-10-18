@@ -1,6 +1,7 @@
 import Pyro4, os, sys, imp, glob
 import sqlite3 as sqlite
 import subprocess, psutil
+from signal import SIGTERM
 from subprocess import PIPE
 import datetime, time
 from datetime import datetime as dt
@@ -167,7 +168,7 @@ def removeExtraJobs(EmulationName):
         daemon.deleteJobs(EmulationID, EmulationName)
         for distributionID in distributionIDList:
             c.execute("DELETE FROM runLog WHERE executed='Pending' AND distributionID=?", [distributionID[0]])
-                
+        c.execute('UPDATE runLog SET executed="True", message="Stopped early (time expired)" WHERE executed="Executing"')
         conn.commit()
         c.close()
     except sqlite.Error, e:
@@ -597,11 +598,12 @@ def listTests(name):
     else:
         print "Display XML content"
 
-def checkPid(PROCNAME):        
+def checkPid(PROCNAME):
     # ps ax | grep -v grep | grep Scheduler.py
     # print "ps ax | grep -v grep | grep "+str(PROCNAME)
-    procTrace = subprocess.Popen("ps ax | grep -v grep | grep " + "\"" + str(PROCNAME) + "\"", shell = True, stdout = PIPE).communicate()[0]
-    # print "procTrace: ",procTrace
+#    print "checkPid(PROCNAME) " ,checkPid(PROCNAME)
+    procTrace = subprocess.Popen("ps ax | grep -v grep | grep " + "\"" + str(PROCNAME) + "\" | tail -n 1", shell = True, stdout = PIPE).communicate()[0]
+#    print "procTrace: ",procTrace
     if procTrace:
         pid = procTrace[0:5]
         # program running
@@ -762,3 +764,61 @@ def timeSinceEpoch(extraSeconds):
     procTrace = subprocess.Popen("date +%s", shell = True, stdout = PIPE, stderr = PIPE)
     procTraceOutput = int(procTrace.communicate()[0]) + int(extraSeconds)
     return procTraceOutput
+
+def getPIDList ():
+    try:
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+        c = conn.cursor()
+        c.execute("SELECT * FROM jobPIDs")
+        tablePIDs = c.fetchall()
+        conn.commit()
+        c.close()
+        PIDList = []
+        for tablePID in tablePIDs:
+            PIDList.append({"PID": str(tablePID[0]), "processName": str(tablePID[1])})
+        return PIDList
+    except sqlite.Error, e:
+        print "Error %s:" % e.args[0]
+        print e
+        
+
+def killRemainingProcesses ():
+    PIDList = getPIDList()
+#    print PIDList
+    for PIDitem in PIDList:
+        if checkProcessActive (PIDitem["PID"], PIDitem["processName"]):
+            try:
+                print "killing process : " +  str(PIDitem["processName"]) + " on PID " + str(PIDitem["PID"])
+                os.kill(int(PIDitem["PID"]), SIGTERM)
+            except Exception, e:
+                print "\nCould not kill process: " +  str(PIDitem["processName"]) + " on PID " + str(PIDitem["PID"])
+    removePIDs()
+
+def checkProcessActive (PID, processName):
+    errorString = "Process " + str(processName) + " on PID " + str(PID) + " does not seem to exist"
+    try:
+        processInfo = str(open("/proc/" + str(PID) + "/cmdline", "r").read())
+        if processName.lower() in processInfo.lower():
+                return True
+    except Exception, e:
+#        print errorString
+        return False
+#    print errorString
+    return False
+    
+def removePIDs ():
+    try:
+        if HOMEPATH:
+            conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+        else:
+            conn = sqlite.connect('./data/cocoma.sqlite')
+        c = conn.cursor()
+        c.execute('DELETE FROM jobPIDs')
+        conn.commit()
+        c.close()
+    except sqlite.Error, e:
+        print "Error %s:" % e.args[0]
+        print e

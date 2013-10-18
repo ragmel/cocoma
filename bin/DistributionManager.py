@@ -150,6 +150,7 @@ def createDistributionRuns(newEmulation):
                 # 1. We populate "distribution" table      
                 c.execute('INSERT INTO distribution (distributionGranularity, distributionType,emulator,distributionName,startTime,duration,emulationID) VALUES (?, ?, ?, ?,?, ?,?)', [distro.granularity, distro.type, distro.emulatorName,distro.name,distro.startTime,distro.duration,newEmulation.emulationID])
                 distro.setDistributionID(c.lastrowid)
+                daemon.setEmuObject(newEmulation)
                 '''
                 {'startLoad': u'10', 'stopLoad': u'90'}
                 '''

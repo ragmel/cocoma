@@ -1,6 +1,6 @@
 <emulation>
   <emuname>MAL_EMU</emuname>
-  <emuType>NET</emuType>
+  <emuType>EVENT</emuType>
   <emuresourceType>NET</emuresourceType>
   <!--date format: 2014-10-10T10:10:10 -->
   <emustartTime>now</emustartTime>
@@ -10,15 +10,15 @@
   <distributions>
      <name>MAL_Distro1</name>
      <startTime>0</startTime>
-     <distribution href="/distributions/fuzz" name="fuzz" />
+     <distribution href="/distributions/event" name="event" />
       <startLoad>1000</startLoad>
       <emulator href="/emulators/backfuzz" name="backfuzz" />
       <emulator-params>
         <resourceType>NET</resourceType>
 	<min>1000</min>
 	<fuzzRange>9000</fuzzRange>
-        <serverip>10.55.168.238</serverip>
-        <serverport>51889</serverport>      
+        <serverip>10.55.168.142</serverip>
+        <serverport>5050</serverport>      
         <packettype>HTTP</packettype>
         <timedelay>1</timedelay>
         <salt>500</salt>

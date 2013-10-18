@@ -91,6 +91,7 @@ def xmlReader(xmlParam, runIfOverloaded):
 
     # Check distroResType match emuResType
     resTypeCheck(resourceTypeEmulation, distroList)
+    distTypeCheck(emulationType, distroList)
 
     xmlLogger.info("XML parsing done")
 
@@ -272,6 +273,18 @@ def resTypeCheck(emulationResType, distroList):
         if not (emulationResType.lower() == distro["resourceTypeDist"].lower()) and not emulationResType.lower() == "mix":
             raise Exception ("Emulation should only contain distributions of type: " + emulationResType.upper())
 
+def distTypeCheck (emulationType, distroList):
+    for distro in distroList:
+        if (emulationType.upper() == "EVENT"):
+            if not distro["distrType"].lower() == "event":
+                raise Exception ("Emulation should only contain EVENT based Distributions")
+        elif (emulationType.upper() == "TIME"):
+            if distro["distrType"].lower() == "event":
+                raise Exception ("Emulation should only contain TIME based Distributions")
+        else:
+            if not emulationType.upper() == "MIX":
+                raise Exception ("emulationType can only be EVENT, TIME or MIX")
+
 def setLoggerDetails(fileName):
     global xmlLogger
     if xmlLogger is None:
@@ -346,6 +359,6 @@ def checkLoadValues(resourceType, distArgs):
     return False
 
 if __name__ == '__main__': #For testing purposes
-    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", False)
+    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", True)
 #    xmlReader("/home/jordan/Desktop/XMLfail.xml")  #REMOVE
     pass

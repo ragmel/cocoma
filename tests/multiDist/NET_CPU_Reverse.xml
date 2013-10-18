@@ -1,6 +1,6 @@
 <emulation>
   <emuname>NET_emu</emuname>
-  <emuType>Mix</emuType>
+  <emuType>TIME</emuType>
   <emuresourceType>MIX</emuresourceType>
   <!--2014-02-02T10:10:10-->
   <emustartTime>now</emustartTime>

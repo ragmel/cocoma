@@ -124,19 +124,16 @@ class schedulerDaemon(object):
     def setEmuObject(self,newEmulation):
         try:
             #prevent duplicate entries of emulations to be created
-            #print "len",len(self.newEmulationList)
+#            print "\nlen emuObject: ", str(len(self.newEmulationList))
             n=0
             if len(self.newEmulationList) >= 1:
                 for emus in self.newEmulationList:
                     #print "emu compare:",emus.emulationID,newEmulation.emulationID
                     if emus.emulationID==newEmulation.emulationID:
                         #print "FOUND IT"
-    
                         self.newEmulationList.pop(n)
-                        self.newEmulationList.append(newEmulation)
-                    else:
-                        self.newEmulationList.append(newEmulation)
-                n+=1
+                    n+=1
+                self.newEmulationList.append(newEmulation)
             else:
                 self.newEmulationList.append(newEmulation)
             

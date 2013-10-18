@@ -18,9 +18,9 @@
           - A resource can be of the following types:
           
                 - CPU
-                - RAM
-                - I/O
-                - Network
+                - MEM
+                - IO
+                - NET
         * - Emulator
           - Specific mechanism/tool that is used to create an emulation type. For example load generators, stress generators, fault generators and malicious payload creation.
         * - Distribution

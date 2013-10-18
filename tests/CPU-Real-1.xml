@@ -1,6 +1,6 @@
 <emulation>
   <emuname>RealTrace</emuname>
-  <emuType>Mix</emuType>
+  <emuType>TIME</emuType>
   <emuresourceType>CPU</emuresourceType>
   <!--date format: 2014-10-10T10:10:10 -->
   <emustartTime>now</emustartTime>

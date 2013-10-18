@@ -166,7 +166,7 @@ def netClientLoad(distributionID,runNo,stressValues,serverPort,packettype,server
                     
                     time.sleep(float(duration))
                     #catching failed runs
-                    if zombieBuster(runIperfPidNo):
+                    if zombieBuster(runIperfPidNo, "iperf"):
                         runIperf.wait()
                         message="Error in the emulator execution"
                         executed="False"
@@ -192,7 +192,7 @@ def netClientLoad(distributionID,runNo,stressValues,serverPort,packettype,server
                     
                     time.sleep(float(duration))
                     #catching failed runs
-                    if zombieBuster(runIperfPidNo):
+                    if zombieBuster(runIperfPidNo, "iperf"):
                         print "Job failed, sending wait()."
                         runIperf.wait()
                         message="Error in the emulator execution"
@@ -218,7 +218,7 @@ def netClientLoad(distributionID,runNo,stressValues,serverPort,packettype,server
                     runIperfPidNo =runIperf.pid
                     
                     #catching failed runs
-                    if zombieBuster(runIperfPidNo):
+                    if zombieBuster(runIperfPidNo, "iperf"):
                         runIperf.wait()
                         message="Error in the emulator execution"
                         executed="False"
@@ -253,7 +253,7 @@ def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
             
             time.sleep(float(emuDuration)+5)
             #catching failed runs
-            if zombieBuster(runIperfPidNo):
+            if zombieBuster(runIperfPidNo, "iperf"):
                 runIperf.wait()
                 message="Fail"
                 executed="False"

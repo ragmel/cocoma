@@ -32,23 +32,13 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     The actual distribution function which counts start time, duration and stress value for each run of distribution.  
     '''
     
-    try:
-        nextevent = distributionArg["nextevent"]
-    except:
-        nextevent="none"
-    
-    
     duration = float(duration)
     
     #lists for return
-    stressValues = []
+    stressValues = ["EVENT"]
     
-    runStartTimeList=[]
+    runStartTimeList=[startTimesec]
     runDurations = [0]
-    
-    
-    stressValues.append(nextevent)
-    runStartTimeList.append(startTimesec)
     
     triggerType="event"
     return stressValues,runStartTimeList,runDurations, triggerType
@@ -65,35 +55,18 @@ def distHelp():
 def argNames(Rtype=None):
     '''
     We specify how many arguments distribution instance require to run properly
-    Rtype = <CPU,MEM,IO,NET>
+    Rtype = <NET>
     IMPORTANT: All argument variable names must be in lower case
     '''
 
     #discovery of supported resources
     if Rtype == None:
-        argNames = ["cpu","mem","io","net"]
-        return argNames
-
-    if Rtype.lower() == "cpu":
-        
-        argNames={"nextevent":{"upperBound":1000000,"lowerBound":0}}
-        return argNames
-   
-    #get free amount of memory and set it to upper bound
-    if Rtype.lower() == "mem":
-        
-        argNames={"nextevent":{"upperBound":1000000,"lowerBound":0}}
-        return argNames
-        
-    if Rtype.lower() == "io":
-        argNames={"nextevent":{"upperBound":1000000,"lowerBound":0}}
+        argNames = ["net"]
         return argNames
     
     if Rtype.lower() == "net":
-        argNames={"nextevent":{"upperBound":1000000,"lowerBound":0}}
+        argNames={}
         return argNames
-    
-
 
 if __name__=="__main__":
         distHelp()

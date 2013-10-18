@@ -1,7 +1,7 @@
 import sqlite3 as sqlite
 import psutil
 import sys
-
+from Library import getPIDList
 import abc
 from abc import ABCMeta
 
@@ -27,7 +27,7 @@ def pidFinder(PROCNAME):
     for proc in psutil.process_iter():
         if proc.name == PROCNAME:
             p = proc.pid
-            print "Process found on PID: ",p
+#            print "Process found on PID: ",p
             return p
 
 def dbWriter(distributionID,runNo,message,executed):
@@ -50,8 +50,11 @@ def dbWriter(distributionID,runNo,message,executed):
             print e
             sys.exit(1)             
 
-def zombieBuster(PID_ID):
-
+def zombieBuster(PID_ID, processName):
+    try:
+        wrtiePIDtable(PID_ID, processName)
+    except Exception:
+        print "unable to write PIDs to DB"
     #catching failed runs
     p = psutil.Process(PID_ID)
     #print "Process name: ",p.name,"\nProcess status: ",p.status
@@ -59,3 +62,20 @@ def zombieBuster(PID_ID):
         return True
     else:
         return False
+    
+def wrtiePIDtable (PID, processName):
+    processDict = {"PID": str(PID), "processName": str(processName)}
+    if processDict not in getPIDList():
+        try:
+            if HOMEPATH:
+                conn = sqlite.connect(HOMEPATH+'/data/cocoma.sqlite')
+            else:
+                conn = sqlite.connect('./data/cocoma.sqlite')
+            c = conn.cursor()
+            sqlCommand = 'INSERT INTO jobPIDs VALUES ("' + str(PID) + '","' + str(processName) + '")' 
+            c.execute(sqlCommand)
+            conn.commit()
+            c.close()
+        except sqlite.Error, e:
+            print "Error %s:" % e.args[0]
+            print e

@@ -86,8 +86,8 @@ job. Each line provides job's information, for example line *3*:
 * **INFO:Distriburion Manager:Scheduler reply:** -just a generic
   logger part
 
-* **6-CPU_Emulation** - emulation name, which is a combined string of
-  emulation ID from the DB and "emuname" value in the XML file
+* **6-CPU_Emulation** - emulation name, which is a combined string
+  of emulation ID from the DB and "emuname" value in the XML file
 
 * **7** - database ID number for distribution
 

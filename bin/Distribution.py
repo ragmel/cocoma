@@ -61,7 +61,7 @@ class distribution(object):
     def getDistributionID(self):
         
         if self.ID !="none":
-            print  "self.ID",self.ID
+#            print  "self.ID",self.ID
             return self.ID
         else:
             return "none"

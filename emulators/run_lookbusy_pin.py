@@ -117,12 +117,12 @@ def memLoad(distributionID,runNo,memUtil,memSleep,duration):
             
             time.sleep(float(duration))
             #catching failed runs
-            if zombieBuster(runLookbusyPidNo):
+            if zombieBuster(runLookbusyPidNo, "lookbusy"):
                 runLookbusy.wait()
                 message="Fail"
                 executed="False"
             else:
-                os.kill(runLookbusy.pid, signal.SIGINT)
+                os.kill(runLookbusy.pid, SIGINT)
             
                 message="Success"
                 executed="True"
@@ -143,7 +143,7 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
                     
                     time.sleep(float(duration))
                     #catching failed runs
-                    if zombieBuster(runLookbusyPidNo):
+                    if zombieBuster(runLookbusyPidNo, "lookbusy"):
                         print "Job failed, sending wait()."
                         runLookbusy.wait()
                         message="Error in the emulator execution"
@@ -168,7 +168,7 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
                     
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
                     #catching failed runs
-                    if zombieBuster(runLookbusyPidNo):
+                    if zombieBuster(runLookbusyPidNo, "lookbusy"):
                         print "Job failed, sending wait()."
                         runLookbusy.wait()
                         print "writing fail into DB..."

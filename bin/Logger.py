@@ -107,13 +107,14 @@ def emulationEnd(emulationName):
     OUT: nothing
     """
     try:
-        print "Emulation Time expired, removing extra jobs"
+        print "Emulation Time expired, removing extra jobs and stopping running processes"
         global emulationEndLogger
         msg = {"Action":"Emulation finished","EmulationName":str(emulationName)}
         producer.sendmsg(myName,msg)
         emulationEndLogger.info(msg)
         #emulationEndLogger.info("Emulation '"+str(emulationName)+"' finished.")
         Library.removeExtraJobs(emulationName)
+        Library.killRemainingProcesses()
         return True
     except:
         return False

@@ -1,6 +1,6 @@
  <emulation>
       <emuname>CPU_and_Mem</emuname>
-      <emutype>Mix</emutype>
+      <emutype>TIME</emutype>
       <emuresourceType>MIX</emuresourceType>
       <emustartTime>now</emustartTime>
       <!--duration in seconds -->
