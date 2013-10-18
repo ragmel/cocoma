@@ -10,20 +10,45 @@ usage()
 cat << EOF
 usage: $0 options
 
-This script allows recording CPU and MEM usage over a period of time of the machine is executed.
+This script allows printing CPU and/or MEM usage of the machine is executed on. It can also output CPU or MEM only single instant value on screen.
+
+When used with the -o option and in continuous mode (not using the -i option), it can be used to create a trace file.
+
+When used with the -o option and the -i option, it can be used to create a file with instant value only.
 
 OPTIONS:
    -h      Show this message
    -f      Poll frequency of the script, default is 1
    -o      Output file. If not specified it will print on screen
+   -c      CPU only usage
+   -m      MEM only usage
+   -B      Output MEM values in bytes format. Default is in %
+   -i      Instant value, no header is included
+   -n      No header is included in the output
+   -b	   Running script in background
 EOF
 }
 
 FR=
 FILE=
 DATE=$(date +"%Y-%m-%d-%H-%M")
+PREV_TOTAL=0
+PREV_IDLE=0
+NCPUS=0
+MEM=0
+MEMT=0
+TIMESTAMP=0
+MEMHEAD=0
 
-while getopts “hf:o:” OPTION
+C=1
+M=1
+I=
+H=
+B=
+N=1
+BACKG=0
+
+while getopts “hf:o:cmiBnb” OPTION
 do
      case $OPTION in
          h)
@@ -32,12 +57,32 @@ do
              ;;
          f)
              FR=$OPTARG
-	     echo "FR: " $FR
              ;;
          o)
-             FILE=$OPTARG\_$DATE.txt
+             FILE=$OPTARG
 	     FILE=$(echo $FILE | tr -s [:upper:] [:lower:])
              ;;
+	 c)
+	     C=1
+	     M=
+	     ;;
+	 m)
+	     M=1
+	     C=
+	     ;;
+	 B)
+	     B=1
+	     ;;
+	 i)
+	     I=1
+	     H=0
+	     ;;
+	 n)
+	     N=0
+	     ;;
+	 b)
+	     BACKG=1
+	     ;;
          ?)
              usage
              exit
@@ -49,69 +94,168 @@ if [ -z $FR ]
 then
    FR=1
 fi
- 
-PREV_TOTAL=0
-PREV_IDLE=0
 
-NCPUS=`grep -c ^processor /proc/cpuinfo`
- 
 MEM=(`cat /proc/meminfo | grep '^MemTotal'`) # Get the total MEM
 unset MEM[0]                          # Discard the "MemTotal" prefix.
-MEMT=${MEM[1]} 
-TIMESTAMP=`date +%s%N | cut -b1-13`
+MEMT=${MEM[1]}
 
-if [ -z $FILE ]
+if [ "$B" == 1 ]
 then
-  echo "NCPUS $NCPUS"
-  echo "MEMTOTAL $MEMT"
-  echo "TIMESTAMP $TIMESTAMP"
-  echo "POLLFR $FR"
-  echo -e "CPU%\tMEMUSED%"
+   MEMHEAD="MEMUSED"
 else
-  echo "NCPUS $NCPUS" >> $FILE
-  echo "MEMTOTAL $MEMT" >> $FILE
-  echo "TIMESTAMP $TIMESTAMP" >> $FILE
-  echo "POLLFR $FR" >> $FILE
-  echo -e "CPU%\tMEMUSED%" >> $FILE
+   MEMHEAD="MEMUSED%"
 fi
 
+if [ ! -z $FILE ]
+then
+   if [ -z $I ]
+   then
+   	FILE=$FILE\_$DATE
+   fi
+fi
 
-while true; do
-  CPU=(`cat /proc/stat | grep '^cpu '`) # Get the total CPU statistics.
-  unset CPU[0]                          # Discard the "cpu" prefix.
-  IDLE=${CPU[4]}                        # Get the idle CPU time.
+header()
+{
+	NCPUS=`grep -c ^processor /proc/cpuinfo`
+	 
+	TIMESTAMP=`date +%s%N | cut -b1-13`
 
-  # Calculate the total CPU time.
-  TOTAL=0
-  for VALUE in "${CPU[@]}"; do
-    let "TOTAL=$TOTAL+$VALUE"
-  done
+	if [ -z $FILE ]
+	then
+	  echo "NCPUS $NCPUS"
+	  echo "MEMTOTAL $MEMT"
+	  echo "TIMESTAMP $TIMESTAMP"
+	  echo "POLLFR $FR"
+	  if [ "$C" == 1 -a "$M" == 1 ]
+	  then
+	  	echo -e "CPU%\t$MEMHEAD"
+	  fi
+	  if [ "$C" == 1 ] && [ -z $M ]
+	  then
+		echo -e "CPU%"
+	  fi
+	  if [ "$M" == 1 ] && [ -z $C ]
+          then
+                echo -e "$MEMHEAD"
+          fi
+	else
+	  echo "NCPUS $NCPUS" >> $FILE
+	  echo "MEMTOTAL $MEMT" >> $FILE
+	  echo "TIMESTAMP $TIMESTAMP" >> $FILE
+	  echo "POLLFR $FR" >> $FILE
+	  if [ "$C" == 1 -a "$M" == 1 ]
+          then  
+                echo -e "CPU%\t$MEMHEAD" >> $FILE
+          fi
+          if [ "$C" == 1 ] && [ -z $M ]
+          then
+                echo -e "CPU%" >> $FILE
+          fi
+          if [ "$M" == 1 ] && [ -z $C ]
+          then 
+                echo -e "$MEMHEAD" >> $FILE
+          fi
+	fi
+}
 
+if [ "$H" != 0 ] && [ "$N" == 1 ]
+then
+   header
+fi
 
-  MEMF=(`cat /proc/meminfo | grep '^MemFree'`) # Get the MEM free statistics.
-  unset MEMF[0]                          # Discard the "MemFree" prefix.
-  MEMFREE=${MEMF[1]}                        # Get the MEMFREE.
- 
-  #TIMESTAMP=`date +%s%N | cut -b1-13`
-  # Calculate the CPU usage since we last checked.
-  let "DIFF_IDLE=$IDLE-$PREV_IDLE"
-  let "DIFF_TOTAL=$TOTAL-$PREV_TOTAL"
-  let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/$DIFF_TOTAL+5)/10"
-  #let "MF=(1000*$MEMFREE/$MEMT+5)/10"
-  let "MU=(1000*($MEMT-$MEMFREE)/$MEMT+5)/10"
-  #echo -en "\r$TIMESTAMP     $DIFF_USAGE     $MF     $MU     $NCPUS     $MEMT  \b\b"
-  
-  if [ -z $FILE ]
-  then
-	echo -e "$DIFF_USAGE\t$MU"
-  else
-	echo -e "$DIFF_USAGE\t$MU" >> $FILE
-  fi
- 
-  # Remember the total and idle CPU times for the next check.
-  PREV_TOTAL="$TOTAL"
-  PREV_IDLE="$IDLE"
- 
-  # Wait before checking again.
-  sleep $FR
-done
+run()
+{
+	while true; do
+	  if [ "$C" == 1 ]
+	  then
+		  CPU=(`cat /proc/stat | grep '^cpu '`) # Get the total CPU statistics.
+		  unset CPU[0]                          # Discard the "cpu" prefix.
+		  IDLE=${CPU[4]}                        # Get the idle CPU time.
+
+		  # Calculate the total CPU time.
+		  TOTAL=0
+		  for VALUE in "${CPU[@]}"; do
+		    let "TOTAL=$TOTAL+$VALUE"
+		  done
+
+		  #TIMESTAMP=`date +%s%N | cut -b1-13`
+		  # Calculate the CPU usage since we last checked.
+		  let "DIFF_IDLE=$IDLE-$PREV_IDLE"
+		  let "DIFF_TOTAL=$TOTAL-$PREV_TOTAL"
+		  let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/$DIFF_TOTAL+5)/10"
+		  #let "MF=(1000*$MEMFREE/$MEMT+5)/10"
+	  fi
+	  
+	  if [ "$M" == 1 ]
+	  then
+		  MEMF=(`cat /proc/meminfo | grep '^MemFree'`) # Get the MEM free statistics.
+		  unset MEMF[0]                          # Discard the "MemFree" prefix.
+		  MEMFREE=${MEMF[1]}                        # Get the MEMFREE.
+		  
+		  if [ "$B" == 1 ]
+		  then
+			let "MU=1000*($MEMT-$MEMFREE)"
+		  else
+			let "MU=(1000*($MEMT-$MEMFREE)/$MEMT+5)/10"
+		  fi
+		  #echo -en "\r$TIMESTAMP     $DIFF_USAGE     $MF     $MU     $NCPUS     $MEMT  \b\b"
+	  fi
+
+	  if [ "$C" == 1 -a "$M" == 1 ]
+	  then
+		if [ -z $FILE ]
+		then
+			echo -e "$DIFF_USAGE\t$MU"
+		else
+			if [ "$I" == 1 ]
+			then
+				echo -e "$DIFF_USAGE\t$MU" > $FILE
+			else	
+				echo -e "$DIFF_USAGE\t$MU" >> $FILE
+			fi
+		fi
+	  fi
+	  if [ "$C" == 1 ] && [ -z $M ]
+	  then
+		if [ -z $FILE ]
+		then
+			echo -e "$DIFF_USAGE"
+		else
+			if [ "$I" == 1 ]
+			then
+				echo -e "$DIFF_USAGE" > $FILE
+			else	
+				echo -e "$DIFF_USAGE" >> $FILE
+			fi
+		fi
+	  fi
+	  if [ "$M" == 1 ] && [ -z $C ]
+	  then
+		if [ -z $FILE ]
+		then
+			echo -e "$MU"
+		else
+			if [ "$I" == 1 ]
+			then
+				echo -e "$MU" > $FILE
+			else	
+				echo -e "$MU" >> $FILE
+			fi
+		fi
+	  fi
+	 
+	  # Remember the total and idle CPU times for the next check.
+	  PREV_TOTAL="$TOTAL"
+	  PREV_IDLE="$IDLE"
+	 
+	  # Wait before checking again.
+	  sleep $FR
+	done
+}
+
+if [ "$BACKG" == 0 ]
+then
+   run
+else
+   run&
+fi
