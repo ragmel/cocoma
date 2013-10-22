@@ -3,7 +3,7 @@
   <emuType>TIME</emuType>
   <emuresourceType>MEM</emuresourceType>
   <!--date format: 2014-10-10T10:10:10 -->
-  <emustartTime>now</emustartTime>
+  <emustartTime>2014-10-10T10:10:10</emustartTime>
   <!--duration in seconds -->
   <emustopTime>60</emustopTime>
   
@@ -12,7 +12,7 @@
      <startTime>0</startTime>
      <!--duration in seconds -->
      <distribution href="/distributions/real_trace" name="real_trace" />
-     <trace>/home/jordan/git/cocoma/extra_tobe_fixed/real-trace_1.txt</trace>
+     <trace>/home/melo/crunchbang_2013-10-22-13-27</trace>
      <emulator href="/emulators/lookbusy" name="lookbusy" />
      <emulator-params>
         <resourceType>MEM</resourceType>

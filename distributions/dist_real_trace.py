@@ -58,58 +58,63 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     memReading=psutil.phymem_usage()
     allMemoryPc =(memReading.total/1048576.00)/100.00
     
-    f = open(trace, 'r')
-    #print f
-    line = f.readline()
-    HEAD, NCPUS = line.strip().split("\t")
-    line = f.readline()
-    HEAD, MEMTOTAL = line.strip().split("\t")
-    line = f.readline()
-    HEAD, TIMESTAMP = line.strip().split("\t")
-    line = f.readline()
-    HEAD, POLLFR = line.strip().split("\t")
-    FR = int(POLLFR)
-    # skip the header
-    prevline = f.readline()
-    # load the first line
-    prevline = f.readline()
-    count = 1
-    Tcount = count
+    try:
     
-    for line in f:
-        CPUprev, MEMUSEDprev = prevline.split()
-        CPU, MEMUSED = line.split()
-        if RESTYPE == "mem":
-            if MEMUSED == MEMUSEDprev:
-                count = count+1
-                Tcount = Tcount+1
-                MEMUSEDprev = MEMUSED
-                #prevline = line
-            else:
-                runDuration = count * FR
-                count = 1
-                # converting MEM in % to actual value in current machine
-                MU=int(MEMUSEDprev)*allMemoryPc
-                load = int(MU)
-                insertLoad(load, runStartTime, runDuration)
-                runStartTime = runStartTime + runDuration
-                MEMUSEDprev = MEMUSED
-                prevline = line
-                
-        if RESTYPE == "cpu":
-            if CPU == CPUprev:
-                count = count+1
-                Tcount = Tcount+1
-                CPUprev = CPU
-                #prevline = line
-            else:
-                runDuration = count * FR
-                count = 1
-                load = int(CPUprev)
-                insertLoad(load, runStartTime, runDuration)
-                runStartTime = runStartTime + runDuration
-                CPUprev = CPU
-                prevline = line
+        f = open(trace, 'r')
+        #print f
+        line = f.readline()
+        HEAD, NCPUS = line.strip().split("\t")
+        line = f.readline()
+        HEAD, MEMTOTAL = line.strip().split("\t")
+        line = f.readline()
+        HEAD, TIMESTAMP = line.strip().split("\t")
+        line = f.readline()
+        HEAD, POLLFR = line.strip().split("\t")
+        FR = int(POLLFR)
+        # skip the header
+        prevline = f.readline()
+        # load the first line
+        prevline = f.readline()
+        count = 1
+        Tcount = count
+        
+        for line in f:
+            CPUprev, MEMUSEDprev = prevline.split()
+            CPU, MEMUSED = line.split()
+            if RESTYPE == "mem":
+                if MEMUSED == MEMUSEDprev:
+                    count = count+1
+                    Tcount = Tcount+1
+                    MEMUSEDprev = MEMUSED
+                    #prevline = line
+                else:
+                    runDuration = count * FR
+                    count = 1
+                    # converting MEM in % to actual value in current machine
+                    MU=int(MEMUSEDprev)*allMemoryPc
+                    load = int(MU)
+                    insertLoad(load, runStartTime, runDuration)
+                    runStartTime = runStartTime + runDuration
+                    MEMUSEDprev = MEMUSED
+                    prevline = line
+                    
+            if RESTYPE == "cpu":
+                if CPU == CPUprev:
+                    count = count+1
+                    Tcount = Tcount+1
+                    CPUprev = CPU
+                    #prevline = line
+                else:
+                    runDuration = count * FR
+                    count = 1
+                    load = int(CPUprev)
+                    insertLoad(load, runStartTime, runDuration)
+                    runStartTime = runStartTime + runDuration
+                    CPUprev = CPU
+                    prevline = line
+    
+    except Exception, e:
+        return "Unable to create distribution:\n" + str(e)
     
     # if the total count is greater than 1 we still have last insert to do
     if Tcount > 1:

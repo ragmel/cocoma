@@ -122,10 +122,10 @@ header()
 
 	if [ -z $FILE ]
 	then
-	  echo "NCPUS $NCPUS"
-	  echo "MEMTOTAL $MEMT"
-	  echo "TIMESTAMP $TIMESTAMP"
-	  echo "POLLFR $FR"
+	  echo -e "NCPUS\t$NCPUS"
+	  echo -e "MEMTOTAL\t$MEMT"
+	  echo -e "TIMESTAMP\t$TIMESTAMP"
+	  echo -e "POLLFR\t$FR"
 	  if [ "$C" == 1 -a "$M" == 1 ]
 	  then
 	  	echo -e "CPU%\t$MEMHEAD"
@@ -139,10 +139,10 @@ header()
                 echo -e "$MEMHEAD"
           fi
 	else
-	  echo "NCPUS $NCPUS" >> $FILE
-	  echo "MEMTOTAL $MEMT" >> $FILE
-	  echo "TIMESTAMP $TIMESTAMP" >> $FILE
-	  echo "POLLFR $FR" >> $FILE
+	  echo -e "NCPUS\t$NCPUS" >> $FILE
+	  echo -e "MEMTOTAL\t$MEMT" >> $FILE
+	  echo -e "TIMESTAMP\t$TIMESTAMP" >> $FILE
+	  echo -e "POLLFR\t$FR" >> $FILE
 	  if [ "$C" == 1 -a "$M" == 1 ]
           then  
                 echo -e "CPU%\t$MEMHEAD" >> $FILE
