@@ -43,8 +43,10 @@ Where ``test_Name`` is replaced by one of the following:
 	test_EMU_MULTI1
 	test_EMU_MULTI2
 	test_EMU_NETWORK
+	
 	test_EMU_NowOperator
 	test_EMU_Force
+	test_EMU_Logging
 
 	test_Scheduler_Start
 	test_Scheduler_Show
@@ -81,6 +83,7 @@ Where ``test_Name`` is replaced by one of the following:
         test_List_Emulator
         test_List_Distributions
         test_List_Results
+        test_List_Jobs
         test_List_Logs
         test_List_SysLogs
         test_List_EmuLogs

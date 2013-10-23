@@ -1,4 +1,4 @@
-# Copyright 2012-2013 SAP Ltd
+#Copyright 2012-2013 SAP Ltd
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 # This is part of the COCOMA framework
 #
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
-#
 
 
 import sqlite3 as sqlite

@@ -130,6 +130,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
       
       Show OS information on Scheduler or API daemon, displays PID numbers
 
+Most of these options are used by themselves, with the exception of '-x' (--xml) which can be used in conjunction with '-f' (--force) and/or '-n' (--now)
 
 Logging
 -------

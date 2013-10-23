@@ -15,7 +15,6 @@
 # This is part of the COCOMA framework
 #
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
-#
 
 import xml.dom.minidom
 import sys
@@ -233,16 +232,9 @@ def getDistributionDetails(xmlStr):
 
         (distroArgs, distroArgsNotes) = getArgs (xmlDistro, "Distribution", distrType, resourceType)
         (emulatorArg, emulatorArgNotes) = getArgs (xmlDistro, "Emulation", emulatorName, resourceType)
-
-        def removeFromDict(dictionary, key):
-            itemValue = 0
-            if dictionary.has_key(key):
-                itemValue = dictionary[key]
-                del dictionary[key]
-            return dictionary, itemValue
         
-        distroArgs, granularity = removeFromDict(distroArgs, "granularity")
-        distroArgs, durationDistro = removeFromDict(distroArgs, "duration")
+        distroArgs, granularity = Library.removeFromDict(distroArgs, "granularity")
+        distroArgs, durationDistro = Library.removeFromDict(distroArgs, "duration")
 
         if not runOverloaded:
             overloadedResource = checkLoadValues (resourceType, distroArgs)
@@ -350,7 +342,6 @@ def checkLoadValues(resourceType, distArgs):
     #Subtracts current MEM usage from maximum system MEM
     if (resourceType.upper() == "MEM"):
         maxResourceLoad -= Library.getMemUsed();
-        print Library.getMemUsed();
     for load in loads:
         if (load > (maxResourceLoad * 0.9)):
             errorStr = resourceType.upper() + " close to maximum value. Re-send with force ('-f') to run"

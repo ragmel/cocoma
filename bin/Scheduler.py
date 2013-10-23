@@ -209,11 +209,11 @@ class schedulerDaemon(object):
         
         loggedJobName=str(emulationID)+"-"+str(emulationName)+"-logger interval-"+str(interval)+"sec."
         try:
-            self.sched.add_date_job(Logger.loadMon, time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(singleRunStartTime)), args=[duration,interval,emulationID,emulationName,emuStartTime], name=loggedJobName)
-            schedFileLogger.debug("Started logger:"+loggedJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(singleRunStartTime))))
-            return "Started logger:"+loggedJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(singleRunStartTime)))
+            self.sched.add_date_job(Logger.loadMon, singleRunStartTime, args=[duration,interval,emulationID,emulationName,emuStartTime], name=loggedJobName)
+            schedFileLogger.debug("Started logger:"+loggedJobName+"StartTime:"+str(singleRunStartTime))
+            return "Started logger:"+loggedJobName+"StartTime:"+str(singleRunStartTime)
         except Exception,e :
-            valReturn="Error starting logger:"+loggedJobName+"StartTime:"+str(time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(singleRunStartTime)))
+            valReturn="Error starting logger:"+loggedJobName+"StartTime:"+str(singleRunStartTime)
             schedFileLogger.debug(valReturn)
             schedFileLogger.error("Scheduler createLoggerJob(): error creating Job ")
             schedFileLogger.exception(str(e))

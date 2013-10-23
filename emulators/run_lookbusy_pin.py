@@ -57,7 +57,7 @@ import Pyro4,imp,time,sys,os,psutil
 import sqlite3 as sqlite
 import datetime as dt
 import subprocess
-import signal
+from signal import SIGINT
 
 from Library import getHomepath
 

@@ -1,3 +1,21 @@
+<!-- Copyright 2012-2013 SAP Ltd
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+This is part of the COCOMA framework
+
+COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
+
 <html>
 	<head>
 	<meta http-equiv="content-type" content="text/html; charset=windows-1252">
@@ -136,10 +154,26 @@
 					<div style="clear:both;"></div>
 					
 					<div id="detailsPopup" class='helpBox'></div>
+					
+					<br><hr><br>
+					
+					<div class='entryArea'>
+                        Enable Job List <input type="checkbox" id='jobListCheck' style='float:right;' checked>
+                    </div>
+                    <div id='jobBox' class="entryArea">
+                        <div id="topJobBox"></div>
+                        <div id="displayJobBox" style="float:left;"></div>
+                        <div id="jobs" class="resultscolumn"></div>
+                        <div style="clear:both;"></div>
+                        <div style="float:right;">
+                            <button type="button" onclick="showJobs()">Refresh Job list</button>
+                        </div>
+                    </div>
+					
 				</div>
-			</div>
+				
 
-		</div>
+		  </div>
 
 
 	<script type="text/javascript">
@@ -181,6 +215,15 @@
 					$("#logBox").slideUp()
 			});
 		
+		$('#jobListCheck').change(function() {
+		      if($('#jobListCheck').attr('checked'))
+		      {
+		          showJobs(); 
+		          $("#jobBox").slideDown()
+		      }
+		      else $("#jobBox").slideUp()
+            });
+		
 		$('#mqCheck').change(function() {
 		  	if($('#mqCheck').attr('checked'))
 				$("#mqBox").slideDown()
@@ -200,19 +243,7 @@
 				$('#locBox'+n).slideDown()
 			}
 		}
-			
-		function locChecked(box)
-		{
-			var n = box.id.slice(8, box.id.length)
-			if(box.checked)
-			{
-				$('#localLbl'+n).css("color", "black")
-				$('#locBox'+n).slideUp()
-			}else{
-				$('#localLbl'+n).css("color", "#CCC")
-				$('#locBox'+n).slideDown()
-			}
-		}
+
 		function populateEmulatorList(n, emuVal, distVal, resVal, extraParamVals)
 		{
 			$.get(cocomaIP + "emulators", function(response){
@@ -553,10 +584,11 @@
 						alert("Emulation is running");
 						showEmus();
 					}).error(function(e){
-						if (e.responseText == "Resource close to maximum value. Re-send with force ('-f') to run") runWithForce("now");
+						if ((e.responseText).indexOf("Re-send with force to run") != -1) runWithForce("now");
 						else alert(e.responseText);
 					});
 			}
+			showJobs()
 		}
 		
 		function runAt()		//run at specified time
@@ -591,6 +623,7 @@
 					}
 				}
 			}
+			showJobs()
 		}
 		
 		function runWithForce(startTime)
@@ -640,6 +673,53 @@
 		{
 			return !isNaN(parseFloat(n)) && isFinite(n);
 		}
+
+        function showJobs()
+        {
+            $.get(cocomaIP + "jobs", function(response){
+                var serializer = new XMLSerializer();
+                var str = serializer.serializeToString(response);
+                var jobs = xml2json.parser(str);
+                
+                $("#topJobBox").html("<p style='font-weight:bold;'>Jobs:</p>");
+                $("#displayJobBox").html("");
+                $("#jobs").text("");
+                count = jobs.valueOf().collection.items.total;
+                
+                if (count == 1)
+                {
+                    $("#displayJobBox").html("No jobs to display");
+                }
+                else
+                {
+                    jobList = new Array();
+                    jobList = jobs.valueOf().collection.items.job;
+                    
+                    if (typeof jobList === 'string') $("#displayJobBox").append(jobList + "<br>");
+                    else 
+                    {
+                        for (var i = 0; i < jobList.length; i++)
+                        {
+                            $("#displayJobBox").append(jobList[i] + "<br>");
+                        }
+                    }
+                    if (jobList.length !=  count)
+                    {
+                        jobList = jobs.valueOf().collection.items.currentlyrunningjob;
+                        $("#displayJobBox").append("<p style='font-weight:bold;'><br>Currently Running Jobs:</p>");
+                        
+                        if (typeof jobList === 'string') $("#displayJobBox").append(jobList + "<br>");
+                        else
+                        {
+                            for (var i = 0; i < jobList.length; i++)
+                            {
+                                $("#displayJobBox").append(jobList[i] + "<br>");
+                            }
+                        }
+                    }
+                }
+          });
+        }
 		
 		function showEmus()
 		{

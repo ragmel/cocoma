@@ -30,6 +30,7 @@ from xml.etree import ElementTree
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
 import zipfile, Library
+from twisted.persisted.aot import prettify
 
 PORT_ADDR=0
 IP_ADDR=0
@@ -81,7 +82,7 @@ def get_root():
     lk = ET.SubElement(root, 'link', {'rel':'tests', 'href':'/tests', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'results', 'href':'/results', 'type':'application/vnd.bonfire+xml'})
     lk = ET.SubElement(root, 'link', {'rel':'logs', 'href':'/logs', 'type':'application/vnd.bonfire+xml'})
-    
+    lk = ET.SubElement(root, 'link', {'rel':'jobs', 'href':'/jobs', 'type':'application/vnd.bonfire+xml'})
 
     return prettify(root)
     
@@ -886,7 +887,6 @@ def create_emu():
     xml_stream_body =request.body.read()
     xml_stream_body=urllib.unquote(xml_stream_body).decode('utf8')
     xml_stream_body = xml_stream_body.replace(unicode("+"), unicode(" "))
-    
     searchString = "&runifOverloaded="
     searchIndex = xml_stream_body.rfind(searchString)
     runIfOverloaded = False
@@ -896,7 +896,6 @@ def create_emu():
         if (runIfOverloadedChar.upper() == "Y"):
             runIfOverloaded = True
 
-    
     if xml_stream:
         #print "File data detected:\n",xml_stream
         return xml_stream
@@ -904,22 +903,31 @@ def create_emu():
             (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(xml_stream, runIfOverloaded)
             if ("Re-send with force ('-f')" in distroList):
                 response.status = 500
-                return "Resource close to maximum value. Re-send with force ('-f') to run"
+                emuError = ET.Element('error')
+                emuError.text = "Resource close to maximum value. Re-send with force to run (see Additional Features documentation)"
+                return prettify(emuError)
         except Exception,e:
             print e
-            response.status = 400
+            response.status = 500
+            emuError=ET.Element('error')
+            emuError.text = str(e)
+            return prettify(emuError)
             
     else:    
         try:
             (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlReader(xml_stream_body, runIfOverloaded)
             if ("Re-send with force ('-f')" in distroList):
                 response.status = 500
-                return "Resource close to maximum value. Re-send with force ('-f') to run"
+                emuError = ET.Element('error')
+                emuError.text = "Resource close to maximum value. Re-send with force to run (see Additional Features documentation)"
+                return prettify(emuError)
         except Exception,e:
-            response.status = 400
+            print e
+            response.status = 500
             #proper way to return web API error
             emuError=ET.Element('error')
-            emuError.text = str(XmlParser.xmlReader(xml_stream_body, runIfOverloaded))
+#            emuError.text = str(XmlParser.xmlReader(xml_stream_body, runIfOverloaded))
+            emuError.text = str(e)
             return prettify(emuError)
             
     #create emulation
@@ -1130,6 +1138,51 @@ def zip_files(fileName_wo_zip):
 
     return static_file(zipFilename, root=dirPath, download=zipFilename)
 
+@route('/jobs', method='GET')
+@route('/jobs/', method='GET')
+def get_Jobs():
+    jobList = Library.getJobList()
+    jobListLength = len(jobList)
+    listSplitIndex = -1
+    currentJobList = []
+    
+    for index, job in enumerate(jobList):
+        if job.find("Currently running jobs") >= 0:
+            listSplitIndex = index
+    if listSplitIndex != -1:    #Splits into two lists, if there are jobs currently running
+        currentJobList = jobList[listSplitIndex+1:jobListLength]
+        jobList = jobList[0:listSplitIndex]
+        jobListLength = len(jobList) + len(currentJobList)
+        
+    def jobsToXML (jobList, currentJobList, totalJobs): #Converts job lists to xml foramt
+        ET.register_namespace("jobs", "http://127.0.0.1/cocoma")
+        response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+        response.set_header('Accept', '*/*')
+        response.set_header('Allow', 'GET')
+        
+        jobXmlRoot = ET.Element('collection', { 'xmlns':'http://127.0.0.1/cocoma','href':'/jobs'})
+        jobCollection = ET.SubElement(jobXmlRoot, 'items', {'offset':'0','total':str(totalJobs)})
+        for job in jobList:
+            jobXML = ET.SubElement(jobCollection, "Job")
+            jobXML.text = job
+        if len(currentJobList) > 0:
+            for currentJob in currentJobList:
+                currentJobXML = ET.SubElement(jobCollection, "currentlyRunningJob")
+                currentJobXML.text = str(currentJob)
+        lk = ET.SubElement(jobXmlRoot, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
+        return prettify(jobXmlRoot)
+    
+#    jobXML = jobsToXML(jobList, currentJobList, jobListLength)
+#    response.status = 200
+#    return jobXML
+    
+    try:
+        jobXML = jobsToXML(jobList, currentJobList, jobListLength)
+        response.status = 200
+        return jobXML
+    except Exception, e:
+        response.status = 400
+        return "<ERROR>Unable to get job list: " + e + " </ERROR>"
 
 def startAPI(IP_ADDR,PORT_ADDR):
 

@@ -1,3 +1,21 @@
+#Copyright 2012-2013 SAP Ltd
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+# This is part of the COCOMA framework
+#
+# COCOMA is a framework for COntrolled COntentious and MAlicious patterns
+
 import Pyro4, os, sys, imp, glob
 import sqlite3 as sqlite
 import subprocess, psutil
@@ -754,6 +772,7 @@ def removeLogs():
     logFiles = glob.glob("/home/jordan/git/cocoma/logs/*.csv")
     logFiles = logFiles + glob.glob("/home/jordan/git/cocoma/logs/*.xml")
     logFiles = logFiles + glob.glob("/home/jordan/git/cocoma/logs/*.txt")
+    logFiles = logFiles + glob.glob("/home/jordan/git/cocoma/logs/*.zip")
     if (len(logFiles) > 0):
         for logfile in logFiles:
             os.remove(logfile)
@@ -822,3 +841,32 @@ def removePIDs ():
     except sqlite.Error, e:
         print "Error %s:" % e.args[0]
         print e
+
+def removeFromDict(dictionary, key):
+    itemValue = 0
+    if dictionary.has_key(key):
+        itemValue = dictionary[key]
+        del dictionary[key]
+    return dictionary, itemValue
+
+def getJobList ():
+    connectionCheck = daemonCheck()
+    if (connectionCheck !=1):
+        sys.exit(1)
+    daemon = getDaemon()
+    schedJobList = daemon.listJobs()
+    jobList = []
+    
+    for job in schedJobList:
+        jobList.append("Job: " + job)
+        
+    currentJobs = getCurrentJobs()
+    if len(currentJobs) > 0:
+        jobList.append("\n---***### Currently running jobs are listed below ###***---\n")
+        for job in currentJobs:
+            jobList.append(job)
+    
+    if len(jobList) == 0:
+        jobList.append("No jobs Scheduled")
+
+    return jobList

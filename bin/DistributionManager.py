@@ -95,7 +95,7 @@ def createDistribution(newEmulation):
             # creating run for logger with probe interval of 2 seconds
             distLoggerDM = singleLogger("Distribution Manager", None, str(newEmulation.emulationID) + "-" + str(newEmulation.emulationName) + "-syslog" + "_" + str(newEmulation.startTimeEmu) + ".csv")
             interval = int(newEmulation.emulationLogFrequency)
-            singleRunStartTime = Library.timestamp(Library.timeConv(newEmulation.startTimeEmu))
+            singleRunStartTime = Library.timeConv(newEmulation.startTimeEmu)
             loggerJobReply = daemon.createLoggerJob(singleRunStartTime, newEmulation.stopTimeEmu, interval, newEmulation.emulationID, newEmulation.emulationName, newEmulation.startTimeEmu)       
         
         createEndJob(daemon, newEmulation)

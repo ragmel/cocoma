@@ -16,24 +16,7 @@
 # This is part of the COCOMA framework
 #
 # COCOMA is a framework for COntrolled COntentious and MAlicious patterns
-#
 
-
-"""
-import optparse,Pyro4
-import sqlite3 as sqlite
-#import argparse - new version of optparlse
-import EmulationManager,XmlParser,DistributionManager,subprocess
-import logging
-import EMQproducer
-from EMQproducer import *
-
-Pyro4.config.HMAC_KEY='pRivAt3Key'
-
-logging.basicConfig(level=logging.INFO)
-
-
-"""
 
 import Library,optparse,os,sys,EMQproducer,EmulationManager,XmlParser
 import sqlite3 as sqlite
@@ -53,6 +36,7 @@ except:
 
 
 def main():
+
     '''
     CLI module of COCOMA framework which defines key options available for local execution.
     For full list of commands please use "ccmsh -h".
@@ -115,9 +99,9 @@ def main():
 
     options, arguments = parser.parse_args()
 
-
     if options.version:
-	VERSION = getVersion()
+        noExtraOptions(options, "version")
+        VERSION = getVersion()
         os.system("clear")
         text = '''
             
@@ -145,7 +129,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns.
 More info @ https://github.com/cragusa/cocoma          
 
             '''
-	print text
+        print text
         sys.exit(1) 
     
     #catch empty arguments
@@ -159,6 +143,7 @@ More info @ https://github.com/cragusa/cocoma
 
         
     if options.startServices:
+        noExtraOptions(options, "startServices")
         if len(arguments)>0:
             cliCommand=""
             if arguments[0] == "scheduler":
@@ -210,6 +195,7 @@ More info @ https://github.com/cragusa/cocoma
 
                 
     if options.stopServices:
+        noExtraOptions(options, "stopServices")
         if len(arguments)>0:
             if arguments[0] == "scheduler":
                 Library.services_control("scheduler","stop"," ")
@@ -224,6 +210,7 @@ More info @ https://github.com/cragusa/cocoma
             print "No arguments supplied, check help"
                 
     if options.showServices:
+        noExtraOptions(options, "showServices")
         if len(arguments)>0:
             if arguments[0] == "scheduler":
                 Library.services_control("scheduler","show"," ")
@@ -243,6 +230,7 @@ More info @ https://github.com/cragusa/cocoma
 
 
     if options.addConfig:
+        noExtraOptions(options, "addConfig")
 	mqarguments = {}
 	mqarguments["emulationMQenable"] = arguments[0]
 	mqarguments["emulationMQvhost"] = arguments[1]
@@ -255,6 +243,7 @@ More info @ https://github.com/cragusa/cocoma
 	EMQproducer.MQconfig(mqarguments)
 
     if options.rmConfig:
+        noExtraOptions(options, "rmConfig")
 	#print "rmConfig"
         if len(arguments)==0:
             #print "got 1 arguments"
@@ -263,6 +252,7 @@ More info @ https://github.com/cragusa/cocoma
             print "Not all arguments supplied, check help"
     
     if options.enConfig:
+        noExtraOptions(options, "enConfig")
 	#print "rmConfig"
         if (len(arguments)==1): 
 		if (arguments[0]=="yes") or (arguments[0]=="no") :
@@ -273,6 +263,7 @@ More info @ https://github.com/cragusa/cocoma
             print "Not all arguments supplied, check help"
     
     if options.showConfig:
+        noExtraOptions(options, "showConfig")
         #print "rmConfig"
         if len(arguments)==0:
             #print "got 1 arguments"
@@ -288,6 +279,7 @@ More info @ https://github.com/cragusa/cocoma
     '''
     
     if options.setBackfuzzPath:
+        noExtraOptions(options, "setBackfuzzPath")
         if len(arguments)>0:
             try:
                 Library.writeInterfaceData(arguments[0],"backfuzz_path")
@@ -300,6 +292,7 @@ More info @ https://github.com/cragusa/cocoma
             sys.exit(0)
     
     if options.resAll:
+        noExtraOptions(options, "resAll")
         if len(arguments)>0:
             try:
                 emuList=Library.getEmulationList(arguments[0])
@@ -356,6 +349,7 @@ More info @ https://github.com/cragusa/cocoma
 
             
     if options.listAll:
+        noExtraOptions(options, "listAll")
         
         if len(arguments)>0:
             try: 
@@ -413,22 +407,11 @@ More info @ https://github.com/cragusa/cocoma
 
                 
     if options.listJobs:
-        connectionCheck=Library.daemonCheck()
-        if  connectionCheck !=1:
-            sys.exit(1)
-        listJobs=daemon.listJobs()
-        if len(listJobs)>0:
-            for job in listJobs:
-                print "Job: ",job
-            currentJobs = Library.getCurrentJobs()
-            if len(currentJobs) > 0:
-                print "\n---***### Currently running jobs are listed below ###***---\n"
-                for currentJob in currentJobs:
-                    print currentJob
-        else:
-            print "\nNo jobs are scheduled\n"
-                
-    
+        noExtraOptions(options, "listJobs")
+        jobList = Library.getJobList()
+        for job in jobList:
+            print job
+
     '''
     ################################
     deleteEmu
@@ -436,6 +419,7 @@ More info @ https://github.com/cragusa/cocoma
     '''
               
     if options.deleteID:
+        noExtraOptions(options, "deleteID")
         if len(arguments)>0:
             #TO-DO: List inactive values with 0 param
             print "Deleting emulation: ",arguments[0]
@@ -451,6 +435,7 @@ More info @ https://github.com/cragusa/cocoma
     
     
     if options.purge_all:
+        noExtraOptions(options, "purge_all")
         print "WARNING:\nThis action will wipe every scheduled job and database entry do you wish to proceed?\n(y/n)"
         yes = set(['yes','y', 'ye','yey'])
         no = set(['no','n','nay'])
@@ -459,6 +444,7 @@ More info @ https://github.com/cragusa/cocoma
             if choice in yes:
                 Library.purgeAll()
                 Library.killRemainingProcesses()
+                Library.removeLogs()
                 #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" purge all")
                 msg = {"Action":"USER REQUEST purge all Emulations"}
                 producer.sendmsg(myName,msg)
@@ -473,6 +459,7 @@ More info @ https://github.com/cragusa/cocoma
             print "\nAction cancelled"
     
     if options.clear_logs:
+        noExtraOptions(options, "clear_logs")
         print "WARNING:\nThis action will wipe every file in the COCOMA/logs directory, do you wish to proceed?\n(y/n)"
         yes = set(['yes','y', 'ye','yey', 'Y', 'YES'])
         no = set(['no','n','nay', 'NO', 'N'])
@@ -495,6 +482,7 @@ More info @ https://github.com/cragusa/cocoma
     '''
 
     if options.listAllDistro:
+        noExtraOptions(options, "listAllDistro")
         if len(arguments)>0:
             try:
                 distroList=Library.listDistributions(arguments[0])
@@ -518,6 +506,7 @@ More info @ https://github.com/cragusa/cocoma
     '''
 
     if options.listAllEmulators:
+        noExtraOptions(options, "listAllEmulators")
         if len(arguments)>0:
             try:
                 emuList2=Library.listEmulators(arguments[0])
@@ -546,9 +535,11 @@ More info @ https://github.com/cragusa/cocoma
                 if Library.daemonCheck()!=False:
                     try:
                         if options.emuForce:
+                            noExtraOptions(options, "xml", "emuForce")
                             (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], True)
                             if (type(distroList) == unicode): sys.exit()
                         elif not options.emuForce:
+                            noExtraOptions(options, "xml")
                             (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], False)
                         
                         if startTimeEmu.lower() =="now":
@@ -574,8 +565,10 @@ More info @ https://github.com/cragusa/cocoma
     if options.emuNow and options.xml:
         try:
             if options.emuForce:
+                noExtraOptions(options, "xml", "emuNow", "emuForce")
                 (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], True)
             elif not options.emuForce:
+                noExtraOptions(options, "xml", "emuNow")
                 (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], False)
             startTimeEmu = Library.emulationNow(2)
             #producer.sendmsg(myName,'USER REQUEST: '+sys._getframe().f_code.co_name+' create '+arguments[0])
@@ -613,7 +606,14 @@ def getVersion():
         return "<error>str(e)</error>"
         sys.exit(1)        
 
-    
+def noExtraOptions(options, *arg):
+    options = vars(options)
+    for argOption in arg:
+        Library.removeFromDict(options, argOption)
+    for optionValue in options.values():
+        if not (optionValue == False):
+            print "Bad option combination"
+            sys.exit()
 
 if __name__ == '__main__':
     main()
