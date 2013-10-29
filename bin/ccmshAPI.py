@@ -908,6 +908,8 @@ def create_emu():
                 return prettify(emuError)
         except Exception,e:
             print e
+            if str(e).find("no attribute 'getElementsByTagName'") > 0: #Return if supplied XML is bad
+                e = "Supplied xml is malformed, check thoroughly for errors"
             response.status = 500
             emuError=ET.Element('error')
             emuError.text = str(e)
@@ -923,6 +925,8 @@ def create_emu():
                 return prettify(emuError)
         except Exception,e:
             print e
+            if str(e).find("no attribute 'getElementsByTagName'") > 0: #Return if supplied XML is bad
+                e = "Supplied xml is malformed, check thoroughly for errors"
             response.status = 500
             #proper way to return web API error
             emuError=ET.Element('error')

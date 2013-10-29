@@ -61,8 +61,8 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
 #    print "distributionGranularity",distributionGranularity
     
     duration = float(duration)
-    runDuration = int(duration)/distributionGranularity
-    runDuration = float(runDuration)
+    #runDuration = int(duration)/distributionGranularity
+    runDuration = float(duration)/distributionGranularity
 #    print "Duration is seconds:", runDuration
     
     runStartTime = startTimesec
@@ -80,10 +80,12 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         
         #runStartTime=startTimesec+(duration*upperBoundary)
         # linearStep does not change, can be calculated just once
+        #linearStep=((int(stopLoad)-int(startLoad))/(int(distributionGranularity)-1))
         linearStep=(float(stopLoad-startLoad)/(distributionGranularity-1))
         linearStepRemainder = linearStep % 1
         linearStepRemainderSum = 0
 
+        linearStep=math.fabs(linearStep)#making positive value
         linearStep=math.fabs(math.floor(linearStep))#making positive value
         linearStep=int(linearStep)
 
@@ -138,7 +140,7 @@ def insertRun(stressValue, startTime, runDuration):
     stressValues.append(stressValue)
     runStartTimeList.append(startTime)
     runDurations.append(runDuration)
-#    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runDuration
+    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runDuration
 
 # this function checks if the load is higher than the malloc limit. In that case creates smaller runs
 def insertLoad(load, startTime, duration):
