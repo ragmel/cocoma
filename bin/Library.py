@@ -710,7 +710,9 @@ def boundsCompare(xmlValue, LimitsDictValues, variableName = None):
     NOTE: in future might be better moved to the wrapper modules
     '''
     
-    if  variableName == "serverip" or variableName == "clientip" or variableName == "packettype":
+    textBasedArgs = ["serverip", "clientip", "packettype", "trace", "serverport"] #arg names must be in all lower-case
+    
+    if  variableName in textBasedArgs:
         return_note = "\nOK"
         return xmlValue, return_note
     
@@ -719,16 +721,23 @@ def boundsCompare(xmlValue, LimitsDictValues, variableName = None):
 
     xmlValue = int(xmlValue)
     
+    if variableName != None:
+        return_note = "The specified value for " + variableName.upper() + " "
+    else:
+        return_note = "The specified value "
+        
     if xmlValue >= lowerBound:
         if xmlValue <= upperBound:
             return_note = "\nOK"
             return xmlValue, return_note
             
         else:
-            return_note = "\nThe specified value " + str(xmlValue) + " was higher than the maximum limit " + str(upperBound) + " changing to the maximum limit"
+            return_note += str(xmlValue) + " was higher than the maximum limit " + str(upperBound) + "; changing to the maximum limit. "
+            print return_note
             return upperBound , return_note 
     else:
-        return_note = "\nThe specified value " + str(xmlValue) + " was lower than the minimum limit " + str(lowerBound) + " changing to the maximum limit"
+        return_note += str(xmlValue) + " was lower than the minimum limit " + str(lowerBound) + "; changing to the maximum limit. "
+        print return_note
         return lowerBound, return_note
             
 def getTotalMem():  #Returns an integer value of the total physical memory
@@ -870,3 +879,54 @@ def getJobList ():
         jobList.append("No jobs Scheduled")
 
     return jobList
+
+def realTraceSmoothing(stressValuesInput, startTime, pollFR, groupingRange):
+    prevVal = -1
+    groupingRange = int(groupingRange)
+    pollFR = int(pollFR)
+    startTime = int(startTime)
+    
+    stressValues = []
+    runDuration = []
+    runStartTime = []
+    
+    for val in stressValuesInput:
+        val = int(val)
+        if ((val < (prevVal + groupingRange)) & (val > (prevVal - groupingRange)) & (prevVal != -1)):
+            stressValues[-1] = (prevVal + val) // 2
+            runDuration[-1] += pollFR
+        else:
+            stressValues.append(val)
+            runDuration.append(pollFR)
+            runStartTime.append(startTime)
+        startTime += pollFR
+        prevVal = stressValues[-1]
+
+    return (stressValues, runStartTime, runDuration)
+
+def memToInt(stressValues):
+    memPercent = getTotalMem() // 100
+    for i, stressValue in enumerate(stressValues):
+        stressValue = int(stressValue)
+        stressValues[i] = int(stressValue * memPercent)
+    return stressValues
+
+def getNCPUs ():
+    return int(psutil.NUM_CPUS())
+
+def checkMinJobTime (emuName, stressValues, runStartTime, runDurations, minJobTime):
+    jobsToBeRemoved = []
+    for i, jobDuration in enumerate(runDurations):
+#        print "jobDuration:", jobDuration
+        if (jobDuration < minJobTime):
+            jobsToBeRemoved.append(i)
+            
+    if (len(jobsToBeRemoved)>0):
+        print "!!WARNING!! " + str(len(jobsToBeRemoved)) + " Jobs in " + emuName.upper() + " are under the minimum job time (" + str(minJobTime) + " sec) and will not be ran"
+        
+        for removeJob in reversed(jobsToBeRemoved):
+            del stressValues[removeJob]
+            del runStartTime[removeJob]
+            del runDurations[removeJob]
+    
+    return (stressValues, runStartTime, runDurations)

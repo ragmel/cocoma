@@ -10,7 +10,7 @@
   <distributions >
      <name>realTrace</name>
      <startTime>0</startTime>
-     <!--duration in seconds -->
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/real_trace" name="real_trace" />
      <trace>/home/jordan/git/cocoma/extra_tobe_fixed/real-trace_1.txt</trace>
      <emulator href="/emulators/stressapptest" name="stressapptest" />
@@ -19,6 +19,7 @@
 	    <!--time between iterations in usec (default 1000)-->
 		<malloclimit>4004</malloclimit>
 		<memThreads>0</memThreads>
+		<groupingRange>5</groupingRange>
      </emulator-params>
   </distributions>
 

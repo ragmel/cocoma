@@ -14,6 +14,7 @@
      <!--duration in seconds -->
      <duration>10</duration>
      <granularity>1</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
       <startLoad>10</startLoad>
       <stopLoad>100</stopLoad>

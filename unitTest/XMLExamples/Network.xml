@@ -13,6 +13,7 @@
      <!--duration in seconds -->
      <duration>150</duration>
      <granularity>10</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear" name="linear" />
    <!--cpu utilization distribution range-->
       <startLoad>100</startLoad>

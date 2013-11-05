@@ -14,6 +14,7 @@
      <!--duration in seconds -->
      <duration>60</duration>
      <granularity>5</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
       <startLoad>1</startLoad>
       <stopLoad>10</stopLoad>

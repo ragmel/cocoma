@@ -59,6 +59,7 @@ import datetime as dt
 import subprocess
 from signal import SIGINT
 
+import Library
 from Library import getHomepath
 
 #perhaps needs to be set somewhere else
@@ -252,8 +253,7 @@ def emulatorArgNames(Rtype=None):
         return argNames
         
     if Rtype.lower() == "cpu":
-        
-        argNames={"ncpus":{"upperBound":100,"lowerBound":0}}
+        argNames={"ncpus":{"upperBound":psutil.NUM_CPUS,"lowerBound":0}}
         return argNames
     
     if Rtype.lower() == "mem":
@@ -266,14 +266,4 @@ def emulatorArgNames(Rtype=None):
 
 
 if __name__ == '__main__':
-    try:
-        filename = "xmldoc.xml"
-        util ="50"
-        ncpus ="b"
-        m = multiprocessing.Process(target = cpuLoad, args=("50","0",10))
-        m.start()
-        m.join()
-    except Exception, e:
-        print "run_lookbusy job main exception: ", e
-    
     pass

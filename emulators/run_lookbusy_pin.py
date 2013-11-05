@@ -285,7 +285,7 @@ def emulatorArgNames(Rtype=None):
         
     if Rtype.lower() == "cpu":
         
-        argNames={"ncpus":{"upperBound":100,"lowerBound":0}}
+        argNames={"ncpus":{"upperBound":psutil.NUM_CPUS,"lowerBound":0}}
         #print "Use Arg's: ",argNames
         return argNames
     
@@ -300,15 +300,4 @@ def emulatorArgNames(Rtype=None):
         return argNames
 
 if __name__ == '__main__':
-    try:
-        filename = "xmldoc.xml"
-        util ="50"
-        ncpus ="b"
-        m = multiprocessing.Process(target = cpuLoad, args=("1", 1, "50","0",20))
-        m.start()
-        #print(m.is_alive())
-        m.join()
-    except Exception, e:
-        print "run_lookbusy job main exception: ", e
-    
     pass

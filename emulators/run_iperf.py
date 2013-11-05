@@ -81,6 +81,8 @@ import subprocess
 from signal import *
 from subprocess import *
 
+sys.path.insert(0,'/home/jordan/git/cocoma/bin/') #REMOVE
+import Library #REMOVE
 from Library import getHomepath
 
 #perhaps needs to be set somewhere else
@@ -347,5 +349,4 @@ def readLogLevel(column):
     return logLevel
 
 if __name__ == '__main__':
-    
     pass

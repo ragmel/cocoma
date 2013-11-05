@@ -13,6 +13,7 @@
      <!--duration in seconds -->
      <duration>120</duration>
      <granularity>20</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
      <!--Megabytes for memory -->
       <startLoad>1000</startLoad>

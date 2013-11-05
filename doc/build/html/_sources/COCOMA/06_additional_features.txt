@@ -131,9 +131,21 @@ To add the force argument to a emulation, ran via a REST client, a parameter cal
 
 *Note*: Spaces should not be included in the request (they are shown here for readability). You may need to manually select an option in order to encode the dictionary.
 
+Malloc Limit
+------------
+
+Some of the Emulators used by COCOMA have their own limits for the maximum amount of memory a single instance of that emulator can address. Because of this the **mallocLimit** (memory allocation limit) argument was added for memory loading distributions. MallocLimit is used by COCOMA to split jobs over the specified limit and has a maximum value of 4095.
+
+Bounds Compare
+--------------
+In the 'argNames' section of each emulator wrapper and distribution there are a number of different arguments required by that class. These are contained in a dictionary in the form `"ARG_NAME":{"upperBound":0,"lowerBound":100}`; where ARG_NAME is the name of the required argument.
+The nested dictionary contains values for the arguments upper and lower bounds (the maximum and minimum value that argument can be). These values are used to check if the value supplied for that argument in the XML is inside the bounds. If the XML value is outside of the bounds then the value will be changed to whatever boundary value it is closest to.
+
+*Note*: Some arguments (such as trace and serverIP) require text based values; These values aren't checked by the boundsCompare method, and so the values for their bounds can be any number.
+
 Message queue use
 -----------------
-COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a timestamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the *camel* notation in case of multi-words. Below is the set of messages::
+COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a time-stamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the *camel* notation in case of multi-words. Below is the set of messages::
 
         {"Timestamp": 1378893008.422242, "Message": {"Action": "Scheduler started",
         "Interface": "eth0", "Port": "51889"}, "From": "Scheduler"}
@@ -247,21 +259,22 @@ Below is a xml snippet showing a new tag called **trace** which provides the pat
         <distributions >
                 <name>realTrace</name>
                 <startTime>0</startTime>
-                <!--duration in seconds -->
-                <duration>60</duration>
-                <granularity>1</granularity>
                 <distribution href="/distributions/real_trace" name="real_trace" />
                 <trace>/path/to/real-trace_1.txt</trace>
                 <emulator href="/emulators/lookbusy" name="lookbusy" />
                 <emulator-params>
                         <resourceType>MEM</resourceType>
-                        <!--time between iterations in usec (default 1000)-->
                         <malloclimit>4004</malloclimit>
+                        <!--time between iterations in usec (default 1000)-->
                         <memSleep>0</memSleep>
+                        <!-- value to group jobs (+/- %)-->
+                        <groupingRange>5</groupingRange>
                 </emulator-params>
         </distributions>
 
-The **duration** is not used as the actual duration is calculated from the trace itself. So if the emulation ends before the distribution, all jobs left (running and scheduled) will be stopped.
+The **duration** section is not needed as the actual duration is calculated from the trace itself. So if the emulation ends before the distribution, all jobs left (running and scheduled) will be stopped.
+
+The **groupingRange** section is used to group stress values from the supplied trace file; this by grouping together consecutive, and averaging, values which are within the specified range (So if we wanted to group the values '10, 14, 18, 22' with a grouping range of 5; then the first 3 values would be grouped and averaged to give 14, though 22 would not be grouped as it is outside the range).
 
 As the concept of distribution in COCOMA relates to a single resource (CPU, RAM, IO, NET), if a mixed (CPU and RAM) real trace emulation wanted to be performed, 2 distributions can be added in the xml, each targeting one of the resources, but having the same *startTime* and *trace*.
 

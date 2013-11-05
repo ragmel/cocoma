@@ -118,7 +118,7 @@ def argNames(Rtype=None):
     
     if Rtype.lower() == "cpu":
         
-        argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
+        argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
         return argNames
        
     #get free amount of memory and set it to upper bound
@@ -127,19 +127,19 @@ def argNames(Rtype=None):
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
 
-        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
+        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
         RESTYPE = "MEM"
 #        print "Use Arg's: ",argNames," with mem"
         return argNames
         
     if Rtype.lower() == "io":
-        argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
+        argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0},"minJobTime":{"upperBound":10000000,"lowerBound":2}}
         RESTYPE = "IO"
 #        print "Use Arg's: ",argNames," with io"
         return argNames
     
     if Rtype.lower() == "net":
-        argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
+        argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
         RESTYPE = "NET"
 #        print "Use Arg's: ",argNames," with net"
         return argNames
@@ -147,5 +147,4 @@ def argNames(Rtype=None):
 
 
 if __name__=="__main__":
-        
         pass

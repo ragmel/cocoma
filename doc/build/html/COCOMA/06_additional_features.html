@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -157,9 +155,19 @@ ccmsh -x CPU.xml -f</pre>
 </div>
 <p><em>Note</em>: Spaces should not be included in the request (they are shown here for readability). You may need to manually select an option in order to encode the dictionary.</p>
 </div>
+<div class="section" id="malloc-limit">
+<h2>Malloc Limit<a class="headerlink" href="#malloc-limit" title="Permalink to this headline">¶</a></h2>
+<p>Some of the Emulators used by COCOMA have their own limits for the maximum amount of memory a single instance of that emulator can address. Because of this the <strong>mallocLimit</strong> (memory allocation limit) argument was added for memory loading distributions. MallocLimit is used by COCOMA to split jobs over the specified limit and has a maximum value of 4095.</p>
+</div>
+<div class="section" id="bounds-compare">
+<h2>Bounds Compare<a class="headerlink" href="#bounds-compare" title="Permalink to this headline">¶</a></h2>
+<p>In the &#8216;argNames&#8217; section of each emulator wrapper and distribution there are a number of different arguments required by that class. These are contained in a dictionary in the form <cite>&#8220;ARG_NAME&#8221;:{&#8220;upperBound&#8221;:0,&#8221;lowerBound&#8221;:100}</cite>; where ARG_NAME is the name of the required argument.
+The nested dictionary contains values for the arguments upper and lower bounds (the maximum and minimum value that argument can be). These values are used to check if the value supplied for that argument in the XML is inside the bounds. If the XML value is outside of the bounds then the value will be changed to whatever boundary value it is closest to.</p>
+<p><em>Note</em>: Some arguments (such as trace and serverIP) require text based values; These values aren&#8217;t checked by the boundsCompare method, and so the values for their bounds can be any number.</p>
+</div>
 <div class="section" id="message-queue-use">
 <h2>Message queue use<a class="headerlink" href="#message-queue-use" title="Permalink to this headline">¶</a></h2>
-<p>COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a timestamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the <em>camel</em> notation in case of multi-words. Below is the set of messages:</p>
+<p>COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a time-stamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the <em>camel</em> notation in case of multi-words. Below is the set of messages:</p>
 <div class="highlight-python"><pre>{"Timestamp": 1378893008.422242, "Message": {"Action": "Scheduler started",
 "Interface": "eth0", "Port": "51889"}, "From": "Scheduler"}
 
@@ -267,21 +275,21 @@ Below is a xml snippet showing a new tag called <strong>trace</strong> which pro
 <div class="highlight-python"><pre>&lt;distributions &gt;
         &lt;name&gt;realTrace&lt;/name&gt;
         &lt;startTime&gt;0&lt;/startTime&gt;
-        &lt;!--duration in seconds --&gt;
-        &lt;duration&gt;60&lt;/duration&gt;
-        &lt;granularity&gt;1&lt;/granularity&gt;
         &lt;distribution href="/distributions/real_trace" name="real_trace" /&gt;
         &lt;trace&gt;/path/to/real-trace_1.txt&lt;/trace&gt;
         &lt;emulator href="/emulators/lookbusy" name="lookbusy" /&gt;
         &lt;emulator-params&gt;
                 &lt;resourceType&gt;MEM&lt;/resourceType&gt;
-                &lt;!--time between iterations in usec (default 1000)--&gt;
                 &lt;malloclimit&gt;4004&lt;/malloclimit&gt;
+                &lt;!--time between iterations in usec (default 1000)--&gt;
                 &lt;memSleep&gt;0&lt;/memSleep&gt;
+                &lt;!-- value to group jobs (+/- %)--&gt;
+                &lt;groupingRange&gt;5&lt;/groupingRange&gt;
         &lt;/emulator-params&gt;
 &lt;/distributions&gt;</pre>
 </div>
-<p>The <strong>duration</strong> is not used as the actual duration is calculated from the trace itself. So if the emulation ends before the distribution, all jobs left (running and scheduled) will be stopped.</p>
+<p>The <strong>duration</strong> section is not needed as the actual duration is calculated from the trace itself. So if the emulation ends before the distribution, all jobs left (running and scheduled) will be stopped.</p>
+<p>The <strong>groupingRange</strong> section is used to group stress values from the supplied trace file; this by grouping together consecutive, and averaging, values which are within the specified range (So if we wanted to group the values &#8216;10, 14, 18, 22&#8217; with a grouping range of 5; then the first 3 values would be grouped and averaged to give 14, though 22 would not be grouped as it is outside the range).</p>
 <p>As the concept of distribution in COCOMA relates to a single resource (CPU, RAM, IO, NET), if a mixed (CPU and RAM) real trace emulation wanted to be performed, 2 distributions can be added in the xml, each targeting one of the resources, but having the same <em>startTime</em> and <em>trace</em>.</p>
 <div class="section" id="recording-a-real-trace">
 <h3>Recording a real trace<a class="headerlink" href="#recording-a-real-trace" title="Permalink to this headline">¶</a></h3>
@@ -523,6 +531,8 @@ The fuzzing process time cannot be known a priori as it depends from factors out
 </ul>
 </li>
 <li><a class="reference internal" href="#resource-overloading">Resource Overloading</a></li>
+<li><a class="reference internal" href="#malloc-limit">Malloc Limit</a></li>
+<li><a class="reference internal" href="#bounds-compare">Bounds Compare</a></li>
 <li><a class="reference internal" href="#message-queue-use">Message queue use</a></li>
 <li><a class="reference internal" href="#real-trace-parse">Real trace parse</a><ul>
 <li><a class="reference internal" href="#recording-a-real-trace">Recording a real trace</a></li>
@@ -579,7 +589,7 @@ The fuzzing process time cannot be known a priori as it depends from factors out
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, SAP.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

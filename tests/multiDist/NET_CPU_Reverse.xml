@@ -13,6 +13,7 @@
      <!--duration in seconds -->
      <duration>100</duration>
      <granularity>20</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear" name="linear" />
 	<!--set target bandwidth to bits per sec-->
       <startLoad>100</startLoad>
@@ -35,6 +36,7 @@
      <!--duration in seconds -->
      <duration>60</duration>
      <granularity>20</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear" name="linear" />
           <!--cpu utilization distribution range-->
       <startLoad>50</startLoad>

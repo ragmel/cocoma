@@ -259,7 +259,8 @@ class schedulerDaemon(object):
             return 2
         else:
             try:
-                self.sched.add_date_job(Job.createRun, time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(self.timestamp(Library.timeConv(Library.emulationNow(2))))), args = [emulationID, distributionID, emulationLifetimeID, duration, emulator, emulatorArg, resourceTypeDist, stressValue, runNo, emuDuration], name = str(emulationID) + distributionName + "-" + str(distributionID) + "-" + str(runNo) + "-" + distributionName + "-" + str(emulator) + "-" + str(resourceTypeDist) + ": " + str(stressValue))
+#                self.sched.add_date_job(Job.createRun, time.strftime("%Y-%m-%d %H:%M:%S", Library.timestamp(self.timestamp(Library.timeConv(Library.emulationNow(2))))), args = [emulationID, distributionID, emulationLifetimeID, duration, emulator, emulatorArg, resourceTypeDist, stressValue, runNo, emuDuration], name = str(emulationID) + distributionName + "-" + str(distributionID) + "-" + str(runNo) + "-" + distributionName + "-" + str(emulator) + "-" + str(resourceTypeDist) + ": " + str(stressValue))
+                self.sched.add_date_job(Job.createRun, Library.timeConv(Library.emulationNow(2)), args = [emulationID, distributionID, emulationLifetimeID, duration, emulator, emulatorArg, resourceTypeDist, stressValue, runNo, emuDuration], name = str(emulationID) + distributionName + "-" + str(distributionID) + "-" + str(runNo) + "-" + distributionName + "-" + str(emulator) + "-" + str(resourceTypeDist) + ": " + str(stressValue))
                 schedFileLogger.info("Created Custom Job: "+str(emulationID)+distributionName+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)+": "+str(stressValue))
                 return 1
             except Exception,e:

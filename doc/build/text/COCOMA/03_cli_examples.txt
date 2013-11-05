@@ -19,6 +19,7 @@ the following can be used:
            <!--duration in seconds -->
            <duration>30</duration>
            <granularity>3</granularity>
+           <minJobTime>2</minJobTime>
            <distribution href="/distributions/linear" name="linear" />
          <!--cpu utilization distribution range-->
             <startLoad>90</startLoad>
@@ -39,6 +40,7 @@ the following can be used:
            <!--duration in seconds -->
            <duration>30</duration>
            <granularity>3</granularity>
+           <minJobTime>2</minJobTime>
            <distribution href="/distributions/linear" name="linear" />
          <!--cpu utilization distribution range-->
             <startLoad>10</startLoad>

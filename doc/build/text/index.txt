@@ -74,6 +74,8 @@ Contents
 
   * Multiple distributions emulation
 
+  * Event Based Scheduling
+
   * Known Issues
 
 * Adding a new emulator
@@ -90,13 +92,17 @@ Contents
 
   * Resource Overloading
 
+  * Malloc Limit
+
+  * Bounds Compare
+
   * Message queue use
 
   * Real trace parse
 
     * Recording a real trace
 
-    * Event-driven approach
+  * Event Based Scheduling
 
   * Malicious module
 

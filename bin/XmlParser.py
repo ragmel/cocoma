@@ -161,7 +161,7 @@ def getModuleArgs (moduleType, moduleName, resourceType):
         argsLimitsDict = moduleMethod(resourceType)
 
         try:
-            moduleArgs = argsLimitsDict.keys()
+            moduleArgs = argsLimitsDict.items()
         except Exception, e:
             xmlLogger.error(moduleType + ' "' + str(moduleName) + '" does not support resource type "' + str(resourceType) + '"')
             return moduleType + ' "' + str(moduleName) + '" does not support resource type "' + str(resourceType) + '"'
@@ -195,20 +195,23 @@ def getArgs (xmlStr, moduleType, moduleName, resourceType):
         if type(moduleArgs) is list: #If the list is returned
             
             for arg in moduleArgs:
-                arg = arg.lower()
+                argDict = arg[1]
+                arg = arg[0].lower()
     #            xmlArg = getXMLData(xmlStr, "distributions", arg)
                 xmlArg = getXMLData(xmlStr, arg, "")
-    
+
                 #Convert stress values mem to real values (if given in %)
                 if ((moduleType.lower() == "distribution") and (resourceType == "mem") and (str(xmlArg[-1]) == "%")):
                     sysMemory = Library.getTotalMem()
                     xmlArg = (int(str(xmlArg[:-1])) * sysMemory)/100
-        
+
+                (xmlArg, checkNote) = Library.boundsCompare(xmlArg, argDict, arg)
+
                 moduleArgsNotes.append(checkNote)
                 moduleArgsNotes.append(xmlArg)
-        
+
                 moduleArgsDict.update({arg:xmlArg})
-    
+
         else:
             errorStr = moduleArgs + "\nXML Error: Cannot get " + moduleType + " arguments, check if 'href' and 'name' exist in XML"
             xmlLogger.error(errorStr)
@@ -350,6 +353,7 @@ def checkLoadValues(resourceType, distArgs):
     return False
 
 if __name__ == '__main__': #For testing purposes
-    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", True)
+#    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", True)
+    print xmlFileParser("/home/jordan/git/cocoma/tests/NET-Linear-Iperf-1-100.xml", True)
 #    xmlReader("/home/jordan/Desktop/XMLfail.xml")  #REMOVE
     pass

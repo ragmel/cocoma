@@ -42,7 +42,7 @@ def main():
     For full list of commands please use "ccmsh -h".
     '''
     
-    daemon=Library.getDaemon()    
+#    daemon=Library.getDaemon()
 
     #Grouping Options
     #a usage string for your program

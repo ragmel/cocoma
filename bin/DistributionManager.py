@@ -104,6 +104,7 @@ def createDistribution(newEmulation):
         print e
         return "SQL error:", e
         sys.exit(1)
+    
     createDistributionRuns(newEmulation)
 
 def createEndJob (daemon, newEmulation):
@@ -196,6 +197,11 @@ def createDistributionRuns(newEmulation):
              
             #2. Use this module for calculation and run creation   
             stressValues,runStartTime,runDurations,triggerType=modhandleMy(newEmulation.emulationID,newEmulation.emulationName,newEmulation.getEmulationLifetimeID(),startTimesec,distro.duration, int(distro.granularity),distro.distroArgs,distro.resourceType,HOMEPATH)
+
+            try:
+                (stressValues, runStartTime, runDurations) = Library.checkMinJobTime(distro.name, stressValues, runStartTime, runDurations, distro.distroArgs["minjobtime"])
+            except Exception, e:
+                print "Could not enforce minimum job time. " + str(e)
 
             #event and time type disro's separation
             try :

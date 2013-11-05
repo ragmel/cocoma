@@ -4,7 +4,7 @@ In order to add a new emulator, a new wrapper has to be implemented. This needs 
 
         * **__init__**: Used to accept the emulators parameters and pass them to whatever methods are used to load the desired resource
         * **emulatorHelp**: Used for displaying help about an emulator (eg. what parameters it needs)
-        * **emulatorArgNames**: Used for returning the names of the arguments that a given emulator takes
+        * **emulatorArgNames**: Used for returning the names of the arguments that a given emulator takes. If any of the arguments aren't numerical then they must have their name added to the `textBasedArgs` list in the `boundsCompare` method contained in `bin/Library.py`
 
 As well as the following code:
 
@@ -26,7 +26,7 @@ In order to add a new distribution, it needs to inherit from the relative abstra
 
         * **distHelp**: Used for displaying help about a distribution (eg. what Resources types it can use)
         * **functionCount**: Used for getting values for: stressValues, runStartTimeList, runDurations. The actual algorithm (which calculates those values) goes in this function
-        * **argNames**: Used for returning the names of the arguments that a given resource takes
+        * **argNames**: Used for returning the names of the arguments that a given resource takes. If any of the arguments aren't numerical then they must have their name added to the `textBasedArgs` list in the `boundsCompare` method contained in `bin/Library.py`
 
 As well as the following code:
 

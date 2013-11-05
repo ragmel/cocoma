@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -58,7 +56,7 @@
 <div><ul class="simple">
 <li><strong>__init__</strong>: Used to accept the emulators parameters and pass them to whatever methods are used to load the desired resource</li>
 <li><strong>emulatorHelp</strong>: Used for displaying help about an emulator (eg. what parameters it needs)</li>
-<li><strong>emulatorArgNames</strong>: Used for returning the names of the arguments that a given emulator takes</li>
+<li><strong>emulatorArgNames</strong>: Used for returning the names of the arguments that a given emulator takes. If any of the arguments aren&#8217;t numerical then they must have their name added to the <cite>textBasedArgs</cite> list in the <cite>boundsCompare</cite> method contained in <cite>bin/Library.py</cite></li>
 </ul>
 </div></blockquote>
 <p>As well as the following code:</p>
@@ -78,7 +76,7 @@ pass</pre>
 <div><ul class="simple">
 <li><strong>distHelp</strong>: Used for displaying help about a distribution (eg. what Resources types it can use)</li>
 <li><strong>functionCount</strong>: Used for getting values for: stressValues, runStartTimeList, runDurations. The actual algorithm (which calculates those values) goes in this function</li>
-<li><strong>argNames</strong>: Used for returning the names of the arguments that a given resource takes</li>
+<li><strong>argNames</strong>: Used for returning the names of the arguments that a given resource takes. If any of the arguments aren&#8217;t numerical then they must have their name added to the <cite>textBasedArgs</cite> list in the <cite>boundsCompare</cite> method contained in <cite>bin/Library.py</cite></li>
 </ul>
 </div></blockquote>
 <p>As well as the following code:</p>
@@ -150,7 +148,7 @@ pass</pre>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, SAP.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

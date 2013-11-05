@@ -51,8 +51,10 @@ Where "test_Name" is replaced by one of the following:
    test_EMU_MULTI1
    test_EMU_MULTI2
    test_EMU_NETWORK
+
    test_EMU_NowOperator
    test_EMU_Force
+   test_EMU_Logging
 
    test_Scheduler_Start
    test_Scheduler_Show
@@ -86,6 +88,7 @@ Where "test_Name" is replaced by one of the following:
    test_List_Emulator
    test_List_Distributions
    test_List_Results
+   test_List_Jobs
    test_List_Logs
    test_List_SysLogs
    test_List_EmuLogs
@@ -139,11 +142,41 @@ here for readability). You may need to manually select an option in
 order to encode the dictionary.
 
 
+Malloc Limit
+============
+
+Some of the Emulators used by COCOMA have their own limits for the
+maximum amount of memory a single instance of that emulator can
+address. Because of this the **mallocLimit** (memory allocation limit)
+argument was added for memory loading distributions. MallocLimit is
+used by COCOMA to split jobs over the specified limit and has a
+maximum value of 4095.
+
+
+Bounds Compare
+==============
+
+In the 'argNames' section of each emulator wrapper and distribution
+there are a number of different arguments required by that class.
+These are contained in a dictionary in the form
+*"ARG_NAME":{"upperBound":0,"lowerBound":100}*; where ARG_NAME is the
+name of the required argument. The nested dictionary contains values
+for the arguments upper and lower bounds (the maximum and minimum
+value that argument can be). These values are used to check if the
+value supplied for that argument in the XML is inside the bounds. If
+the XML value is outside of the bounds then the value will be changed
+to whatever boundary value it is closest to.
+
+*Note*: Some arguments (such as trace and serverIP) require text based
+values; These values aren't checked by the boundsCompare method, and
+so the values for their bounds can be any number.
+
+
 Message queue use
 =================
 
 COCOMA writes messages to the EMQ, which are used by the provenance
-service. Each message contains a timestamp, the message content and
+service. Each message contains a time-stamp, the message content and
 the component that created it. The message contains further
 information as the type of action, and various parameters depending on
 the specific action. The format adopted is to have key starting in
@@ -266,23 +299,29 @@ provides the path to the trace file from which the distribution
    <distributions >
            <name>realTrace</name>
            <startTime>0</startTime>
-           <!--duration in seconds -->
-           <duration>60</duration>
-           <granularity>1</granularity>
            <distribution href="/distributions/real_trace" name="real_trace" />
            <trace>/path/to/real-trace_1.txt</trace>
            <emulator href="/emulators/lookbusy" name="lookbusy" />
            <emulator-params>
                    <resourceType>MEM</resourceType>
-                   <!--time between iterations in usec (default 1000)-->
                    <malloclimit>4004</malloclimit>
+                   <!--time between iterations in usec (default 1000)-->
                    <memSleep>0</memSleep>
+                   <!-- value to group jobs (+/- %)-->
+                   <groupingRange>5</groupingRange>
            </emulator-params>
    </distributions>
 
-The **duration** is not used as the actual duration is calculated from
-the trace itself. So if the emulation ends before the distribution,
-all jobs left (running and scheduled) will be stopped.
+The **duration** section is not needed as the actual duration is
+calculated from the trace itself. So if the emulation ends before the
+distribution, all jobs left (running and scheduled) will be stopped.
+
+The **groupingRange** section is used to group stress values from the
+supplied trace file; this by grouping together consecutive, and
+averaging, values which are within the specified range (So if we
+wanted to group the values '10, 14, 18, 22' with a grouping range of
+5; then the first 3 values would be grouped and averaged to give 14,
+though 22 would not be grouped as it is outside the range).
 
 As the concept of distribution in COCOMA relates to a single resource
 (CPU, RAM, IO, NET), if a mixed (CPU and RAM) real trace emulation
@@ -308,81 +347,89 @@ the data into a file, the output redirection should be uses, such as:
            it will run for the specified (30 seconds) amount of time
 
 
-Event-driven approach
----------------------
+Event Based Scheduling
+======================
 
-COCOMA offers 2 different ways to manage events. One is time-based,
-where a distribution is run for a finite and known amount of time. In
-this case when having two time-based distributions, where the second
-one has to run right after the first one has finished, given that the
-duration of the distribution is explicetely specified, it is possible
-to calculate the exact ending time of the first distribution and
-therefore schedule the start of the second one accordingly. However,
-there might be cases that the duration of a distribution is not known,
-e.g. in malicious distributions. In this case, say for example that
-out of the two distributions that want to be run sequentially, the
-first one doesn't have a duration, it would be impossible to schedule
-the second one since the end time of the first one is unknown.
-Therefore, we introduced the event-driven approach, where the first
-one creates an end-job event that triggers the schedule of the second
-distribution. This allows to take into account these duration-less
-distribution. An example is in the xml snippet below:
+In addition to the regular, time based, scheduling COCOMA offers Event
+based scheduling (Only usable with the backfuzz emulator at present).
+This was introduced as the amount of time it takes for a network
+distribution to run can vary depending on a number of unknown factors
+(for example a slower network would take longer to send data over). In
+Event based scheduling the order of distributions in the supplied XML
+is used to determine which order distributions will run in. Below is a
+short explanation of how distributions are scheduled when using
+events:
 
-   <distributions>
-           <name>Fuzzer_Distro1</name>
-           <nextevent>Fuzzer_Distro2</nextevent>
-           <!--duration in seconds -->
-           <starttime>0</starttime>
-           <granularity>0</granularity>
-           <duration>0</duration>
-           <distribution href="/distributions/event" name="event" />
-           <emulator href="/emulators/backfuzz" name="backfuzz" />
+* Run time based distributions as normal (if there are any) until an
+  Event is reached
 
-           <emulator-params>
-                   <resourceType>NET</resourceType>
-                   <serverip>10.55.164.181</serverip>
-                   <serverport>80</serverport>
-                   <min>100</min>
-                   <max>104</max>
-                   <packettype>HTTP</packettype>
-                   <timedelay>0</timedelay>
-                   <salt>2</salt>
-           </emulator-params>
-   </distributions>
+* Stop scheduling any further distributions until the Event finishes
 
-   <distributions>
-           <name>Fuzzer_Distro2</name>
-           <!--duration in seconds -->
-           <nextevent>Fuzzer_Distro2</nextevent>
-           <starttime>0</starttime>
-           <granularity>0</granularity>
-           <duration>0</duration>
-           <distribution href="/distributions/event" name="event" />
-           <emulator href="/emulators/backfuzz" name="backfuzz" />
+* Resume Scheduling distributions, using their start time as a delay
+  after the event finishes. (A distribution with a start time of 5
+  would start 5 seconds after the event finishes)
 
-           <emulator-params>
-                   <resourceType>NET</resourceType>
-                   <serverip>10.55.164.181</serverip>
-                   <serverport>22</serverport>
-                   <min>100</min>
-                   <max>104</max>
-                   <packettype>SSH</packettype>
-                   <timedelay>0</timedelay>
-                   <salt>2</salt>
-           </emulator-params>
-   </distributions>
+* Repeat until all distributions are scheduled or emuStopTime
+  expires (at which point all running jobs will be killed, and
+  scheduling will stop)
 
-The new distribution format in this case has a new tag **nextevent**,
-which allows the scheduler to understand that the following
-distribution to be scheduled, once the first distribution finishes, is
-the one in this tag. The example relates to a malicious distribution,
-which is further explained in a dedicated section of this document.
-Please note that in this case, although they are specified, the
-*starttime*, *granularity* and *duration* are not actually used as
-they don't apply in the event-driven context. Finally, the
-*emustopTime* still sets the emulation ends, so in case a distribution
-hasn't finished within the emulation time range specified, the jobs
-left (running and scheduled) will be stopped.
+Event Based Emulation example:
+
+    <emulation>
+      <emuname>MAL_EMU</emuname>
+      <emuType>MIX</emuType>
+      <emuresourceType>MIX</emuresourceType>
+      <!--date format: 2014-10-10T10:10:10 -->
+      <emustartTime>now</emustartTime>
+      <!--duration in seconds -->
+      <emustopTime>35</emustopTime>
+
+      <distributions>
+         <name>MAL_Distro1</name>
+         <startTime>0</startTime>
+         <distribution href="/distributions/event" name="event" />
+          <emulator href="/emulators/backfuzz" name="backfuzz" />
+          <emulator-params>
+            <resourceType>NET</resourceType>
+            <min>100</min>
+            <fuzzRange>900</fuzzRange>
+            <serverip>10.55.168.142</serverip>
+            <serverport>5050</serverport>
+            <packettype>TCP</packettype>
+            <timedelay>1</timedelay>
+            <salt>100</salt>
+         </emulator-params>
+      </distributions>
+
+      <distributions>
+       <name>CPU_Distro</name>
+         <startTime>5</startTime>
+         <!--duration in seconds -->
+         <duration>10</duration>
+         <granularity>2</granularity>
+         <distribution href="/distributions/linear" name="linear" />
+         <startLoad>10</startLoad>
+         <stopLoad>50</stopLoad>
+         <emulator href="/emulators/lookbusy" name="lookbusy" />
+         <emulator-params>
+           <resourceType>CPU</resourceType>
+           <ncpus>0</ncpus>
+         </emulator-params>
+       </distributions>
+
+      <log>
+            <!-- Use value "1" to enable logging(by default logging is off)  -->
+            <enable>0</enable>
+            <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+            <frequency>3</frequency>
+            <logLevel>debug</logLevel>
+      </log>
+
+    </emulation>
+
+In the above example the Event based distributiopn would first run to
+completion, then the time (CPU) distribution would be run 5 secounds
+after the event finishes
 
 
 Malicious module
@@ -402,27 +449,42 @@ approach was introduced to support this. The xml snippet below (the
 same of the event-driven section) shows a maliciuos distribution using
 backfuzz:
 
-   <distributions>
-           <name>Fuzzer_Distro1</name>
-           <nextevent>Fuzzer_Distro2</nextevent>
-           <!--duration in seconds -->
-           <starttime>0</starttime>
-           <granularity>0</granularity>
-           <duration>0</duration>
-           <distribution href="/distributions/event" name="event" />
-           <emulator href="/emulators/backfuzz" name="backfuzz" />
+   <emulation>
+    <emuname>MAL_EMU</emuname>
+    <emuType>NET</emuType>
+    <emuresourceType>NET</emuresourceType>
+    <!--date format: 2014-10-10T10:10:10 -->
+    <emustartTime>now</emustartTime>
+    <!--duration in seconds -->
+    <emustopTime>120</emustopTime>
 
-           <emulator-params>
-                   <resourceType>NET</resourceType>
-                   <serverip>10.55.164.181</serverip>
-                   <serverport>80</serverport>
-                   <min>100</min>
-                   <max>104</max>
-                   <packettype>HTTP</packettype>
-                   <timedelay>0</timedelay>
-                   <salt>2</salt>
-           </emulator-params>
+   <distributions>
+     <name>MAL_Distro</name>
+     <startTime>0</startTime>
+     <distribution href="/distributions/event" name="event" />
+      <emulator href="/emulators/backfuzz" name="backfuzz" />
+      <emulator-params>
+        <resourceType>NET</resourceType>
+        <min>100</min>
+        <fuzzRange>900</fuzzRange>
+        <serverip>10.55.168.142</serverip>
+        <serverport>5050</serverport>
+        <packettype>TCP</packettype>
+        <!-- Timeout (default 0.8s)-->
+        <timedelay>1</timedelay>
+        <salt>10</salt>
+     </emulator-params>
    </distributions>
+
+    <log>
+     <!-- Use value "1" to enable logging(by default logging is off)  -->
+     <enable>0</enable>
+     <!-- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  -->
+     <frequency>3</frequency>
+     <logLevel>debug</logLevel>
+    </log>
+
+   </emulation>
 
 In the emulator parameters part we can specify the server IP and its
 port, the minimum and maximum lenght of the fuzzing string sent, the

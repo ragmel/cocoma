@@ -12,6 +12,7 @@
             <!--duration in seconds -->
             <duration>60</duration>
             <granularity>1</granularity>
+	    <minJobTime>2</minJobTime>
             <distribution href="/distributions/linear" name="linear" />
             <!--cpu utilization distribution range-->
             <startLoad>10</startLoad>
@@ -31,6 +32,7 @@
               <!--duration in seconds -->
               <duration>60</duration>
               <granularity>5</granularity>
+      	      <minJobTime>2</minJobTime>
               <distribution href="/distributions/linear_incr" name="linear_incr" />
               <!--Megabytes for memory -->
                <startLoad>50</startLoad>
@@ -50,7 +52,8 @@
               <!--duration in seconds -->
               <duration>60</duration>
               <granularity>5</granularity>
-              <distribution href="/distributions/linear_incr" name="linear_incr" />
+              <minJobTime>2</minJobTime>
+	       <distribution href="/distributions/linear_incr" name="linear_incr" />
                <startLoad>1</startLoad>
                <stopLoad>10</stopLoad>
                <emulator href="/emulators/lookbusy" name="lookbusy" />

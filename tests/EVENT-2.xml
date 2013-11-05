@@ -13,6 +13,7 @@
      <nextevent>Fuzzer_Distro2</nextevent>
      <!--duration in seconds -->
      <starttime>0</starttime>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/event" name="event" />
      <emulator href="/emulators/backfuzz" name="backfuzz" />
       

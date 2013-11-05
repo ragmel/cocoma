@@ -13,6 +13,7 @@
      <nextevent>NONE</nextevent>
      <!--duration in seconds -->
      <starttime>0</starttime>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/event" name="event" />
      <emulator href="/emulators/backfuzz" name="backfuzz" />
       
@@ -35,6 +36,7 @@
         <!--duration in seconds -->
         <duration>30</duration>
         <granularity>10</granularity>
+	<minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
         <!--cpu utilization distribution range-->
         <startLoad>10</startLoad>

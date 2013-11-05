@@ -12,10 +12,12 @@
      <startTime>0</startTime>
      <!--duration in seconds -->
      <distribution href="/distributions/real_trace" name="real_trace" />
+     <minJobTime>2</minJobTime>
      <trace>/home/jordan/git/cocoma/extra_tobe_fixed/real-trace_2.txt</trace>
      <emulator href="/emulators/lookbusy" name="lookbusy" />
      <emulator-params>
         <resourceType>CPU</resourceType>
+	<groupingRange>5</groupingRange>
 	    <!--time between iterations in usec (default 1000)-->
 		<ncpus>0</ncpus>	
      </emulator-params>

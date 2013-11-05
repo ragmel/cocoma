@@ -1,4 +1,4 @@
-.TH "COCOMA" "1" "October 11, 2013" "2.0" "COCOMA"
+.TH "COCOMA" "1" "November 05, 2013" "2.0" "COCOMA"
 .SH NAME
 COCOMA \- man page
 .
@@ -247,6 +247,8 @@ Stop Scheduler or API daemon
 .B \-\-show <api>, <scheduler>
 Show OS information on Scheduler or API daemon, displays PID numbers
 .UNINDENT
+.sp
+Most of these options are used by themselves, with the exception of \(aq\-x\(aq (\-\-xml) which can be used in conjunction with \(aq\-f\(aq (\-\-force) and/or \(aq\-n\(aq (\-\-now)
 .SS Logging
 .SS Event Logging
 .sp
@@ -963,6 +965,7 @@ Consider this sample XML document code:
      <!\-\-duration in seconds \-\->
      <duration>60</duration>
      <granularity>20</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear" name="linear" />
      <!\-\-cpu utilization distribution range\-\->
       <startLoad>10</startLoad>
@@ -1038,7 +1041,8 @@ The \(aqemuresourceType\(aq value is used for a check to ensure that all distrib
      <!\-\-cpu utilization distribution range\-\->
       <startLoad>10</startLoad>
       <stopLoad>95</stopLoad>
-
+      <!\-\- minimum time jobs can run for \-\->
+      <minJobTime>2</minJobTime>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator\-params>
         <!\-\-more parameters will be added \-\->
@@ -1096,6 +1100,7 @@ To create an emulation via CLI, a local XML \fBemulation.xml\fP file as the foll
         <!\-\-duration in seconds \-\->
         <duration>30</duration>
         <granularity>3</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
       <!\-\-cpu utilization distribution range\-\->
          <startLoad>90</startLoad>
@@ -1116,6 +1121,7 @@ To create an emulation via CLI, a local XML \fBemulation.xml\fP file as the foll
         <!\-\-duration in seconds \-\->
         <duration>30</duration>
         <granularity>3</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
       <!\-\-cpu utilization distribution range\-\->
          <startLoad>10</startLoad>
@@ -1253,38 +1259,45 @@ begin
    :emustopTime => "240",
    :distributions =>[{
          :name => "MEM\-increase",
-            :startTime =>"0",
-            :duration =>"120",
-            :granularity =>"10",
-            :distribution => {
-                                :href => "/distributions/linear_incr",
-                                :name => "linear_incr"},
-            :startLoad => "10%",
-            :stopLoad => "80%",
-            :emulator =>{
-            :href => "/emulators/stressapptest",
-            :name => "stressapptest"},
-            :\(aqemulator\-params\(aq =>{
-                                :resourceType =>"MEM",
-                                :memThreads => "1"}
-      },
-             {
-                        :name => "MEM\-decrease",
-                        :startTime =>"121",
-                        :duration =>"119",
-                        :granularity =>"10",
-                        :distribution => {
-                                :href => "/distributions/linear_incr",
-                                :name => "linear_incr"},
-                        :startLoad => "80%",
-                        :stopLoad => "10%",
-                        :emulator =>{
-                                :href => "/emulators/stressapptest",
-                                :name => "stressapptest"},
-                        :\(aqemulator\-params\(aq =>{
-                                :resourceType =>"MEM",
-                                :memThreads => "1"}
-                        }]
+         :startTime =>"0",
+         :duration =>"120",
+         :granularity =>"10",
+         :minJobTime => "2",
+         :distribution => {
+             :href => "/distributions/linear_incr",
+             :name => "linear_incr"
+             },
+         :startLoad => "10%",
+         :stopLoad => "80%",
+         :emulator =>{
+         :href => "/emulators/stressapptest",
+         :name => "stressapptest"},
+        :\(aqemulator\-params\(aq =>{
+             :resourceType =>"MEM",
+             :memThreads => "1"
+             }
+         },
+         {
+         :name => "MEM\-decrease",
+         :startTime =>"121",
+         :duration =>"119",
+         :granularity =>"10",
+         :minJobTime => "2",
+         :distribution => {
+             :href => "/distributions/linear_incr",
+             :name => "linear_incr"
+             },
+         :startLoad => "80%",
+         :stopLoad => "10%",
+         :emulator =>{
+             :href => "/emulators/stressapptest",
+             :name => "stressapptest"
+             },
+         :\(aqemulator\-params\(aq =>{
+             :resourceType =>"MEM",
+             :memThreads => "1"
+             }
+                }]
  )
 
 end
@@ -1417,6 +1430,7 @@ Emulation XML for CPU contention:
      <!\-\-duration in seconds \-\->
      <duration>120</duration>
      <granularity>24</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear" name="linear" />
      <!\-\-cpu utilization distribution range\-\->
       <startLoad>10</startLoad>
@@ -1467,6 +1481,7 @@ Emulation XML for I/O contention:
      <!\-\-duration in seconds \-\->
      <duration>60</duration>
      <granularity>5</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
      <startLoad>1</startLoad>
      <stopLoad>10</stopLoad>
@@ -1518,6 +1533,7 @@ In this example we use a different distribution called \fItrapezoidal\fP:
      <!\-\-duration in seconds \-\->
      <duration>60</duration>
      <granularity>5</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
      <startLoad>1</startLoad>
      <stopLoad>10</stopLoad>
@@ -1569,6 +1585,7 @@ Emulation XML for memory contention:
      <!\-\-duration in seconds \-\->
      <duration>60</duration>
      <granularity>5</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
      <!\-\-Memory usage (Megabytes) \-\->
      <startLoad>100</startLoad>
@@ -1616,6 +1633,7 @@ Example for memory emulation using \fItrapezoidal\fP distribution:
      <!\-\-duration in seconds \-\->
      <duration>60</duration>
      <granularity>5</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/trapezoidal" name="trapezoidal" />
      <!\-\-Megabytes for memory \-\->
      <startLoad>100</startLoad>
@@ -1664,6 +1682,7 @@ The newtork emulation needs two COCOMA VM\(aqs, one that acts as a client and th
      <!\-\-duration in seconds \-\->
      <duration>150</duration>
      <granularity>10</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
      <!\-\-set target bandwidth to bits per sec\-\->
      <startLoad>100</startLoad>
@@ -1686,58 +1705,6 @@ The newtork emulation needs two COCOMA VM\(aqs, one that acts as a client and th
    <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
    <frequency>3</frequency>
   </log>
-
-</emulation>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.sp
-In the following example a different emulator named \fIbackfuzz\fP will be used with its proprietary distribution \fIfuzz\fP. This combination is used to simulate malicious network activity by sending a series of random requests and data to the specified server
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<emulation>
- <emuname>MAL_EMU</emuname>
- <emuType>NET</emuType>
- <emuresourceType>NET</emuresourceType>
- <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
- <emustartTime>now</emustartTime>
- <!\-\-duration in seconds \-\->
- <emustopTime>120</emustopTime>
-
- <distributions>
-    <name>MAL_Distro1</name>
-    <startTime>0</startTime>
-    <duration>120</duration>
-    <distribution href="/distributions/fuzz" name="fuzz" />
-    <startLoad>100</startLoad>
-    <emulator href="/emulators/backfuzz" name="backfuzz" />
-    <emulator\-params>
-        <resourceType>NET</resourceType>
-        <!\-\- Difference between MIN and MAX fuzz values \-\->
-        <fuzzRange>900</fuzzRange>
-        <!\-\- IP and port of server to fuzz \-\->
-        <serverip>10.55.168.238</serverip>
-        <serverport>51889</serverport>
-        <!\-\- Type of packet to use for fuzzing \-\->
-        <packettype>HTTP</packettype>
-        <!\-\- Time to pause on each fuzz value in s (leave as 0 for default of 0.8s) \-\->
-        <timedelay>1</timedelay>
-        <!\-\- Value to increment by \-\->
-        <salt>50</salt>
-    </emulator\-params>
- </distributions>
-
- <log>
-  <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
-  <enable>0</enable>
-  <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
-  <frequency>3</frequency>
-  <logLevel>debug</logLevel>
- </log>
 
 </emulation>
 .ft P
@@ -1770,6 +1737,7 @@ CPU and Memory example
         <!\-\-duration in seconds \-\->
         <duration>60</duration>
         <granularity>1</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
         <!\-\-cpu utilization distribution range\-\->
         <startLoad>10</startLoad>
@@ -1788,6 +1756,7 @@ CPU and Memory example
          <!\-\-duration in seconds \-\->
          <duration>60</duration>
          <granularity>5</granularity>
+         <minJobTime>2</minJobTime>
          <distribution href="/distributions/linear_incr" name="linear_incr" />
          <!\-\-Megabytes for memory \-\->
          <startLoad>100</startLoad>
@@ -1834,6 +1803,7 @@ CPU, MEM and IO example
          <!\-\-duration in seconds \-\->
          <duration>60</duration>
          <granularity>1</granularity>
+         <minJobTime>2</minJobTime>
          <distribution href="/distributions/linear" name="linear" />
          <!\-\-cpu utilization distribution range\-\->
          <startLoad>10</startLoad>
@@ -1852,6 +1822,7 @@ CPU, MEM and IO example
          <!\-\-duration in seconds \-\->
          <duration>60</duration>
          <granularity>5</granularity>
+         <minJobTime>2</minJobTime>
          <distribution href="/distributions/linear_incr" name="linear_incr" />
          <!\-\-Megabytes for memory \-\->
          <startLoad>100</startLoad>
@@ -1870,6 +1841,7 @@ CPU, MEM and IO example
          <!\-\-duration in seconds \-\->
          <duration>60</duration>
          <granularity>5</granularity>
+         <minJobTime>2</minJobTime>
          <distribution href="/distributions/linear_incr" name="linear_incr" />
          <startLoad>1</startLoad>
          <stopLoad>10</stopLoad>
@@ -1889,6 +1861,83 @@ CPU, MEM and IO example
        <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
        <frequency>3</frequency>
     </log>
+ </emulation>
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Event Based Scheduling
+.sp
+In addition to the regular, time based, scheduling there is Event based scheduling. In Event based scheduling the order of jobs ioin the xml is used to determine which order jobs will run in. Below is a short explanation of how jobs are scheduled when using events:
+.INDENT 0.0
+.IP \(bu 2
+Run time based jobs as normal (if there are any) until an Event is reached
+.IP \(bu 2
+Stop scheduling any further jobs unitl the Event finishes
+.IP \(bu 2
+Resume Scheduling jobs, using their start time as a delay after the event finishes. (A job with a start time of 5 would start 5 secounds after the event finishes)
+.IP \(bu 2
+Repeat until all distribuitons are scheduled or emuStopTime expires (at whcih point all running jobs will be killed, and scheduling will stop)
+.UNINDENT
+.sp
+Event Based Emulation example:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ <emulation>
+   <emuname>MAL_EMU</emuname>
+   <emuType>MIX</emuType>
+   <emuresourceType>MIX</emuresourceType>
+   <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
+   <emustartTime>now</emustartTime>
+   <!\-\-duration in seconds \-\->
+   <emustopTime>35</emustopTime>
+
+   <distributions>
+      <name>MAL_Distro1</name>
+      <startTime>0</startTime>
+      <minJobTime>2</minJobTime>
+      <distribution href="/distributions/event" name="event" />
+       <emulator href="/emulators/backfuzz" name="backfuzz" />
+       <emulator\-params>
+         <resourceType>NET</resourceType>
+         <min>100</min>
+         <fuzzRange>900</fuzzRange>
+         <serverip>10.55.168.142</serverip>
+         <serverport>5050</serverport>
+         <packettype>TCP</packettype>
+         <timedelay>1</timedelay>
+         <salt>100</salt>
+      </emulator\-params>
+   </distributions>
+
+   <distributions>
+    <name>CPU_Distro</name>
+      <startTime>5</startTime>
+      <!\-\-duration in seconds \-\->
+      <duration>10</duration>
+      <granularity>2</granularity>
+      <minJobTime>2</minJobTime>
+      <distribution href="/distributions/linear" name="linear" />
+      <startLoad>10</startLoad>
+      <stopLoad>50</stopLoad>
+      <emulator href="/emulators/lookbusy" name="lookbusy" />
+      <emulator\-params>
+        <resourceType>CPU</resourceType>
+        <ncpus>0</ncpus>
+      </emulator\-params>
+    </distributions>
+
+   <log>
+         <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
+         <enable>0</enable>
+         <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
+         <frequency>3</frequency>
+         <logLevel>debug</logLevel>
+   </log>
+
  </emulation>
 .ft P
 .fi
@@ -1919,9 +1968,11 @@ In order to add a new emulator, a new wrapper has to be implemented. This needs 
 .INDENT 3.5
 .INDENT 0.0
 .IP \(bu 2
+\fB__init__\fP: Used to accept the emulators parameters and pass them to whatever methods are used to load the desired resource
+.IP \(bu 2
 \fBemulatorHelp\fP: Used for displaying help about an emulator (eg. what parameters it needs)
 .IP \(bu 2
-\fBemulatorArgNames\fP: Used for returning the names of the arguments that a given emulator takes
+\fBemulatorArgNames\fP: Used for returning the names of the arguments that a given emulator takes. If any of the arguments aren\(aqt numerical then they must have their name added to the \fItextBasedArgs\fP list in the \fIboundsCompare\fP method contained in \fIbin/Library.py\fP
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1943,6 +1994,8 @@ pass
 .UNINDENT
 .sp
 Specific methods to execute the wanted emulator instance with the relative needed parameters will have to be added. Checking the existing emulator wrappers should give a clear view on how the wrapping process can be carried out.
+.sp
+\fINote\fP: The zombieBuster method (from the abstract class) \fBmust\fP be called at some point in the emulator wrapper (passing in the PID and name of the emulator being ran). One of the purposes of this method is to terminate any remaining processes after the emulation time expires; If it is not used then jobs may be created after the emulation finishes, or jobs created during the emulation may not terminate properly.
 .SS Adding a new distribution
 .sp
 In order to add a new distribution, it needs to inherit from the relative abstract class, which can be found in the same \fIdistributions\fP directory. The class needs 3 different methods:
@@ -1954,7 +2007,7 @@ In order to add a new distribution, it needs to inherit from the relative abstra
 .IP \(bu 2
 \fBfunctionCount\fP: Used for getting values for: stressValues, runStartTimeList, runDurations. The actual algorithm (which calculates those values) goes in this function
 .IP \(bu 2
-\fBargNames\fP: Used for returning the names of the arguments that a given resource takes
+\fBargNames\fP: Used for returning the names of the arguments that a given resource takes. If any of the arguments aren\(aqt numerical then they must have their name added to the \fItextBasedArgs\fP list in the \fIboundsCompare\fP method contained in \fIbin/Library.py\fP
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -2030,8 +2083,10 @@ test_EMU_MEMTrap
 test_EMU_MULTI1
 test_EMU_MULTI2
 test_EMU_NETWORK
+
 test_EMU_NowOperator
 test_EMU_Force
+test_EMU_Logging
 
 test_Scheduler_Start
 test_Scheduler_Show
@@ -2078,6 +2133,7 @@ test_List_Emulation
 test_List_Emulator
 test_List_Distributions
 test_List_Results
+test_List_Jobs
 test_List_Logs
 test_List_SysLogs
 test_List_EmuLogs
@@ -2144,9 +2200,18 @@ XML = XML_GOES_HERE & runIfOverloaded = Y
 .UNINDENT
 .sp
 \fINote\fP: Spaces should not be included in the request (they are shown here for readability). You may need to manually select an option in order to encode the dictionary.
+.SS Malloc Limit
+.sp
+Some of the Emulators used by COCOMA have their own limits for the maximum amount of memory a single instance of that emulator can address. Because of this the \fBmallocLimit\fP (memory allocation limit) argument was added for memory loading distributions. MallocLimit is used by COCOMA to split jobs over the specified limit and has a maximum value of 4095.
+.SS Bounds Compare
+.sp
+In the \(aqargNames\(aq section of each emulator wrapper and distribution there are a number of different arguments required by that class. These are contained in a dictionary in the form \fI"ARG_NAME":{"upperBound":0,"lowerBound":100}\fP; where ARG_NAME is the name of the required argument.
+The nested dictionary contains values for the arguments upper and lower bounds (the maximum and minimum value that argument can be). These values are used to check if the value supplied for that argument in the XML is inside the bounds. If the XML value is outside of the bounds then the value will be changed to whatever boundary value it is closest to.
+.sp
+\fINote\fP: Some arguments (such as trace and serverIP) require text based values; These values aren\(aqt checked by the boundsCompare method, and so the values for their bounds can be any number.
 .SS Message queue use
 .sp
-COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a timestamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the \fIcamel\fP notation in case of multi\-words. Below is the set of messages:
+COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a time\-stamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the \fIcamel\fP notation in case of multi\-words. Below is the set of messages:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -2275,17 +2340,16 @@ Below is a xml snippet showing a new tag called \fBtrace\fP which provides the p
 <distributions >
         <name>realTrace</name>
         <startTime>0</startTime>
-        <!\-\-duration in seconds \-\->
-        <duration>60</duration>
-        <granularity>1</granularity>
         <distribution href="/distributions/real_trace" name="real_trace" />
         <trace>/path/to/real\-trace_1.txt</trace>
         <emulator href="/emulators/lookbusy" name="lookbusy" />
         <emulator\-params>
                 <resourceType>MEM</resourceType>
-                <!\-\-time between iterations in usec (default 1000)\-\->
                 <malloclimit>4004</malloclimit>
+                <!\-\-time between iterations in usec (default 1000)\-\->
                 <memSleep>0</memSleep>
+                <!\-\- value to group jobs (+/\- %)\-\->
+                <groupingRange>5</groupingRange>
         </emulator\-params>
 </distributions>
 .ft P
@@ -2293,7 +2357,9 @@ Below is a xml snippet showing a new tag called \fBtrace\fP which provides the p
 .UNINDENT
 .UNINDENT
 .sp
-The \fBduration\fP is not used as the actual duration is calculated from the trace itself. So if the emulation ends before the distribution, all jobs left (running and scheduled) will be stopped.
+The \fBduration\fP section is not needed as the actual duration is calculated from the trace itself. So if the emulation ends before the distribution, all jobs left (running and scheduled) will be stopped.
+.sp
+The \fBgroupingRange\fP section is used to group stress values from the supplied trace file; this by grouping together consecutive, and averaging, values which are within the specified range (So if we wanted to group the values \(aq10, 14, 18, 22\(aq with a grouping range of 5; then the first 3 values would be grouped and averaged to give 14, though 22 would not be grouped as it is outside the range).
 .sp
 As the concept of distribution in COCOMA relates to a single resource (CPU, RAM, IO, NET), if a mixed (CPU and RAM) real trace emulation wanted to be performed, 2 distributions can be added in the xml, each targeting one of the resources, but having the same \fIstartTime\fP and \fItrace\fP.
 .SS Recording a real trace
@@ -2314,63 +2380,84 @@ $ timeout 30s rec_res_usage.sh 2 > trace_file.txt
 .fi
 .UNINDENT
 .UNINDENT
-.SS Event\-driven approach
+.SS Event Based Scheduling
 .sp
-COCOMA offers 2 different ways to manage events. One is time\-based, where a distribution is run for a finite and known amount of time. In this case when having two time\-based distributions, where the second one has to run right after the first one has finished, given that the duration of the distribution is explicetely specified, it is possible to calculate the exact ending time of the first distribution and therefore schedule the start of the second one accordingly. However, there might be cases that the duration of a distribution is not known, e.g. in malicious distributions. In this case, say for example that out of the two distributions that want to be run sequentially, the first one doesn\(aqt have a duration, it would be impossible to schedule the second one since the end time of the first one is unknown. Therefore, we introduced the event\-driven approach, where the first one creates an end\-job event that triggers the schedule of the second distribution. This allows to take into account these duration\-less distribution. An example is in the xml snippet below:
+In addition to the regular, time based, scheduling COCOMA offers Event based scheduling (Only usable with the backfuzz emulator at present). This was introduced as the amount of time it takes for a network distribution to run can vary depending on a number of unknown factors (for example a slower network would take longer to send data over).
+In Event based scheduling the order of distributions in the supplied XML is used to determine which order distributions will run in. Below is a short explanation of how distributions are scheduled when using events:
+.INDENT 0.0
+.IP \(bu 2
+Run time based distributions as normal (if there are any) until an Event is reached
+.IP \(bu 2
+Stop scheduling any further distributions until the Event finishes
+.IP \(bu 2
+Resume Scheduling distributions, using their start time as a delay after the event finishes. (A distribution with a start time of 5 would start 5 seconds after the event finishes)
+.IP \(bu 2
+Repeat until all distributions are scheduled or emuStopTime expires (at which point all running jobs will be killed, and scheduling will stop)
+.UNINDENT
+.sp
+Event Based Emulation example:
 .INDENT 0.0
 .INDENT 3.5
 .sp
 .nf
 .ft C
-<distributions>
-        <name>Fuzzer_Distro1</name>
-        <nextevent>Fuzzer_Distro2</nextevent>
-        <!\-\-duration in seconds \-\->
-        <starttime>0</starttime>
-        <granularity>0</granularity>
-        <duration>0</duration>
-        <distribution href="/distributions/event" name="event" />
-        <emulator href="/emulators/backfuzz" name="backfuzz" />
+ <emulation>
+   <emuname>MAL_EMU</emuname>
+   <emuType>MIX</emuType>
+   <emuresourceType>MIX</emuresourceType>
+   <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
+   <emustartTime>now</emustartTime>
+   <!\-\-duration in seconds \-\->
+   <emustopTime>35</emustopTime>
 
-        <emulator\-params>
-                <resourceType>NET</resourceType>
-                <serverip>10.55.164.181</serverip>
-                <serverport>80</serverport>
-                <min>100</min>
-                <max>104</max>
-                <packettype>HTTP</packettype>
-                <timedelay>0</timedelay>
-                <salt>2</salt>
-        </emulator\-params>
-</distributions>
+   <distributions>
+      <name>MAL_Distro1</name>
+      <startTime>0</startTime>
+      <distribution href="/distributions/event" name="event" />
+       <emulator href="/emulators/backfuzz" name="backfuzz" />
+       <emulator\-params>
+         <resourceType>NET</resourceType>
+         <min>100</min>
+         <fuzzRange>900</fuzzRange>
+         <serverip>10.55.168.142</serverip>
+         <serverport>5050</serverport>
+         <packettype>TCP</packettype>
+         <timedelay>1</timedelay>
+         <salt>100</salt>
+      </emulator\-params>
+   </distributions>
 
-<distributions>
-        <name>Fuzzer_Distro2</name>
-        <!\-\-duration in seconds \-\->
-        <nextevent>Fuzzer_Distro2</nextevent>
-        <starttime>0</starttime>
-        <granularity>0</granularity>
-        <duration>0</duration>
-        <distribution href="/distributions/event" name="event" />
-        <emulator href="/emulators/backfuzz" name="backfuzz" />
+   <distributions>
+    <name>CPU_Distro</name>
+      <startTime>5</startTime>
+      <!\-\-duration in seconds \-\->
+      <duration>10</duration>
+      <granularity>2</granularity>
+      <distribution href="/distributions/linear" name="linear" />
+      <startLoad>10</startLoad>
+      <stopLoad>50</stopLoad>
+      <emulator href="/emulators/lookbusy" name="lookbusy" />
+      <emulator\-params>
+        <resourceType>CPU</resourceType>
+        <ncpus>0</ncpus>
+      </emulator\-params>
+    </distributions>
 
-        <emulator\-params>
-                <resourceType>NET</resourceType>
-                <serverip>10.55.164.181</serverip>
-                <serverport>22</serverport>
-                <min>100</min>
-                <max>104</max>
-                <packettype>SSH</packettype>
-                <timedelay>0</timedelay>
-                <salt>2</salt>
-        </emulator\-params>
-</distributions>
+   <log>
+         <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
+         <enable>0</enable>
+         <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
+         <frequency>3</frequency>
+         <logLevel>debug</logLevel>
+   </log>
+
+ </emulation>
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .sp
-The new distribution format in this case has a new tag \fBnextevent\fP, which allows the scheduler to understand that the following distribution to be scheduled, once the first distribution finishes, is the one in this tag. The example relates to a malicious distribution, which is further explained in a dedicated section of this document. Please note that in this case, although they are specified, the \fIstarttime\fP, \fIgranularity\fP and \fIduration\fP are not actually used as they don\(aqt apply in the event\-driven context. Finally, the \fIemustopTime\fP still sets the emulation ends, so in case a distribution hasn\(aqt finished within the emulation time range specified, the jobs left (running and scheduled) will be stopped.
+In the above example the Event based distributiopn would first run to completion, then the time (CPU) distribution would be run 5 secounds after the event finishes
 .SS Malicious module
 .sp
 The malicious module allows users to create distributions that can target a specific machine by sending fuzzing data over a chosen protocol. As the emulator supporting our malicious module is \fIbackfuzz\fP [1] [2], it offers fuzzing over various known protocol such as \fIHTTP\fP, \fISSH\fP, \fIFTP\fP, \fIIMAP\fP, etc. The nice thing that all protocols are added to the tool as plugins, so if a new protocol wants to be tested, a new plugin for it can be created and added to the tool for the purpose.
@@ -2380,27 +2467,42 @@ The fuzzing process time cannot be known a priori as it depends from factors out
 .sp
 .nf
 .ft C
-<distributions>
-        <name>Fuzzer_Distro1</name>
-        <nextevent>Fuzzer_Distro2</nextevent>
-        <!\-\-duration in seconds \-\->
-        <starttime>0</starttime>
-        <granularity>0</granularity>
-        <duration>0</duration>
-        <distribution href="/distributions/event" name="event" />
-        <emulator href="/emulators/backfuzz" name="backfuzz" />
+<emulation>
+ <emuname>MAL_EMU</emuname>
+ <emuType>NET</emuType>
+ <emuresourceType>NET</emuresourceType>
+ <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
+ <emustartTime>now</emustartTime>
+ <!\-\-duration in seconds \-\->
+ <emustopTime>120</emustopTime>
 
-        <emulator\-params>
-                <resourceType>NET</resourceType>
-                <serverip>10.55.164.181</serverip>
-                <serverport>80</serverport>
-                <min>100</min>
-                <max>104</max>
-                <packettype>HTTP</packettype>
-                <timedelay>0</timedelay>
-                <salt>2</salt>
-        </emulator\-params>
+<distributions>
+  <name>MAL_Distro</name>
+  <startTime>0</startTime>
+  <distribution href="/distributions/event" name="event" />
+   <emulator href="/emulators/backfuzz" name="backfuzz" />
+   <emulator\-params>
+     <resourceType>NET</resourceType>
+     <min>100</min>
+     <fuzzRange>900</fuzzRange>
+     <serverip>10.55.168.142</serverip>
+     <serverport>5050</serverport>
+     <packettype>TCP</packettype>
+     <!\-\- Timeout (default 0.8s)\-\->
+     <timedelay>1</timedelay>
+     <salt>10</salt>
+  </emulator\-params>
 </distributions>
+
+ <log>
+  <!\-\- Use value "1" to enable logging(by default logging is off)  \-\->
+  <enable>0</enable>
+  <!\-\- Use seconds for setting probe intervals(if logging is enabled default is 3sec)  \-\->
+  <frequency>3</frequency>
+  <logLevel>debug</logLevel>
+ </log>
+
+</emulation>
 .ft P
 .fi
 .UNINDENT

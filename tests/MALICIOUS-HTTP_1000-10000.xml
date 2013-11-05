@@ -10,6 +10,7 @@
   <distributions>
      <name>MAL_Distro1</name>
      <startTime>0</startTime>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/event" name="event" />
       <startLoad>1000</startLoad>
       <emulator href="/emulators/backfuzz" name="backfuzz" />

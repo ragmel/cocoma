@@ -23,6 +23,7 @@ begin
 	:startTime =>"0",
 	:duration =>"120",        
 	:granularity =>"20",
+	:minJobTime => "2",
 	:distribution => {
 			:href => "/distributions/linear_incr",
 			:name => "linear_incr"},

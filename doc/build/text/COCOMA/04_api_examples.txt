@@ -38,38 +38,45 @@ to connect to the COCOMA VM:
       :emustopTime => "240",
       :distributions =>[{
             :name => "MEM-increase",
-               :startTime =>"0",
-               :duration =>"120",
-               :granularity =>"10",
-               :distribution => {
-                                   :href => "/distributions/linear_incr",
-                                   :name => "linear_incr"},
-               :startLoad => "10%",
-               :stopLoad => "80%",
-               :emulator =>{
-               :href => "/emulators/stressapptest",
-               :name => "stressapptest"},
-               :'emulator-params' =>{
-                                   :resourceType =>"MEM",
-                                   :memThreads => "1"}
-         },
-                {
-                           :name => "MEM-decrease",
-                           :startTime =>"121",
-                           :duration =>"119",
-                           :granularity =>"10",
-                           :distribution => {
-                                   :href => "/distributions/linear_incr",
-                                   :name => "linear_incr"},
-                           :startLoad => "80%",
-                           :stopLoad => "10%",
-                           :emulator =>{
-                                   :href => "/emulators/stressapptest",
-                                   :name => "stressapptest"},
-                           :'emulator-params' =>{
-                                   :resourceType =>"MEM",
-                                   :memThreads => "1"}
-                           }]
+            :startTime =>"0",
+            :duration =>"120",
+            :granularity =>"10",
+            :minJobTime => "2",
+            :distribution => {
+                :href => "/distributions/linear_incr",
+                :name => "linear_incr"
+                },
+            :startLoad => "10%",
+            :stopLoad => "80%",
+            :emulator =>{
+            :href => "/emulators/stressapptest",
+            :name => "stressapptest"},
+           :'emulator-params' =>{
+                :resourceType =>"MEM",
+                :memThreads => "1"
+                }
+            },
+            {
+            :name => "MEM-decrease",
+            :startTime =>"121",
+            :duration =>"119",
+            :granularity =>"10",
+            :minJobTime => "2",
+            :distribution => {
+                :href => "/distributions/linear_incr",
+                :name => "linear_incr"
+                },
+            :startLoad => "80%",
+            :stopLoad => "10%",
+            :emulator =>{
+                :href => "/emulators/stressapptest",
+                :name => "stressapptest"
+                },
+            :'emulator-params' =>{
+                :resourceType =>"MEM",
+                :memThreads => "1"
+                }
+                   }]
     )
 
    end

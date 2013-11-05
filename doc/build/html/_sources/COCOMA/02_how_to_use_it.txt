@@ -635,6 +635,7 @@ Consider this sample XML document code:
         <!--duration in seconds -->
         <duration>60</duration>
         <granularity>20</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
@@ -697,7 +698,8 @@ The 'emuresourceType' value is used for a check to ensure that all distributions
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
          <stopLoad>95</stopLoad>
-         
+         <!-- minimum time jobs can run for -->
+         <minJobTime>2</minJobTime>
          <emulator href="/emulators/lookbusy" name="lookbusy" />
          <emulator-params>
            <!--more parameters will be added -->

@@ -10,7 +10,7 @@
   <distributions >
      <name>realTrace</name>
      <startTime>0</startTime>
-     <!--duration in seconds -->
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/real_trace" name="real_trace" />
      <trace>/home/melo/crunchbang_2013-10-22-13-27</trace>
      <emulator href="/emulators/lookbusy" name="lookbusy" />
@@ -19,6 +19,7 @@
 	    <!--time between iterations in usec (default 1000)-->
 		<malloclimit>4004</malloclimit>
 		<memSleep>0</memSleep>
+		<groupingRange>5</groupingRange>
      </emulator-params>
   </distributions>
 

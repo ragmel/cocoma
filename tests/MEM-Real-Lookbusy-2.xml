@@ -10,15 +10,16 @@
   <distributions >
      <name>realTrace</name>
      <startTime>0</startTime>
-     <!--duration in seconds -->
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/real_trace" name="real_trace" />
      <trace>/home/jordan/git/cocoma/extra_tobe_fixed/real-trace_2.txt</trace>
      <emulator href="/emulators/lookbusy" name="lookbusy" />
      <emulator-params>
         <resourceType>MEM</resourceType>
-	    <!--time between iterations in usec (default 1000)-->
+		<groupingRange>5</groupingRange>
 		<malloclimit>4004</malloclimit>
 		<memSleep>0</memSleep>
+		<groupingRange>5</groupingRange>
      </emulator-params>
   </distributions>
 

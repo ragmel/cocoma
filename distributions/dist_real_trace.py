@@ -33,6 +33,7 @@ RESTYPE = "null"
 MALLOC_LIMIT = 1000000
 
 import sys
+import Library
 from Library import getHomepath
 sys.path.insert(0, getHomepath() + '/distributions/')
 from abstract_dist import *
@@ -45,18 +46,16 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     #startLoad = int(distributionArg["startload"])
     #stopLoad = int(distributionArg["stopload"])
     trace = distributionArg["trace"]
+    groupingRange = int(distributionArg["groupingrange"])
     global MALLOC_LIMIT
     global RESTYPE
     RESTYPE = resType
+    global stressValues
+    global runStartTimeList
+    global runDurations
     
-    runStartTime = startTimesec
-    # we check that the resource type is mem, if not we give malloc limit a value 1000000, because is not used for the other resource types
-    
-    if RESTYPE == "mem":
-        MALLOC_LIMIT = int(distributionArg["malloclimit"])
-    
-    memReading=psutil.phymem_usage()
-    allMemoryPc =(memReading.total/1048576.00)/100.00
+#    memReading=psutil.phymem_usage()
+#    allMemoryPc =(memReading.total/1048576.00)/100.00
     
     try:
     
@@ -73,83 +72,55 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         FR = int(POLLFR)
         # skip the header
         prevline = f.readline()
-        # load the first line
-        prevline = f.readline()
-        count = 1
-        Tcount = count
-        
+
+        memArray = []
+        cpuArray = []
         for line in f:
-            CPUprev, MEMUSEDprev = prevline.split()
-            CPU, MEMUSED = line.split()
-            if RESTYPE == "mem":
-                if MEMUSED == MEMUSEDprev:
-                    count = count+1
-                    Tcount = Tcount+1
-                    MEMUSEDprev = MEMUSED
-                    #prevline = line
-                else:
-                    runDuration = count * FR
-                    count = 1
-                    # converting MEM in % to actual value in current machine
-                    MU=int(MEMUSEDprev)*allMemoryPc
-                    load = int(MU)
-                    insertLoad(load, runStartTime, runDuration)
-                    runStartTime = runStartTime + runDuration
-                    MEMUSEDprev = MEMUSED
-                    prevline = line
-                    
-            if RESTYPE == "cpu":
-                if CPU == CPUprev:
-                    count = count+1
-                    Tcount = Tcount+1
-                    CPUprev = CPU
-                    #prevline = line
-                else:
-                    runDuration = count * FR
-                    count = 1
-                    load = int(CPUprev)
-                    insertLoad(load, runStartTime, runDuration)
-                    runStartTime = runStartTime + runDuration
-                    CPUprev = CPU
-                    prevline = line
+            cpuValue, memValue = line.split()
+            memArray.append(memValue)
+            cpuArray.append(cpuValue)
     
+        if RESTYPE == "mem":
+            if ("MEMUSED%" in prevline):
+                memArray = Library.memToInt(memArray) #Convert memory stressValues from % to real values
+            groupingRange = (Library.getTotalMem() // 100) * groupingRange #Convert from % to real value
+            (stressValues, runStartTimeList, runDurations) = Library.realTraceSmoothing(memArray, startTimesec, FR, groupingRange)
+            MALLOC_LIMIT = int(distributionArg["malloclimit"])
+            splitMemMalloc()
+            
+        if RESTYPE == "cpu":
+            (stressValues, runStartTimeList, runDurations) = Library.realTraceSmoothing(cpuArray, startTimesec, FR, groupingRange)
+
+            
     except Exception, e:
         return "Unable to create distribution:\n" + str(e)
-    
-    # if the total count is greater than 1 we still have last insert to do
-    if Tcount > 1:
-        # last run to insert        
-        runDuration = count * FR
-        CPU, MEMUSED = prevline.split()
-        # converting MEM in % to actual value in current machine
-        if RESTYPE == "mem":
-                MU=int(MEMUSED)*allMemoryPc
-                load = int(MU)
-        if RESTYPE == "cpu":
-                load = int(CPU)   
-        
-        insertLoad(load, runStartTime, runDuration)
 
     triggerType = "time"
     return stressValues, runStartTimeList, runDurations, triggerType
 
-def insertRun(stressValue, startTime, runDuration):
-    stressValues.append(stressValue)
-    runStartTimeList.append(startTime)
-    runDurations.append(runDuration)
 
-# this function checks if the load is higher than the malloc limit. In that case creates smaller runs
-def insertLoad(load, startTime, duration):
-    # if not a resource tyme MEM we just insert it
-    if load > MALLOC_LIMIT and RESTYPE == "mem":
-        div = int(load // MALLOC_LIMIT)
-        rest = load - (div * MALLOC_LIMIT)
-        for _ in range(0,div):
-            insertRun(MALLOC_LIMIT, startTime, duration)
-        if rest > 0:
-            insertRun(rest, startTime, duration)
-    else:
-        insertRun(load, startTime, duration)
+#Checks if mem stressvalue is higher than MALLOC_LIMIT, splits jobs if so
+def splitMemMalloc():
+    global stressValues
+    global runStartTimeList
+    global runDurations
+    
+    mallocReached = False
+    tempJobs = [] #Holds details of split jobs, to be merged with main arrays/lists
+    for i, stressValue in enumerate(stressValues): 
+        if stressValue > MALLOC_LIMIT:
+            stressValues[i] = MALLOC_LIMIT
+            tempJob = [i, stressValue-MALLOC_LIMIT, runStartTimeList[i], runDurations[i]]
+            tempJobs.append(tempJob)
+            mallocReached = True
+    
+    for tempJob in reversed(tempJobs): #Add the values into the lists at position tempJob[0]
+        stressValues.insert(tempJob[0],tempJob[1]+1)
+        runStartTimeList.insert(tempJob[0],tempJob[2]+1)
+        runDurations.insert(tempJob[0],tempJob[3]+1)
+    
+    if (mallocReached): #Called recursively until no malloc splits performed
+        splitMemMalloc()
 
 def distHelp():
     '''
@@ -176,7 +147,7 @@ def argNames(Rtype=None):
    
     if Rtype.lower() == "cpu":
         
-        argNames={"trace":{"upperBound":999999,"lowerBound":0}}
+        argNames={"trace":{"upperBound":999999,"lowerBound":0}, "groupingRange":{"upperBound":99,"lowerBound":1}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
         return argNames
    
     #get free amount of memory and set it to upper bound
@@ -186,10 +157,9 @@ def argNames(Rtype=None):
         allMemory =memReading.total/1048576
 
         #argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "trace":""}
-        argNames={"malloclimit":{"upperBound":4095,"lowerBound":50},"trace":{"upperBound":999999,"lowerBound":0}}
+        argNames={"malloclimit":{"upperBound":4095,"lowerBound":50},"trace":{"upperBound":999999,"lowerBound":0}, "groupingRange":{"upperBound":99,"lowerBound":1}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
 #        print "Use Arg's: ",argNames," with mem"
         return argNames
 
 if __name__=="__main__":
-        
         pass

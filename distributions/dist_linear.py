@@ -92,13 +92,11 @@ def mallocSplit (indexPostition, stressValues, runStartTimeList, runDurations):
 
 
 def argNames(Rtype=None):
-#        raise Exception ("argNames running")
         '''
         We specify how many arguments distribution instance require to run properly
         Rtype = <CPU,MEM,IO,NET>
         IMPORTANT: All argument variable names must be in lower case
         '''
-    
         #discovery of supported resources
         if Rtype == None:
             argNames = ["cpu","mem","io","net"]
@@ -107,7 +105,7 @@ def argNames(Rtype=None):
     
         if Rtype.lower() == "cpu":
             
-            argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
+            argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
             return argNames
        
         #get free amount of memory and set it to upper bound
@@ -116,25 +114,17 @@ def argNames(Rtype=None):
             memReading=psutil.phymem_usage()
             allMemory =memReading.total/1048576
     
-            argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
+            argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
             return argNames
             
         if Rtype.lower() == "io":
-            argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
+            argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
             return argNames
         
         if Rtype.lower() == "net":
-            argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}}
+            argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
             return argNames
 
 
-
 if __name__ == "__main__": #For testing
-    try:
-        functionCount()
-#        obj.insertRun()
-#        obj.insertLoad()
-        distHelp()
-        argNames()
-    except NotImplementedError:
-        print "Some methods not implemented"
+    pass

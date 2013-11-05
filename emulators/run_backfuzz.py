@@ -219,7 +219,7 @@ def emulatorArgNames(Rtype=None):
 
     if Rtype.lower() == "net":
 
-        argNames={"min":{"upperBound":100000000,"lowerBound":0}, "fuzzRange":{"upperBound":100000000,"lowerBound":0}, "serverport":{"upperBound":10000,"lowerBound":0}, "serverip":{"upperBound":10000,"lowerBound":1}, "packettype":{"upperBound":10000,"lowerBound":1}, "timedelay":{"upperBound":100,"lowerBound":1}, "salt":{"upperBound":100,"lowerBound":1}}
+        argNames={"min":{"upperBound":100000000,"lowerBound":1}, "fuzzRange":{"upperBound":100000000,"lowerBound":1}, "serverport":{"upperBound":10000,"lowerBound":0}, "serverip":{"upperBound":10000,"lowerBound":1}, "packettype":{"upperBound":10000,"lowerBound":1}, "timedelay":{"upperBound":100,"lowerBound":0}, "salt":{"upperBound":100000,"lowerBound":1}}
 
         return argNames
 

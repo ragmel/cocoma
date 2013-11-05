@@ -13,6 +13,7 @@
      <!--duration in seconds -->
      <duration>200</duration>
      <granularity>20</granularity>
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
 	<!--set target bandwidth to bits per sec-->
       <startLoad>1</startLoad>

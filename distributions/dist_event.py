@@ -65,9 +65,8 @@ def argNames(Rtype=None):
         return argNames
     
     if Rtype.lower() == "net":
-        argNames={}
+        argNames={"minJobTime":{"upperBound":10000000,"lowerBound":2}}
         return argNames
 
 if __name__=="__main__":
-        distHelp()
         pass

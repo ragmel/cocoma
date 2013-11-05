@@ -20,10 +20,11 @@ begin
    :emuStartTime => "now",
    :emuStopTime => "60",
    :distributions => {
-	:name => "MEM-increase",
+	:name => "CPU-increase",
 	:startTime =>"0",
 	:duration =>"60",        
 	:granularity =>"10",
+	:minJobTime => "2",
 	:distribution => {
 			:href => "/distributions/linear",
 			:name => "linear"},

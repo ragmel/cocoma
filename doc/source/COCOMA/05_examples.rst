@@ -24,6 +24,7 @@ Emulation XML for CPU contention:
         <!--duration in seconds -->
         <duration>120</duration>
         <granularity>24</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
@@ -72,6 +73,7 @@ Emulation XML for I/O contention:
         <!--duration in seconds -->
         <duration>60</duration>
         <granularity>5</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear_incr" name="linear_incr" />
         <startLoad>1</startLoad>
         <stopLoad>10</stopLoad>
@@ -118,6 +120,7 @@ In this example we use a different distribution called *trapezoidal*:
         <!--duration in seconds -->
         <duration>60</duration>
         <granularity>5</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/trapezoidal" name="trapezoidal" />
         <startLoad>1</startLoad>
         <stopLoad>10</stopLoad>
@@ -166,6 +169,7 @@ Emulation XML for memory contention:
         <!--duration in seconds -->
         <duration>60</duration>
         <granularity>5</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear_incr" name="linear_incr" />
         <!--Memory usage (Megabytes) -->
         <startLoad>100</startLoad>
@@ -208,6 +212,7 @@ Example for memory emulation using *trapezoidal* distribution:
         <!--duration in seconds -->
         <duration>60</duration>
         <granularity>5</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/trapezoidal" name="trapezoidal" />
         <!--Megabytes for memory -->
         <startLoad>100</startLoad>
@@ -256,6 +261,7 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
         <!--duration in seconds -->
         <duration>150</duration>
         <granularity>10</granularity>
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear_incr" name="linear_incr" />
         <!--set target bandwidth to bits per sec-->
         <startLoad>100</startLoad>
@@ -307,6 +313,7 @@ An important feature of COCOMA is the ability to combine multiple distributions 
            <!--duration in seconds -->
            <duration>60</duration>
            <granularity>1</granularity>
+           <minJobTime>2</minJobTime>
            <distribution href="/distributions/linear" name="linear" />
            <!--cpu utilization distribution range-->
            <startLoad>10</startLoad>
@@ -325,6 +332,7 @@ An important feature of COCOMA is the ability to combine multiple distributions 
             <!--duration in seconds -->
             <duration>60</duration>
             <granularity>5</granularity>
+            <minJobTime>2</minJobTime>
             <distribution href="/distributions/linear_incr" name="linear_incr" />
             <!--Megabytes for memory -->
             <startLoad>100</startLoad>
@@ -365,6 +373,7 @@ An important feature of COCOMA is the ability to combine multiple distributions 
             <!--duration in seconds -->
             <duration>60</duration>
             <granularity>1</granularity>
+            <minJobTime>2</minJobTime>
             <distribution href="/distributions/linear" name="linear" />
             <!--cpu utilization distribution range-->
             <startLoad>10</startLoad>
@@ -383,6 +392,7 @@ An important feature of COCOMA is the ability to combine multiple distributions 
             <!--duration in seconds -->
             <duration>60</duration>
             <granularity>5</granularity>
+            <minJobTime>2</minJobTime>
             <distribution href="/distributions/linear_incr" name="linear_incr" />
             <!--Megabytes for memory -->
             <startLoad>100</startLoad>
@@ -401,6 +411,7 @@ An important feature of COCOMA is the ability to combine multiple distributions 
             <!--duration in seconds -->
             <duration>60</duration>
             <granularity>5</granularity>
+            <minJobTime>2</minJobTime>
             <distribution href="/distributions/linear_incr" name="linear_incr" />
             <startLoad>1</startLoad>
             <stopLoad>10</stopLoad>
@@ -448,6 +459,7 @@ Event Based Emulation example:
       <distributions>
          <name>MAL_Distro1</name>
          <startTime>0</startTime>
+         <minJobTime>2</minJobTime>
          <distribution href="/distributions/event" name="event" />
           <emulator href="/emulators/backfuzz" name="backfuzz" />
           <emulator-params>
@@ -468,6 +480,7 @@ Event Based Emulation example:
          <!--duration in seconds -->
          <duration>10</duration>
          <granularity>2</granularity>
+         <minJobTime>2</minJobTime>
          <distribution href="/distributions/linear" name="linear" />
          <startLoad>10</startLoad>
          <stopLoad>50</stopLoad>
