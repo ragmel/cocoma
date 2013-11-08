@@ -76,7 +76,7 @@ To check if the scheduler is running use the following:</p>
 </pre></div>
 </div>
 <p>The <strong>API daemon</strong> - provides the RESTfull web API, which exposes COCOMA resources to be used over the network. It follows the same command structure as the Scheduler.
-To check if the scheduler is running use the following:</p>
+To check if the API daemon is running use the following:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --show api
 </pre></div>
 </div>
@@ -148,7 +148,7 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-j">
 <tt class="descname">-j</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list-jobs</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-j" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name and the planned execution time</p>
+<dd><p>Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name, the planned execution time, and the duration (when available)</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -166,7 +166,7 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-x">
 <tt class="descname">-x</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--xml</tt><tt class="descclassname"> &lt;file name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-x" title="Permalink to this definition">¶</a></dt>
-<dd><p>It create and emulation based on the local XML</p>
+<dd><p>It create and emulation based on the XML provided</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -184,7 +184,7 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-p">
 <tt class="descname">-p</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--purge</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-p" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all DB entries, all scheduled jobs</p>
+<dd><p>Remove all DB entries, all scheduled jobs and all logs</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -202,7 +202,7 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh--show">
 <tt class="descname">--show</tt><tt class="descclassname"> &lt;api&gt;, &lt;scheduler&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh--show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show OS information on Scheduler or API daemon, displays PID numbers</p>
+<dd><p>Show Scheduler or API daemon processes and their PID numbers</p>
 </dd></dl>
 
 <p>Most of these options are used by themselves, with the exception of &#8216;-x&#8217; (&#8211;xml) which can be used in conjunction with &#8216;-f&#8217; (&#8211;force) and/or &#8216;-n&#8217; (&#8211;now)</p>
@@ -680,8 +680,7 @@ The file with CSV extention will contain the system resource data, and the file 
 37
 38
 39
-40
-41</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+40</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>CPU_EMU<span class="nt">&lt;/emuname&gt;</span>
   <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -697,7 +696,6 @@ The file with CSV extention will contain the system resource data, and the file 
      <span class="c">&lt;!--duration in seconds --&gt;</span>
      <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>20<span class="nt">&lt;/granularity&gt;</span>
-     <span class="nt">&lt;minJobTime&gt;</span>2<span class="nt">&lt;/minJobTime&gt;</span>
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
      <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
@@ -749,7 +747,7 @@ The file with CSV extention will contain the system resource data, and the file 
 <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
-<p>The &#8216;emuresourceType&#8217; value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions use &#8216;MIX&#8217;</p>
+<p>The &#8216;emuresourceType&#8217; value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions over different resource types use &#8216;MIX&#8217;</p>
 <ul class="simple">
 <li><strong>Distribution</strong></li>
 </ul>
@@ -773,8 +771,7 @@ The file with CSV extention will contain the system resource data, and the file 
 18
 19
 20
-21
-22</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="nt">&lt;distributions&gt;</span>
+21</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="nt">&lt;distributions&gt;</span>
 
    <span class="nt">&lt;name&gt;</span>CPU_Distro<span class="nt">&lt;/name&gt;</span>
      <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
@@ -785,8 +782,7 @@ The file with CSV extention will contain the system resource data, and the file 
      <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
       <span class="nt">&lt;stopLoad&gt;</span>95<span class="nt">&lt;/stopLoad&gt;</span>
-      <span class="c">&lt;!-- minimum time jobs can run for --&gt;</span>
-      <span class="nt">&lt;minJobTime&gt;</span>2<span class="nt">&lt;/minJobTime&gt;</span>
+
       <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/lookbusy&quot;</span> <span class="na">name=</span><span class="s">&quot;lookbusy&quot;</span> <span class="nt">/&gt;</span>
       <span class="nt">&lt;emulator-params&gt;</span>
         <span class="c">&lt;!--more parameters will be added --&gt;</span>

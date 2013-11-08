@@ -39,7 +39,7 @@ also be started in *DEBUG* mode:
 
 The **API daemon** - provides the RESTfull web API, which exposes
 COCOMA resources to be used over the network. It follows the same
-command structure as the Scheduler. To check if the scheduler is
+command structure as the Scheduler. To check if the API daemon is
 running use the following:
 
    $ ccmsh --show api
@@ -105,7 +105,8 @@ The COCOMA CLI is called *ccmsh*, and provides the following options:
 
    Queries the scheduler for the list of jobs that are scheduled to be
    executed and are currently executing. For each one, it gives the
-   job name and the planned execution time
+   job name, the planned execution time, and the duration (when
+   available)
 
 -i, --dist <distribution name>
 
@@ -123,7 +124,7 @@ The COCOMA CLI is called *ccmsh*, and provides the following options:
 
 -x, --xml <file name>
 
-   It create and emulation based on the local XML
+   It create and emulation based on the XML provided
 
 -n, --now (used with -x option only)
 
@@ -136,7 +137,7 @@ The COCOMA CLI is called *ccmsh*, and provides the following options:
 
 -p, --purge
 
-   Remove all DB entries, all scheduled jobs
+   Remove all DB entries, all scheduled jobs and all logs
 
 --start <api interface port>, <scheduler interface port>
 
@@ -152,8 +153,7 @@ The COCOMA CLI is called *ccmsh*, and provides the following options:
 
 --show <api>, <scheduler>
 
-   Show OS information on Scheduler or API daemon, displays PID
-   numbers
+   Show Scheduler or API daemon processes and their PID numbers
 
 Most of these options are used by themselves, with the exception of
 '-x' (--xml) which can be used in conjunction with '-f' (--force)
@@ -628,7 +628,6 @@ Consider this sample XML document code:
         <!--duration in seconds -->
         <duration>60</duration>
         <granularity>20</granularity>
-        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
@@ -672,7 +671,8 @@ consists of three blocks:
 
 The 'emuresourceType' value is used for a check to ensure that all
 distributions in an emulstion are of the specified type (CPU in this
-case). For Emulations with multiple distributions use 'MIX'
+case). For Emulations with multiple distributions over different
+resource types use 'MIX'
 
 * **Distribution**
 
@@ -687,8 +687,7 @@ case). For Emulations with multiple distributions use 'MIX'
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
          <stopLoad>95</stopLoad>
-         <!-- minimum time jobs can run for -->
-         <minJobTime>2</minJobTime>
+
          <emulator href="/emulators/lookbusy" name="lookbusy" />
          <emulator-params>
            <!--more parameters will be added -->

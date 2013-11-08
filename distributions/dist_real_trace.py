@@ -25,8 +25,8 @@ import Pyro4, time, psutil
 Pyro4.config.HMAC_KEY='pRivAt3Key'
 
 #lists for return
-stressValues = []        
-runStartTimeList=[]         
+stressValues = []
+runStartTimeList=[]
 runDurations = []
 
 RESTYPE = "null"
@@ -83,6 +83,9 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         if RESTYPE == "mem":
             if ("MEMUSED%" in prevline):
                 memArray = Library.memToInt(memArray) #Convert memory stressValues from % to real values
+            else:
+                memArray = map(lambda stressVal: int(stressVal)  // (1024**2), memArray)
+#                for memVal in memArray: memVal = memVal / (1024**2) #Convert from Bytes into MegaBytes
             groupingRange = (Library.getTotalMem() // 100) * groupingRange #Convert from % to real value
             (stressValues, runStartTimeList, runDurations) = Library.realTraceSmoothing(memArray, startTimesec, FR, groupingRange)
             MALLOC_LIMIT = int(distributionArg["malloclimit"])
@@ -104,23 +107,24 @@ def splitMemMalloc():
     global stressValues
     global runStartTimeList
     global runDurations
+    mallocReached = True
     
-    mallocReached = False
-    tempJobs = [] #Holds details of split jobs, to be merged with main arrays/lists
-    for i, stressValue in enumerate(stressValues): 
-        if stressValue > MALLOC_LIMIT:
-            stressValues[i] = MALLOC_LIMIT
-            tempJob = [i, stressValue-MALLOC_LIMIT, runStartTimeList[i], runDurations[i]]
-            tempJobs.append(tempJob)
-            mallocReached = True
+    while (mallocReached):
+        mallocReached = False
+        tempJobs = [] #Holds details of split jobs, to be merged with main arrays/lists
+        for i, stressValue in enumerate(stressValues): 
+            if stressValue > MALLOC_LIMIT:
+                stressValues[i] = MALLOC_LIMIT
+                tempJob = [i, stressValue-MALLOC_LIMIT, runStartTimeList[i], runDurations[i]]
+                tempJobs.append(tempJob)
+                mallocReached = True
+        
+        for tempJob in reversed(tempJobs): #Add the values into the lists at position tempJob[0]
+            stressValues.insert(tempJob[0]+1,tempJob[1])
+            runStartTimeList.insert(tempJob[0]+1,tempJob[2])
+            runDurations.insert(tempJob[0]+1,tempJob[3])
     
-    for tempJob in reversed(tempJobs): #Add the values into the lists at position tempJob[0]
-        stressValues.insert(tempJob[0],tempJob[1]+1)
-        runStartTimeList.insert(tempJob[0],tempJob[2]+1)
-        runDurations.insert(tempJob[0],tempJob[3]+1)
-    
-    if (mallocReached): #Called recursively until no malloc splits performed
-        splitMemMalloc()
+    print "stressValues out ", stressValues #REMOVE
 
 def distHelp():
     '''

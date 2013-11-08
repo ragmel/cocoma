@@ -125,7 +125,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 					</div>
 					<hr>
 					<br>
-					Total Duration: &nbsp;<label id="totalDuration">60</label>
+					Total Duration: &nbsp;<input id="totalDuration" value="60" style="width: 75px;" onChange = "checkTotalduration()">
 					<br><br>
 					
 					<button type="button" onclick="run()">Run now</button>
@@ -671,6 +671,17 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			return !isNaN(parseFloat(n)) && isFinite(n);
 		}
 
+        function checkTotalduration()
+        {
+            var isNum = isNumber($("#totalDuration").val());
+            if (!isNum)
+            {
+                calculateTotalDuration();
+                alert("The value given for totalDuration was naot a number, calculating correct value");
+            }
+            else totalDuration = $("#totalDuration").val();
+        }
+
         function showJobs()
         {
             $.get(cocomaIP + "jobs", function(response){
@@ -745,7 +756,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 				td += temp;
 			}
 			totalDuration = td; //set global var
-			$("#totalDuration").text(td);
+			$("#totalDuration").val(td);
 		}
 		
 		function displayEmus(data)

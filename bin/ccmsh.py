@@ -398,12 +398,12 @@ More info @ https://github.com/cragusa/cocoma
                         print "Stress Value: ", Runs["stressValue"]
                         print "Error Message: ", Runs["message"]
 
-                try:
-                    #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" list all")
-                    msg = {"Action":"USER REQUEST list all Emulations"}
-                    producer.sendmsg(myName,msg)
-                except Exception,e:
-                    print "NO USER INPUT"
+            try:
+                #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" list all")
+                msg = {"Action":"USER REQUEST list all Emulations"}
+                producer.sendmsg(myName,msg)
+            except Exception,e:
+                print "NO USER INPUT"
 
                 
     if options.listJobs:
@@ -603,7 +603,7 @@ def getVersion():
      except sqlite.Error, e:
         print " SQL Error %s:" % e.args[0]
         print e
-        return "<error>str(e)</error>"
+        return "<error>" + str(e) + "</error>"
         sys.exit(1)        
 
 def noExtraOptions(options, *arg):

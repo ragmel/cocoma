@@ -1,4 +1,4 @@
-.TH "COCOMA" "1" "November 05, 2013" "2.0" "COCOMA"
+.TH "COCOMA" "1" "November 08, 2013" "2.0" "COCOMA"
 .SH NAME
 COCOMA \- man page
 .
@@ -121,7 +121,7 @@ $ ccmsh \-\-start scheduler eth1 55555 debug
 .UNINDENT
 .sp
 The \fBAPI daemon\fP \- provides the RESTfull web API, which exposes COCOMA resources to be used over the network. It follows the same command structure as the Scheduler.
-To check if the scheduler is running use the following:
+To check if the API daemon is running use the following:
 .INDENT 0.0
 .INDENT 3.5
 .sp
@@ -200,7 +200,7 @@ Display list of results of all emulations that are scheduled or already finished
 .INDENT 0.0
 .TP
 .B \-j, \-\-list\-jobs
-Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name and the planned execution time
+Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name, the planned execution time, and the duration (when available)
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -215,7 +215,7 @@ Scans the \fI"/usr/share/pyshared/cocoma/emulators"\fP folder and displays all a
 .INDENT 0.0
 .TP
 .B \-x, \-\-xml <file name>
-It create and emulation based on the local XML
+It create and emulation based on the XML provided
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -230,7 +230,7 @@ Deletes a specific emulation from the database
 .INDENT 0.0
 .TP
 .B \-p, \-\-purge
-Remove all DB entries, all scheduled jobs
+Remove all DB entries, all scheduled jobs and all logs
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -245,7 +245,7 @@ Stop Scheduler or API daemon
 .INDENT 0.0
 .TP
 .B \-\-show <api>, <scheduler>
-Show OS information on Scheduler or API daemon, displays PID numbers
+Show Scheduler or API daemon processes and their PID numbers
 .UNINDENT
 .sp
 Most of these options are used by themselves, with the exception of \(aq\-x\(aq (\-\-xml) which can be used in conjunction with \(aq\-f\(aq (\-\-force) and/or \(aq\-n\(aq (\-\-now)
@@ -965,7 +965,6 @@ Consider this sample XML document code:
      <!\-\-duration in seconds \-\->
      <duration>60</duration>
      <granularity>20</granularity>
-     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear" name="linear" />
      <!\-\-cpu utilization distribution range\-\->
       <startLoad>10</startLoad>
@@ -1020,7 +1019,7 @@ The XML document defines the emulation experiment details, which consists of thr
 .UNINDENT
 .UNINDENT
 .sp
-The \(aqemuresourceType\(aq value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions use \(aqMIX\(aq
+The \(aqemuresourceType\(aq value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions over different resource types use \(aqMIX\(aq
 .INDENT 0.0
 .IP \(bu 2
 \fBDistribution\fP
@@ -1041,8 +1040,7 @@ The \(aqemuresourceType\(aq value is used for a check to ensure that all distrib
      <!\-\-cpu utilization distribution range\-\->
       <startLoad>10</startLoad>
       <stopLoad>95</stopLoad>
-      <!\-\- minimum time jobs can run for \-\->
-      <minJobTime>2</minJobTime>
+
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator\-params>
         <!\-\-more parameters will be added \-\->
@@ -1943,24 +1941,6 @@ Event Based Emulation example:
 .fi
 .UNINDENT
 .UNINDENT
-.SS Known Issues
-.sp
-The interaction of the various emulators used in COCOMA can cause unexpected issues. Some of these issues are listed below (This is \fInot\fP an exhaustive list, and will be updated as new issues are discovered)
-.INDENT 0.0
-.IP \(bu 2
-Stressapptest uses ~100% CPU, regardless of what resource it is being ran on.
-.IP \(bu 2
-If a Linear increase distribution is run on memory using stressapptest at the same time as Iperf is being used to load the Network, then the Network resource may not reach its target load. This problem is usually encountered when the memory usage reaches over ~80% (as shown in the graph below)
-.UNINDENT
-.INDENT 0.0
-.INDENT 2.5
-[image]
-.UNINDENT
-.UNINDENT
-.INDENT 0.0
-.IP \(bu 2
-When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command \(aqccmsh \-j\(aq) may not be correct
-.UNINDENT
 .SS Adding a new emulator
 .sp
 In order to add a new emulator, a new wrapper has to be implemented. This needs to inherit from the relative abstract class, which can be found in the same \fIemulators\fP directory. The class needs 3 different methods:
@@ -2519,7 +2499,7 @@ In the emulator parameters part we can specify the server IP and its port, the m
 The interaction of the various emulators used in COCOMA can cause unexpected issues. Some of these issues are listed below (This is \fInot\fP an exhaustive list, and will be updated as new issues are discovered)
 .INDENT 0.0
 .IP \(bu 2
-Stressapptest uses ~100% CPU, regardless of what resource it is being ran on.
+Stressapptest: it uses ~100% CPU, regardless of what resource it is being ran on. Also, when using it with high memory consumption, it can create issues to processes running in the COCOMA VM, such as causing them to crash. The user should be aware of how it is used;
 .IP \(bu 2
 If a Linear increase distribution is run on memory using stressapptest at the same time as Iperf is being used to load the Network, then the Network resource may not reach its target load. This problem is usually encountered when the memory usage reaches over ~80% (as shown in the graph below)
 .UNINDENT
@@ -2530,7 +2510,7 @@ If a Linear increase distribution is run on memory using stressapptest at the sa
 .UNINDENT
 .INDENT 0.0
 .IP \(bu 2
-When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command \(aqccmsh \-j\(aq) may not be correct
+When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command \(aqccmsh \-j\(aq) may not be correct;
 .UNINDENT
 .SS Implementation details
 .sp

@@ -31,7 +31,7 @@ If more detailed output information is needed, the *Scheduler* can also be start
    $ ccmsh --start scheduler eth1 55555 debug 
 
 The **API daemon** - provides the RESTfull web API, which exposes COCOMA resources to be used over the network. It follows the same command structure as the Scheduler.
-To check if the scheduler is running use the following:
+To check if the API daemon is running use the following:
 
 .. code-block:: bash
 
@@ -93,7 +93,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
     
 .. cmdoption:: -j, --list-jobs 
 
-      Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name and the planned execution time
+      Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name, the planned execution time, and the duration (when available)
 .. cmdoption:: -i, --dist <distribution name>
 
       Scans the *"/usr/share/pyshared/cocoma/distributions"* folder and displays all available distribution modules. If a distribution name is provided, then it shows the help information for that specific distribution 
@@ -104,7 +104,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
 .. cmdoption:: -x, --xml <file name>
 
-      It create and emulation based on the local XML
+      It create and emulation based on the XML provided
 
 .. cmdoption:: -n, --now (used with -x option only)
 
@@ -116,7 +116,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
 .. cmdoption:: -p, --purge 
 
-      Remove all DB entries, all scheduled jobs 
+      Remove all DB entries, all scheduled jobs and all logs
 
 .. cmdoption::     --start <api interface port>, <scheduler interface port>
       
@@ -128,7 +128,7 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
 .. cmdoption::     --show <api>, <scheduler>
       
-      Show OS information on Scheduler or API daemon, displays PID numbers
+      Show Scheduler or API daemon processes and their PID numbers
 
 Most of these options are used by themselves, with the exception of '-x' (--xml) which can be used in conjunction with '-f' (--force) and/or '-n' (--now)
 
@@ -635,7 +635,6 @@ Consider this sample XML document code:
         <!--duration in seconds -->
         <duration>60</duration>
         <granularity>20</granularity>
-        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
@@ -680,7 +679,7 @@ The XML document defines the emulation experiment details, which consists of thr
      ...
    </emulation>
 
-The 'emuresourceType' value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions use 'MIX'
+The 'emuresourceType' value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions over different resource types use 'MIX'
 
 * **Distribution**
 
@@ -698,8 +697,7 @@ The 'emuresourceType' value is used for a check to ensure that all distributions
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
          <stopLoad>95</stopLoad>
-         <!-- minimum time jobs can run for -->
-         <minJobTime>2</minJobTime>
+         
          <emulator href="/emulators/lookbusy" name="lookbusy" />
          <emulator-params>
            <!--more parameters will be added -->

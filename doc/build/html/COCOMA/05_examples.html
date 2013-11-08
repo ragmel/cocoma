@@ -926,20 +926,6 @@
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="known-issues">
-<h2>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h2>
-<p>The interaction of the various emulators used in COCOMA can cause unexpected issues. Some of these issues are listed below (This is <em>not</em> an exhaustive list, and will be updated as new issues are discovered)</p>
-<ul class="simple">
-<li>Stressapptest uses ~100% CPU, regardless of what resource it is being ran on.</li>
-<li>If a Linear increase distribution is run on memory using stressapptest at the same time as Iperf is being used to load the Network, then the Network resource may not reach its target load. This problem is usually encountered when the memory usage reaches over ~80% (as shown in the graph below)</li>
-</ul>
-<div class="figure align-center">
-<img alt="../_images/MEM_NET-Problem.png" src="../_images/MEM_NET-Problem.png" />
-</div>
-<ul class="simple">
-<li>When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command &#8216;ccmsh -j&#8217;) may not be correct</li>
-</ul>
-</div>
 </div>
 
 
@@ -960,7 +946,6 @@
 <li><a class="reference internal" href="#network">Network</a></li>
 <li><a class="reference internal" href="#multiple-distributions-emulation">Multiple distributions emulation</a></li>
 <li><a class="reference internal" href="#event-based-scheduling">Event Based Scheduling</a></li>
-<li><a class="reference internal" href="#known-issues">Known Issues</a></li>
 </ul>
 </li>
 </ul>
