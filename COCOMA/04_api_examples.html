@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Creating Emulation via API Client (Restfully) &mdash; COCOMA 1 documentation</title>
+    <title>Creating Emulation via API Client (Restfully) &mdash; COCOMA v2.0 - Secundus documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1',
+        VERSION:     'v2.0 - Secundus',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="top" title="COCOMA v2.0 - Secundus documentation" href="../index.html" />
     <link rel="next" title="The Web UI" href="07_webUI.html" />
     <link rel="prev" title="Creating Emulation via CLI" href="03_cli_examples.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="03_cli_examples.html" title="Creating Emulation via CLI"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">COCOMA v2.0 - Secundus documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -80,38 +80,45 @@
    <span class="ss">:emustopTime</span> <span class="o">=&gt;</span> <span class="s2">&quot;240&quot;</span><span class="p">,</span>
    <span class="ss">:distributions</span> <span class="o">=&gt;[</span><span class="p">{</span>
          <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;MEM-increase&quot;</span><span class="p">,</span>
-            <span class="ss">:startTime</span> <span class="o">=&gt;</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
-            <span class="ss">:duration</span> <span class="o">=&gt;</span><span class="s2">&quot;120&quot;</span><span class="p">,</span>
-            <span class="ss">:granularity</span> <span class="o">=&gt;</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
-            <span class="ss">:distribution</span> <span class="o">=&gt;</span> <span class="p">{</span>
-                                <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s2">&quot;/distributions/linear_incr&quot;</span><span class="p">,</span>
-                                <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;linear_incr&quot;</span><span class="p">},</span>
-            <span class="ss">:startLoad</span> <span class="o">=&gt;</span> <span class="s2">&quot;10%&quot;</span><span class="p">,</span>
-            <span class="ss">:stopLoad</span> <span class="o">=&gt;</span> <span class="s2">&quot;80%&quot;</span><span class="p">,</span>
-            <span class="ss">:emulator</span> <span class="o">=&gt;</span><span class="p">{</span>
-            <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s2">&quot;/emulators/stressapptest&quot;</span><span class="p">,</span>
-            <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;stressapptest&quot;</span><span class="p">},</span>
-            <span class="ss">:&#39;emulator-params&#39;</span> <span class="o">=&gt;</span><span class="p">{</span>
-                                <span class="ss">:resourceType</span> <span class="o">=&gt;</span><span class="s2">&quot;MEM&quot;</span><span class="p">,</span>
-                                <span class="ss">:memThreads</span> <span class="o">=&gt;</span> <span class="s2">&quot;1&quot;</span><span class="p">}</span>
-      <span class="p">},</span>
-             <span class="p">{</span>
-                        <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;MEM-decrease&quot;</span><span class="p">,</span>
-                        <span class="ss">:startTime</span> <span class="o">=&gt;</span><span class="s2">&quot;121&quot;</span><span class="p">,</span>
-                        <span class="ss">:duration</span> <span class="o">=&gt;</span><span class="s2">&quot;119&quot;</span><span class="p">,</span>
-                        <span class="ss">:granularity</span> <span class="o">=&gt;</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
-                        <span class="ss">:distribution</span> <span class="o">=&gt;</span> <span class="p">{</span>
-                                <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s2">&quot;/distributions/linear_incr&quot;</span><span class="p">,</span>
-                                <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;linear_incr&quot;</span><span class="p">},</span>
-                        <span class="ss">:startLoad</span> <span class="o">=&gt;</span> <span class="s2">&quot;80%&quot;</span><span class="p">,</span>
-                        <span class="ss">:stopLoad</span> <span class="o">=&gt;</span> <span class="s2">&quot;10%&quot;</span><span class="p">,</span>
-                        <span class="ss">:emulator</span> <span class="o">=&gt;</span><span class="p">{</span>
-                                <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s2">&quot;/emulators/stressapptest&quot;</span><span class="p">,</span>
-                                <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;stressapptest&quot;</span><span class="p">},</span>
-                        <span class="ss">:&#39;emulator-params&#39;</span> <span class="o">=&gt;</span><span class="p">{</span>
-                                <span class="ss">:resourceType</span> <span class="o">=&gt;</span><span class="s2">&quot;MEM&quot;</span><span class="p">,</span>
-                                <span class="ss">:memThreads</span> <span class="o">=&gt;</span> <span class="s2">&quot;1&quot;</span><span class="p">}</span>
-                        <span class="p">}</span><span class="o">]</span>
+         <span class="ss">:startTime</span> <span class="o">=&gt;</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+         <span class="ss">:duration</span> <span class="o">=&gt;</span><span class="s2">&quot;120&quot;</span><span class="p">,</span>
+         <span class="ss">:granularity</span> <span class="o">=&gt;</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+         <span class="ss">:minJobTime</span> <span class="o">=&gt;</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+         <span class="ss">:distribution</span> <span class="o">=&gt;</span> <span class="p">{</span>
+             <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s2">&quot;/distributions/linear_incr&quot;</span><span class="p">,</span>
+             <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;linear_incr&quot;</span>
+             <span class="p">},</span>
+         <span class="ss">:startLoad</span> <span class="o">=&gt;</span> <span class="s2">&quot;10%&quot;</span><span class="p">,</span>
+         <span class="ss">:stopLoad</span> <span class="o">=&gt;</span> <span class="s2">&quot;80%&quot;</span><span class="p">,</span>
+         <span class="ss">:emulator</span> <span class="o">=&gt;</span><span class="p">{</span>
+         <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s2">&quot;/emulators/stressapptest&quot;</span><span class="p">,</span>
+         <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;stressapptest&quot;</span><span class="p">},</span>
+        <span class="ss">:&#39;emulator-params&#39;</span> <span class="o">=&gt;</span><span class="p">{</span>
+             <span class="ss">:resourceType</span> <span class="o">=&gt;</span><span class="s2">&quot;MEM&quot;</span><span class="p">,</span>
+             <span class="ss">:memThreads</span> <span class="o">=&gt;</span> <span class="s2">&quot;1&quot;</span>
+             <span class="p">}</span>
+         <span class="p">},</span>
+         <span class="p">{</span>
+         <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;MEM-decrease&quot;</span><span class="p">,</span>
+         <span class="ss">:startTime</span> <span class="o">=&gt;</span><span class="s2">&quot;121&quot;</span><span class="p">,</span>
+         <span class="ss">:duration</span> <span class="o">=&gt;</span><span class="s2">&quot;119&quot;</span><span class="p">,</span>
+         <span class="ss">:granularity</span> <span class="o">=&gt;</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+         <span class="ss">:minJobTime</span> <span class="o">=&gt;</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+         <span class="ss">:distribution</span> <span class="o">=&gt;</span> <span class="p">{</span>
+             <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s2">&quot;/distributions/linear_incr&quot;</span><span class="p">,</span>
+             <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;linear_incr&quot;</span>
+             <span class="p">},</span>
+         <span class="ss">:startLoad</span> <span class="o">=&gt;</span> <span class="s2">&quot;80%&quot;</span><span class="p">,</span>
+         <span class="ss">:stopLoad</span> <span class="o">=&gt;</span> <span class="s2">&quot;10%&quot;</span><span class="p">,</span>
+         <span class="ss">:emulator</span> <span class="o">=&gt;</span><span class="p">{</span>
+             <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s2">&quot;/emulators/stressapptest&quot;</span><span class="p">,</span>
+             <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;stressapptest&quot;</span>
+             <span class="p">},</span>
+         <span class="ss">:&#39;emulator-params&#39;</span> <span class="o">=&gt;</span><span class="p">{</span>
+             <span class="ss">:resourceType</span> <span class="o">=&gt;</span><span class="s2">&quot;MEM&quot;</span><span class="p">,</span>
+             <span class="ss">:memThreads</span> <span class="o">=&gt;</span> <span class="s2">&quot;1&quot;</span>
+             <span class="p">}</span>
+                <span class="p">}</span><span class="o">]</span>
  <span class="p">)</span>
 
 <span class="k">end</span>
@@ -186,7 +193,7 @@
         <li class="right" >
           <a href="03_cli_examples.html" title="Creating Emulation via CLI"
              >previous</a> |</li>
-        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">COCOMA v2.0 - Secundus documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

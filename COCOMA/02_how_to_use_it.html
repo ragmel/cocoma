@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Getting Started &mdash; COCOMA 1 documentation</title>
+    <title>Getting Started &mdash; COCOMA v2.0 - Secundus documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1',
+        VERSION:     'v2.0 - Secundus',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="COCOMA 1 documentation" href="../index.html" />
+    <link rel="top" title="COCOMA v2.0 - Secundus documentation" href="../index.html" />
     <link rel="next" title="Creating Emulation via CLI" href="03_cli_examples.html" />
     <link rel="prev" title="Introduction" href="01_introduction.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="01_introduction.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">COCOMA v2.0 - Secundus documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -76,7 +76,7 @@ To check if the scheduler is running use the following:</p>
 </pre></div>
 </div>
 <p>The <strong>API daemon</strong> - provides the RESTfull web API, which exposes COCOMA resources to be used over the network. It follows the same command structure as the Scheduler.
-To check if the scheduler is running use the following:</p>
+To check if the API daemon is running use the following:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ccmsh --show api
 </pre></div>
 </div>
@@ -130,7 +130,7 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-b">
 <tt class="descname">-b</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--bfz</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-b" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the path of to the backfuzz emulator (stored in database)</p>
+<dd><p>Update/Show location of Backfuzz emulator (stored in database)</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -148,7 +148,7 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-j">
 <tt class="descname">-j</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--list-jobs</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-j" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name and the planned execution time</p>
+<dd><p>Queries the scheduler for the list of jobs that are scheduled to be executed and are currently executing. For each one, it gives the job name, the planned execution time, and the duration (when available)</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -166,7 +166,7 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-x">
 <tt class="descname">-x</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--xml</tt><tt class="descclassname"> &lt;file name&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh-x" title="Permalink to this definition">¶</a></dt>
-<dd><p>It create and emulation based on the local XML</p>
+<dd><p>It create and emulation based on the XML provided</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -184,7 +184,7 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-p">
 <tt class="descname">-p</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--purge</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-p" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all DB entries, all scheduled jobs</p>
+<dd><p>Remove all DB entries, all scheduled jobs and all logs</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -202,9 +202,10 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh--show">
 <tt class="descname">--show</tt><tt class="descclassname"> &lt;api&gt;, &lt;scheduler&gt;</tt><a class="headerlink" href="#cmdoption-ccmsh--show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show OS information on Scheduler or API daemon, displays PID numbers</p>
+<dd><p>Show Scheduler or API daemon processes and their PID numbers</p>
 </dd></dl>
 
+<p>Most of these options are used by themselves, with the exception of &#8216;-x&#8217; (&#8211;xml) which can be used in conjunction with &#8216;-f&#8217; (&#8211;force) and/or &#8216;-n&#8217; (&#8211;now)</p>
 </div>
 <div class="section" id="logging">
 <h2>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h2>
@@ -746,7 +747,7 @@ The file with CSV extention will contain the system resource data, and the file 
 <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
-<p>The &#8216;emuresourceType&#8217; value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions use &#8216;MIX&#8217;</p>
+<p>The &#8216;emuresourceType&#8217; value is used for a check to ensure that all distributions in an emulstion are of the specified type (CPU in this case). For Emulations with multiple distributions over different resource types use &#8216;MIX&#8217;</p>
 <ul class="simple">
 <li><strong>Distribution</strong></li>
 </ul>
@@ -884,7 +885,7 @@ The file with CSV extention will contain the system resource data, and the file 
         <li class="right" >
           <a href="01_introduction.html" title="Introduction"
              >previous</a> |</li>
-        <li><a href="../index.html">COCOMA 1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">COCOMA v2.0 - Secundus documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
