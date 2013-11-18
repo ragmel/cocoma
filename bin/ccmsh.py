@@ -537,7 +537,9 @@ More info @ https://github.com/cragusa/cocoma
                         if options.emuForce:
                             noExtraOptions(options, "xml", "emuForce")
                             (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], True)
-                            if (type(distroList) == unicode): sys.exit()
+                            if (type(distroList[0]) == unicode):
+                                for distroItem in distroList: print distroItem + "\n"
+                                sys.exit()
                         elif not options.emuForce:
                             noExtraOptions(options, "xml")
                             (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], False)

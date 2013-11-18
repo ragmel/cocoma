@@ -880,6 +880,9 @@ def create_emu():
     Create emulation by POSTing xml with required parameters
     '''
     
+    response.set_header('Content-Type', 'application/vnd.bonfire+xml')
+    response.set_header('Accept', '*/*')
+    response.set_header('Allow', 'GET, HEAD, POST')
     
     #http://10.55.164.232:8050/emulations
     
@@ -901,10 +904,14 @@ def create_emu():
         return xml_stream
         try:
             (emulationName,emulationType,emulationLog,emulationLogFrequency, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlFileParser(xml_stream, runIfOverloaded)
-            if ("Re-send with force ('-f')" in distroList):
+            if ("Re-send with force (-f)" in distroList[0]):
                 response.status = 500
-                emuError = ET.Element('error')
-                emuError.text = "Resource close to maximum value. Re-send with force to run (see Additional Features documentation)"
+                ET.register_namespace("test", "http://127.0.0.1/cocoma")
+                emuError = ET.Element('Force-Errors')
+                emuError = ET.Element('Force-Errors', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations/'})
+                for forceError in distroList:
+                    forceErrorXML = ET.SubElement(emuError, "error")
+                    forceErrorXML.text = str(forceError)
                 return prettify(emuError)
         except Exception,e:
             print e
@@ -918,10 +925,13 @@ def create_emu():
     else:    
         try:
             (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData, MQproducerValues) = XmlParser.xmlReader(xml_stream_body, runIfOverloaded)
-            if ("Re-send with force ('-f')" in distroList):
+            if ("Re-send with force (-f)" in distroList[0]):
                 response.status = 500
-                emuError = ET.Element('error')
-                emuError.text = "Resource close to maximum value. Re-send with force to run (see Additional Features documentation)"
+                ET.register_namespace("test", "http://127.0.0.1/cocoma")
+                emuError = ET.Element('Force-Errors', { 'xmlns':'http://127.0.0.1/cocoma','href':'/emulations/'})
+                for forceError in distroList:
+                    forceErrorXML = ET.SubElement(emuError, "error")
+                    forceErrorXML.text = str(forceError)
                 return prettify(emuError)
         except Exception,e:
             print e

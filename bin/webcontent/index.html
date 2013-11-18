@@ -308,6 +308,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 	
 		function populateDistList(emuResources, n, distVal, resVal, extraParamVals)
 		{
+                
 			$.get(cocomaIP + "distributions", function(response){
 				var serializer = new XMLSerializer();				//transform xml response into json
 				var str = serializer.serializeToString(response);
@@ -316,46 +317,86 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 				var popResources = false;		//makes sure checkDistResources is only run for the currently selected (first) <option> and not all of them
 				
 				$("#distSelect" + n).html("");	//blank select
-				
+
+                var y = 0;
+                var x = 0;
+                var url = new Array();
+    
 				for(var i=0; i<dist.valueOf().collection.items.total; i++)
 				{
+				
 					var name = dist.valueOf().collection.items.distribution[i].name
 					var distResources;
-					var url = cocomaIP + "distributions/" + name;
-
-					$.get(url, function(response){
-						var serializer = new XMLSerializer();				//transform xml response into json
-						var str = serializer.serializeToString(response);
-						//console.log(str);
-						var resources = xml2json.parser(str);
-						distResources = checkResourceOptions(resources.valueOf().distribution);
-
-						var matches = false;
-						for(var j=0; j<4; j++)		//if there are no resources that can be used by both the emu and the dist, dont list dist as option
-						{
-							if(emuResources[j] != "x" && emuResources[j] == distResources[j])
-								matches = true;
-						}
-
-						if(matches)
-						{
-							var currentDistName = resources.valueOf().distribution.href.split('/')[2];
-							$("#distSelect" +n).append("<option>"+ currentDistName +"</option>");
-							
-							if(distVal != null)
-								$("#distSelect" +n).val(distVal);
-							
-							if(!popResources)
-							{
-								checkDistResources(currentDistName, emuResources, n, resVal, extraParamVals);
-								emuString = emuResources;
-								popResources = true;	//method has now been run for first option, dont allow running for all options
-							}
-						}
-					});
+					url[i] = cocomaIP + "distributions/" + name;
+                    
+                    //if (i+1 == dist.valueOf().collection.items.total)
+                    if (i == 0)
+                    {
+                        console.log("TRUE")
+                        x = fillDistBox(url[i], emuResources, n, distVal, resVal, extraParamVals, true, x);
+                    }
+                    else
+                    {
+                        x = fillDistBox(url[i], emuResources, n, distVal, resVal, extraParamVals, false, x);
+					}
+					
 				}
+				
+				console.log("distVal = " + distVal);
+				
+				if ((distVal != null) && (x+1 == dist.valueOf().collection.items.total))
+                {
+                    $("#distSelect" +n).val(distVal).change();
+                }
+                else
+                {
+                    //fillDistSelectBox(n, dist.valueOf().collection.items.total, distVal, x)
+                    setTimeout(function() {$("#distSelect" +n).val(distVal).change()}, 500);
+                }
 			});
+			
 		}
+		
+		function fillDistBox(distUrl, emuResources, n, distVal, resVal, extraParamVals, popResources, x)
+		{
+    		$.get(distUrl, function(response)
+    		{
+    		      var serializer = new XMLSerializer();               //transform xml response into json
+                  var str = serializer.serializeToString(response);
+                  var resources = xml2json.parser(str);
+                  
+                  distResources = checkResourceOptions(resources.valueOf().distribution);
+    
+                 var matches = false;
+                 for(var j=0; j<4; j++)      //if there are no resources that can be used by both the emu and the dist, dont list dist as option
+                 {
+                    if(emuResources[j] != "x" && emuResources[j] == distResources[j])
+                    matches = true;
+                 }
+                 if(matches)
+                 {
+                    var currentDistName = resources.valueOf().distribution.href.split('/')[2];
+                    $("#distSelect" +n).append("<option>"+ currentDistName +"</option>");
+                                
+                    if(distVal != null)
+                    {
+                        console.log("distVal = " + distVal);
+                        $("#distSelect" +n).val(distVal).change();
+                    }
+                    if(popResources)
+                    {
+                        console.log("RESVAL: " + resVal)
+                        checkDistResources(currentDistName, emuResources, n, resVal, extraParamVals);
+                        //setTimeout(function(){checkDistResources(currentDistName, emuResources, n, resVal, extraParamVals)}, 1000);
+                        emuString = emuResources;
+                        popResources = true;    //method has now been run for first option, dont allow running for all options
+                    }
+               }
+          });
+         x += 1;
+         return x;
+		}
+		
 		
 		function expandDist(n, btn)
 		{
@@ -494,6 +535,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 		
 		function populateResourceList(options, emuOptions, n, resVal, extraParamVals)
 		{
+		  console.log("populateResourceList resVal:" + resVal)
 			$("#resourceSelect" +n).html(""); //blank select
 			if(options[0] != 'x' && emuOptions[0] != 'x')
 				$("#resourceSelect" +n).append("<option>CPU</option>");
@@ -507,10 +549,14 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			//check additional params required for the current dist and emulator, add input boxes for their specification
 			
 			if(resVal != null)
-				$("#resourceSelect" +n).val(resVal)
-			
-			addExtraParams(n, extraParamVals);
-			
+			{
+				setTimeout(function() {$("#resourceSelect" +n).val(resVal)}, 500);
+				setTimeout(function() {addExtraParams(n, extraParamVals)}, 750);
+			}
+			else
+			{
+    			addExtraParams(n, extraParamVals);
+    		}
 		}
 		
 		function addExtraParams(n, extraParamVals)
@@ -530,7 +576,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 				if(distParams[n][i] == "stopload")
 					distParams[n][i] = "stopLoad";
 			}
-
+            
 			var emuP = currentEmu[n].emulator.info.resources[currentResource];
 			emuParams[n] = Object.keys(emuP);
 			
@@ -581,7 +627,8 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 						alert("Emulation is running");
 						showEmus();
 					}).error(function(e){
-						if ((e.responseText).indexOf("Re-send with force to run") != -1) runWithForce("now");
+					   var errors = parseForceErrors(e.responseText)
+						if ((e.responseText).indexOf("Re-send with force") != -1) runWithForce("now", errors);
 						else alert(e.responseText);
 					});
 			}
@@ -613,7 +660,8 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 								}).error(function(e){
 									//var error = xml2json.parser(e.responseText);
 									//alert(error.error)
-									if (e.responseText == "Resource close to maximum value. Re-send with force ('-f') to run") runWithForce(DT);
+									var errors = parseForceErrors(e.responseText)
+									if ((e.responseText).indexOf("Re-send with force") != -1) runWithForce(DT, errors);
 									else alert(e.statusText);
 								});
 						}
@@ -623,13 +671,14 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			showJobs()
 		}
 		
-		function runWithForce(startTime)
+		function runWithForce(startTime, forceErrors)
         {
             var exml = writeEmuXML(startTime);
             
             if(validateForm())
             {
-                var runIfOverloaded = confirm("Some Resource(s) close to their limit(s). Re-Run with force?")
+                
+                var runIfOverloaded = confirm(forceErrorString(forceErrors))
                 if (runIfOverloaded) runIfOverloaded="Y"
                 else runIfOverloaded = "N"
                 
@@ -641,10 +690,38 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
                         alert("Emulation will run at: " + startTime);
                         showEmus();
                     }).error(function(e){
-                        if (e.responseText != "Resource close to maximum value. Re-send with force ('-f') to run") alert(e.responseText);
+                        if ((e.responseText).indexOf("Re-send with force") == -1) alert(e.responseText);
                     });
             }
         }
+        
+        function forceErrorString(errors)
+        {
+            var errorStr = "";
+            for (var i = 0; i < errors.length; i++)
+            {
+                errorStr += errors[i] + "\n";
+            }
+            errorStr += "\n\nRe-Send with force?";
+            return errorStr
+        }
+		
+		function parseForceErrors(errorXML)
+		{
+		  errorArray = errorXML.split("<error>");
+		  
+		  errorArray.shift(); //remove unneeded XML header
+		  var len = errorArray.length
+		  errorArray[len - 1] = errorArray[len - 1].substring(0, errorArray[len - 1].length - 16); //Remove XML close tag
+		  
+		  for (var i = 0; i < errorArray.length; i++)
+		  {
+		      var splitElem = errorArray[i].split("</error>");
+		      errorArray[i] =  splitElem[0];
+		  }
+		  
+		  return errorArray;
+		}
 		
 		function parseDate(date, time)   //parse date into xml legal string
 		{
@@ -689,7 +766,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
                 var str = serializer.serializeToString(response);
                 var jobs = xml2json.parser(str);
                 
-                $("#topJobBox").html("<p style='font-weight:bold;'>Jobs:</p>");
+                $("#topJobBox").html("<p style='font-weight:bold;'>Scheduled Jobs:</p>");
                 $("#displayJobBox").html("");
                 $("#jobs").text("");
                 count = jobs.valueOf().collection.items.total;
@@ -853,20 +930,23 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 					
 					for(var i=0; i<distCount; i++)		//add a new dist form for every dist in emu
 					{
-						var n=i+1;
-						
-						newDistForm(n);		//load in all emu/dist/res options and set them to those specified in the emu beng loaded
-						$("#distName"+n).val(dists[i].attributes[1].nodeValue);
-						$("#sTime"+n).val(dists[i].childNodes[1].textContent);
-						$("#duration"+n).val(dists[i].childNodes[7].textContent);
-						$("#granularity"+n).val(dists[i].childNodes[3].textContent);
-						
-						var emuVal = dists[i].childNodes[13].attributes[1].nodeValue;
-						var distVal = dists[0].childNodes[5].attributes[1].textContent
-						var resVal =  convertResType(dists[0].childNodes[15].childNodes[1].textContent)
-						var extraParamVals = dists[i];
-						
-						populateEmulatorList(n, emuVal, distVal, resVal, extraParamVals);
+                        var n=i+1;
+                        
+                        newDistForm(n);     //load in all emu/dist/res options and set them to those specified in the emu beng loaded
+                        
+                        $("#distName"+n).val(dists[i].attributes[1].nodeValue);
+                        $("#sTime"+n).val($(dists[i]).find('startTime')[0].textContent);
+                        
+                        //$("#duration"+n).val(dists[i].childNodes[7].textContent);
+                        //$("#granularity"+n).val(dists[i].childNodes[3].textContent);
+                        
+                        var emuVal = $(dists[i]).find('emulator')[0].attributes[1].nodeValue;
+                        var distVal = $(dists[i]).find('distribution')[0].attributes[1].nodeValue;
+                        
+                        var resVal = convertResType($(dists[i]).find('resourceType')[0].textContent);
+                        var extraParamVals = dists[i];
+                        
+                        populateEmulatorList(n, emuVal, distVal, resVal, extraParamVals);
 					}
 				
 				});

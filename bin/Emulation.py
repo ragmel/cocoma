@@ -101,8 +101,8 @@ class emulation(object):
         
         emulationLifetimeEndTime = int(self.stopTimeEmu)
         compareEndTime = int(newDistribution.startTime) + int(newDistribution.duration) 
-        if compareEndTime > emulationLifetimeEndTime:
-            raise Exception("Distribution has date longer than emulation.Check distribution name: " + newDistribution.name) 
+#        if compareEndTime > emulationLifetimeEndTime:
+#            raise Exception("Distribution has date longer than emulation.Check distribution name: " + newDistribution.name) 
     
         
         self.distroList.append(newDistribution)

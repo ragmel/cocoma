@@ -305,7 +305,10 @@ def createEmulation(emulationName, emulationType, emulationLog, emulationLogFreq
 
     distroObjList = []
     resourceOverloaded = False
-    if (type(distroList)==unicode):
+    if (type(distroList[0])==unicode):
+        print str(len(distroList)) + " force error(s):\n"
+        for item in distroList:
+            print str(item) + "\n"
         sys.exit()
 
     try:

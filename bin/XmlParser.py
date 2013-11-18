@@ -20,9 +20,10 @@ import xml.dom.minidom
 import sys
 from xml.dom.minidom import parseString
 import Library
+from math import fabs
 
 xmlLogger = None
-runOverloaded = False
+forceRun = False
 
 def xmlFileParser (xmlFileName, runIfOverloaded):
     global xmlLogger
@@ -36,8 +37,8 @@ def xmlFileParser (xmlFileName, runIfOverloaded):
         raise Exception ("Cannot parse XML, see documentation for required sections \n Printing xmlData: \n" + xmlStr)
 
 def xmlReader(xmlParam, runIfOverloaded):
-    global runOverloaded
-    runOverloaded = runIfOverloaded
+    global forceRun
+    forceRun = runIfOverloaded
     setLoggerDetails(xmlParam)
     xmlStr = getXMLString(xmlParam)
 #    
@@ -73,7 +74,7 @@ def xmlReader(xmlParam, runIfOverloaded):
         MQproducerValues = getMQDetails(xmlStr.getElementsByTagName('mq')[0])
 
     distroList = getDistributionDetails(xmlStr)
-    if (type(distroList) == unicode):
+    if (type(distroList[0]) == unicode):
         return (emulationName, emulationType, emulationLog, emulationLogFrequency, emulationLogLevel, resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList, xmlParam, MQproducerValues)
 
     xmlLogger.info("##########################")
@@ -221,11 +222,13 @@ def getArgs (xmlStr, moduleType, moduleName, resourceType):
 def getDistributionDetails(xmlStr):
     distroList = []
     xmlDistroList = []
+    totalDistDuration = 0
 
     numDistributions = len(xmlStr.getElementsByTagName('distributions'))
     for i in xrange(numDistributions):
         xmlDistroList.append(xmlStr.getElementsByTagName('distributions')[i])
 
+    forceErrors = []
     for xmlDistro in xmlDistroList:
         distributionsName = getXMLData(xmlDistro, "name", "")
         startTimeDistro = getXMLData(xmlDistro, "starttime", "")
@@ -239,16 +242,27 @@ def getDistributionDetails(xmlStr):
         distroArgs, granularity = Library.removeFromDict(distroArgs, "granularity")
         distroArgs, durationDistro = Library.removeFromDict(distroArgs, "duration")
 
-        if not runOverloaded:
-            overloadedResource = checkLoadValues (resourceType, distroArgs)
-            if (type(overloadedResource) == unicode):
-                return overloadedResource
+        if not forceRun:
+            ovRes = checkLoadValues (resourceType, distroArgs)
+            if (type(ovRes) == unicode):
+                forceErrors.append(ovRes)
+            totalDistDuration = calculateDuration (totalDistDuration, startTimeDistro, durationDistro)
+#            if (type(forceErrors) == unicode):
+#                return forceErrors
 
         distroDict = {"distributionsName":distributionsName, "startTimeDistro":startTimeDistro, "durationDistro":durationDistro,
                     "granularity":granularity, "distrType":distrType, "distroArgs":distroArgs,
                     "emulatorName":emulatorName, "emulatorArg":emulatorArg, "resourceTypeDist":resourceType,
                     "emulatorArgNotes":emulatorArgNotes, "distroArgsNotes":distroArgsNotes}
         distroList.append(distroDict)
+    
+    emuDuration = getXMLData(xmlStr, "emustoptime", "")
+    if not forceRun:
+        if (int(totalDistDuration)) > int(emuDuration):
+            forceErrors.append("Distribution(s) have a total duration greater than the duration of the Emulation. Re-send with force (-f) to run")
+        if (len(forceErrors) > 0):
+            return forceErrors
+
     return distroList
 
 def sectionCheck(xmlStr, sectionName):
@@ -347,13 +361,28 @@ def checkLoadValues(resourceType, distArgs):
         maxResourceLoad -= Library.getMemUsed();
     for load in loads:
         if (load > (maxResourceLoad * 0.9)):
-            errorStr = resourceType.upper() + " close to maximum value. Re-send with force ('-f') to run"
-            print errorStr
+            errorStr = resourceType.upper() + " close to maximum value. Re-send with force (-f) to run"
+#            print errorStr
             return errorStr
     return False
 
+def calculateDuration (totalDuration, startTime, duration):
+    totalDuration = int(totalDuration)
+    startTime = int(startTime)
+    duration = int(duration)
+    
+#    if (totalDuration == 0):
+#        totalDuration = startTime + duration
+    if ((startTime + duration) > totalDuration):
+        totalDuration = startTime + duration
+    else:
+        additionalTime = fabs(totalDuration - (startTime + duration))
+        totalDuration += additionalTime
+    
+    return totalDuration
+
 if __name__ == '__main__': #For testing purposes
-#    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", True)
-    print xmlFileParser("/home/jordan/git/cocoma/tests/NET-Linear-Iperf-1-100.xml", True)
+#    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", False)
+    print xmlFileParser("/home/jordan/git/cocoma/tests/multiDist/CPU_MEM-1.xml", False) #REMOVE
 #    xmlReader("/home/jordan/Desktop/XMLfail.xml")  #REMOVE
     pass
