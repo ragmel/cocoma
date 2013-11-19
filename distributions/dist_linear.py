@@ -25,7 +25,7 @@ from numpy import linspace
 
 import math, psutil
 
-MALLOC_LIMIT = 1000000
+MALLOC_LIMIT = 4095
 
 class dist_linear(abstract_dist):
     pass
@@ -44,9 +44,6 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     The actual distribution function which counts start time, duration and stress value for each run of distribution.  
     '''
     # we check that the resource type is mem, if not we give malloc limit a value 1000000, because is not used for the other resource types
-    global MALLOC_LIMIT
-    if resType == "mem":
-        MALLOC_LIMIT = int(distributionArg["malloclimit"])
     
     startLoad = int(distributionArg["startload"])
     stopLoad = int(distributionArg["stopload"])

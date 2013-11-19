@@ -29,8 +29,8 @@ stressValues = []
 runStartTimeList=[]         
 runDurations = []
 
-RESTYPE = "null"
-MALLOC_LIMIT = 1000000
+MALLOC_LIMIT = 4095
+RESTYPE = ""
 
 import sys
 from Library import getHomepath
@@ -42,28 +42,15 @@ class dist_trapezoiddal(abstract_dist):
 
 def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,resType,HOMEPATH):
     
+    global RESTYPE
+    RESTYPE = resType
+    
     startLoad = int(distributionArg["startload"])
     stopLoad = int(distributionArg["stopload"])
     triggerType="time"
     
-    # we check that the resource type is mem, if not we give malloc limit a value 1000000, because is not used for the other resource types
-    global MALLOC_LIMIT
-    global RESTYPE
-    
-    RESTYPE = resType
-    if RESTYPE == "mem":
-        MALLOC_LIMIT = int(distributionArg["malloclimit"])
-        
-    
-#    print "hello this is dist linear incr"
-#    print "startLoad",startLoad
-#    print "stopLoad",stopLoad
-#    print "distributionGranularity",distributionGranularity
-    
     duration = float(duration)
-    #runDuration = int(duration)/distributionGranularity
     runDuration = float(duration)/distributionGranularity
-#    print "Duration is seconds:", runDuration
     
     runStartTime = startTimesec
     # check for the start load value if it's higher than malloc limit
@@ -78,9 +65,6 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     else:
         runNo=int(1)
         
-        #runStartTime=startTimesec+(duration*upperBoundary)
-        # linearStep does not change, can be calculated just once
-        #linearStep=((int(stopLoad)-int(startLoad))/(int(distributionGranularity)-1))
         linearStep=(float(stopLoad-startLoad)/(distributionGranularity-1))
         linearStepRemainder = linearStep % 1
         linearStepRemainderSum = 0
@@ -92,8 +76,6 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         upperBoundary= int(distributionGranularity)-1
 
         while(upperBoundary !=runNo):
-#            print "Run No: ", runNo
-#            print "self.startTimesec",startTimesec
             
             linearStepRemainderSum += linearStepRemainder
             linearStepincr = False
@@ -115,7 +97,7 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
             if linearStepincr == True:
                 linearStep -= 1
 
-            #increasing to next run            
+            #increasing to next run
             runNo=int(runNo)+1
         
 #        print "Final Run"
@@ -160,9 +142,9 @@ def distHelp():
     Help method that gives description of trapezoidal distribution usage
     '''
     
-    print "Trapezoidal distribution takes in start and stop load (plus malloclimit for MEM) parameters and gradually increasing resource workload by spawning jobs in parallel. Can be used with MEM,IO,NET resource types."
+    print "Trapezoidal distribution takes in start and stop load parameters and gradually increasing resource workload by spawning jobs in parallel. Can be used with MEM,IO,NET resource types."
         
-    return "Trapezoidal distribution takes in start and stop load (plus malloclimit for MEM) parameters and gradually increasing resource workload by spawning jobs in parallel. Can be used with MEM,IO,NET resource types."
+    return "Trapezoidal distribution takes in start and stop load parameters and gradually increasing resource workload by spawning jobs in parallel. Can be used with MEM,IO,NET resource types."
     
 
 def argNames(Rtype=None):
@@ -184,7 +166,7 @@ def argNames(Rtype=None):
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
 
-        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
         RESTYPE = "MEM"
 #        print "Use Arg's: ",argNames," with mem"
         return argNames

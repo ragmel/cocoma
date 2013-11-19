@@ -30,7 +30,7 @@ runStartTimeList=[]
 runDurations = []
 
 RESTYPE = "null"
-MALLOC_LIMIT = 1000000
+MALLOC_LIMIT = 4095
 
 import sys
 import Library
@@ -47,7 +47,6 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     #stopLoad = int(distributionArg["stopload"])
     trace = distributionArg["trace"]
     groupingRange = int(distributionArg["groupingrange"])
-    global MALLOC_LIMIT
     global RESTYPE
     RESTYPE = resType
     global stressValues
@@ -88,7 +87,6 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
 #                for memVal in memArray: memVal = memVal / (1024**2) #Convert from Bytes into MegaBytes
             groupingRange = (Library.getTotalMem() // 100) * groupingRange #Convert from % to real value
             (stressValues, runStartTimeList, runDurations) = Library.realTraceSmoothing(memArray, startTimesec, FR, groupingRange)
-            MALLOC_LIMIT = int(distributionArg["malloclimit"])
             splitMemMalloc()
             
         if RESTYPE == "cpu":
@@ -160,9 +158,7 @@ def argNames(Rtype=None):
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
 
-        #argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "trace":""}
-        argNames={"malloclimit":{"upperBound":4095,"lowerBound":50},"trace":{"upperBound":999999,"lowerBound":0}, "groupingRange":{"upperBound":99,"lowerBound":1}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
-#        print "Use Arg's: ",argNames," with mem"
+        argNames={"trace":{"upperBound":999999,"lowerBound":0}, "groupingRange":{"upperBound":99,"lowerBound":1}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
         return argNames
 
 if __name__=="__main__":

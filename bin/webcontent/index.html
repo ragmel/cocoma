@@ -308,7 +308,8 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 	
 		function populateDistList(emuResources, n, distVal, resVal, extraParamVals)
 		{
-                
+            emuString = emuResources;
+            
 			$.get(cocomaIP + "distributions", function(response){
 				var serializer = new XMLSerializer();				//transform xml response into json
 				var str = serializer.serializeToString(response);

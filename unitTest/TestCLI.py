@@ -71,7 +71,7 @@ class TestCLI (unittest.TestCase):
     def test_EMU_Overload(self):  # REMOVE: For testing resource overload
           EMUTests = EmulationTests()
           XML = "XMLExamples/shortTests/Overload_CPU.xml"
-          result = EMUTests.testCLICalls(runEmulation + XML, "resource will become Overloaded")
+          result = EMUTests.testCLICalls(runEmulation + XML, "force")
           self.assertNotEquals(result, -1, "CPU Overload test Failed")
           
     def test_EMU_Force(self): #Tries to run an emulation which requires '-f' to run

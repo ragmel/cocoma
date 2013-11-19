@@ -21,7 +21,6 @@
       <emulator href="/emulators/stressapptest" name="stressapptest" />
       <emulator-params>
         <resourceType>MEM</resourceType>
-	    <malloclimit>4004</malloclimit>
 		<memThreads>0</memThreads>
       </emulator-params>
   </distributions>

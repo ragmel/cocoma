@@ -30,7 +30,6 @@ def xmlFileParser (xmlFileName, runIfOverloaded):
     xmlLogger = Library.loggerSet("XML Parser")
     xmlStr = getXMLFile(xmlFileName)
     if xmlStr.lstrip()[:1] == "<":  #Does if XML File Exists
-#        xmlStr = getXMLString(fileName)
         xmlData = getXMLString(xmlStr)
         return xmlReader(xmlStr, runIfOverloaded)
     else:
@@ -41,12 +40,6 @@ def xmlReader(xmlParam, runIfOverloaded):
     forceRun = runIfOverloaded
     setLoggerDetails(xmlParam)
     xmlStr = getXMLString(xmlParam)
-#    
-#    xmlData = getXMLFile(fileName)
-#    if xmlData.lstrip()[:1] == "<":  #Does if XML File Exists
-#        xmlStr = getXMLString(fileName)
-#    else:
-#        raise Exception ("Cannot parse XML, see documentation for required sections \n Printing xmlData: \n" + xmlData)
     
     emuPresent = sectionCheck(xmlStr, "emulation")
     distroPresent = sectionCheck(xmlStr, "distributions")
@@ -60,9 +53,6 @@ def xmlReader(xmlParam, runIfOverloaded):
     (emulationName, emulationType, resourceTypeEmulation, startTimeEmu, stopTimeEmu) = getEmulationDetails(xmlStr)
     emulationName = emulationName.upper()
 
-#    distroList = getDistributionDetails(xmlStr)
-#    if not (type(distroList) == list):
-#        return (emulationName, emulationType, emulationLog, emulationLogFrequency, emulationLogLevel, resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList, xmlParam, MQproducerValues)
 
     if sectionCheck(xmlStr, "log"):
         (emulationLog, emulationLogFrequency, emulationLogLevel) = getLoggerDetails(xmlStr.getElementsByTagName('log')[0])
@@ -74,7 +64,7 @@ def xmlReader(xmlParam, runIfOverloaded):
         MQproducerValues = getMQDetails(xmlStr.getElementsByTagName('mq')[0])
 
     distroList = getDistributionDetails(xmlStr)
-    if (type(distroList[0]) == unicode):
+    if (type(distroList[0]) == str):
         return (emulationName, emulationType, emulationLog, emulationLogFrequency, emulationLogLevel, resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList, xmlParam, MQproducerValues)
 
     xmlLogger.info("##########################")
@@ -116,7 +106,6 @@ def getXMLFile(fileName):
 
 def getXMLString(xmlData):
     xmlStr = ""
-#    xmlData = getXMLFile(fileName)
     try:
         xmlStr = parseString(xmlData.lower())
     except Exception, e:
@@ -198,7 +187,6 @@ def getArgs (xmlStr, moduleType, moduleName, resourceType):
             for arg in moduleArgs:
                 argDict = arg[1]
                 arg = arg[0].lower()
-    #            xmlArg = getXMLData(xmlStr, "distributions", arg)
                 xmlArg = getXMLData(xmlStr, arg, "")
 
                 #Convert stress values mem to real values (if given in %)
@@ -247,8 +235,6 @@ def getDistributionDetails(xmlStr):
             if (type(ovRes) == unicode):
                 forceErrors.append(ovRes)
             totalDistDuration = calculateDuration (totalDistDuration, startTimeDistro, durationDistro)
-#            if (type(forceErrors) == unicode):
-#                return forceErrors
 
         distroDict = {"distributionsName":distributionsName, "startTimeDistro":startTimeDistro, "durationDistro":durationDistro,
                     "granularity":granularity, "distrType":distrType, "distroArgs":distroArgs,
@@ -362,7 +348,6 @@ def checkLoadValues(resourceType, distArgs):
     for load in loads:
         if (load > (maxResourceLoad * 0.9)):
             errorStr = resourceType.upper() + " close to maximum value. Re-send with force (-f) to run"
-#            print errorStr
             return errorStr
     return False
 
@@ -371,8 +356,6 @@ def calculateDuration (totalDuration, startTime, duration):
     startTime = int(startTime)
     duration = int(duration)
     
-#    if (totalDuration == 0):
-#        totalDuration = startTime + duration
     if ((startTime + duration) > totalDuration):
         totalDuration = startTime + duration
     else:
@@ -382,7 +365,6 @@ def calculateDuration (totalDuration, startTime, duration):
     return totalDuration
 
 if __name__ == '__main__': #For testing purposes
-#    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", False)
-    print xmlFileParser("/home/jordan/git/cocoma/tests/multiDist/CPU_MEM-1.xml", False) #REMOVE
+    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", False)
 #    xmlReader("/home/jordan/Desktop/XMLfail.xml")  #REMOVE
     pass

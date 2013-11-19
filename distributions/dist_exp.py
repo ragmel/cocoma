@@ -29,7 +29,7 @@ Pyro4.config.HMAC_KEY='pRivAt3Key'
 stressValues = []        
 runStartTimeList= []         
 runDurations = []
-MALLOC_LIMIT = 1000000
+MALLOC_LIMIT = 4095
 
 import sys
 from Library import getHomepath
@@ -40,10 +40,6 @@ class dist_exp(abstract_dist):
     pass
 
 def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,duration, distributionGranularity,distributionArg,resType,HOMEPATH):
-    
-    global MALLOC_LIMIT
-    if resType == "mem":
-        MALLOC_LIMIT = int(distributionArg["malloclimit"])
     
     startLoad = int(distributionArg["startload"])
     stopLoad = int(distributionArg["stopload"])
@@ -127,7 +123,7 @@ def argNames(Rtype=None):
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
 
-        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
         RESTYPE = "MEM"
 #        print "Use Arg's: ",argNames," with mem"
         return argNames
@@ -144,7 +140,6 @@ def argNames(Rtype=None):
 #        print "Use Arg's: ",argNames," with net"
         return argNames
     
-
 
 if __name__=="__main__":
         pass

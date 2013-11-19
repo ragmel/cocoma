@@ -108,28 +108,9 @@ def createDistribution(newEmulation):
     createDistributionRuns(newEmulation)
 
 def createEndJob (daemon, newEmulation):
-    duration = []
-    startTime = []
-    granularity = []
-    
-    for distroItem in newEmulation.distroList:
-        startTime.append(int(distroItem.getStartTime()))
-        if distroItem.getDuration() > 0:
-            duration.append(int(distroItem.getDuration()))
-        else:
-            duration.append(1)
-        if distroItem.getGranularity() > 0:
-            granularity.append(int(distroItem.getGranularity()))
-        else:
-            granularity.append(1)
-    
-    maxStartTime = max(startTime)
-    maxStartTimeIndex = startTime.index(maxStartTime)
-    runInterval = duration[maxStartTimeIndex] // granularity[maxStartTimeIndex]
-    
     returnEmulationName = (str(newEmulation.emulationID) + "-" + newEmulation.emulationName)
-    extraEndTime = dt.timedelta(0, (float(newEmulation.stopTimeEmu) + (runInterval + 2)))
-    emulationEndTime = (Library.timeConv(newEmulation.startTimeEmu)) + extraEndTime
+    #Calcualte when the end job should be (start + duration +1) //+1 is to allow for delay in scheduler starting emulation 
+    emulationEndTime = (Library.timeConv(newEmulation.startTimeEmu)) + dt.timedelta(0, (float(newEmulation.stopTimeEmu) + 1))
     emulationEndJobReply = daemon.createEmulationEndJob(emulationEndTime, returnEmulationName)
 
 def createDistributionRuns(newEmulation):

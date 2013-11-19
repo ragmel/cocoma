@@ -17,7 +17,6 @@
      <emulator-params>
         <resourceType>MEM</resourceType>
 	    <!--time between iterations in usec (default 1000)-->
-		<malloclimit>4004</malloclimit>
 		<memThreads>0</memThreads>
 		<groupingRange>5</groupingRange>
      </emulator-params>

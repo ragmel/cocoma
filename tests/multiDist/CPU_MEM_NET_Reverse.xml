@@ -36,7 +36,6 @@
         <!--Megabytes for memory -->
         <startLoad>1000</startLoad>
         <stopLoad>100</stopLoad>
-        <malloclimit>4095</malloclimit>
         <emulator href="/emulators/lookbusy" name="lookbusy" />
          <emulator-params>
              <resourceType>MEM</resourceType>

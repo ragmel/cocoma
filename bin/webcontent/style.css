@@ -3,7 +3,7 @@ body{
 }
 
 #topBar {
-	background-color:rgba(50,29,79,0.7);
+	background-color:rgba(28, 78, 99,0.8);
 	height: 70px;
 	width: 100%;
 	position: fixed;
@@ -92,7 +92,7 @@ button.list
 	border:none;
 	color: #0F77B2;
 	font-family:arial;
-	font-size:12px;
+	font-size:15px;
 	font-weight:standard;
 	padding:0px;
 

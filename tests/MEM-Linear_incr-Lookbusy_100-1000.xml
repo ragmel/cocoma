@@ -5,24 +5,23 @@
   <!--date format: 2014-10-10T10:10:10 -->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>120</emustopTime>
+  <emustopTime>10</emustopTime>
   
   <distributions >
      <name>MEM_Distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>120</duration>
-     <granularity>20</granularity>
+     <duration>10</duration>
+     <granularity>2</granularity>
      <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear_incr" name="linear_incr" />
      <!--Megabytes for memory -->
       <startLoad>100</startLoad>
-      <stopLoad>1000</stopLoad>
+      <stopLoad>150</stopLoad>
       <emulator href="/emulators/lookbusy" name="lookbusy" />
       <emulator-params>
         <resourceType>MEM</resourceType>
 	    <!--time between iterations in usec (default 1000)-->
-	    <malloclimit>4004</malloclimit>	
 		<memSleep>0</memSleep>
       </emulator-params>
   </distributions>

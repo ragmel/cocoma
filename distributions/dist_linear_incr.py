@@ -29,7 +29,7 @@ runStartTimeList=[]
 runDurations = []
 
 RESTYPE = "null"
-MALLOC_LIMIT = 1000000
+MALLOC_LIMIT = 4095
 
 import sys
 from Library import getHomepath
@@ -45,22 +45,12 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     triggerType="time"
     
     # we check that the resource type is mem, if not we give malloc limit a value 1000000, because is not used for the other resource types
-    global MALLOC_LIMIT
     global RESTYPE
     RESTYPE = resType
-    if RESTYPE == "mem":
-        MALLOC_LIMIT = int(distributionArg["malloclimit"])
-
-    
-#    print "hello this is dist linear incr"
-#    print "startLoad",startLoad
-#    print "stopLoad",stopLoad
-#    print "distributionGranularity",distributionGranularity
     
     duration = float(duration)
     runDuration = int(duration)/distributionGranularity
     runDuration = float(runDuration)
-#    print "Duration is seconds:", runDuration
     
     runStartTime = startTimesec
     # check for the start load value if it's higher than malloc limit
@@ -75,8 +65,6 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
     else:
         runNo=int(1)
         
-        #runStartTime=startTimesec+(duration*upperBoundary)
-        # linearStep does not change, can be calculated just once
         linearStep=(float(stopLoad-startLoad)/(distributionGranularity-1))
         linearStepRemainder = linearStep % 1
         linearStepRemainderSum = 0
@@ -87,8 +75,6 @@ def functionCount(emulationID,emulationName,emulationLifetimeID,startTimesec,dur
         upperBoundary= int(distributionGranularity)-1
 
         while(upperBoundary !=runNo):
-#            print "Run No: ", runNo
-            
             if startLoad < stopLoad:
                 runStartTime=startTimesec+(runDuration*runNo)
             
@@ -118,7 +104,6 @@ def insertRun(stressValue, startTime, runDuration):
     stressValues.append(stressValue)
     runStartTimeList.append(startTime)
     runDurations.append(runDuration)
-#    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runDuration
 
 # this function checks if the load is higher than the malloc limit. In that case creates smaller runs
 def insertLoad(load, startTime, duration):
@@ -162,7 +147,7 @@ def argNames(Rtype=None):
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
 
-        argNames={"startload":{"upperBound":allMemory,"lowerBound":50},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+        argNames={"startload":{"upperBound":allMemory,"lowerBound":50},"stopload":{"upperBound":allMemory,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
         RESTYPE = "MEM"
 #        print "Use Arg's: ",argNames," with mem"
         return argNames

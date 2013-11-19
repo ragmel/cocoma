@@ -17,7 +17,6 @@
      <emulator-params>
         <resourceType>MEM</resourceType>
 		<groupingRange>5</groupingRange>
-		<malloclimit>4004</malloclimit>
 		<memSleep>0</memSleep>
 		<groupingRange>5</groupingRange>
      </emulator-params>
