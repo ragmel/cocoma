@@ -64,7 +64,7 @@ def xmlReader(xmlParam, runIfOverloaded):
         MQproducerValues = getMQDetails(xmlStr.getElementsByTagName('mq')[0])
 
     distroList = getDistributionDetails(xmlStr)
-    if (type(distroList[0]) == str):
+    if ((type(distroList[0]) == str) or (type(distroList[0]) == unicode)):
         return (emulationName, emulationType, emulationLog, emulationLogFrequency, emulationLogLevel, resourceTypeEmulation, startTimeEmu, stopTimeEmu, distroList, xmlParam, MQproducerValues)
 
     xmlLogger.info("##########################")

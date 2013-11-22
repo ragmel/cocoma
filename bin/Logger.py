@@ -150,7 +150,7 @@ def loadMon(duration,interval,emulationID,emulationName,emuStartTime):
             probeTime=time.time()-initTime
             timeStamp=dt.now()
             
-            f.write(str(int(probeTime))+";"+str(timeStamp.strftime("%Y-%m-%d %H:%M:%S"))+";"+CPU+";"+MEM+";"+IOr+";"+IOw+";"+NET+"\n")
+            f.write(str(int(probeTime))+";"+str(timeStamp.strftime("%Y-%m-%d %H:%M:%S.%f"))+";"+CPU+";"+MEM+";"+IOr+";"+IOw+";"+NET+"\n")
 
             iterationsNo=iterationsNo-1
     except Exception,e:

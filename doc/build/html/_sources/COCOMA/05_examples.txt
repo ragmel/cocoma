@@ -174,7 +174,6 @@ Emulation XML for memory contention:
         <!--Memory usage (Megabytes) -->
         <startLoad>100</startLoad>
         <stopLoad>1000</stopLoad>
-        <malloclimit>4095</malloclimit>
         <emulator href="/emulators/stressapptest" name="stressapptest" />
         <emulator-params>
             <resourceType>MEM</resourceType>
@@ -217,7 +216,6 @@ Example for memory emulation using *trapezoidal* distribution:
         <!--Megabytes for memory -->
         <startLoad>100</startLoad>
         <stopLoad>1000</stopLoad>
-        <malloclimit>4095</malloclimit>
         <emulator href="/emulators/stressapptest" name="stressapptest" />
         <emulator-params>
             <resourceType>MEM</resourceType>  
@@ -337,7 +335,6 @@ An important feature of COCOMA is the ability to combine multiple distributions 
             <!--Megabytes for memory -->
             <startLoad>100</startLoad>
             <stopLoad>1000</stopLoad>
-            <malloclimit>4095</malloclimit>
             <emulator href="/emulators/stressapptest" name="stressapptest" />
             <emulator-params>
               <resourceType>MEM</resourceType>
@@ -397,7 +394,6 @@ An important feature of COCOMA is the ability to combine multiple distributions 
             <!--Megabytes for memory -->
             <startLoad>100</startLoad>
             <stopLoad>1000</stopLoad>
-            <malloclimit>4095</malloclimit>
             <emulator href="/emulators/stressapptest" name="stressapptest" />
             <emulator-params>
                <resourceType>MEM</resourceType>

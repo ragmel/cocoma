@@ -161,7 +161,7 @@ class schedulerDaemon(object):
         schedFileLogger.debug("-> createJob(self,emulationID,distributionID,distributionName,emulationLifetimeID,duration,emulator,emulatorArg,resourceTypeDist,stressValue,runStartTime,runNo,emuDuration)")
         
         try:
-            runStartTimeDT = dt.datetime.fromtimestamp(runStartTime).strftime('%Y-%m-%d %H:%M:%S')
+            runStartTimeDT = dt.datetime.fromtimestamp(runStartTime).strftime('%Y-%m-%d %H:%M:%S.%f')
             schedFileLogger.debug("Job added with: StartTime:"+str(runStartTimeDT))
             
             schedFileLogger.debug("emulationID "+str(emulationID))
@@ -172,7 +172,7 @@ class schedulerDaemon(object):
             schedFileLogger.debug("runNo "+str(runNo))
             
             #self.sched.add_listener(job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)  
-            runEndTimeStr=str(dt.datetime.fromtimestamp(runStartTime + float(duration)).strftime('%Y-%m-%d %H:%M:%S'))
+            runEndTimeStr=str(dt.datetime.fromtimestamp(runStartTime + float(duration)).strftime('%Y-%m-%d %H:%M:%S.%f'))
             
             partName=str(emulationName)+"-"+str(distributionID)+"-"+str(runNo)+"-"+distributionName+"-"+str(emulator)+"-"+str(resourceTypeDist)
             jobNameData = {"JobName":partName,"StressValue":stressValue,"StartTime":runStartTimeDT,"Duration":duration,"EndTime":runEndTimeStr}

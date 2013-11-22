@@ -180,10 +180,16 @@ def createDistributionRuns(newEmulation):
             stressValues,runStartTime,runDurations,triggerType=modhandleMy(newEmulation.emulationID,newEmulation.emulationName,newEmulation.getEmulationLifetimeID(),startTimesec,distro.duration, int(distro.granularity),distro.distroArgs,distro.resourceType,HOMEPATH)
 
             try:
+                if (distro.distroArgs.has_key("minjobtime")):
+                    minJobTime = distro.distroArgs["minjobtime"]
+                else:
+                    minJobTime = 2
                 (stressValues, runStartTime, runDurations) = Library.checkMinJobTime(distro.name, stressValues, runStartTime, runDurations, distro.distroArgs["minjobtime"])
             except Exception, e:
                 print "Could not enforce minimum job time. " + str(e)
 
+            runStartTime = Library.staggerStartTimes(runStartTime)
+            (stressValues, runStartTime, runDurations) = Library.removeZeroJobs(stressValues, runStartTime, runDurations) #Remove jobs with a stressValue of 0
             #event and time type disro's separation
             try :
                 

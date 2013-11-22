@@ -396,7 +396,12 @@ def get_emulator(name=""):
                 emulatorUpperBound.text = str(argNames[args]["upperBound"])
                 
                 emulatorLowerBound=ET.SubElement(emulatorArgsXml,"lowerBound")
-                emulatorLowerBound.text = str(argNames[args]["upperBound"])
+                emulatorLowerBound.text = str(argNames[args]["lowerBound"])
+                
+                if not (argNames[args].has_key("argHelp")):
+                    argNames[args]["argHelp"] = "No help Available"
+                emuArgHelp=ET.SubElement(emulatorArgsXml,"argHelp")
+                emuArgHelp.text = str(argNames[args]["argHelp"])
     
 
         lk0 = ET.SubElement(emulatorXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
@@ -520,7 +525,17 @@ def get_distribution(name=""):
                 distroUpperBound.text = str(argNames[args]["upperBound"])
                 
                 distroLowerBound=ET.SubElement(distroArgsXml,"lowerBound")
-                distroLowerBound.text = str(argNames[args]["upperBound"])
+                distroLowerBound.text = str(argNames[args]["lowerBound"])
+                
+                if not (argNames[args].has_key("argHelp")):
+                    argNames[args]["argHelp"] = "No help Available :'("
+                distroArgHelp=ET.SubElement(distroArgsXml,"argHelp")
+                distroArgHelp.text = str(argNames[args]["argHelp"])
+                
+#                if (argNames[args].has_key("argHelp")):
+#                    distroArgHelp.text = str(argNames[args]["argHelp"])
+#                else:
+#                    distroArgHelp.text = str("No help Available :(")
     
         lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/', 'type':'application/vnd.bonfire+xml'})
         lk0 = ET.SubElement(distributionXml, 'link', {'rel':'parent', 'href':'/distributions', 'type':'application/vnd.bonfire+xml'})

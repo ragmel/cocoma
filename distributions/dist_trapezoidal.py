@@ -122,7 +122,7 @@ def insertRun(stressValue, startTime, runDuration):
     stressValues.append(stressValue)
     runStartTimeList.append(startTime)
     runDurations.append(runDuration)
-    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(startTime)), runDuration
+#    print "Inserted RUN: ", stressValue, time.strftime("%Y-%m-%d %H:%M:%S.%f", time.gmtime(startTime)), runDuration
 
 # this function checks if the load is higher than the malloc limit. In that case creates smaller runs
 def insertLoad(load, startTime, duration):
@@ -166,19 +166,19 @@ def argNames(Rtype=None):
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
 
-        argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+        argNames={"startload":{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to begin at.\nUnits: MB or %"},"stopload":{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to reach at it's mid-point.\nUnits: MB or %"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Number of runs to create"}}
         RESTYPE = "MEM"
 #        print "Use Arg's: ",argNames," with mem"
         return argNames
         
     if Rtype.lower() == "io":
-        argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+        argNames={"startload":{"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"},"stopload":{"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to reach at it's mid-point.\nUnits: MB/s throughput"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
         RESTYPE = "IO"
 #        print "Use Arg's: ",argNames," with io"
         return argNames
     
     if Rtype.lower() == "net":
-        argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+        argNames={"startload":{"upperBound":1000000,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"},"stopload":{"upperBound":1000000,"lowerBound":0, "argHelp":"Value for distribution to reach at it's mid-point.\nUnits: MB/s throughput"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
         RESTYPE = "NET"
 #        print "Use Arg's: ",argNames," with net"
         return argNames

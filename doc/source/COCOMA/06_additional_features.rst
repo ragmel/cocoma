@@ -131,11 +131,6 @@ To add the force argument to a emulation, ran via a REST client, a parameter cal
 
 *Note*: Spaces should not be included in the request (they are shown here for readability). You may need to manually select an option in order to encode the dictionary.
 
-Malloc Limit
-------------
-
-Some of the Emulators used by COCOMA have their own limits for the maximum amount of memory a single instance of that emulator can address. Because of this the **mallocLimit** (memory allocation limit) argument was added for memory loading distributions. MallocLimit is used by COCOMA to split jobs over the specified limit and has a maximum value of 4095.
-
 Bounds Compare
 --------------
 In the 'argNames' section of each emulator wrapper and distribution there are a number of different arguments required by that class. These are contained in a dictionary in the form `"ARG_NAME":{"upperBound":0,"lowerBound":100}`; where ARG_NAME is the name of the required argument.

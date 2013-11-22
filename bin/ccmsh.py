@@ -543,8 +543,8 @@ More info @ https://github.com/cragusa/cocoma
                         elif not options.emuForce:
                             noExtraOptions(options, "xml")
                             (emulationName,emulationType,emulationLog,emulationLogFrequency,emulationLogLevel, resourceTypeEmulation, startTimeEmu,stopTimeEmu, distroList,xmlData,MQproducerValues) = XmlParser.xmlFileParser(arguments[0], False)
-                            if (type(distroList[0]) == str): #Print forceErrors
-                                for distroItem in distroList: print distroItem + "\n"
+                            if (type(distroList[0]) == str):
+                                for distroItem in distroList: print distroItem + "\n" #Print forceErrors
                                 sys.exit()
                         if startTimeEmu.lower() =="now":
 

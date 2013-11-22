@@ -253,15 +253,15 @@ def emulatorArgNames(Rtype=None):
         return argNames
         
     if Rtype.lower() == "cpu":
-        argNames={"ncpus":{"upperBound":psutil.NUM_CPUS,"lowerBound":0}}
+        argNames={"ncpus":{"upperBound":psutil.NUM_CPUS,"lowerBound":0, "argHelp":"Number of CPUs to keep busy (default: autodetected)"}}
         return argNames
     
     if Rtype.lower() == "mem":
-        argNames={"memsleep":{"upperBound":999999999,"lowerBound":0}}
+        argNames={"memsleep":{"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in usec (default 1000)"}}
         return argNames
     
     if Rtype.lower() == "io":
-        argNames={"ioblocksize":{"upperBound":9999999,"lowerBound":0},"iosleep":{"upperBound":999999999,"lowerBound":0}}
+        argNames={"ioblocksize":{"upperBound":9999999,"lowerBound":0, "argHelp":"Size of blocks to use for I/O (in bytes, followed by KB, MB or GB)"},"iosleep":{"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in msec (default 100)"}}
         return argNames
 
 

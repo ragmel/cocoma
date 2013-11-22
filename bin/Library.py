@@ -768,7 +768,7 @@ def getCurrentJobs():
                 jobName = currentRun[0] + "-" + str(runLog[0]) + "-" + str(runLog[1]) + "-" + currentRun[2]
                 startTime = float(runLog[3])
                 stopTime = startTime + float(runLog[4])
-                jobInfo = "startTime: " + dt.fromtimestamp(startTime).strftime('%Y-%m-%d %H:%M:%S') + ", duration: " + runLog[4] + " sec, stopTime: " + dt.fromtimestamp(stopTime).strftime('%Y-%m-%d %H:%M:%S') + ", resourceType: " + currentRun[3].upper() + ", stressValue: " + runLog[5]
+                jobInfo = "startTime: " + dt.fromtimestamp(startTime).strftime('%Y-%m-%d %H:%M:%S.%f') + ", duration: " + runLog[4] + " sec, stopTime: " + dt.fromtimestamp(stopTime).strftime('%Y-%m-%d %H:%M:%S') + ", resourceType: " + currentRun[3].upper() + ", stressValue: " + runLog[5]
                 job = "Job: " + jobName + " { " + jobInfo + " }"
                 if not(job in currentJobs): currentJobs.append(job) #Add the job to the list , if it isn't already in the list
     except sqlite.Error, e:
@@ -930,3 +930,34 @@ def checkMinJobTime (emuName, stressValues, runStartTime, runDurations, minJobTi
             del runDurations[removeJob]
     
     return (stressValues, runStartTime, runDurations)
+
+def staggerStartTimes(startTimes):
+    prevTime = startTimes[0]
+    addTime = 0.0
+    
+    for i, startTime in enumerate(startTimes):
+        if (startTime == prevTime):
+            startTimes[i] = startTime + addTime
+            addTime += 0.1
+        else:
+            prevTime = startTime
+            addTime = 0.0
+    
+    return startTimes
+
+def removeZeroJobs (stressValues, startTimes, durations):
+    #Removes jobs with a stressValue of 0
+    count = 0
+    removeIndex = []
+    for i, stressValue in enumerate(stressValues):
+        print "\nstressValue: ", type(stressValue), stressValues
+        if (stressValue == 0):
+            removeIndex.append(i)
+            count += 1
+    for index in reversed(removeIndex):
+        stressValues.pop(index)
+        startTimes.pop(index)
+        durations.pop(index)
+        
+    print str(count), " Jobs with a stressValue of 0 removed"
+    return (stressValues, startTimes, durations)

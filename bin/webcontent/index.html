@@ -531,7 +531,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 					currentDist[n] = resources;
 					resourceOptions = checkResourceOptions(resources.valueOf().distribution);
 					populateResourceList(resourceOptions, emuResources, n, resVal, extraParamVals);
-				});	
+				});
 		}
 		
 		function populateResourceList(options, emuOptions, n, resVal, extraParamVals)
@@ -552,7 +552,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			if(resVal != null)
 			{
 				setTimeout(function() {$("#resourceSelect" +n).val(resVal)}, 500);
-				setTimeout(function() {addExtraParams(n, extraParamVals)}, 750);
+				setTimeout(function() {addExtraParams(n, extraParamVals)}, 1000);
 			}
 			else
 			{
@@ -565,41 +565,63 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			$("#extraParams"+n).html("");
 			
 			var currentResource = convertRType($("#resourceSelect"+n+" :selected").text()).toLowerCase();
-			var extraParameters = new Array();	//hold all additional parameters required by dist and emulator
 			
-			var distP = currentDist[n].distribution.info.resources[currentResource];
-			distParams[n] = Object.keys(distP);
-			
-			for(var i=0; i<distParams[n].length; i++)			//TEMPORARY FIX DUE TO XML MISSPELLING
-			{
-				if(distParams[n][i] == "startload")
-					distParams[n][i] = "startLoad";
-				if(distParams[n][i] == "stopload")
-					distParams[n][i] = "stopLoad";
-			}
-            
+			var distP = currentDist[n].valueOf().distribution.info.resources[currentResource];
 			var emuP = currentEmu[n].emulator.info.resources[currentResource];
+			
+			distParams[n] = Object.keys(distP);
 			emuParams[n] = Object.keys(emuP);
 			
-			extraParameters = distParams[n].concat(emuParams[n]);
 			
-
-			for(var i=0; i<(extraParameters.length); i++)
-			{
+			//Load the Arg names and their bounds+help into arrays
+			var argsArray = $.map(distP, function(value, index) {return [value];});
+			argsArray = argsArray.concat($.map(emuP, function(value, index) {return [value];}));
+			var argNamesArray = $.map(distP, function(value, index) {return [index];});
+            argNamesArray = argNamesArray.concat($.map(emuP, function(value, index) {return [index];}));
+            
+			for(var i=0; i<(argNamesArray.length); i++)
+			{    
+			     var argHelp = argsArray[i].valueOf().arghelp;
+			     
+			     if (typeof argHelp === 'undefined') argHelp = "No help available :'(";
+			     
+			     //replace special charactes with escape characters
+			     argHelp = argHelp.replace(/\n/g, "<br>");
+			     argHelp = argHelp.replace(/'/g, "");
+			     argHelp = argHelp.replace(/\(/g, "&#40");
+			     argHelp = argHelp.replace(/\)/g, "&#41;");
+			     
+			     var helpBtn = "<button id='" + argNamesArray[i] + n + "HelpBtn' class='list' onmouseout='hideHelpBox(" + argNamesArray[i] + n + "Help)' onmouseover='showargHelp(" + n +", &#39;" + argNamesArray[i] + "&#39,&#39" + argHelp + "&#39)' style='float:right;' type='button'>?</button><div id='" + argNamesArray[i] + n + "Help' class='helpBox'></div>";
+			
 			     //Add onChange listener to the duration box
-			    if (extraParameters[i] == "duration")
-			         $("#extraParams"+n).append("<div class='entryArea'>"+extraParameters[i]+": <input id='"+extraParameters[i]+""+n+"' onchange='calculateTotalDuration()' style='float:right;'><br></div>");
+			    if (argNamesArray[i] == "duration")
+			         $("#extraParams"+n).append("<div class='entryArea'>"+argNamesArray[i]+": " + helpBtn + "<input id='"+argNamesArray[i]+""+n+"' onchange='calculateTotalDuration()' style='float:right;'><br></div>");
 			    else
-				     $("#extraParams"+n).append("<div class='entryArea'>"+extraParameters[i]+": <input id='"+extraParameters[i]+""+n+"' style='float:right;'><br></div>");
+				     $("#extraParams"+n).append("<div class='entryArea'>"+argNamesArray[i]+": " + helpBtn + "<input id='"+argNamesArray[i]+""+n+"' style='float:right;'><br></div>");
+				
+				//$("#"+argNamesArray[i]+n+"HelpBtn").css('top', $("#"+argNamesArray[i]+n).position().top + 20);
+                //$("#"+argNamesArray[i]+n+"HelpBtn").css('left', $("#"+argNamesArray[i]+n).position().left);
+				
 				if(extraParamVals != null)
 				{
 					try{
-					$("#"+extraParameters[i]+n).val(extraParamVals.getElementsByTagName(extraParameters[i].toLowerCase())[0].textContent);
+					$("#"+argNamesArray[i]+n).val(extraParamVals.getElementsByTagName(argNamesArray[i].toLowerCase())[0].textContent);
 					}catch(e){}
 				}
 			}
 			
 		}
+		
+		function showargHelp(n, argName,argHelp)
+        {
+            helpInfo = argHelp;
+            helpInfo += "<br><label style='color: #0F77B2; font-size:10px; float:right'>Click to hide</label>";
+
+            $("#"+argName+n+"Help").css('top', $("#"+argName+n+"HelpBtn").position().top + 20);
+            $("#"+argName+n+"Help").css('left', $("#"+argName+n+"HelpBtn").position().left);
+            $("#"+argName+n+"Help").css('display', 'block');
+            $("#"+argName+n+"Help").html(helpInfo);
+        }
 				
 		function emuChanged(n){
 			checkEmuResources($("#emulatorSelect"+n+" :selected").text(), n, null, null, null);

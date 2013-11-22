@@ -318,7 +318,7 @@ def emulatorArgNames(Rtype=None):
     
     if Rtype.lower() == "net":
         
-        argNames={"serverport":{"upperBound":10000,"lowerBound":0},"packettype":{"upperBound":"udp","lowerBound":"tcp"},"serverip":{"upperBound":10000,"lowerBound":1}}
+        argNames={"serverport":{"upperBound":10000,"lowerBound":0, "argHelp": "Server port to connect to"},"packettype":{"upperBound":"udp","lowerBound":"tcp", "argHelp":"Packet-Type to test. (UDP or TCP only)"},"serverip":{"upperBound":10000,"lowerBound":1, "argHelp":"Server IP to connect to"}}
         logging.debug( "Use Arg's: "+str(argNames))
         return argNames
 

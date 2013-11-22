@@ -9,4 +9,4 @@ The interaction of the various emulators used in COCOMA can cause unexpected iss
 .. figure:: MEM_NET-Problem.png
     :align: center
 
-* When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command 'ccmsh -j') may not be correct;
+* When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command 'ccmsh -j') may not be complete as some of the jobs have yet to be scheduled. ;

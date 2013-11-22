@@ -84,7 +84,7 @@ class Producer():
 
     def formatmsg(self, topic, name, message):
         ts = time.time()
-        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
         #newmsg = st+';'+name+';'+message
 	#print "scheduler.getUniqueID: "+self.scheduler.getUniqueID()
         data = {"Timestamp":ts, "From":name, "Message":message}

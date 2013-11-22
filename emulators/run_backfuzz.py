@@ -219,7 +219,7 @@ def emulatorArgNames(Rtype=None):
 
     if Rtype.lower() == "net":
 
-        argNames={"min":{"upperBound":100000000,"lowerBound":1}, "fuzzRange":{"upperBound":100000000,"lowerBound":1}, "serverport":{"upperBound":10000,"lowerBound":0}, "serverip":{"upperBound":10000,"lowerBound":1}, "packettype":{"upperBound":10000,"lowerBound":1}, "timedelay":{"upperBound":100,"lowerBound":0}, "salt":{"upperBound":100000,"lowerBound":1}}
+        argNames={"min":{"upperBound":100000000,"lowerBound":1, "argHelp":"Start Length of fuzz string to send"}, "fuzzRange":{"upperBound":100000000,"lowerBound":1, "argHelp":"Range for fuzzing to run. Adding this to the 'min' will give the max fuzz string length"}, "serverport":{"upperBound":10000,"lowerBound":0, "argHelp": "Server port to connect to"}, "serverip":{"upperBound":10000,"lowerBound":1, "argHelp": "Server IP to connect to"}, "packettype":{"upperBound":10000,"lowerBound":1, "argHelp":"Packet-Type to fuzz.\n Accepted: FTP, HTTP, IMAP, IRC, POP3, SMTP, SSH, TCP, TFTP, TNET, UDP (may not all work)"}, "timedelay":{"upperBound":100,"lowerBound":0, "argHelp": "Delay between fuzz strings being sent.\nUnits: s (default = 0.8)"}, "salt":{"upperBound":100000,"lowerBound":1, "argHelp": "Length to increase fuzz string by on each iteration"}}
 
         return argNames
 

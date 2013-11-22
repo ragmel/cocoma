@@ -20,7 +20,8 @@ The *COCOMA API IP* refers to the IP of the interface on which the API have been
 
 Creating an emulation
 ---------------------
-Each emulation requires a name and at least one distribution, although as many distributions as required can be added. Each distribution requires a name and all required fields to be filled, this data will vary as per the emulation, distribution or resource selected. Distribution windows can be minimized for overall readability or removed entirely (not added to the emulation) by clicking the 'x' in the top right corner:
+Each emulation requires a name and at least one distribution, although as many distributions as required can be added. Each distribution requires a name and all required fields to be filled, this data will vary as per the emulation, distribution or resource selected. Some help is provided to explain what each of the arguments are and (if relevant) what their units are. Distribution windows can be minimized for overall readability or removed entirely (not added to the emulation) by clicking the 'x' in the top right corner:
+
 
 .. figure:: webUIimages/MultiDist.png
         :scale: 75

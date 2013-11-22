@@ -149,7 +149,7 @@ def argNames(Rtype=None):
    
     if Rtype.lower() == "cpu":
         
-        argNames={"trace":{"upperBound":999999,"lowerBound":0}, "groupingRange":{"upperBound":99,"lowerBound":1}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+        argNames={"trace":{"upperBound":999999,"lowerBound":0, "argHelp":"Path to trace file (must be lower-case).\nSee documentation for additional help"}, "groupingRange":{"upperBound":99,"lowerBound":1, "argHelp":"Range to group jobs together by.\nSee documentation for additional help"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
         return argNames
    
     #get free amount of memory and set it to upper bound
@@ -158,7 +158,7 @@ def argNames(Rtype=None):
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
 
-        argNames={"trace":{"upperBound":999999,"lowerBound":0}, "groupingRange":{"upperBound":99,"lowerBound":1}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+        argNames={"trace":{"upperBound":999999,"lowerBound":0, "argHelp":"Path to trace file (must be lower-case).\nSee documentation for additional help"}, "groupingRange":{"upperBound":99,"lowerBound":1, "argHelp":"Range to group jobs together by.\nSee documentation for additional help"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
         return argNames
 
 if __name__=="__main__":

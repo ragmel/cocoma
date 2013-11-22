@@ -102,7 +102,7 @@ def argNames(Rtype=None):
     
         if Rtype.lower() == "cpu":
             
-            argNames={"startload":{"upperBound":100,"lowerBound":0},"stopload":{"upperBound":100,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+            argNames={"startload":{"upperBound":100,"lowerBound":0, "argHelp":"Value for distribution to start at.\nUnits: %"},"stopload":{"upperBound":100,"lowerBound":0, "argHelp":"Value for distribution to stop at.\nUnits: %"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
             return argNames
        
         #get free amount of memory and set it to upper bound
@@ -111,15 +111,15 @@ def argNames(Rtype=None):
             memReading=psutil.phymem_usage()
             allMemory =memReading.total/1048576
     
-            argNames={"startload":{"upperBound":allMemory,"lowerBound":50,},"stopload":{"upperBound":allMemory,"lowerBound":50}, "malloclimit":{"upperBound":4095,"lowerBound":50}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+            argNames={"startload":{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to begin at.\nUnits: MB or %"},"stopload":{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to stop at.\nUnits: MB or %"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
             return argNames
             
         if Rtype.lower() == "io":
-            argNames={"startload":{"upperBound":999999,"lowerBound":0},"stopload":{"upperBound":999999,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+            argNames={"startload":{"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"},"stopload":{"upperBound":999999,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
             return argNames
         
         if Rtype.lower() == "net":
-            argNames={"startload":{"upperBound":1000000,"lowerBound":0},"stopload":{"upperBound":1000000,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0}, "duration":{"upperBound":100000,"lowerBound":0}, "minJobTime":{"upperBound":10000000,"lowerBound":2}}
+            argNames={"startload":{"upperBound":1000000,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"},"stopload":{"upperBound":1000000,"lowerBound":0, "argHelp":"Value for distribution to stop at.\nUnits: MB/s throughput"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
             return argNames
 
 
