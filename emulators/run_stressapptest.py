@@ -92,6 +92,7 @@ import subprocess
 from signal import *
 from subprocess import *
 import random
+from collections import OrderedDict
 
 from Library import getHomepath
 
@@ -238,12 +239,9 @@ def emulatorArgNames(Rtype=None):
         return argNames
     
     if Rtype.lower() == "mem":
-        argNames={"memthreads":{"upperBound":10,"lowerBound":0, "argHelp":"number of memory copy threads to run (auto-detect to number of CPUs)"}}
-        return argNames
+        argNames=[("memthreads", {"upperBound":10,"lowerBound":0, "argHelp":"number of memory copy threads to run (auto-detect to number of CPUs)"})]
+        return OrderedDict(argNames)
     
     if Rtype.lower() == "io":
-        argNames={"memsize":{"upperBound":99999,"lowerBound":50, "argHelp":"megabytes of ram to test (auto-detect all memory available)"}}
-        return argNames
-
-if __name__ == '__main__':
-    pass
+        argNames=[("memsize", {"upperBound":99999,"lowerBound":50, "argHelp":"megabytes of ram to test (auto-detect all memory available)"})]
+        return OrderedDict(argNames)

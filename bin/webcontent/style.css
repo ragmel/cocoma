@@ -177,3 +177,12 @@ button {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
+
+table {
+  border-spacing: 10px 0;
+  text-align: left;
+}
+
+th{
+    padding: 5px;
+}

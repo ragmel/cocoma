@@ -80,6 +80,7 @@ import datetime as dt
 import subprocess
 from signal import *
 from subprocess import *
+from collections import OrderedDict
 
 sys.path.insert(0,'/home/jordan/git/cocoma/bin/') #REMOVE
 import Library #REMOVE
@@ -318,9 +319,11 @@ def emulatorArgNames(Rtype=None):
     
     if Rtype.lower() == "net":
         
-        argNames={"serverport":{"upperBound":10000,"lowerBound":0, "argHelp": "Server port to connect to"},"packettype":{"upperBound":"udp","lowerBound":"tcp", "argHelp":"Packet-Type to test. (UDP or TCP only)"},"serverip":{"upperBound":10000,"lowerBound":1, "argHelp":"Server IP to connect to"}}
+        argNames=[("serverip",{"upperBound":10000,"lowerBound":1, "argHelp":"Server IP to connect to"}),
+                  ("serverport", {"upperBound":10000,"lowerBound":0, "argHelp": "Server port to connect to"}),
+                  ("packettype", {"upperBound":"udp","lowerBound":"tcp", "argHelp":"Packet-Type to test. (UDP or TCP only)"})]
         logging.debug( "Use Arg's: "+str(argNames))
-        return argNames
+        return OrderedDict(argNames)
 
 def readLogLevel(column):
     '''
@@ -347,6 +350,3 @@ def readLogLevel(column):
             logLevel=row[0]
     
     return logLevel
-
-if __name__ == '__main__':
-    pass

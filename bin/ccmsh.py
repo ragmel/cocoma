@@ -153,7 +153,6 @@ More info @ https://github.com/cragusa/cocoma
                 try:
                     n=1
                     while n !=len(arguments):
-                        
                         cliCommand =cliCommand+" "+arguments[n]+" "
                         n+=1
                 except Exception,e :
@@ -173,18 +172,11 @@ More info @ https://github.com/cragusa/cocoma
                 try:
                     n=1
                     while n !=len(arguments):
-                        if n==2:
-                            cliCommand+=" -p "+arguments[n]
-                        
-                        if n==1:
-                            cliCommand = "-i "+arguments[n]
-                        
+                        cliCommand =cliCommand+" "+arguments[n]+" "
                         n+=1
                 except Exception,e :
                     print "No additional arguments were supplied to API:",e
                     Library.services_control("api","start"," ")        
-                    
-                    
                     
                 print "Starting ",arguments[0],cliCommand
                 Library.services_control("api","start",cliCommand)
@@ -444,7 +436,6 @@ More info @ https://github.com/cragusa/cocoma
             if choice in yes:
                 Library.purgeAll()
                 Library.killRemainingProcesses()
-                Library.removeLogs()
                 #producer.sendmsg(myName,"USER REQUEST: "+sys._getframe().f_code.co_name+" purge all")
                 msg = {"Action":"USER REQUEST purge all Emulations"}
                 producer.sendmsg(myName,msg)

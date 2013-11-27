@@ -1226,37 +1226,30 @@ def startAPI(IP_ADDR,PORT_ADDR):
 
 if __name__ == '__main__':
     PORT_ADDR = 5050
-    #check if the interface specified
     try: 
         if sys.argv[1] == "-h":
             print "Use ccmshAPI -i <name of network interface> -p <port number>. Default network interface is eth0, port 5050."
-        
-        elif sys.argv[1] == "-i":
-            INTERFACE = sys.argv[2]
-            print "Interface: ",sys.argv[2]
-            IP_ADDR=Library.getifip(sys.argv[2])
+        else:
             try:
-                if sys.argv[3] == "-p":
-                    PORT_ADDR = int(sys.argv[4])
-                else:
-                    print "Use ccmshAPI -i <name of network interface> -p <port number>. Default network interface is eth0, port 5050."
-            except:
-                
-                print "No port specified using 5050 as default"
+                INTERFACE = sys.argv[1]
+                print "Interface: ",INTERFACE
+                IP_ADDR=Library.getifip(INTERFACE)
+                try:
+                    PORT_ADDR = int(sys.argv[2])
+                except Exception, e:
+                    print "No port specified using 5050 as default"
+            except Exception, e:
+                INTERFACE = "eth0"
+                IP_ADDR=Library.getifip(INTERFACE)
+                print "No port specified using eth0 as default"
 
             #writing config to db
             Library.writeInterfaceData(INTERFACE,"apiinterface")
             #starting API module
             startAPI(IP_ADDR,PORT_ADDR)
      
-        else:    
-            print "Use ccmshAPI -i <name of network interface> -p <port number>. Default network interface is eth0, port 5050."
     except Exception, e:
-        print "API exception error:",e
         INTERFACE ="eth0"
-        print "Interface: ","eth0"
         IP_ADDR=Library.getifip("eth0")
         Library.writeInterfaceData("eth0","apiinterface")
         startAPI(IP_ADDR,PORT_ADDR)
-        
-    

@@ -10,3 +10,5 @@ The interaction of the various emulators used in COCOMA can cause unexpected iss
     :align: center
 
 * When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command 'ccmsh -j') may not be complete as some of the jobs have yet to be scheduled. ;
+
+* The Web UI may not work properly on older or out of date browsers

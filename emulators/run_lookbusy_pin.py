@@ -58,6 +58,7 @@ import sqlite3 as sqlite
 import datetime as dt
 import subprocess
 from signal import SIGINT
+from collections import OrderedDict
 
 from Library import getHomepath
 
@@ -249,7 +250,7 @@ def cpuLoad(distributionID,runNo,cpuUtil,ncpus,duration):
 def emulatorHelp():
 
     return """
-    Emulator lookbusy can be used for following resources:
+    Emulator lookbusy_pin can be used for following resources:
     1)Loads CPU with parameters:
       ncpus - Number of CPUs to keep busy (default: autodetected)
       
@@ -285,19 +286,17 @@ def emulatorArgNames(Rtype=None):
         
     if Rtype.lower() == "cpu":
         
-        argNames={"ncpus":{"upperBound":psutil.NUM_CPUS,"lowerBound":0, "argHelp":"Number of CPUs to keep busy (default: autodetected)"}}
+        argNames=[("ncpus", {"upperBound":psutil.NUM_CPUS,"lowerBound":0, "argHelp":"Number of CPUs to keep busy (default: autodetected)"})]
         #print "Use Arg's: ",argNames
-        return argNames
+        return OrderedDict(argNames)
     
     if Rtype.lower() == "mem":
-        argNames={"memsleep":{"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in usec (default 1000)"}}
+        argNames=[("memsleep", {"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in usec (default 1000)"})]
         #print "Use Arg's: ",argNames
-        return argNames
+        return OrderedDict(argNames)
     
     if Rtype.lower() == "io":
-        argNames={"ioblocksize":{"upperBound":9999999,"lowerBound":0, "argHelp":"Size of blocks to use for I/O (in bytes, followed by KB, MB or GB)"},"iosleep":{"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in msec (default 100)"}}
+        argNames=[("ioblocksize", {"upperBound":9999999,"lowerBound":0, "argHelp":"Size of blocks to use for I/O (in bytes, followed by KB, MB or GB)"}),
+                  ("iosleep", {"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in msec (default 100)"})]
         #print "Use Arg's: ",argNames
-        return argNames
-
-if __name__ == '__main__':
-    pass
+        return OrderedDict(argNames)

@@ -54,10 +54,11 @@
   <div class="section" id="the-web-ui">
 <h1>The Web UI<a class="headerlink" href="#the-web-ui" title="Permalink to this headline">¶</a></h1>
 <p>Here we explain how to use the web UI to create and manage emulations and view their results.</p>
+<p><em>Note:</em> For best results only use the Web UI on an up to date browser (may not function as intended on an out of date or older browser)</p>
 <div class="section" id="opening-the-ui">
 <h2>Opening the UI<a class="headerlink" href="#opening-the-ui" title="Permalink to this headline">¶</a></h2>
 <p>Provided that the API is running, the web UI will be accessible at</p>
-<div class="highlight-python"><pre>http://[COCOMA API IP]:5050/index.html</pre>
+<div class="highlight-python"><pre>http://[COCOMA API IP]:[COCOMA API PORT]/index.html</pre>
 </div>
 <p>The <em>COCOMA API IP</em> refers to the IP of the interface on which the API have been started. The page is compatible with Chrome, Firefox and Safari web browsers, while it is not with Internet Explorer. The page will automatically load in available emulators, distributions and resources. It will detect which distributions and resources are compatible with the given emulator so that the user needs not worry about creating XML the framework cannot process. Any emulations which already exist will also be displayed in the right hand bar.</p>
 <div class="figure align-center">

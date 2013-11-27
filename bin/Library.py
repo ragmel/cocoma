@@ -778,10 +778,10 @@ def getCurrentJobs():
     return currentJobs
 
 def removeLogs():
-    logFiles = glob.glob("/home/jordan/git/cocoma/logs/*.csv")
-    logFiles = logFiles + glob.glob("/home/jordan/git/cocoma/logs/*.xml")
-    logFiles = logFiles + glob.glob("/home/jordan/git/cocoma/logs/*.txt")
-    logFiles = logFiles + glob.glob("/home/jordan/git/cocoma/logs/*.zip")
+    logFiles = glob.glob(HOMEPATH+"/logs/*.csv")
+    logFiles = logFiles + glob.glob(HOMEPATH+"/logs/*.xml")
+    logFiles = logFiles + glob.glob(HOMEPATH+"/logs/*.txt")
+    logFiles = logFiles + glob.glob(HOMEPATH+"/logs/*.zip")
     if (len(logFiles) > 0):
         for logfile in logFiles:
             os.remove(logfile)
@@ -938,7 +938,7 @@ def staggerStartTimes(startTimes):
     for i, startTime in enumerate(startTimes):
         if (startTime == prevTime):
             startTimes[i] = startTime + addTime
-            addTime += 0.1
+            addTime += 0.12
         else:
             prevTime = startTime
             addTime = 0.0
@@ -950,7 +950,6 @@ def removeZeroJobs (stressValues, startTimes, durations):
     count = 0
     removeIndex = []
     for i, stressValue in enumerate(stressValues):
-        print "\nstressValue: ", type(stressValue), stressValues
         if (stressValue == 0):
             removeIndex.append(i)
             count += 1
@@ -958,6 +957,8 @@ def removeZeroJobs (stressValues, startTimes, durations):
         stressValues.pop(index)
         startTimes.pop(index)
         durations.pop(index)
-        
-    print str(count), " Jobs with a stressValue of 0 removed"
+    
+    if (count > 0):
+        print str(count), " Jobs with a stressValue of 0 removed"
+
     return (stressValues, startTimes, durations)

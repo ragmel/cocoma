@@ -33,6 +33,7 @@ MALLOC_LIMIT = 4095
 RESTYPE = ""
 
 import sys
+from collections import OrderedDict
 from Library import getHomepath
 sys.path.insert(0, getHomepath() + '/distributions/')
 from abstract_dist import *
@@ -165,23 +166,32 @@ def argNames(Rtype=None):
         
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
-
-        argNames={"startload":{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to begin at.\nUnits: MB or %"},"stopload":{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to reach at it's mid-point.\nUnits: MB or %"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Number of runs to create"}}
+        
+        argNames=[("granularity",{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
+                  ("duration",{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
+                  ("minJobTime",{"upperBound":10000000,"lowerBound":2, "argHelp":"Number of runs to create (Min 2)"}),
+                  ("startload",{"upperBound":allMemory,"lowerBound":50, "argHep":"Value for distribution to begin at.\nUnits: MB or %\ne.g. '10' (for 10MB) or '10%'"}),
+                  ("stopload",{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to reach at its mid-point.\nUnits: MB or %\ne.g. '10' (for 10MB) or '10%'"})]
         RESTYPE = "MEM"
 #        print "Use Arg's: ",argNames," with mem"
-        return argNames
+        return OrderedDict(argNames)
         
     if Rtype.lower() == "io":
-        argNames={"startload":{"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"},"stopload":{"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to reach at it's mid-point.\nUnits: MB/s throughput"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
+        argNames=[("granularity",{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
+                  ("duration",{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
+                  ("minJobTime",{"upperBound":10000000,"lowerBound":2, "argHelp":"Number of runs to create (Min 2)"}),
+                  ("startload",{"upperBound":999999,"lowerBound":0, "argHep":"Value for distribution to begin at.\nUnits: MB/s throughput"}),
+                  ("stopload",{"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to reach at its mid-point.\nUnits: MB/s throughput"})]
         RESTYPE = "IO"
 #        print "Use Arg's: ",argNames," with io"
-        return argNames
+        return OrderedDict(argNames)
     
     if Rtype.lower() == "net":
-        argNames={"startload":{"upperBound":1000000,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"},"stopload":{"upperBound":1000000,"lowerBound":0, "argHelp":"Value for distribution to reach at it's mid-point.\nUnits: MB/s throughput"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
+        argNames=[("granularity",{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
+                  ("duration",{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
+                  ("minJobTime",{"upperBound":10000000,"lowerBound":2, "argHelp":"Number of runs to create (Min 2)"}),
+                  ("startload",{"upperBound":999999,"lowerBound":0, "argHep":"Value for distribution to begin at.\nUnits: MB/s throughput"}),
+                  ("stopload",{"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to reach at its mid-point.\nUnits: MB/s throughput"})]
         RESTYPE = "NET"
 #        print "Use Arg's: ",argNames," with net"
-        return argNames
-    
-if __name__=="__main__":
-        pass
+        return OrderedDict(argNames)

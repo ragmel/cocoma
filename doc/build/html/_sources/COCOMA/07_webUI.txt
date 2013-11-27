@@ -2,13 +2,15 @@ The Web UI
 ==========
 Here we explain how to use the web UI to create and manage emulations and view their results.
 
+*Note:* For best results only use the Web UI on an up to date browser (may not function as intended on an out of date or older browser)
+
 Opening the UI
 --------------
 Provided that the API is running, the web UI will be accessible at
 
 :: 
 
-        http://[COCOMA API IP]:5050/index.html
+        http://[COCOMA API IP]:[COCOMA API PORT]/index.html
 
 The *COCOMA API IP* refers to the IP of the interface on which the API have been started. The page is compatible with Chrome, Firefox and Safari web browsers, while it is not with Internet Explorer. The page will automatically load in available emulators, distributions and resources. It will detect which distributions and resources are compatible with the given emulator so that the user needs not worry about creating XML the framework cannot process. Any emulations which already exist will also be displayed in the right hand bar.
 

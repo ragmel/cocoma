@@ -58,6 +58,7 @@ import sqlite3 as sqlite
 import datetime as dt
 import subprocess
 from signal import SIGINT
+from collections import OrderedDict
 
 import Library
 from Library import getHomepath
@@ -253,17 +254,14 @@ def emulatorArgNames(Rtype=None):
         return argNames
         
     if Rtype.lower() == "cpu":
-        argNames={"ncpus":{"upperBound":psutil.NUM_CPUS,"lowerBound":0, "argHelp":"Number of CPUs to keep busy (default: autodetected)"}}
-        return argNames
+        argNames=[("ncpus", {"upperBound":psutil.NUM_CPUS,"lowerBound":0, "argHelp":"Number of CPUs to keep busy (default: autodetected)"})]
+        return OrderedDict(argNames)
     
     if Rtype.lower() == "mem":
-        argNames={"memsleep":{"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in usec (default 1000)"}}
-        return argNames
+        argNames=[("memsleep", {"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in usec (default 1000)"})]
+        return OrderedDict(argNames)
     
     if Rtype.lower() == "io":
-        argNames={"ioblocksize":{"upperBound":9999999,"lowerBound":0, "argHelp":"Size of blocks to use for I/O (in bytes, followed by KB, MB or GB)"},"iosleep":{"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in msec (default 100)"}}
-        return argNames
-
-
-if __name__ == '__main__':
-    pass
+        argNames=[("ioblocksize", {"upperBound":9999999,"lowerBound":0, "argHelp":"Size of blocks to use for I/O (in bytes, followed by KB, MB or GB)"}),
+                  ("iosleep", {"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in msec (default 100)"})]
+        return OrderedDict(argNames)

@@ -18,6 +18,7 @@
 #
 
 import sys
+from collections import OrderedDict
 from Library import getHomepath
 sys.path.insert(0, getHomepath() + '/distributions/')
 from abstract_dist import *
@@ -102,26 +103,38 @@ def argNames(Rtype=None):
     
         if Rtype.lower() == "cpu":
             
-            argNames={"startload":{"upperBound":100,"lowerBound":0, "argHelp":"Value for distribution to start at.\nUnits: %"},"stopload":{"upperBound":100,"lowerBound":0, "argHelp":"Value for distribution to stop at.\nUnits: %"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
-            return argNames
+            argNames=[("duration",{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
+                      ("granularity", {"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
+                      ("minJobTime",{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds (Min 2)"}),
+                      ("startload",{"upperBound":100,"lowerBound":0, "argHelp":"Value for distribution to start at.\nUnits: %"}),
+                      ("stopload", {"upperBound":100,"lowerBound":0, "argHelp":"Value for distribution to stop at.\nUnits: %"})]
+            return OrderedDict(argNames)
        
         #get free amount of memory and set it to upper bound
         if Rtype.lower() == "mem":
             
             memReading=psutil.phymem_usage()
             allMemory =memReading.total/1048576
-    
-            argNames={"startload":{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to begin at.\nUnits: MB or %"},"stopload":{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to stop at.\nUnits: MB or %"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
-            return argNames
+
+            argNames=[("duration", {"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
+                      ("granularity", {"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
+                      ("minJobTime", {"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds (Min 2)"}),
+                      ("startload", {"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to begin at.\nUnits: MB or %\ne.g. '10' (for 10MB) or '10%'"}),
+                      ("stopload", {"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to stop at.\nUnits: MB or %\ne.g. '10' (for 10MB) or '10%'"})]
+            return OrderedDict(argNames)
             
         if Rtype.lower() == "io":
-            argNames={"startload":{"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"},"stopload":{"upperBound":999999,"lowerBound":0}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
-            return argNames
+            argNames=[("duration", {"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
+                      ("granularity", {"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
+                      ("minJobTime", {"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds (Min 2)"}),
+                      ("startload", {"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"}),
+                      ("stopload", {"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to end at.\nUnits: MB/s throughput"})]
+            return OrderedDict(argNames)
         
         if Rtype.lower() == "net":
-            argNames={"startload":{"upperBound":1000000,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"},"stopload":{"upperBound":1000000,"lowerBound":0, "argHelp":"Value for distribution to stop at.\nUnits: MB/s throughput"}, "granularity":{"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}, "duration":{"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}, "minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
-            return argNames
-
-
-if __name__ == "__main__": #For testing
-    pass
+            argNames=[("duration", {"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
+                      ("granularity", {"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
+                      ("minJobTime", {"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds (Min 2)"}),
+                      ("startload", {"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"}),
+                      ("stopload", {"upperBound":999999,"lowerBound":0, "argHelp":"Value for distribution to end at.\nUnits: MB/s throughput"})]
+            return OrderedDict(argNames)

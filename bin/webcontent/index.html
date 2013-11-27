@@ -28,6 +28,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 	
 		<div id="topBar">
 		<img src='COCOMA_LOGO.png' height='50' style="padding:15px;">
+		<a href="http://cragusa.github.io/cocoma/" style="float:right; color: #CC0000;font-size:25px;padding:10px;text-decoration: none" target="_blank" ><b>Documentation</b></a>
 		</div>
 		<div id="centreBox">
 			<div class="wrapper" style="float:left">
@@ -142,13 +143,17 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			
 			<div class="wrapper" style="float:right">
 				<div id="rightBox" class="box" style="padding:30px;">
-					<div id="topBox"></div>
-					<div id="displayBox" style="float:left;" onmouseout='hidePopups'></div>
-					<div id="dlLink" class="resultscolumn"></div>
-					<div id="AorI" class="resultscolumn"></div>
-					<div id="failedRuns" class="resultscolumn"></div>
-					<div id="totalRuns" class="resultscolumn"></div>
-					<div style="clear:both;"></div>
+					<div id="topBox" style="font-size:20;"><b>Current Emulations:</b></div><br>
+					
+					<table id="emulationTable" cellpadding="2" text-align="right">
+					   <tr>
+					       <th>Name</th>
+					       <th>Total runs</th>
+					       <th>Failed Runs</th>
+					       <th>Emulation State</th>
+					       <th>Download</th>
+					   </tr>
+					</table>
 					
 					<div id="detailsPopup" class='helpBox'></div>
 					
@@ -168,9 +173,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
                     </div>
 					
 				</div>
-				
-
-		  </div>
+		     </div>
 
 
 	<script type="text/javascript">
@@ -333,7 +336,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
                     //if (i+1 == dist.valueOf().collection.items.total)
                     if (i == 0)
                     {
-                        console.log("TRUE")
+                        //console.log("TRUE")
                         x = fillDistBox(url[i], emuResources, n, distVal, resVal, extraParamVals, true, x);
                     }
                     else
@@ -343,7 +346,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 					
 				}
 				
-				console.log("distVal = " + distVal);
+				//console.log("distVal = " + distVal);
 				
 				if ((distVal != null) && (x+1 == dist.valueOf().collection.items.total))
                 {
@@ -381,12 +384,12 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
                                 
                     if(distVal != null)
                     {
-                        console.log("distVal = " + distVal);
+                        //console.log("distVal = " + distVal);
                         $("#distSelect" +n).val(distVal).change();
                     }
                     if(popResources)
                     {
-                        console.log("RESVAL: " + resVal)
+                        //console.log("RESVAL: " + resVal)
                         checkDistResources(currentDistName, emuResources, n, resVal, extraParamVals);
                         //setTimeout(function(){checkDistResources(currentDistName, emuResources, n, resVal, extraParamVals)}, 1000);
                         emuString = emuResources;
@@ -536,7 +539,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 		
 		function populateResourceList(options, emuOptions, n, resVal, extraParamVals)
 		{
-		  console.log("populateResourceList resVal:" + resVal)
+		  //console.log("populateResourceList resVal:" + resVal)
 			$("#resourceSelect" +n).html(""); //blank select
 			if(options[0] != 'x' && emuOptions[0] != 'x')
 				$("#resourceSelect" +n).append("<option>CPU</option>");
@@ -677,7 +680,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 							$.post(cocomaIP + "emulations", exml, function(response){
 									var serializer = new XMLSerializer();				//transform xml response into json
 									var str = serializer.serializeToString(response);
-									console.log(str);
+									//console.log(str);
 									alert("Emulation will begin running at "+ date +" "+ time);
 									showEmus();
 								}).error(function(e){
@@ -843,6 +846,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 		function calculateTotalDuration()
 		{
 			var td = 0;
+			var tdMax = 0
 			for(var i=1; i<=noOfDists; i++)
 			{
 			     for (var y=0; y <= distParams[i].length; y++)
@@ -851,96 +855,155 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			         var duration = $("#duration" + i).val();
 			     }
 				var start = $("#sTime"+i).val();
-				var temp = start*1 + duration*1;
+				td = start*1 + duration*1;
+				if (td > tdMax) tdMax = td
 				
-				td += temp;
 			}
-			totalDuration = td; //set global var
-			$("#totalDuration").val(td);
+			totalDuration = tdMax; //set global var
+			$("#totalDuration").clear;
+			$("#totalDuration").val(tdMax);
 		}
 		
 		function displayEmus(data)
 		{
-			$("#displayBox").html("Name<br><br>");
-			$("#topBox").html("<p style='font-weight:bold;'>Current emulations:&nbsp&nbsp&nbsphover to veiw details</p>");
+		    var emuTable = document.getElementById("emulationTable");
+		    
 			count = data.valueOf().collection.items.total;
-			$("#dlLink").html("<br><br>");
-			
 			if(count == 0)
-				$("#displayBox").html("No emulations to display")
+			{
+			     var row = emuTable.insertRow(1);
+			     var cell0 = row.insertCell(0);
+			     cell0.colSpan = 5;
+			     cell0.innerHTML="No Emulations to Display";
+			}
 			else
 			{
 				emuNamesList = new Array();
+				logNameList = new Array();
+				
+                logNameList = getEmuLogList(); //Get list emulations with logs enabled
+				
 				if(data.valueOf().collection.items.emulation.length == null)
-					emuNamesList[0] = data.valueOf().collection.items.emulation
-					else
-						emuNamesList = data.valueOf().collection.items.emulation
-						
-				for(var i=0; i < count; i++){
-					var name = emuNamesList[i].name;
-					
-					$("#totalRuns").html("total runs<br><br>");
-					$("#failedRuns").html("failed<br><br>");
-					$("#AorI").html("state<br><br>");
-					
-					$.get(cocomaIP + "results/" + name, function(response){		//get results xml
-						var serializer = new XMLSerializer();				//transform xml response into json
-						var str = serializer.serializeToString(response);
-						var results = xml2json.parser(str);
-						
-						$("#totalRuns").append(results.valueOf().results.totalruns + "<br>");
-						$("#failedRuns").append(results.valueOf().results.failedruns + "<br>");
-						var aori = results.valueOf().results.emustate
-						if(aori == "Executed")
-							$("#AorI").append("<label style='color:#008C0D'>Executed</label><br>");
-						else if(aori == "Failed run(s)")
-                            $("#AorI").append("<label style='color:#BF0600'>Failed run(s)</label><br>");
-                        else if(aori == "Unexecuted run(s)")
-                            $("#AorI").append("<label style='color:#D98313'>Unexecuted run(s)</label><br>");
-                        else if(aori == "Pending Execution")
-                            $("#AorI").append("<label style='color:#9009DE'>Pending Execution</label><br>");
-						else
-							$("#AorI").append("<label style='color:#1E00B7'>Running</label><br>");
-						});
-
-					var l = ' onclick="emuClicked(&#39;'+name+'&#39;)"';
-					var m = ' onmouseover="emuHover(&#39;'+name+'&#39;)"';
-					$("#displayBox").append("<button class='list' "+l+m+" onmouseout='hideHelpBox(detailsPopup)'>"+name+"</button> <br>");
+				{
+				    emuNamesList[0] = data.valueOf().collection.items.emulation
+				}
+				else
+				{
+				    emuNamesList = data.valueOf().collection.items.emulation
 				}
 				
-			        $.get(cocomaIP + "logs/emulations/", function(serverResponse){     //get results xml
-                    var serializer = new XMLSerializer();               //transform xml response into json
-                    var responseStr = serializer.serializeToString(serverResponse);
-                    var responseJSON = xml2json.parser(responseStr);
-                    
-                    logNameList = new Array()
-                    if (responseJSON.valueOf().collection.items.emulationlog.length == null)
-                        logNameList[0] = responseJSON.valueOf().collection.items.emulationlog;
-                    else
-                        logNameList = responseJSON.valueOf().collection.items.emulationlog;
-                        
-                    var logNameListLength = responseJSON.valueOf().collection.items.total;
-                    for(var y=0; y < count; y++){
-                        var listName = emuNamesList[y].name;
-                        var logFound = false
-                        for (var x=0; x < logNameListLength; x++){
-                            var logName = logNameList[x].name;
-                            if (logName == listName ) logFound = true;
-                            }
-                        
-                        if (logFound) $("#dlLink").append("<a href='"+ cocomaIP + "logs/emulations/" + listName +"' class='linktxt' id='"+listName+"'onclick='f(){return false;}'><img src='download.png' height='19'></a><br>");
-                        else $("#dlLink").append("<a class='linktxt' id='"+listName+"'onclick='f(){return false;}'><img src='noDownload.png' height='19'></a><br>");
-                        }
-                   });
+				for(var i=0; i < count; i++)
+				{
+					var name = emuNamesList[i].name;
+					$.get(cocomaIP + "results/" + name, function(response)
+					{
+					   var serializer = new XMLSerializer();               //transform xml response into json
+					   var str = serializer.serializeToString(response);
+					   var results = xml2json.parser(str);
+					   
+					   var emuName = results.valueOf().results.emulationname;
+					   var totalRuns = results.valueOf().results.totalruns;
+					   var failedRuns = results.valueOf().results.failedruns;
+					   var emuState = results.valueOf().results.emustate;
+					   
+					   addEmulationRow(emuTable, emuName, totalRuns, failedRuns, emuState, logNameList);
+					});
+				}
 			}
 		}
+		
+		function getEmuLogList()
+        {
+            logNameList = new Array()
+            $.get(cocomaIP + "logs/emulations/", function(serverResponse)
+            {     //get results xml
+                 var serializer = new XMLSerializer();               //transform xml response into json
+                 var responseStr = serializer.serializeToString(serverResponse);
+                 var responseJSON = xml2json.parser(responseStr);
+                 
+                 if (responseJSON.valueOf().collection.items.emulationlog.length == null)
+                 {
+                    logNameList[0] = responseJSON.valueOf().collection.items.emulationlog;
+                 }
+                 else
+                 {
+                    logNameList = responseJSON.valueOf().collection.items.emulationlog;
+                 }
+                 
+                 var logNameListLength = responseJSON.valueOf().collection.items.total;
+                 for (var i=0; i < logNameListLength; i++)
+                 {
+                    logNameList[i] = logNameList[i].name;
+                 }
+            });
+            return logNameList;
+        }
+		
+		function addEmulationRow(table, name, totalRuns, failedRuns, state, logNames)
+        {
+            var row = table.insertRow(-1); //insert New row at end
+            var cellName = row.insertCell(0);
+            var cellTotalRuns = row.insertCell(1);
+            var cellFailedRuns = row.insertCell(2);
+            var cellState= row.insertCell(3);
+            var cellDownload = row.insertCell(4);
+            
+            var dlBtn = emuDownlaodBtn(name, logNames);
+            
+            var l = ' onclick="emuClicked(&#39;'+name+'&#39;)"';
+            var m = ' onmouseover="emuHover(&#39;'+name+'&#39;)"';
+            name = "<button id='" + name + "Btn' class='list' "+l+m+" onmouseout='hideHelpBox(detailsPopup)'>"+name+"</button>"
+            
+            state = getStateColour(state);
+            
+            cellName.innerHTML = name;
+            cellTotalRuns.innerHTML = totalRuns;
+            cellFailedRuns.innerHTML = failedRuns;
+            cellState.innerHTML = state;
+            cellDownload.innerHTML = dlBtn;
+        }
+		
+		function getStateColour(state)
+        {
+            if(state == "Executed")
+                return "<label style='color:#008C0D'>Executed</label><br>";
+            else if(state == "Failed run(s)")
+                return "<label style='color:#BF0600'>Failed run(s)</label><br>";
+            else if(state == "Unexecuted run(s)")
+                return "<label style='color:#D98313'>Unexecuted run(s)</label><br>";
+            else if(state == "Pending Execution")
+                return "<label style='color:#9009DE'>Pending Execution</label><br>";
+            else
+                return "<label style='color:#1E00B7'>Running</label><br>";
+        }
+		
+		function emuDownlaodBtn(name, logNames)
+        {
+            //Adds a button to download the emulation (if available)
+            logListLength = logNames.length;
+            var logFound = false;
+            for (var i=0; i < logListLength; i++)
+            {
+                if (name == logNames[i]) logFound = true;
+            }
+            
+            if (logFound)
+            {
+                var btnTxt = "<a href='"+ cocomaIP + "logs/emulations/" + name +"' class='linktxt' id='"+name+"' onclick='f(){return false;}'><img src='download.png' height='19'></a>"
+            }
+            else
+            {
+                var btnTxt = "<a class='linktxt' id='" + name + "' onclick='f(){return false;}'><img src='noDownload.png' height='19'></a>"
+            }
+            return btnTxt
+        }
 		
 		function emuClicked(name)
 		{
 			$.get(cocomaIP + "emulations/" + name, function(response){
 					$xml = $(response);
 					$("#ename").val(name);
-					console.log($xml);
+					//console.log($xml);
 					var dists = $xml.find('distributions')
 					var distCount = dists.length;	//refers to numebr of dists in saved emulation about to be loaded
 					for(var i =1; i<= noOfDists; i++)		//start by removing all dists from display
@@ -1046,7 +1109,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 					$("#detailsPopup").css('top', mouseY - $("#detailsPopup").height() -30);
 				else
 					$("#detailsPopup").css('top', mouseY + 10);
-				$("#detailsPopup").css('left', $("#displayBox").position().left);
+				$("#detailsPopup").css('left', $("#" + name + "Btn").position().left);
 				$("#detailsPopup").css('display', 'block');
 				});
 		}
@@ -1126,7 +1189,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			
 			xml += "</emulation>";
 			
-			console.log(xml);
+			//console.log(xml);
 			//$("#displayBox").html(convertXML(xml));		//for display of xml on page
 			
 			return xml;

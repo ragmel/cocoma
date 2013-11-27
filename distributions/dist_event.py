@@ -20,6 +20,7 @@
 import math,psutil,Library
 
 import sys
+from collections import OrderedDict
 from Library import getHomepath
 sys.path.insert(0, getHomepath() + '/distributions/')
 from abstract_dist import *
@@ -49,8 +50,8 @@ def distHelp():
     Help method that gives description of linear distribution usage
     '''
     
-    print "Event driven distribution.Can be only used with emulators that eventually will terminate by themselves with static parameters. Distributions within payload XML are processed sequentially,order matters."
-    return "Event driven distribution.Can be only used with emulators that eventually will terminate by themselves with static parameters. Distributions within payload XML are processed sequentially,order matters."
+    print "Event driven distribution.Can be only used with emulators that eventually will terminate by themselves with static parameters. Distributions within payload XML are processed sequentially,order matters.\n See documentation for further help"
+    return "Event driven distribution.Can be only used with emulators that eventually will terminate by themselves with static parameters. Distributions within payload XML are processed sequentially,order matters.\n See documentation for further help"
     
 def argNames(Rtype=None):
     '''
@@ -65,8 +66,5 @@ def argNames(Rtype=None):
         return argNames
     
     if Rtype.lower() == "net":
-        argNames={"minJobTime":{"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds"}}
-        return argNames
-
-if __name__=="__main__":
-        pass
+        argNames=[("minJobTime", {"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds (Min: 2)"})]
+        return OrderedDict(argNames)
