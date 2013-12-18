@@ -98,15 +98,6 @@ class TestCLI (unittest.TestCase):
           length = int(length) + 1
           time.sleep(int(length))
           self.assertNotEquals(result, -1, "IO-EMU creation Failed")
- 
-    def test_EMU_IOTrap(self):  # Creates an IO Trap emulation using CLI
-          EMUTests = EmulationTests()
-          XML = "XMLExamples/shortTests/IOTrap.xml"
-          result = EMUTests.testCLICalls(runEmulation + XML, emulationStarted)
-          length = EMUTests.getTestDuration(XML)
-          length = int(length) + 1
-          time.sleep(int(length))
-          self.assertNotEquals(result, -1, "IO Trap-EMU creation Failed")
                    
     def test_EMU_MEM(self):  # Creates a MEM emulation using CLI
           EMUTests = EmulationTests()

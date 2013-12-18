@@ -24,7 +24,7 @@
         <serverip>10.55.168.238</serverip>
 	<!--Leave "0" for default 5001 port -->
 	<serverport>51889</serverport>
-        <packettype>UDP</packettype>
+        <protocol>UDP</protocol>
     </emulator-params>
   </distributions>
 

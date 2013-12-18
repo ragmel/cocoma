@@ -1693,7 +1693,7 @@ The newtork emulation needs two COCOMA VM\(aqs, one that acts as a client and th
         <serverport>5001</serverport>
         <clientip>172.18.254.236</clientip>
         <clientport>5001</clientport>
-        <packettype>UDP</packettype>
+        <protocol>UDP</protocol>
         </emulator\-params>
   </distributions>
 
@@ -1905,7 +1905,7 @@ Event Based Emulation example:
          <fuzzRange>900</fuzzRange>
          <serverip>10.55.168.142</serverip>
          <serverport>5050</serverport>
-         <packettype>TCP</packettype>
+         <protocol>TCP</protocol>
          <timedelay>1</timedelay>
          <salt>100</salt>
       </emulator\-params>
@@ -2401,7 +2401,7 @@ Event Based Emulation example:
          <fuzzRange>900</fuzzRange>
          <serverip>10.55.168.142</serverip>
          <serverport>5050</serverport>
-         <packettype>TCP</packettype>
+         <protocol>TCP</protocol>
          <timedelay>1</timedelay>
          <salt>100</salt>
       </emulator\-params>
@@ -2467,7 +2467,7 @@ The fuzzing process time cannot be known a priori as it depends from factors out
      <fuzzRange>900</fuzzRange>
      <serverip>10.55.168.142</serverip>
      <serverport>5050</serverport>
-     <packettype>TCP</packettype>
+     <protocol>TCP</protocol>
      <!\-\- Timeout (default 0.8s)\-\->
      <timedelay>1</timedelay>
      <salt>10</salt>

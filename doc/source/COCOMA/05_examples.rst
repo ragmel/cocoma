@@ -272,7 +272,7 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
            <serverport>5001</serverport>
            <clientip>172.18.254.236</clientip>
            <clientport>5001</clientport>
-           <packettype>UDP</packettype>
+           <protocol>UDP</protocol>
            </emulator-params>
      </distributions>
    
@@ -285,6 +285,7 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
      
    </emulation>
 
+`Note`: Some network emulators require that you be targeting a port with a web service active on it to work
 
 Multiple distributions emulation
 --------------------------------
@@ -464,7 +465,7 @@ Event Based Emulation example:
             <fuzzRange>900</fuzzRange>
             <serverip>10.55.168.142</serverip>
             <serverport>5050</serverport>
-            <packettype>TCP</packettype>
+            <protocol>TCP</protocol>
             <timedelay>1</timedelay>
             <salt>100</salt>
          </emulator-params>

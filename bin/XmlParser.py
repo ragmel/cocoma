@@ -153,8 +153,9 @@ def getModuleArgs (moduleType, moduleName, resourceType):
         try:
             moduleArgs = argsLimitsDict.items()
         except Exception, e:
-            xmlLogger.error(moduleType + ' "' + str(moduleName) + '" does not support resource type "' + str(resourceType) + '"')
-            return moduleType + ' "' + str(moduleName) + '" does not support resource type "' + str(resourceType) + '"'
+            errorStr = moduleType + ' "' + str(moduleName).upper() + '" does not support resource type "' + str(resourceType).upper() + '"'
+            xmlLogger.error(errorStr)
+            return errorStr
 
     except Exception, e:
         error = "Error: " + str(e) + "\nUnable to find " + moduleType + " module name: " + str(moduleName)
@@ -195,6 +196,10 @@ def getArgs (xmlStr, moduleType, moduleName, resourceType):
                     xmlArg = (int(str(xmlArg[:-1])) * sysMemory)/100
 
                 (xmlArg, checkNote) = Library.boundsCompare(xmlArg, argDict, arg)
+                
+                if ('accepted' in argDict):
+                    if not (Library.checkAcceptedArg(xmlArg, argDict['accepted'])):
+                        raise Exception ("\nXML Error: The value for " + arg + " was not in the accepted range (" + str(argDict['accepted']) + ")")
 
                 moduleArgsNotes.append(checkNote)
                 moduleArgsNotes.append(xmlArg)
@@ -229,7 +234,13 @@ def getDistributionDetails(xmlStr):
         
         distroArgs, granularity = Library.removeFromDict(distroArgs, "granularity")
         distroArgs, durationDistro = Library.removeFromDict(distroArgs, "duration")
-
+        
+        if (emulatorName == "backfuzz" and not (distrType == "event" and resourceType == "net")):
+            errorStr = "ERROR: The BACKFUZZ emulator can only be used with the EVENT distribution targeting a NET resource"
+            xmlLogger.error(errorStr)
+            print errorStr
+            raise Exception(errorStr)
+        
         if not forceRun:
             ovRes = checkLoadValues (resourceType, distroArgs)
             if (type(ovRes) == unicode):
@@ -366,5 +377,5 @@ def calculateDuration (totalDuration, startTime, duration):
 
 if __name__ == '__main__': #For testing purposes
     print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", False)
-#    xmlReader("/home/jordan/Desktop/XMLfail.xml")  #REMOVE
+#    xmlFileParser("/home/jordan/git/cocoma/unitTest/XMLExamples/Network.xml", False)  #REMOVE
     pass

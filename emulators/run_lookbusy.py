@@ -97,7 +97,7 @@ class emulatorMod(abstract_emu):
             memMulti.join()
             
         if resourceTypeDist.lower() == "io":
-            ioMulti = multiprocessing.Process(target = ioLoad, args=(self.distributionID,self.runNo,stressValues,emulatorArg["ioblocksize"],emulatorArg["iosleep"],duration))
+            ioMulti = multiprocessing.Process(target = ioLoad, args=(self.distributionID,self.runNo,stressValues,emulatorArg["iosleep"],duration))
             ioMulti.start()
             ioMulti.join()
     pass
@@ -132,11 +132,11 @@ def memLoad(distributionID,runNo,memUtil,memSleep,duration):
                 
             dbWriter(distributionID,runNo,message,executed)
                 
-def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
+def ioLoad(distributionID,runNo,ioUtil,ioSleep,duration):
             print "IO Executed"
             if ioSleep ==0 or ioSleep =="0":
                 try:
-                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioBlockSize)+"MB"])
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioUtil)+"MB"])
                     runLookbusyPidNo =runLookbusy.pid
                     
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
@@ -164,8 +164,8 @@ def ioLoad(distributionID,runNo,ioUtil,ioBlockSize,ioSleep,duration):
 
             else:
                 try:
-                    print "executing:", "lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioBlockSize)+"MB","-D",ioSleep
-                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioBlockSize)+"MB","-D",str(ioSleep)])
+                    print "executing:", "lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioUtil)+"MB","-D",ioSleep
+                    runLookbusy = subprocess.Popen(["lookbusy", "-c","0", "-d",str(ioUtil)+"MB","-b",str(ioUtil)+"MB","-D",str(ioSleep)])
                     runLookbusyPidNo =runLookbusy.pid
                     
                     print "Started lookbusy on PID No: ",runLookbusyPidNo
@@ -226,7 +226,6 @@ def emulatorHelp():
       memSleep - Time to sleep between iterations, in usec (default 1000)
       
     3)Changing size of files to use during IO with parameters:
-      ioBlockSize - Size of blocks to use for I/O in MB
       ioSleep - Time to sleep between iterations, in msec (default 100)
     
     
@@ -262,6 +261,5 @@ def emulatorArgNames(Rtype=None):
         return OrderedDict(argNames)
     
     if Rtype.lower() == "io":
-        argNames=[("ioblocksize", {"upperBound":9999999,"lowerBound":0, "argHelp":"Size of blocks to use for I/O (in bytes, followed by KB, MB or GB)"}),
-                  ("iosleep", {"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in msec (default 100)"})]
+        argNames=[("iosleep", {"upperBound":999999999,"lowerBound":0, "argHelp":"Time to sleep between iterations, in msec (default 100)"})]
         return OrderedDict(argNames)

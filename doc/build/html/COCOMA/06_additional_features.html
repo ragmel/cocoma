@@ -76,7 +76,6 @@ An unsuccessful test will produce the same outoput, with <em>ERROR</em> or <em>F
 <p>Where <tt class="docutils literal"><span class="pre">test_Name</span></tt> is replaced by one of the following:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">test_EMU_CPU</span>
 <span class="n">test_EMU_IO</span>
-<span class="n">test_EMU_IOTrap</span>
 <span class="n">test_EMU_MEM</span>
 <span class="n">test_EMU_MEMTrap</span>
 <span class="n">test_EMU_MULTI1</span>
@@ -125,7 +124,6 @@ An unsuccessful test will produce the same outoput, with <em>ERROR</em> or <em>F
 
 <span class="n">test_EMU_Logs</span>
 <span class="n">test_EMUcr_IO</span>
-<span class="n">test_EMUcr_IOtrap</span>
 <span class="n">test_EMUcr_MEM</span>
 <span class="n">test_EMUcr_MEMtrap</span>
 <span class="n">test_EMUcr_NETWORK</span>
@@ -161,7 +159,10 @@ ccmsh -x CPU.xml -f</pre>
 <h2>Bounds Compare<a class="headerlink" href="#bounds-compare" title="Permalink to this headline">¶</a></h2>
 <p>In the &#8216;argNames&#8217; section of each emulator wrapper and distribution there are a number of different arguments required by that class. These are contained in a dictionary in the form <cite>&#8220;ARG_NAME&#8221;:{&#8220;upperBound&#8221;:0,&#8221;lowerBound&#8221;:100}</cite>; where ARG_NAME is the name of the required argument.
 The nested dictionary contains values for the arguments upper and lower bounds (the maximum and minimum value that argument can be). These values are used to check if the value supplied for that argument in the XML is inside the bounds. If the XML value is outside of the bounds then the value will be changed to whatever boundary value it is closest to.</p>
-<p><em>Note</em>: Some arguments (such as trace and serverIP) require text based values; These values aren&#8217;t checked by the boundsCompare method, and so the values for their bounds can be any number.</p>
+<p><em>Note</em>: Some arguments (such as trace and serverIP) require text based values; These values aren&#8217;t checked by the boundsCompare method, and so the values for their bounds can be any number. It is possible to have text-based values checked by adding a list called <cite>&#8220;accepted&#8221;</cite> into an arguments dictionary. The dictionary entry for the <cite>packType</cite> argument of <cite>iperf</cite> is shown below as an example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&quot;protocol&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;upperBound&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;lowerBound&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;argHelp&quot;</span><span class="p">:</span><span class="s">&quot;protocol to test. (UDP or TCP only)&quot;</span><span class="p">,</span> <span class="s">&quot;accepted&quot;</span><span class="p">:[</span><span class="s">&quot;TCP&quot;</span><span class="p">,</span> <span class="s">&quot;UDP&quot;</span><span class="p">]}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="message-queue-use">
 <h2>Message queue use<a class="headerlink" href="#message-queue-use" title="Permalink to this headline">¶</a></h2>
@@ -382,7 +383,7 @@ In Event based scheduling the order of distributions in the supplied XML is used
          <span class="nt">&lt;fuzzRange&gt;</span>900<span class="nt">&lt;/fuzzRange&gt;</span>
          <span class="nt">&lt;serverip&gt;</span>10.55.168.142<span class="nt">&lt;/serverip&gt;</span>
          <span class="nt">&lt;serverport&gt;</span>5050<span class="nt">&lt;/serverport&gt;</span>
-         <span class="nt">&lt;packettype&gt;</span>TCP<span class="nt">&lt;/packettype&gt;</span>
+         <span class="nt">&lt;protocol&gt;</span>TCP<span class="nt">&lt;/protocol&gt;</span>
          <span class="nt">&lt;timedelay&gt;</span>1<span class="nt">&lt;/timedelay&gt;</span>
          <span class="nt">&lt;salt&gt;</span>100<span class="nt">&lt;/salt&gt;</span>
       <span class="nt">&lt;/emulator-params&gt;</span>
@@ -476,7 +477,7 @@ The fuzzing process time cannot be known a priori as it depends from factors out
      <span class="nt">&lt;fuzzRange&gt;</span>900<span class="nt">&lt;/fuzzRange&gt;</span>
      <span class="nt">&lt;serverip&gt;</span>10.55.168.142<span class="nt">&lt;/serverip&gt;</span>
      <span class="nt">&lt;serverport&gt;</span>5050<span class="nt">&lt;/serverport&gt;</span>
-     <span class="nt">&lt;packettype&gt;</span>TCP<span class="nt">&lt;/packettype&gt;</span>
+     <span class="nt">&lt;protocol&gt;</span>TCP<span class="nt">&lt;/protocol&gt;</span>
      <span class="c">&lt;!-- Timeout (default 0.8s)--&gt;</span>
      <span class="nt">&lt;timedelay&gt;</span>1<span class="nt">&lt;/timedelay&gt;</span>
      <span class="nt">&lt;salt&gt;</span>10<span class="nt">&lt;/salt&gt;</span>

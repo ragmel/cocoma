@@ -12,13 +12,13 @@
      <startTime>0</startTime>
      <minJobTime>2</minJobTime>
      <distribution href="/distributions/real_trace" name="real_trace" />
-     <trace>/home/melo/git_cocoma/scripts/real-trace</trace>
+     <trace>/home/jordan/git/cocoma/extra_tobe_fixed/real-trace_1.txt</trace>
      <emulator href="/emulators/stressapptest" name="stressapptest" />
      <emulator-params>
         <resourceType>MEM</resourceType>
 	    <!--time between iterations in usec (default 1000)-->
 		<memThreads>0</memThreads>
-		<groupingRange>3</groupingRange>
+		<groupingRange>5</groupingRange>
      </emulator-params>
   </distributions>
 

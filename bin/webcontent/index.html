@@ -146,13 +146,6 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 					<div id="topBox" style="font-size:20;"><b>Current Emulations:</b></div><br>
 					
 					<table id="emulationTable" cellpadding="2" text-align="right">
-					   <tr>
-					       <th>Name</th>
-					       <th>Total runs</th>
-					       <th>Failed Runs</th>
-					       <th>Emulation State</th>
-					       <th>Download</th>
-					   </tr>
 					</table>
 					
 					<div id="detailsPopup" class='helpBox'></div>
@@ -188,7 +181,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 		distParams[1] = new Array();		//all arrays concerning multiples dists begin at 1
 		emuParams[1] = new Array();
 		
-		var totalDuration = 60;
+		var totalDuration = $("#totalDuration").val();
 		
 		var emuString;
 		
@@ -281,7 +274,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 					currentEmu[n] = resources;	//set global var
 					resourceOptions = checkResourceOptions(resources.valueOf().emulator);
 					
-					populateDistList(resourceOptions, n, distVal, resVal, extraParamVals);
+					populateDistList(name, resourceOptions, n, distVal, resVal, extraParamVals);
 				});	
 		
 		}
@@ -309,7 +302,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			return resourceString;
 		}
 	
-		function populateDistList(emuResources, n, distVal, resVal, extraParamVals)
+		function populateDistList(emuName, emuResources, n, distVal, resVal, extraParamVals)
 		{
             emuString = emuResources;
             
@@ -328,22 +321,24 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
     
 				for(var i=0; i<dist.valueOf().collection.items.total; i++)
 				{
-				
 					var name = dist.valueOf().collection.items.distribution[i].name
-					var distResources;
-					url[i] = cocomaIP + "distributions/" + name;
-                    
-                    //if (i+1 == dist.valueOf().collection.items.total)
-                    if (i == 0)
-                    {
-                        //console.log("TRUE")
-                        x = fillDistBox(url[i], emuResources, n, distVal, resVal, extraParamVals, true, x);
-                    }
-                    else
-                    {
-                        x = fillDistBox(url[i], emuResources, n, distVal, resVal, extraParamVals, false, x);
-					}
 					
+					if ((emuName == "backfuzz" && name == "event") || (emuName != "backfuzz" && name != "event")) //Will need changed if other emulators using event
+					{
+    					var distResources;
+    					url[i] = cocomaIP + "distributions/" + name;
+                        
+                        //if (i+1 == dist.valueOf().collection.items.total)
+                        if (i == 0)
+                        {
+                            //console.log("TRUE")
+                            x = fillDistBox(url[i], emuResources, n, distVal, resVal, extraParamVals, true, x);
+                        }
+                        else
+                        {
+                            x = fillDistBox(url[i], emuResources, n, distVal, resVal, extraParamVals, false, x);
+    					}
+					}
 				}
 				
 				//console.log("distVal = " + distVal);
@@ -639,27 +634,27 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 		}
 		
 			
-		function run()
-		{		//run now
-			var exml = writeEmuXML("now");
-			
-			if(validateForm())
-			{
-				//$("#showXML").html(convertXML(exml));		//display xml (for debugging only)
-				$.post(cocomaIP + "emulations", exml, function(response){
-						var serializer = new XMLSerializer();				//transform xml response into json
-						var str = serializer.serializeToString(response);
-						//console.log(str);
-						alert("Emulation is running");
-						showEmus();
-					}).error(function(e){
-					   var errors = parseForceErrors(e.responseText)
-						if ((e.responseText).indexOf("Re-send with force") != -1) runWithForce("now", errors);
-						else alert(e.responseText);
-					});
-			}
-			showJobs()
-		}
+        function run()
+        {       //run now
+            var exml = writeEmuXML("now");
+            
+            if(validateForm())
+            {
+                //$("#showXML").html(convertXML(exml));     //display xml (for debugging only)
+                $.post(cocomaIP + "emulations", exml, function(response){
+                        var serializer = new XMLSerializer();               //transform xml response into json
+                        var str = serializer.serializeToString(response);
+                        //console.log(str);
+                        alert("Emulation is running");
+                        showEmus();
+                    }).error(function(e){
+                       var errors = parseForceErrors(e.responseText)
+                        if ((e.responseText).indexOf("Re-send with force") != -1) runWithForce("now", errors);
+                        else alert(e.responseText);
+                    });
+            }
+            showJobs()
+        }
 		
 		function runAt()		//run at specified time
 		{
@@ -762,12 +757,109 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 		function validateForm()
 		{
 			var valid = true;
-			
-			if($("#ename").val() == "")
-					valid = false;
-				
+			missingParams = new Array();
+            
+            if($("#ename").val().length == 0)
+            {
+                missingParams.push("Emulation Name");
+                valid = false;
+            }
+            
+            var numDists = $( '.distStrip', '#distList' ).length;
+            
+            for (var i = 1; i < numDists + 1; i++)
+            {
+                missingParams = missingParams.concat(validateDist(i));
+            }
+            
+            missingParams = missingParams.concat(validateLogging())
+            missingParams = missingParams.concat(validateMQ())
+            
+            if (missingParams.length > 0)
+            {
+                valid = false;
+                var missingParamStr = "ERROR! Missing Parameters:"
+                for (var n = 0; n < missingParams.length; n ++)
+                {
+                    missingParamStr += "\n" + missingParams[n];
+                }
+                alert(missingParamStr);
+            }
 			return valid;
 		}
+		
+		function validateDist(distNum)
+		{
+		    missingParams = new Array();
+		      
+            if ($("#distName" + distNum).val().length == 0)
+            {
+                missingParams.push("Dist " + distNum + ": Name");
+                valid = false;
+            }
+            
+            if ($("#sTime"+ distNum).val().length == 0)
+            {
+                missingParams.push("Dist " + distNum + ": Start time");
+                valid = false;
+            }
+            else if (!(/^\d+$/.test($("#sTime"+distNum).val()))) //If not an integer
+            {
+                missingParams.push("Dist " + distNum + ": Start time (int only)");
+                valid = false;
+            }
+            
+            //Get names of extraParams
+            var extraParams = document.getElementById('extraParams'+distNum).getElementsByTagName('input');
+            var extraParams = $.map(extraParams, function(extraParam) {return extraParam.id;})
+            for (var n = 0; n < extraParams.length; n ++)
+            {
+                if ($("#" + extraParams[n]).val().length == 0)
+                {
+                    missingParams.push("Dist " + distNum + ": " + extraParams[n].substring(0, extraParams[n].length - 1));
+                    valid = false;
+                }
+            }
+            
+            return missingParams
+		}
+		
+		function validateLogging()
+		{
+		  missingParams = new Array();
+		  
+		  if($("#loggingCheck").is(":checked"))
+		  {
+            if ($("#logFreq").val().length == 0)
+            {
+                missingParams.push("Logging Frequency");
+            }
+            else if (!(/^\d+$/.test($("#logFreq").val()))) //If not an integer
+            {
+                missingParams.push("Logging Frequency (int only)");
+            }
+		  }
+		  return missingParams
+		}
+		
+        function validateMQ()
+        {
+          missingParams = new Array();
+          
+          if($("#mqCheck").is(":checked"))
+          {
+            var paramBoxNames = ["mqvhost", "mqexchange", "mquser", "mqpassword", "mqhost", "mqtopic"]
+            for (var i = 0; i < paramBoxNames.length; i++)
+            {
+                if ($("#" + paramBoxNames[i]).val().length == 0)
+                {
+                    name = paramBoxNames[i].substr(2,paramBoxNames[i].length) //trim the leading 'mq'
+                    missingParams.push("MQ " + name);
+                }
+            }
+          }
+          return missingParams
+        }
 		
 		function isNumber(n) 
 		{
@@ -833,13 +925,22 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
         }
 		
 		function showEmus()
-		{
+		{     logNameList = getEmuLogList();
 			$.get(cocomaIP + "emulations", function(response){
 					var serializer = new XMLSerializer();				//transform xml response into json
 					var str = serializer.serializeToString(response);
 					//console.log(str);
 					var emus = xml2json.parser(str);
-					displayEmus(emus);
+					
+					//if the list isn't filled yet, wait for 0.1s
+					if (typeof logNameList === 'object')
+					{
+					   displayEmus(emus, logNameList);
+					}
+					else
+					{
+					   setTimeout(function() {displayEmus(emus, logNameList)}, 100); 
+					}
 				});
 		}
 		
@@ -864,9 +965,18 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			$("#totalDuration").val(tdMax);
 		}
 		
-		function displayEmus(data)
+		function displayEmus(data, logNameList)
 		{
 		    var emuTable = document.getElementById("emulationTable");
+		    
+            while (emuTable.rows.length > 0)
+            {
+                emuTable.deleteRow(0);
+            }
+            
+            var tableHeaders = ["Name", "Total runs", "Failed Runs", "Emulation State", "Logs"];
+            
+            addTableHeaders(emuTable, tableHeaders);
 		    
 			count = data.valueOf().collection.items.total;
 			if(count == 0)
@@ -879,9 +989,6 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			else
 			{
 				emuNamesList = new Array();
-				logNameList = new Array();
-				
-                logNameList = getEmuLogList(); //Get list emulations with logs enabled
 				
 				if(data.valueOf().collection.items.emulation.length == null)
 				{
@@ -912,32 +1019,40 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 			}
 		}
 		
-		function getEmuLogList()
+        function getEmuLogList()
         {
-            logNameList = new Array()
             $.get(cocomaIP + "logs/emulations/", function(serverResponse)
             {     //get results xml
                  var serializer = new XMLSerializer();               //transform xml response into json
                  var responseStr = serializer.serializeToString(serverResponse);
                  var responseJSON = xml2json.parser(responseStr);
                  
-                 if (responseJSON.valueOf().collection.items.emulationlog.length == null)
-                 {
-                    logNameList[0] = responseJSON.valueOf().collection.items.emulationlog;
-                 }
-                 else
-                 {
-                    logNameList = responseJSON.valueOf().collection.items.emulationlog;
-                 }
-                 
+                 logNameList = new Array()
                  var logNameListLength = responseJSON.valueOf().collection.items.total;
-                 for (var i=0; i < logNameListLength; i++)
+                 
+                 if (logNameListLength != 0)
                  {
-                    logNameList[i] = logNameList[i].name;
+                    if (logNameListLength == 1) logNameList[0] = responseJSON.valueOf().collection.items.emulationlog;
+                    else logNameList = responseJSON.valueOf().collection.items.emulationlog;
+                 
+                     for (var i=0; i < logNameListLength; i++)
+                     {
+                        logNameList[i] = logNameList[i].name;
+                     }
                  }
+                return logNameList;
             });
-            return logNameList;
         }
+		
+		function addTableHeaders(table, headerList)
+		{
+		  var headRow = table.insertRow(-1); //insert New row at end
+		  while (headerList.length > 0)
+		  {
+		      headRow.innerHTML += "<th><b>" + headerList.shift() + "</b></th>"
+		  }
+		}
+		
 		
 		function addEmulationRow(table, name, totalRuns, failedRuns, state, logNames)
         {
@@ -950,9 +1065,9 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
             
             var dlBtn = emuDownlaodBtn(name, logNames);
             
-            var l = ' onclick="emuClicked(&#39;'+name+'&#39;)"';
+            //var l = ' onclick="emuClicked(&#39;'+name+'&#39;)"';
             var m = ' onmouseover="emuHover(&#39;'+name+'&#39;)"';
-            name = "<button id='" + name + "Btn' class='list' "+l+m+" onmouseout='hideHelpBox(detailsPopup)'>"+name+"</button>"
+            name = "<button id='" + name + "Btn' class='list' "+m+" onmouseout='hideHelpBox(detailsPopup)'>"+name+"</button>"
             
             state = getStateColour(state);
             
@@ -989,15 +1104,16 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
             
             if (logFound)
             {
-                var btnTxt = "<a href='"+ cocomaIP + "logs/emulations/" + name +"' class='linktxt' id='"+name+"' onclick='f(){return false;}'><img src='download.png' height='19'></a>"
+                var btnTxt = "<a href='"+ cocomaIP + "logs/emulations/" + name +"' class='linktxt' id='"+name+"' onclick='f(){return false;}'><img src='download.png' height='19'></a>";
             }
             else
             {
-                var btnTxt = "<a class='linktxt' id='" + name + "' onclick='f(){return false;}'><img src='noDownload.png' height='19'></a>"
+                var btnTxt = "<a class='linktxt' id='" + name + "' onclick ='alert(&quot No Logs available to Download&quot)'><img src='noDownload.png' height='19'></a>";
             }
-            return btnTxt
+            return btnTxt;
         }
 		
+		<!-- Feature not in use due to bugs
 		function emuClicked(name)
 		{
 			$.get(cocomaIP + "emulations/" + name, function(response){
@@ -1037,6 +1153,7 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 				
 				});
 		}
+		-->
 		
 		function convertResType(res)		//convert from XML resource type to GUI readable resource type
 		{
@@ -1147,8 +1264,6 @@ COCOMA is a framework for COntrolled COntentious and MAlicious patterns -->
 							xml += CE("runloc", $("#remoteIP"+j).val());
 						xml += CE("name", $("#distName"+j).val());
 						xml += CE("startTime", $("#sTime"+j).val());
-						xml += CE("duration", $("#duration"+j).val());
-						xml += CE("granularity", $("#granularity"+j).val());
 						xml += "<distribution href='/distributions/"+ dist +"' name='"+ dist +"' />";
 						for(var i=0; i<distParams[j].length; i++)
 						{

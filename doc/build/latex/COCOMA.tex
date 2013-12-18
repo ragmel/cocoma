@@ -1557,7 +1557,7 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
         \PYG{n+nt}{\PYGZlt{}serverport}\PYG{n+nt}{\PYGZgt{}}5001\PYG{n+nt}{\PYGZlt{}/serverport\PYGZgt{}}
         \PYG{n+nt}{\PYGZlt{}clientip}\PYG{n+nt}{\PYGZgt{}}172.18.254.236\PYG{n+nt}{\PYGZlt{}/clientip\PYGZgt{}}
         \PYG{n+nt}{\PYGZlt{}clientport}\PYG{n+nt}{\PYGZgt{}}5001\PYG{n+nt}{\PYGZlt{}/clientport\PYGZgt{}}
-        \PYG{n+nt}{\PYGZlt{}packettype}\PYG{n+nt}{\PYGZgt{}}UDP\PYG{n+nt}{\PYGZlt{}/packettype\PYGZgt{}}
+        \PYG{n+nt}{\PYGZlt{}protocol}\PYG{n+nt}{\PYGZgt{}}UDP\PYG{n+nt}{\PYGZlt{}/protocol\PYGZgt{}}
         \PYG{n+nt}{\PYGZlt{}/emulator\PYGZhy{}params\PYGZgt{}}
   \PYG{n+nt}{\PYGZlt{}/distributions\PYGZgt{}}
 
@@ -1598,7 +1598,7 @@ In the following example a different emulator named \emph{backfuzz} will be used
         \PYG{n+nt}{\PYGZlt{}serverip}\PYG{n+nt}{\PYGZgt{}}10.55.168.238\PYG{n+nt}{\PYGZlt{}/serverip\PYGZgt{}}
         \PYG{n+nt}{\PYGZlt{}serverport}\PYG{n+nt}{\PYGZgt{}}51889\PYG{n+nt}{\PYGZlt{}/serverport\PYGZgt{}}
         \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Type of packet to use for fuzzing }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
-        \PYG{n+nt}{\PYGZlt{}packettype}\PYG{n+nt}{\PYGZgt{}}HTTP\PYG{n+nt}{\PYGZlt{}/packettype\PYGZgt{}}
+        \PYG{n+nt}{\PYGZlt{}protocol}\PYG{n+nt}{\PYGZgt{}}HTTP\PYG{n+nt}{\PYGZlt{}/protocol\PYGZgt{}}
         \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Time to pause on each fuzz value in s (leave as 0 for default of 0.8s) }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
         \PYG{n+nt}{\PYGZlt{}timedelay}\PYG{n+nt}{\PYGZgt{}}1\PYG{n+nt}{\PYGZlt{}/timedelay\PYGZgt{}}
         \PYG{c}{\PYGZlt{}!\PYGZhy{}\PYGZhy{}}\PYG{c}{ Value to increment by }\PYG{c}{\PYGZhy{}\PYGZhy{}\PYGZgt{}}
@@ -2135,7 +2135,7 @@ COCOMA offers 2 different ways to manage events. One is time-based, where a dist
                 \textless{}serverport\textgreater{}80\textless{}/serverport\textgreater{}
                 \textless{}min\textgreater{}100\textless{}/min\textgreater{}
                 \textless{}max\textgreater{}104\textless{}/max\textgreater{}
-                \textless{}packettype\textgreater{}HTTP\textless{}/packettype\textgreater{}
+                \textless{}protocol\textgreater{}HTTP\textless{}/protocol\textgreater{}
                 \textless{}timedelay\textgreater{}0\textless{}/timedelay\textgreater{}
                 \textless{}salt\textgreater{}2\textless{}/salt\textgreater{}
         \textless{}/emulator-params\textgreater{}
@@ -2157,7 +2157,7 @@ COCOMA offers 2 different ways to manage events. One is time-based, where a dist
                 \textless{}serverport\textgreater{}22\textless{}/serverport\textgreater{}
                 \textless{}min\textgreater{}100\textless{}/min\textgreater{}
                 \textless{}max\textgreater{}104\textless{}/max\textgreater{}
-                \textless{}packettype\textgreater{}SSH\textless{}/packettype\textgreater{}
+                \textless{}protocol\textgreater{}SSH\textless{}/protocol\textgreater{}
                 \textless{}timedelay\textgreater{}0\textless{}/timedelay\textgreater{}
                 \textless{}salt\textgreater{}2\textless{}/salt\textgreater{}
         \textless{}/emulator-params\textgreater{}
@@ -2193,7 +2193,7 @@ The fuzzing process time cannot be known a priori as it depends from factors out
                 \textless{}serverport\textgreater{}80\textless{}/serverport\textgreater{}
                 \textless{}min\textgreater{}100\textless{}/min\textgreater{}
                 \textless{}max\textgreater{}104\textless{}/max\textgreater{}
-                \textless{}packettype\textgreater{}HTTP\textless{}/packettype\textgreater{}
+                \textless{}protocol\textgreater{}HTTP\textless{}/protocol\textgreater{}
                 \textless{}timedelay\textgreater{}0\textless{}/timedelay\textgreater{}
                 \textless{}salt\textgreater{}2\textless{}/salt\textgreater{}
         \textless{}/emulator-params\textgreater{}

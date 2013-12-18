@@ -37,7 +37,6 @@ Where ``test_Name`` is replaced by one of the following:
 
 	test_EMU_CPU
 	test_EMU_IO
-	test_EMU_IOTrap
 	test_EMU_MEM
 	test_EMU_MEMTrap
 	test_EMU_MULTI1
@@ -89,9 +88,8 @@ Where ``test_Name`` is replaced by one of the following:
         test_List_EmuLogs
         test_List_Tests
 
-	test_EMU_Logs
-	test_EMUcr_IO
-        test_EMUcr_IOtrap
+        test_EMU_Logs
+        test_EMUcr_IO
         test_EMUcr_MEM
         test_EMUcr_MEMtrap
         test_EMUcr_NETWORK
@@ -136,7 +134,12 @@ Bounds Compare
 In the 'argNames' section of each emulator wrapper and distribution there are a number of different arguments required by that class. These are contained in a dictionary in the form `"ARG_NAME":{"upperBound":0,"lowerBound":100}`; where ARG_NAME is the name of the required argument.
 The nested dictionary contains values for the arguments upper and lower bounds (the maximum and minimum value that argument can be). These values are used to check if the value supplied for that argument in the XML is inside the bounds. If the XML value is outside of the bounds then the value will be changed to whatever boundary value it is closest to.
 
-*Note*: Some arguments (such as trace and serverIP) require text based values; These values aren't checked by the boundsCompare method, and so the values for their bounds can be any number.
+*Note*: Some arguments (such as trace and serverIP) require text based values; These values aren't checked by the boundsCompare method, and so the values for their bounds can be any number. It is possible to have text-based values checked by adding a list called `"accepted"` into an arguments dictionary. The dictionary entry for the `packType` argument of `iperf` is shown below as an example:
+
+::
+
+    "protocol", {"upperBound":0,"lowerBound":0, "argHelp":"protocol to test. (UDP or TCP only)", "accepted":["TCP", "UDP"]}
+
 
 Message queue use
 -----------------
@@ -322,7 +325,7 @@ Event Based Emulation example:
             <fuzzRange>900</fuzzRange>
             <serverip>10.55.168.142</serverip>
             <serverport>5050</serverport>
-            <packettype>TCP</packettype>
+            <protocol>TCP</protocol>
             <timedelay>1</timedelay>
             <salt>100</salt>
          </emulator-params>
@@ -384,7 +387,7 @@ The fuzzing process time cannot be known a priori as it depends from factors out
         <fuzzRange>900</fuzzRange>
         <serverip>10.55.168.142</serverip>
         <serverport>5050</serverport>
-        <packettype>TCP</packettype>
+        <protocol>TCP</protocol>
         <!-- Timeout (default 0.8s)-->
         <timedelay>1</timedelay>
         <salt>10</salt>

@@ -176,16 +176,6 @@ class TestAPI(unittest.TestCase):
         length = int(length) + 3
         time.sleep(int(length))
         self.assertEqual(result, 201, xmlPath + "\n" + resultStr) 
-    
-    def test_EMUcr_IOtrap(self):
-        testClass = EmulationTests()
-        xmlPath = HOMEPATH + "/unitTest/XMLExamples/shortTests/IOTrap.xml"
-        f = open(xmlPath, 'r')
-        result, resultStr = EmulationTests.postXMLEmulation(testClass, f.read())
-        length = testClass.getTestDuration(xmlPath)
-        length = int(length) + 3
-        time.sleep(int(length))
-        self.assertEqual(result, 201, xmlPath + "\n" + resultStr)        
             
     def test_EMUcr_MEM(self):
         testClass = EmulationTests()

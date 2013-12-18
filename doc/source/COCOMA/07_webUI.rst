@@ -63,8 +63,9 @@ Once all the parameters are set there are two options; run the emulation right a
 	
 Working with existing emulations
 --------------------------------
-Any existing emulations in your system will be listed on the right hand side of the screen. The UI also displays the total number of runs, how many of those failed and the current state of the emulation (*active* or *inactive*). Hovering over the emulation name will display the information on that emulation in a popup and by clicking on it the emulation data
-can be loaded into the creation screen on the left where its parameters can be edited or simply run again right away. Clicking the small download icon to the right of each emulation will prompt the download of a zip file to your system. This zip file contains the .xml used to create the emulation as well as .csv files with the system logs and the logs for that specific emulation.
+Any existing emulations in your system will be listed on the right hand side of the screen. The UI also displays the total number of runs, how many of those failed and the current state of the emulation (*active* or *inactive*). Hovering over the emulation name will display the information on that emulation in a popup.
+
+Clicking the small download icon to the right of each emulation will prompt the download of a zip file to your system. This zip file contains the .xml used to create the emulation as well as .csv files with the system logs and the logs for that specific emulation.
 
 .. figure:: webUIimages/emuDisplay.png
         :scale: 90

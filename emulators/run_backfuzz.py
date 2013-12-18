@@ -121,7 +121,7 @@ class emulatorMod(abstract_emu):
             sys.exit(0)
         
         if resourceTypeDist.lower() == "net":
-            netFuzzProc = multiprocessing.Process(target = fuzzLoad, args=(emulationID, distributionID, runNo, emulatorArg["min"],emulatorArg["fuzzrange"], emulatorArg["serverip"], emulatorArg["serverport"], emulatorArg["packettype"], emulatorArg["salt"], emulatorArg["timedelay"]))
+            netFuzzProc = multiprocessing.Process(target = fuzzLoad, args=(emulationID, distributionID, runNo, emulatorArg["min"],emulatorArg["fuzzrange"], emulatorArg["serverip"], emulatorArg["serverport"], emulatorArg["protocol"], emulatorArg["salt"], emulatorArg["timedelay"]))
             netFuzzProc.start()
             
             wrtiePIDtable (netFuzzProc.pid, "Scheduler") #Stops event based scheduling once EMU time expires
@@ -130,16 +130,16 @@ class emulatorMod(abstract_emu):
             netFuzzProc.join()
 
 
-def fuzzLoad(emulationID, distributionID, runNo, min, fuzzRange, serverip, serverport, packettype, salt, timedelay):
+def fuzzLoad(emulationID, distributionID, runNo, min, fuzzRange, serverip, serverport, protocol, salt, timedelay):
     runBackfuzzPidNo=0
 
-    if timedelay == "0":
-        timedelay = "0.8"
+    if (timedelay == 0 or timedelay == "0"):
+        timedelay = 0.8
 
     try:
-        print "python", BACKFUZZ_PATH, "-h", str(serverip), "-p", str(serverport), "-min", str(min), "-max", str(int(min) + int(fuzzRange)), "-s ", str(salt), "-pl", str(packettype).upper(), "-t", str(timedelay)
+        print "python", BACKFUZZ_PATH, "-h", str(serverip), "-p", str(serverport), "-min", str(min), "-max", str(int(min) + int(fuzzRange)), "-s ", str(salt), "-pl", str(protocol).upper(), "-t", str(timedelay)
 
-        runBackfuzz = subprocess.Popen(["python",BACKFUZZ_PATH, "-h", str(serverip), "-p", str(serverport), "-min", str(min), "-max", str(int(min) + int(fuzzRange)), "-s", str(salt), "-pl", str(packettype).upper(), "-t", str(timedelay), "&&"], cwd= BACKFUZZ_PATH[:-11], stdin=subprocess.PIPE)#,stdout=subprocess.PIPE)
+        runBackfuzz = subprocess.Popen(["python",BACKFUZZ_PATH, "-h", str(serverip), "-p", str(serverport), "-min", str(min), "-max", str(int(min) + int(fuzzRange)), "-s", str(salt), "-pl", str(protocol).upper(), "-t", str(timedelay), "&&"], cwd= BACKFUZZ_PATH[:-11], stdin=subprocess.PIPE)#,stdout=subprocess.PIPE)
         runBackfuzz.stdin.flush()
         runBackfuzz.stdin.write("\r\n")
         runBackfuzzPidNo =runBackfuzz.pid
@@ -199,7 +199,7 @@ def emulatorHelp():
         <resourceType>NET</resourceType>
         <serverip>10.55.164.223</serverip>
         <serverport>5001</serverport>      
-        <packettype>HTTP</packettype>
+        <protocol>HTTP</protocol>
         <salt>2</salt>
 
     </emulator-params>
@@ -222,9 +222,9 @@ def emulatorArgNames(Rtype=None):
 
         argNames=[("serverip", {"upperBound":10000,"lowerBound":1, "argHelp": "Server IP to connect to"}),
                   ("serverport", {"upperBound":10000,"lowerBound":0, "argHelp": "Server port to connect to"}),
-                  ("packettype", {"upperBound":10000,"lowerBound":1, "argHelp":"Packet-Type to fuzz.\n Accepted: FTP, HTTP, IMAP, IRC, POP3, SMTP, SSH, TCP, TFTP, TNET, UDP (may not all work)"}),
+                  ("protocol", {"upperBound":10000,"lowerBound":1, "argHelp":"protocol to fuzz.\n Accepted: FTP, HTTP, IMAP, IRC, POP3, SMTP, SSH, TCP, TFTP, TNET, UDP (may not all work)"}),
                   ("min", {"upperBound":100000000,"lowerBound":1, "argHelp":"Start Length of fuzz string to send"}),
                   ("fuzzRange", {"upperBound":100000000,"lowerBound":1, "argHelp":"Range for fuzzing to run. Adding this to the 'min' will give the max fuzz string length"}),
                   ("salt", {"upperBound":100000,"lowerBound":1, "argHelp": "Length to increase fuzz string by on each iteration"}),
-                  ("timedelay", {"upperBound":100,"lowerBound":0, "argHelp": "Delay between fuzz strings being sent.\nUnits: s (default = 0.8)"})]
+                  ("timedelay", {"upperBound":100,"lowerBound":0.8, "argHelp": "Delay between fuzz strings being sent.\nUnits: s (default = 0.8)"})]
         return OrderedDict(argNames)

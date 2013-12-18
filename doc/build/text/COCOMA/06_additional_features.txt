@@ -395,7 +395,7 @@ Event Based Emulation example:
             <fuzzRange>900</fuzzRange>
             <serverip>10.55.168.142</serverip>
             <serverport>5050</serverport>
-            <packettype>TCP</packettype>
+            <protocol>TCP</protocol>
             <timedelay>1</timedelay>
             <salt>100</salt>
          </emulator-params>
@@ -469,7 +469,7 @@ backfuzz:
         <fuzzRange>900</fuzzRange>
         <serverip>10.55.168.142</serverip>
         <serverport>5050</serverport>
-        <packettype>TCP</packettype>
+        <protocol>TCP</protocol>
         <!-- Timeout (default 0.8s)-->
         <timedelay>1</timedelay>
         <salt>10</salt>

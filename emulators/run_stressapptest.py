@@ -89,9 +89,9 @@ import Pyro4,imp,time,sys,os,psutil
 import sqlite3 as sqlite
 import datetime as dt
 import subprocess
+from Library import deleteFiles
 from signal import *
 from subprocess import *
-import random
 from collections import OrderedDict
 
 from Library import getHomepath
@@ -125,7 +125,7 @@ class emulatorMod(abstract_emu):
             memMulti.join()
 
         if resourceTypeDist.lower() == "io":
-            ioMulti = multiprocessing.Process(target = ioLoad, args=(distributionID,runNo,stressValues,emulatorArg["memsize"],duration))
+            ioMulti = multiprocessing.Process(target = ioLoad, args=(emulationID, distributionID, runNo, stressValues, emulatorArg["memsize"], duration))
             ioMulti.start()
             print(ioMulti.is_alive())
             ioMulti.join()
@@ -159,12 +159,13 @@ def memLoad(distributionID,runNo,memSize,memThreads,duration):
     dbWriter(distributionID,runNo,message,executed)
     time.sleep(float(duration))            
            
-def ioLoad(distributionID,runNo,fileQty,memSize,duration):
+def ioLoad(emulationID, distributionID,runNo,fileQty,memSize,duration):
     runStressapptestPidNo=0
             
     try:
         if int(fileQty) ==0:
-            cmd="stressapptest "+" -m 0"+" -M "+str(memSize)+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))+" -s "+str(duration)+"&"
+            cmd="stressapptest "+" -m 0"+" -M "+str(memSize)+" -f /tmp/stressapptestFile"+emulationID + "_" + distributionID + "_" +runNo+" -s "+str(duration)+"&"
+            print cmd#REMOVE
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
         
@@ -173,10 +174,11 @@ def ioLoad(distributionID,runNo,fileQty,memSize,duration):
             fileQty=int(fileQty)
     
             while fileQty !=0:
-                fileStr=fileStr+" -m 0"+" -f /tmp/stressapptestFile"+str(random.randint(1,10000))
-                fileQty =fileQty-1            
+                fileStr = fileStr + " -m 0" + " -f /tmp/stressapptestFile" + str(emulationID) + "_" + str(distributionID) + "_" + str(runNo) + "-" + str(fileQty)
+                fileQty =fileQty-1
             
             cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -s "+str(duration)+" --stop_on_errors&"
+            print cmd#REMOVE
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
 
@@ -193,7 +195,9 @@ def ioLoad(distributionID,runNo,fileQty,memSize,duration):
         executed="True"
         
     dbWriter(distributionID,runNo,message,executed)
+    #Sleep until the job is over, then delete the files stressappTest creates
     time.sleep(float(duration))
+    deleteFiles("/tmp/stressapptestFile",  str(emulationID) + "_" + str(distributionID) + "_" + str(runNo) + "*")
         
 def emulatorHelp():
 
@@ -243,5 +247,9 @@ def emulatorArgNames(Rtype=None):
         return OrderedDict(argNames)
     
     if Rtype.lower() == "io":
-        argNames=[("memsize", {"upperBound":99999,"lowerBound":50, "argHelp":"megabytes of ram to test (auto-detect all memory available)"})]
+        
+        memReading=psutil.phymem_usage()
+        allMemory =memReading.total/1048576
+
+        argNames=[("memsize", {"upperBound":allMemory,"lowerBound":1, "argHelp":"megabytes of ram to test (auto-detect all memory available)"})]
         return OrderedDict(argNames)

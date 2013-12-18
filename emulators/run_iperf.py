@@ -118,18 +118,18 @@ class emulatorMod(abstract_emu):
   
  
         if resourceTypeDist.lower() == "net" and emulatorArg["server"]==0:
-                netClientProc = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["serverport"],emulatorArg["packettype"],emulatorArg["serverip"],emulationID,emulatorArg,emuDuration,duration))
+                netClientProc = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["serverport"],emulatorArg["protocol"],emulatorArg["serverip"],emulationID,emulatorArg,emuDuration,duration))
                 netClientProc.start()
                 netClientProc.join()
                 
         
         elif emulatorArg["server"]==1:
-                netServerProc = multiprocessing.Process(target = netServerLoad, args=(distributionID,runNo,emulatorArg["serverport"],emulatorArg["packettype"],emuDuration))
+                netServerProc = multiprocessing.Process(target = netServerLoad, args=(distributionID,runNo,emulatorArg["serverport"],emulatorArg["protocol"],emuDuration))
                 netServerProc.start()
                 netServerProc.join()
                 
   
-def netClientLoad(distributionID,runNo,stressValues,serverPort,packettype,serverIP,emulationID,emulatorArg,emuDuration,duration):
+def netClientLoad(distributionID,runNo,stressValues,serverPort,protocol,serverIP,emulationID,emulatorArg,emuDuration,duration):
             
             daemonPort=str(readLogLevel("schedport"))
 
@@ -159,9 +159,9 @@ def netClientLoad(distributionID,runNo,stressValues,serverPort,packettype,server
             
             if runNo == str(0):
                 time.sleep(2)
-            print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,serverPort,packettype,serverIP,emulationID,duration\n",distributionID,runNo,stressValues,serverPort,packettype,serverIP,emulationID,duration,"\n\n"
+            print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,serverPort,protocol,serverIP,emulationID,duration\n",distributionID,runNo,stressValues,serverPort,protocol,serverIP,emulationID,duration,"\n\n"
             bandwith =stressValues
-            if packettype.lower() == "udp":
+            if protocol.lower() == "udp":
                 
                 try:
                     runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"mb","-t",str(duration)])
@@ -187,7 +187,7 @@ def netClientLoad(distributionID,runNo,stressValues,serverPort,packettype,server
                     print "run_Iperf job exception: ", e
             
             
-            if packettype.lower() == "tcp":
+            if protocol.lower() == "tcp":
                 
                 try:
                     runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith)+"mb"])
@@ -236,11 +236,11 @@ def netClientLoad(distributionID,runNo,stressValues,serverPort,packettype,server
                 except Exception, e:
                     print "run_Iperf job exception: ", e
 
-def netServerLoad(distributionID,runNo,netPort,packettype,emuDuration):
+def netServerLoad(distributionID,runNo,netPort,protocol,emuDuration):
             
             runIperfPidNo=0
             try:
-                if packettype.lower() =="udp" :
+                if protocol.lower() =="udp" :
                     try:
                         runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort),"-u"])
                     except Exception, e:
@@ -295,7 +295,7 @@ transmitted packet per run.
         <!--Leave "0" for default 5001 port -->
         <serverport>0</serverport>
         <!--if TCP is needed just change "UDP" to "TCP"-->
-        <packettype>UDP</packettype>
+        <protocol>UDP</protocol>
     </emulator-params>
   
   </distributions>
@@ -321,7 +321,7 @@ def emulatorArgNames(Rtype=None):
         
         argNames=[("serverip",{"upperBound":10000,"lowerBound":1, "argHelp":"Server IP to connect to"}),
                   ("serverport", {"upperBound":10000,"lowerBound":0, "argHelp": "Server port to connect to"}),
-                  ("packettype", {"upperBound":"udp","lowerBound":"tcp", "argHelp":"Packet-Type to test. (UDP or TCP only)"})]
+                  ("protocol", {"upperBound":0,"lowerBound":0, "argHelp":"protocol to test. (UDP or TCP only)", "accepted":["TCP", "UDP"]})]
         logging.debug( "Use Arg's: "+str(argNames))
         return OrderedDict(argNames)
 

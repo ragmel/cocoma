@@ -138,7 +138,7 @@ def argNames(Rtype=None):
     
     #discovery of supported resources
     if Rtype == None:
-        argNames = ["mem","io","net"]
+        argNames = ["mem","net"]
         
         return argNames
 
@@ -148,28 +148,18 @@ def argNames(Rtype=None):
         memReading=psutil.phymem_usage()
         allMemory =memReading.total/1048576
 
-        argNames=[("duration", {"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
-                  ("granularity", {"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
+        argNames=[("duration", {"upperBound":100000,"lowerBound":1, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
+                  ("granularity", {"upperBound":100000,"lowerBound":1, "argHelp":"Number of runs to create"}),
                   ("minJobTime", {"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds (Min 2)"}),
                   ("startload", {"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to begin at.\nUnits: MB or %\ne.g. '10' (for 10MB) or '10%'"}),
                   ("stopload", {"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to stop at.\nUnits: MB or %\ne.g. '10' (for 10MB) or '10%'"})]
         RESTYPE = "MEM"
 #        print "Use Arg's: ",argNames," with mem"
         return OrderedDict(argNames)
-        
-    if Rtype.lower() == "io":
-        argNames=[("duration", {"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
-                  ("granularity", {"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
-                  ("minJobTime", {"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds (Min 2)"}),
-                  ("startload", {"upperBound":999999,"lowerBound":50, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"}),
-                  ("stopload", {"upperBound":999999,"lowerBound":50, "argHelp":"Value for distribution to stop at.\nUnits: MB/s throughput"})]
-        RESTYPE = "IO"
-#        print "Use Arg's: ",argNames," with io"
-        return OrderedDict(argNames)
     
     if Rtype.lower() == "net":
-        argNames=[("duration", {"upperBound":100000,"lowerBound":0, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
-                  ("granularity", {"upperBound":100000,"lowerBound":0, "argHelp":"Number of runs to create"}),
+        argNames=[("duration", {"upperBound":100000,"lowerBound":1, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
+                  ("granularity", {"upperBound":100000,"lowerBound":1, "argHelp":"Number of runs to create"}),
                   ("minJobTime", {"upperBound":10000000,"lowerBound":2, "argHelp":"Minimum time a single job's duration can be (any jobs under will be deleted).\nUnits: seconds (Min 2)"}),
                   ("startload",{"upperBound":999999,"lowerBound":50, "argHelp":"Value for distribution to begin at.\nUnits: MB/s throughput"}),
                   ("stopload", {"upperBound":999999,"lowerBound":50, "argHelp":"Value for distribution to stop at.\nUnits: MB/s throughput"})]

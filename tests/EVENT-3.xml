@@ -29,20 +29,17 @@
  <distributions>
 
    <name>Fuzzer_Distro2</name>
-     <nextevent>NONE</nextevent>
-     <!--duration in seconds -->
      <starttime>0</starttime>
-     <minJobTime>2</minJobTime>
      <distribution href="/distributions/event" name="event" />
      <emulator href="/emulators/backfuzz" name="backfuzz" />
 
     <emulator-params>
         <resourceType>NET</resourceType>
-        <serverip>10.55.168.238</serverip>
-        <serverport>51889</serverport>
+        <serverip>10.55.168.181</serverip>
+        <serverport>5050</serverport>
         <min>100</min>
         <fuzzRange>4</fuzzRange>
-        <packettype>SSH</packettype>
+        <protocol>SSH</protocol>
         <timedelay>0</timedelay>
         <salt>2</salt>
     </emulator-params>
@@ -75,5 +72,3 @@
  </log>
   
 </emulation>
-
-

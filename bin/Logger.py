@@ -115,6 +115,7 @@ def emulationEnd(emulationName):
         #emulationEndLogger.info("Emulation '"+str(emulationName)+"' finished.")
         Library.removeExtraJobs(emulationName)
         Library.killRemainingProcesses()
+        Library.deleteFiles("/tmp/stressapptestFile",  "*") # Remove any stressappTest files left behind from I/O loading
         return True
     except:
         return False

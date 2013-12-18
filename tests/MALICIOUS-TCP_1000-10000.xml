@@ -20,7 +20,7 @@
 	<fuzzRange>9000</fuzzRange>
         <serverip>10.55.168.142</serverip>
         <serverport>5050</serverport>      
-        <packettype>TCP</packettype>
+        <protocol>TCP</protocol>
         <timedelay>1</timedelay>
         <salt>50</salt>
      </emulator-params>

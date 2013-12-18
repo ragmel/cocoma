@@ -262,7 +262,7 @@ act as a server. Emulation XML for the network contention:
       <serverport>5001</serverport>
            <clientip>127.0.0.1</clientip>
       <clientport>5001</clientport>
-           <packettype>UDP</packettype>
+           <protocol>UDP</protocol>
        </emulator-params>
      </distributions>
 

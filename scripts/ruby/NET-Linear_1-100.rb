@@ -38,7 +38,7 @@ begin
 			:resourceType =>"NET",
 			:serverPort => "51889",
 			:serverIP => "10.55.168.142",
-			:packetType => "UDP"}
+			:protocol => "UDP"}
    },
 
    :log => {

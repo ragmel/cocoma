@@ -710,7 +710,7 @@ def boundsCompare(xmlValue, LimitsDictValues, variableName = None):
     NOTE: in future might be better moved to the wrapper modules
     '''
     
-    textBasedArgs = ["serverip", "clientip", "packettype", "trace", "serverport"] #arg names must be in all lower-case
+    textBasedArgs = ["serverip", "clientip", "protocol", "trace", "serverport"] #arg names must be in all lower-case
     
     if  variableName in textBasedArgs:
         return_note = "\nOK"
@@ -777,17 +777,6 @@ def getCurrentJobs():
     c.close()
     return currentJobs
 
-def removeLogs():
-    logFiles = glob.glob(HOMEPATH+"/logs/*.csv")
-    logFiles = logFiles + glob.glob(HOMEPATH+"/logs/*.xml")
-    logFiles = logFiles + glob.glob(HOMEPATH+"/logs/*.txt")
-    logFiles = logFiles + glob.glob(HOMEPATH+"/logs/*.zip")
-    if (len(logFiles) > 0):
-        for logfile in logFiles:
-            os.remove(logfile)
-    else:
-        print "No Log files found"
-        
 def timeSinceEpoch(extraSeconds):
     procTrace = subprocess.Popen("date +%s", shell = True, stdout = PIPE, stderr = PIPE)
     procTraceOutput = int(procTrace.communicate()[0]) + int(extraSeconds)
@@ -932,21 +921,16 @@ def checkMinJobTime (emuName, stressValues, runStartTime, runDurations, minJobTi
     return (stressValues, runStartTime, runDurations)
 
 def staggerStartTimes(startTimes):
-    prevTime = startTimes[0]
-    addTime = 0.0
-    
-    for i, startTime in enumerate(startTimes):
-        if (startTime == prevTime):
-            startTimes[i] = startTime + addTime
-            addTime += 0.12
-        else:
-            prevTime = startTime
-            addTime = 0.0
-    
+#Staggers jobs with the same time by increments of 0.12s
+#Stops scheduler having too many jobs at once (causes problems)
+    for startTime in startTimes:
+        matchingTimeIndex = [i for i, time in enumerate(startTimes) if time == startTime]
+        for i, matchingIndex in enumerate(matchingTimeIndex):
+            startTimes[matchingIndex] = startTimes[matchingIndex] + (0.12 * i)
     return startTimes
 
 def removeZeroJobs (stressValues, startTimes, durations):
-    #Removes jobs with a stressValue of 0
+#Removes jobs with a stressValue of 0
     count = 0
     removeIndex = []
     for i, stressValue in enumerate(stressValues):
@@ -962,3 +946,22 @@ def removeZeroJobs (stressValues, startTimes, durations):
         print str(count), " Jobs with a stressValue of 0 removed"
 
     return (stressValues, startTimes, durations)
+
+def deleteFiles (path, *args):
+#Requires a path and file name(s)/Extenstions (*args)
+    filesToDel = []
+    for fileName in args:
+        filesToDel += glob.glob(path + fileName)
+        
+    if (len(filesToDel) > 0):
+        for file in filesToDel:
+            os.remove(file)
+    else:
+        print "No Matching files found"
+
+def checkAcceptedArg (arg, acceptedArgs):
+#Checks wheter an arg is the list of supplid AcceptedArgs
+    for acceptedArg in acceptedArgs:
+        if (acceptedArg.lower() == arg):
+            return True
+    return False

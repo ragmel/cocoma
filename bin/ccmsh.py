@@ -457,7 +457,7 @@ More info @ https://github.com/cragusa/cocoma
         try:
             choice = raw_input().lower()
             if choice in yes:
-                Library.removeLogs()
+                Library.deleteFiles(HOMEPATH + "/logs/*", ".csv", ".xml", ".txt", ".zip")
             elif choice in no:
                 print "Action cancelled"
                 return False

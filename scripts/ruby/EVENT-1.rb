@@ -34,7 +34,7 @@ begin
 			:serverPort => "51889",
 			:min => "100",
 			:fuzzRange => "100",
-			:packetType => "TCP",
+			:protocol => "TCP",
 			:timeDelay => "1",
 			:salt => "5",
 			:serverIP => "10.55.168.142"},
