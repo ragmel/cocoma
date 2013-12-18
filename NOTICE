@@ -85,7 +85,6 @@ COCOMA list of files
 │   │   │   │   ├── DistPopup.png
 │   │   │   │   ├── emuDisplay.png
 │   │   │   │   ├── emulation2.png
-│   │   │   │   ├── emulatorPopup.png
 │   │   │   │   ├── logsandMQ.png
 │   │   │   │   ├── MEM_NET-Problem.png
 │   │   │   │   ├── MultiDist.png
@@ -193,7 +192,6 @@ COCOMA list of files
 │       │   └── webUIimages
 │       │       ├── DistPopup.png
 │       │       ├── emuDisplay.png
-│       │       ├── emulatorPopup.png
 │       │       ├── logsandMQ.png
 │       │       ├── MultiDist.png
 │       │       ├── Overall.png

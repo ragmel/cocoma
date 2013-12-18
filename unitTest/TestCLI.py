@@ -67,7 +67,6 @@ class TestCLI (unittest.TestCase):
         EMUTests.testCLIInputCalls("ccmsh -p", "y", "")
           
     # ##Test Emulation creation
-    
     def test_EMU_Overload(self):  # REMOVE: For testing resource overload
           EMUTests = EmulationTests()
           XML = "XMLExamples/shortTests/Overload_CPU.xml"
@@ -102,16 +101,16 @@ class TestCLI (unittest.TestCase):
     def test_EMU_MEM(self):  # Creates a MEM emulation using CLI
           EMUTests = EmulationTests()
           XML = "XMLExamples/shortTests/Mem.xml"
-          result = EMUTests.testCLICalls(runEmulation + XML, emulationStarted)
+          result = EMUTests.testCLICalls(runEmulation + XML + " -f", emulationStarted)
           length = EMUTests.getTestDuration(XML)
           length = int(length) + 1
           time.sleep(int(length))
-          self.assertNotEquals(result, -1, "MEM-EMU creation Failed")
-                  
+          self.assertNotEquals(result, -1, "MEM-EMU creation Failed") 
+
     def test_EMU_MEMTrap(self):  # Creates a MEM Trap emulation using CLI
           EMUTests = EmulationTests()
           XML = "XMLExamples/shortTests/MemTrap.xml"
-          result = EMUTests.testCLICalls(runEmulation + XML, emulationStarted)
+          result = EMUTests.testCLICalls(runEmulation + XML + " -f", emulationStarted)
           length = EMUTests.getTestDuration(XML)
           length = int(length) + 1
           time.sleep(int(length))
@@ -120,7 +119,7 @@ class TestCLI (unittest.TestCase):
     def test_EMU_MULTI1(self):  # Creates a Multiple Distribution emulation using CLI
           EMUTests = EmulationTests()
           XML = "XMLExamples/shortTests/MultiDist1.xml"
-          result = EMUTests.testCLICalls(runEmulation + XML, emulationStarted)
+          result = EMUTests.testCLICalls(runEmulation + XML + " -f", emulationStarted)
           length = EMUTests.getTestDuration(XML)
           length = int(length) + 1
           time.sleep(int(length))
@@ -129,12 +128,12 @@ class TestCLI (unittest.TestCase):
     def test_EMU_MULTI2(self):  # Creates a Multiple Distribution emulation using CLI
           EMUTests = EmulationTests()
           XML = "XMLExamples/shortTests/MultiDist2.xml"
-          result = EMUTests.testCLICalls(runEmulation + XML, emulationStarted)
+          result = EMUTests.testCLICalls(runEmulation + XML + " -f", emulationStarted)
           length = EMUTests.getTestDuration(XML)
           length = int(length) + 1
           time.sleep(int(length))
           self.assertNotEquals(result, -1, "Multi Dist 2-EMU creation Failed")
-             
+
     def test_EMU_NETWORK(self):  # Creates a Network emulation using CLI
           EMUTests = EmulationTests()
           XML = "XMLExamples/shortTests/Network.xml"

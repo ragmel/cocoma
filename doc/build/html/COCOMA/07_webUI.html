@@ -62,7 +62,7 @@
 </div>
 <p>The <em>COCOMA API IP</em> refers to the IP of the interface on which the API have been started. The page is compatible with Chrome, Firefox and Safari web browsers, while it is not with Internet Explorer. The page will automatically load in available emulators, distributions and resources. It will detect which distributions and resources are compatible with the given emulator so that the user needs not worry about creating XML the framework cannot process. Any emulations which already exist will also be displayed in the right hand bar.</p>
 <div class="figure align-center">
-<a class="reference internal image-reference" href="../_images/Overall.png"><img alt="../_images/Overall.png" src="../_images/Overall.png" style="width: 1344.0px; height: 767.2px;" /></a>
+<a class="reference internal image-reference" href="../_images/Overall.png"><img alt="../_images/Overall.png" src="../_images/Overall.png" style="width: 1325.8px; height: 690.9px;" /></a>
 <p class="caption">COCOMA webUI</p>
 </div>
 </div>
@@ -70,15 +70,15 @@
 <h2>Creating an emulation<a class="headerlink" href="#creating-an-emulation" title="Permalink to this headline">¶</a></h2>
 <p>Each emulation requires a name and at least one distribution, although as many distributions as required can be added. Each distribution requires a name and all required fields to be filled, this data will vary as per the emulation, distribution or resource selected. Some help is provided to explain what each of the arguments are and (if relevant) what their units are. Distribution windows can be minimized for overall readability or removed entirely (not added to the emulation) by clicking the &#8216;x&#8217; in the top right corner:</p>
 <div class="figure align-center">
-<a class="reference internal image-reference" href="../_images/MultiDist.png"><img alt="../_images/MultiDist.png" src="../_images/MultiDist.png" style="width: 576.75px; height: 650.25px;" /></a>
+<a class="reference internal image-reference" href="../_images/MultiDist.png"><img alt="../_images/MultiDist.png" src="../_images/MultiDist.png" style="width: 545.25px; height: 577.5px;" /></a>
 <p class="caption">Multi-distribution interface</p>
 </div>
 </div>
 <div class="section" id="distribution-parameters">
 <h2>Distribution Parameters<a class="headerlink" href="#distribution-parameters" title="Permalink to this headline">¶</a></h2>
-<p><em>Start time</em> determines how long (in seconds) after the overall emulation has begun, this particular distribution will begin. <em>Duration</em> is how long the distribution will last for. <em>Granularity</em> refers to the number of the steps taken from <em>startLoad</em> through to <em>stopLoad</em> over the course of the distributions run. For example a 60 second duration CPU stressing distribution with a granularity of 10 will move from <em>startLoad</em> to <em>stopLoad</em> in steps of 6 seconds. More information on the emulator or distribution currently selected and the specific parameters they require can be viewed by hovering over the blue question mark beside it:</p>
+<p>Where possible, help has been added for each distribution parameter. This can be viewed by hovering over the <strong>?</strong> beside a parameter; This should display a pop-up with some help and the units (if relevant) of that parameter</p>
 <div class="figure align-center">
-<a class="reference internal image-reference" href="../_images/ui_popup.png"><img alt="../_images/ui_popup.png" src="../_images/ui_popup.png" style="width: 757.8px; height: 195.3px;" /></a>
+<a class="reference internal image-reference" href="../_images/ui_popup.png"><img alt="../_images/ui_popup.png" src="../_images/ui_popup.png" style="width: 415.8px; height: 89.1px;" /></a>
 <p class="caption">Help pop-ups</p>
 </div>
 </div>
@@ -100,10 +100,10 @@
 </div>
 <div class="section" id="working-with-existing-emulations">
 <h2>Working with existing emulations<a class="headerlink" href="#working-with-existing-emulations" title="Permalink to this headline">¶</a></h2>
-<p>Any existing emulations in your system will be listed on the right hand side of the screen. The UI also displays the total number of runs, how many of those failed and the current state of the emulation (<em>active</em> or <em>inactive</em>). Hovering over the emulation name will display the information on that emulation in a popup.</p>
+<p>Any existing emulations in your system will be listed on the right hand side of the screen. The UI also displays the total number of runs, how many of those failed and the current state of the emulation (<em>Pending Execution</em>, <em>Running</em>, <em>Executed</em>, <em>Unexecuted Run(s)</em> or <em>Failed Run(s)</em>). Hovering over the emulation name will display the information on that emulation in a popup.</p>
 <p>Clicking the small download icon to the right of each emulation will prompt the download of a zip file to your system. This zip file contains the .xml used to create the emulation as well as .csv files with the system logs and the logs for that specific emulation.</p>
 <div class="figure align-center">
-<a class="reference internal image-reference" href="../_images/emuDisplay.png"><img alt="../_images/emuDisplay.png" src="../_images/emuDisplay.png" style="width: 672.3px; height: 429.3px;" /></a>
+<a class="reference internal image-reference" href="../_images/emuDisplay.png"><img alt="../_images/emuDisplay.png" src="../_images/emuDisplay.png" style="width: 649.8px; height: 473.4px;" /></a>
 <p class="caption">Emulations interface</p>
 </div>
 </div>

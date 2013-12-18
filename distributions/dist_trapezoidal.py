@@ -170,7 +170,7 @@ def argNames(Rtype=None):
         argNames=[("granularity",{"upperBound":100000,"lowerBound":1, "argHelp":"Number of runs to create"}),
                   ("duration",{"upperBound":100000,"lowerBound":1, "argHelp":"Time Distribution lasts for.\nUnits: seconds"}),
                   ("minJobTime",{"upperBound":10000000,"lowerBound":2, "argHelp":"Number of runs to create (Min 2)"}),
-                  ("startload",{"upperBound":allMemory,"lowerBound":50, "argHep":"Value for distribution to begin at.\nUnits: MB or %\ne.g. '10' (for 10MB) or '10%'"}),
+                  ("startload",{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to begin at.\nUnits: MB or %\ne.g. '10' (for 10MB) or '10%'"}),
                   ("stopload",{"upperBound":allMemory,"lowerBound":50, "argHelp":"Value for distribution to reach at its mid-point.\nUnits: MB or %\ne.g. '10' (for 10MB) or '10%'"})]
         RESTYPE = "MEM"
 #        print "Use Arg's: ",argNames," with mem"

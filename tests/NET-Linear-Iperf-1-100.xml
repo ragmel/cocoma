@@ -5,14 +5,14 @@
   <!--2014-02-02T10:10:10-->
   <emustartTime>now</emustartTime>
   <!--duration in seconds -->
-  <emustopTime>200</emustopTime>
+  <emustopTime>20</emustopTime>
   
   <distributions> 
    <name>NET_distro</name>
      <startTime>0</startTime>
      <!--duration in seconds -->
-     <duration>200</duration>
-     <granularity>20</granularity>
+     <duration>20</duration>
+     <granularity>4</granularity>
      <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear" name="linear" />
 	<!--set target bandwidth to bits per sec-->
@@ -21,10 +21,9 @@
       <emulator href="/emulators/iperf" name="iperf" />
     <emulator-params>
         <resourceType>NET</resourceType>
-        <serverip>10.55.168.238</serverip>
+        <serverip>10.55.164.204</serverip>
 	<!--Leave "0" for default 5001 port -->
 	<serverport>51889</serverport>
-        <protocol>UDP</protocol>
     </emulator-params>
   </distributions>
 

@@ -186,7 +186,13 @@ enabled vhost exchange user password host topic</p>
 <dl class="cmdoption">
 <dt id="cmdoption-ccmsh-p">
 <tt class="descname">-p</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--purge</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-p" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all DB entries, all scheduled jobs and all logs</p>
+<dd><p>Remove all DB entries and scheduled jobs</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-ccmsh-c">
+<tt class="descname">-c</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--clear-logs</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-ccmsh-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all log files</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -258,6 +264,7 @@ The file with CSV extention will contain the system resource data, and the file 
 * /distributions/{name}
 * /emulators
 * /emulators/{name}
+* /jobs
 * /results
 * /results/{name}
 * /tests
@@ -600,6 +607,21 @@ The file with CSV extention will contain the system resource data, and the file 
 </pre></div>
 </div>
 </div></blockquote>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/jobs</span></tt></dt>
+<dd><div class="first last highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;collection</span> <span class="na">href=</span><span class="s">&quot;/jobs&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://127.0.0.1/cocoma&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;items</span> <span class="na">offset=</span><span class="s">&quot;0&quot;</span> <span class="na">total=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Job&gt;</span>Job: 1-CPU_EMU-Emulation (trigger: date[2013-12-18 10:48:27], next run at: 2013-12-18 10:48:27)<span class="nt">&lt;/Job&gt;</span>
+    <span class="nt">&lt;Job&gt;</span>Job: {&quot;;Duration&quot;;: 10.0, &quot;;EndTime&quot;;: &quot;;2013-12-18 10:48:29.000000&quot;;, &quot;;StressValue&quot;;: 20, &quot;;StartTime&quot;;: &quot;;2013-12-18 10:48:19.000000&quot;;, &quot;;JobName&quot;;: &quot;;1-CPU_EMU-1-1-cpu_distro-lookbusy-cpu&quot;;} (trigger: date[2013-12-18 10:48:19], next run at: 2013-12-18 10:48:19)<span class="nt">&lt;/Job&gt;</span>
+    <span class="nt">&lt;currentlyRunningJob&gt;</span>Job: 1-CPU_EMU-1-0-cpu_distro { startTime: 2013-12-18 10:48:09.000000, duration: 10.0 sec, stopTime: 2013-12-18 10:48:19, resourceType: CPU, stressValue: 10 }<span class="nt">&lt;/currentlyRunningJob&gt;</span>
+  <span class="nt">&lt;/items&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">rel=</span><span class="s">&quot;parent&quot;</span> <span class="na">type=</span><span class="s">&quot;application/vnd.bonfire+xml&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/collection&gt;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 <p><tt class="docutils literal"><span class="pre">http:method::</span> <span class="pre">GET</span> <span class="pre">/logs</span></tt></p>
 <blockquote>
 <div><p>Displays logs list. The returned <em>200- OK</em> XML:</p>
@@ -682,7 +704,9 @@ The file with CSV extention will contain the system resource data, and the file 
 37
 38
 39
-40</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+40
+41
+42</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>CPU_EMU<span class="nt">&lt;/emuname&gt;</span>
   <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
@@ -698,6 +722,8 @@ The file with CSV extention will contain the system resource data, and the file 
      <span class="c">&lt;!--duration in seconds --&gt;</span>
      <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>20<span class="nt">&lt;/granularity&gt;</span>
+     <span class="c">&lt;!--Minimum time a job can last (seconds)--&gt;</span>
+     <span class="nt">&lt;minJobTime&gt;</span>2<span class="nt">&lt;/minJobTime&gt;</span>
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
      <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
@@ -773,13 +799,17 @@ The file with CSV extention will contain the system resource data, and the file 
 18
 19
 20
-21</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="nt">&lt;distributions&gt;</span>
+21
+22
+23</pre></div></td><td class="code"><div class="highlight"><pre>  <span class="nt">&lt;distributions&gt;</span>
 
    <span class="nt">&lt;name&gt;</span>CPU_Distro<span class="nt">&lt;/name&gt;</span>
      <span class="nt">&lt;startTime&gt;</span>0<span class="nt">&lt;/startTime&gt;</span>
      <span class="c">&lt;!--duration in seconds --&gt;</span>
      <span class="nt">&lt;duration&gt;</span>60<span class="nt">&lt;/duration&gt;</span>
      <span class="nt">&lt;granularity&gt;</span>20<span class="nt">&lt;/granularity&gt;</span>
+     <span class="c">&lt;!--Minimum time a job can last (seconds)--&gt;</span>
+     <span class="nt">&lt;minJobTime&gt;</span>2<span class="nt">&lt;/minJobTime&gt;</span>
      <span class="nt">&lt;distribution</span> <span class="na">href=</span><span class="s">&quot;/distributions/linear&quot;</span> <span class="na">name=</span><span class="s">&quot;linear&quot;</span> <span class="nt">/&gt;</span>
      <span class="c">&lt;!--cpu utilization distribution range--&gt;</span>
       <span class="nt">&lt;startLoad&gt;</span>10<span class="nt">&lt;/startLoad&gt;</span>
@@ -814,7 +844,7 @@ The file with CSV extention will contain the system resource data, and the file 
   <span class="nt">&lt;/log&gt;</span>
 </pre></div>
 </td></tr></table></div>
-<p>In plain english it means - create an emulation named <em>CPU_EMU</em> starting <em>now</em> and running for <em>60</em> sec. The Emulation includes one distribution called <em>CPU_Distro</em>, which starts at the same time as emulation, runs for <em>60</em> sec, using <em>linear</em> pattern. The pattern increases the workload of the <em>CPU</em> from <em>10%</em> to <em>95%</em> in <em>20</em> steps by using the <em>lookbusy</em> emulator. The workload produced by the application is logged every second with debug level information.</p>
+<p>In plain english it means - create an emulation named <em>CPU_EMU</em> starting <em>now</em> and running for <em>60</em> sec. The Emulation includes one distribution called <em>CPU_Distro</em>, which starts at the same time as emulation, runs for <em>60</em> sec, using <em>linear</em> pattern. The pattern increases the workload of the <em>CPU</em> from <em>10%</em> to <em>95%</em> in <em>20</em> steps by using the <em>lookbusy</em> emulator (with none of the steps lasting less than 2 seconds). The workload produced by the application is logged every second with debug level information.</p>
 </div>
 </div>
 

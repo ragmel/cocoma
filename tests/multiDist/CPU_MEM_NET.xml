@@ -62,7 +62,6 @@
         <serverport>5001</serverport>
         <clientip>127.0.0.1</clientip>
         <clientport>5001</clientport>
-        <protocol>UDP</protocol>
     </emulator-params>
   </distributions>
 

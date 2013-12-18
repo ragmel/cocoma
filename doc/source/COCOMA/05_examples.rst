@@ -11,7 +11,7 @@ Emulation XML for CPU contention:
    
    <emulation>
      <emuname>CPU_EMU</emuname>
-     <emuType>Mix</emuType>
+     <emuType>TIME</emuType>
      <emuresourceType>CPU</emuresourceType>
      <!--date format: 2014-10-10T10:10:10 -->
      <emustartTime>now</emustartTime>
@@ -59,7 +59,7 @@ Emulation XML for I/O contention:
 
    <emulation>
      <emuname>IO_EMU</emuname>
-     <emuType>Mix</emuType>
+     <emuType>TIME</emuType>
      <emuresourceType>IO</emuresourceType>
      <!--date format: 2014-10-10T10:10:10 -->
      <emustartTime>now</emustartTime>
@@ -106,7 +106,7 @@ In this example we use a different distribution called *trapezoidal*:
 
    <emulation>
      <emuname>IO_EMU</emuname>
-     <emuType>Mix</emuType>
+     <emuType>TIME</emuType>
      <emuresourceType>IO</emuresourceType>
      <!--date format: 2014-10-10T10:10:10 -->
      <emustartTime>now</emustartTime>
@@ -156,7 +156,7 @@ Emulation XML for memory contention:
 
    <emulation>
      <emuname>MEM_EMU</emuname>
-     <emuType>Mix</emuType>
+     <emuType>TIME</emuType>
      <emuresourceType>MEM</emuresourceType>
      <!--date format: 2014-10-10T10:10:10 -->
      <emustartTime>now</emustartTime>
@@ -198,7 +198,7 @@ Example for memory emulation using *trapezoidal* distribution:
 
    <emulation>
      <emuname>MEM_EMU</emuname>
-     <emuType>Mix</emuType>
+     <emuType>TIME</emuType>
      <emuresourceType>MEM</emuresourceType>
      <!--date format: 2014-10-10T10:10:10 -->
      <emustartTime>now</emustartTime>
@@ -246,7 +246,7 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
 
    <emulation>
      <emuname>NET_emu</emuname>
-     <emuType>Mix</emuType>
+     <emuType>TIME</emuType>
      <emuresourceType>NET</emuresourceType>
      <!--2014-02-02T10:10:10-->
      <emustartTime>now</emustartTime>
@@ -272,7 +272,6 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
            <serverport>5001</serverport>
            <clientip>172.18.254.236</clientip>
            <clientport>5001</clientport>
-           <protocol>UDP</protocol>
            </emulator-params>
      </distributions>
    
@@ -300,7 +299,7 @@ An important feature of COCOMA is the ability to combine multiple distributions 
    
     <emulation>
         <emuname>CPU_and_Mem</emuname>
-        <emutype>Mix</emutype>
+        <emutype>TIME</emutype>
         <emuresourceType>MIX</emuresourceType>
         <emustartTime>now</emustartTime>
         <!--duration in seconds -->
@@ -359,7 +358,7 @@ An important feature of COCOMA is the ability to combine multiple distributions 
    
     <emulation>
         <emuname>CPU_and_Mem</emuname>
-        <emutype>Mix</emutype>
+        <emutype>TIME</emutype>
         <emuresourceType>MIX</emuresourceType>
         <emustartTime>now</emustartTime>
         <!--duration in seconds -->

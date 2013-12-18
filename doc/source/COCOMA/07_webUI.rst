@@ -33,7 +33,7 @@ Each emulation requires a name and at least one distribution, although as many d
         
 Distribution Parameters
 -----------------------
-*Start time* determines how long (in seconds) after the overall emulation has begun, this particular distribution will begin. *Duration* is how long the distribution will last for. *Granularity* refers to the number of the steps taken from *startLoad* through to *stopLoad* over the course of the distributions run. For example a 60 second duration CPU stressing distribution with a granularity of 10 will move from *startLoad* to *stopLoad* in steps of 6 seconds. More information on the emulator or distribution currently selected and the specific parameters they require can be viewed by hovering over the blue question mark beside it:
+Where possible, help has been added for each distribution parameter. This can be viewed by hovering over the **?** beside a parameter; This should display a pop-up with some help and the units (if relevant) of that parameter
 
 .. figure:: webUIimages/ui_popup.png
         :scale: 90
@@ -63,7 +63,7 @@ Once all the parameters are set there are two options; run the emulation right a
 	
 Working with existing emulations
 --------------------------------
-Any existing emulations in your system will be listed on the right hand side of the screen. The UI also displays the total number of runs, how many of those failed and the current state of the emulation (*active* or *inactive*). Hovering over the emulation name will display the information on that emulation in a popup.
+Any existing emulations in your system will be listed on the right hand side of the screen. The UI also displays the total number of runs, how many of those failed and the current state of the emulation (*Pending Execution*, *Running*, *Executed*, *Unexecuted Run(s)* or *Failed Run(s)*). Hovering over the emulation name will display the information on that emulation in a popup.
 
 Clicking the small download icon to the right of each emulation will prompt the download of a zip file to your system. This zip file contains the .xml used to create the emulation as well as .csv files with the system logs and the logs for that specific emulation.
 

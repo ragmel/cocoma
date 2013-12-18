@@ -82,8 +82,6 @@ from signal import *
 from subprocess import *
 from collections import OrderedDict
 
-sys.path.insert(0,'/home/jordan/git/cocoma/bin/') #REMOVE
-import Library #REMOVE
 from Library import getHomepath
 
 #perhaps needs to be set somewhere else
@@ -118,18 +116,18 @@ class emulatorMod(abstract_emu):
   
  
         if resourceTypeDist.lower() == "net" and emulatorArg["server"]==0:
-                netClientProc = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["serverport"],emulatorArg["protocol"],emulatorArg["serverip"],emulationID,emulatorArg,emuDuration,duration))
+                netClientProc = multiprocessing.Process(target = netClientLoad, args=(distributionID,runNo,stressValues,emulatorArg["serverport"],emulatorArg["serverip"],emulationID,emulatorArg,emuDuration,duration))
                 netClientProc.start()
                 netClientProc.join()
                 
         
         elif emulatorArg["server"]==1:
-                netServerProc = multiprocessing.Process(target = netServerLoad, args=(distributionID,runNo,emulatorArg["serverport"],emulatorArg["protocol"],emuDuration))
+                netServerProc = multiprocessing.Process(target = netServerLoad, args=(distributionID,runNo,emulatorArg["serverport"],emuDuration))
                 netServerProc.start()
                 netServerProc.join()
                 
   
-def netClientLoad(distributionID,runNo,stressValues,serverPort,protocol,serverIP,emulationID,emulatorArg,emuDuration,duration):
+def netClientLoad(distributionID,runNo,stressValues,serverPort,serverIP,emulationID,emulatorArg,emuDuration,duration):
             
             daemonPort=str(readLogLevel("schedport"))
 
@@ -159,97 +157,42 @@ def netClientLoad(distributionID,runNo,stressValues,serverPort,protocol,serverIP
             
             if runNo == str(0):
                 time.sleep(2)
-            print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,serverPort,protocol,serverIP,emulationID,duration\n",distributionID,runNo,stressValues,serverPort,protocol,serverIP,emulationID,duration,"\n\n"
+            print "\n\nThis is netClientLoad:\ndistributionID,runNo,stressValues,serverPort,serverIP,emulationID,duration\n",distributionID,runNo,stressValues,serverPort,serverIP,emulationID,duration,"\n\n"
             bandwith =stressValues
-            if protocol.lower() == "udp":
                 
-                try:
-                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"mb","-t",str(duration)])
-                    runIperfPidNo =runIperf.pid
-                    
-                    time.sleep(float(duration))
-                    #catching failed runs
-                    if zombieBuster(runIperfPidNo, "iperf"):
-                        runIperf.wait()
-                        message="Error in the emulator execution"
-                        executed="False"
-                        dbWriter(distributionID,runNo,message,executed)
-                        return False
-                    else:
-                        runIperf.terminate()
-                    
-                        message="Success"
-                        executed="True"
-                        dbWriter(distributionID,runNo,message,executed)
-                        return True
-        
-                except Exception, e:
-                    print "run_Iperf job exception: ", e
-            
-            
-            if protocol.lower() == "tcp":
+            try:
+                runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-b",str(bandwith)+"mb","-t",str(duration)])
+                runIperfPidNo =runIperf.pid
                 
-                try:
-                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-n",str(bandwith)+"mb"])
-                    runIperfPidNo =runIperf.pid
-                    
-                    time.sleep(float(duration))
-                    #catching failed runs
-                    if zombieBuster(runIperfPidNo, "iperf"):
-                        print "Job failed, sending wait()."
-                        runIperf.wait()
-                        message="Error in the emulator execution"
-                        executed="False"
-                        dbWriter(distributionID,runNo,message,executed)
-                        return False
-                    else:
-                        runIperf.terminate()
-                    
-                        message="Success"
-                        executed="True"
-                        dbWriter(distributionID,runNo,message,executed)
-                        return True
-        
-                except Exception, e:
-                    print "run_Iperf job exception: ", e
-            
-            
+                time.sleep(float(duration))
+                #catching failed runs
+                if zombieBuster(runIperfPidNo, "iperf"):
+                    runIperf.wait()
+                    message="Error in the emulator execution"
+                    executed="False"
+                    dbWriter(distributionID,runNo,message,executed)
+                    return False
+                else:
+                    runIperf.terminate()
+                
+                    message="Success"
+                    executed="True"
+                    dbWriter(distributionID,runNo,message,executed)
+                    return True
+    
+            except Exception, e:
+                print "run_Iperf job exception: ", e
 
-            else:
-                try:
-                    runIperf = subprocess.Popen(["iperf","-c",str(serverIP),"-p",str(serverPort),"-t",duration])
-                    runIperfPidNo =runIperf.pid
-                    
-                    #catching failed runs
-                    if zombieBuster(runIperfPidNo, "iperf"):
-                        runIperf.wait()
-                        message="Error in the emulator execution"
-                        executed="False"
-                        dbWriter(distributionID,runNo,message,executed)
-                    else:
-                        runIperf.terminate()
-                    
-                        message="Success"
-                        executed="True"
-                        dbWriter(distributionID,runNo,message,executed)
-                    
-                except Exception, e:
-                    print "run_Iperf job exception: ", e
-
-def netServerLoad(distributionID,runNo,netPort,protocol,emuDuration):
+def netServerLoad(distributionID,runNo,netPort,emuDuration):
             
             runIperfPidNo=0
             try:
-                if protocol.lower() =="udp" :
-                    try:
-                        runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort),"-u"])
-                    except Exception, e:
-                        print e
-                
-                    runIperfPidNo =runIperf.pid
-                else:
-                    runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort)])
-                    runIperfPidNo =runIperf.pid
+                try:
+                    runIperf = subprocess.Popen(["iperf","-s", "-p",str(netPort),"-u"])
+                except Exception, e:
+                    print e
+            
+                runIperfPidNo =runIperf.pid
                 
             except Exception, e:
                 "run_runIperf job exception: ", e
@@ -273,8 +216,7 @@ def emulatorHelp():
     plainText= """
  Iperf emulator is used to generate workload over network between two COCOMA VM's - Client and Server. Emulation parameters (XML document) which include IP addresses 
 of Client and Server COCOMA are sent to Client VM. Client VM then connects to Server VM starts Iperf in server mode ready to accept packages.
- Two types of packets can be selected within distribution UDP or TCP. In case of UDP packets we are changing bandwidth load in "mb". In case of TCP we vary size of the 
-transmitted packet per run.
+In case of UDP packets we are changing bandwidth load in "mb".
 
 1) UDP setup example:   
 <distributions>
@@ -295,7 +237,6 @@ transmitted packet per run.
         <!--Leave "0" for default 5001 port -->
         <serverport>0</serverport>
         <!--if TCP is needed just change "UDP" to "TCP"-->
-        <protocol>UDP</protocol>
     </emulator-params>
   
   </distributions>
@@ -320,8 +261,7 @@ def emulatorArgNames(Rtype=None):
     if Rtype.lower() == "net":
         
         argNames=[("serverip",{"upperBound":10000,"lowerBound":1, "argHelp":"Server IP to connect to"}),
-                  ("serverport", {"upperBound":10000,"lowerBound":0, "argHelp": "Server port to connect to"}),
-                  ("protocol", {"upperBound":0,"lowerBound":0, "argHelp":"protocol to test. (UDP or TCP only)", "accepted":["TCP", "UDP"]})]
+                  ("serverport", {"upperBound":10000,"lowerBound":0, "argHelp": "Server port to connect to"})]
         logging.debug( "Use Arg's: "+str(argNames))
         return OrderedDict(argNames)
 

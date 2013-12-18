@@ -376,6 +376,6 @@ def calculateDuration (totalDuration, startTime, duration):
     return totalDuration
 
 if __name__ == '__main__': #For testing purposes
-    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", False)
-#    xmlFileParser("/home/jordan/git/cocoma/unitTest/XMLExamples/Network.xml", False)  #REMOVE
+#    print xmlFileParser("/home/jordan/git/cocoma/tests/CPU-Linear-Lookbusy_10-95.xml", False) #REMOVE (for testing)
+#    xmlFileParser("/home/jordan/git/cocoma/unitTest/XMLExamples/Network.xml", False)  #REMOVE (for testing)
     pass

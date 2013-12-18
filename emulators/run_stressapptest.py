@@ -165,7 +165,6 @@ def ioLoad(emulationID, distributionID,runNo,fileQty,memSize,duration):
     try:
         if int(fileQty) ==0:
             cmd="stressapptest "+" -m 0"+" -M "+str(memSize)+" -f /tmp/stressapptestFile"+emulationID + "_" + distributionID + "_" +runNo+" -s "+str(duration)+"&"
-            print cmd#REMOVE
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
         
@@ -178,7 +177,6 @@ def ioLoad(emulationID, distributionID,runNo,fileQty,memSize,duration):
                 fileQty =fileQty-1
             
             cmd="stressapptest "+" -M "+str(memSize)+" "+fileStr+" -s "+str(duration)+" --stop_on_errors&"
-            print cmd#REMOVE
             runStressapptest=os.system(cmd)
             runStressapptestPidNo =pidFinder("stressapptest")
 
