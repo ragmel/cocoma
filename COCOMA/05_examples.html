@@ -94,7 +94,7 @@
 37
 38</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>CPU_EMU<span class="nt">&lt;/emuname&gt;</span>
-  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>TIME<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>CPU<span class="nt">&lt;/emuresourceType&gt;</span>
   <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
   <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
@@ -178,7 +178,7 @@
 40
 41</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>IO_EMU<span class="nt">&lt;/emuname&gt;</span>
-  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>TIME<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>IO<span class="nt">&lt;/emuresourceType&gt;</span>
   <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
   <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
@@ -262,7 +262,7 @@
 40
 41</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>IO_EMU<span class="nt">&lt;/emuname&gt;</span>
-  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>TIME<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>IO<span class="nt">&lt;/emuresourceType&gt;</span>
   <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
   <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
@@ -342,10 +342,9 @@
 33
 34
 35
-36
-37</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>MEM_EMU<span class="nt">&lt;/emuname&gt;</span>
-  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>TIME<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>MEM<span class="nt">&lt;/emuresourceType&gt;</span>
   <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
   <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
@@ -363,7 +362,6 @@
      <span class="c">&lt;!--Memory usage (Megabytes) --&gt;</span>
      <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
      <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-     <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
      <span class="nt">&lt;emulator-params&gt;</span>
          <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
@@ -418,10 +416,9 @@
 33
 34
 35
-36
-37</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>MEM_EMU<span class="nt">&lt;/emuname&gt;</span>
-  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>TIME<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>MEM<span class="nt">&lt;/emuresourceType&gt;</span>
   <span class="c">&lt;!--date format: 2014-10-10T10:10:10 --&gt;</span>
   <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
@@ -439,7 +436,6 @@
      <span class="c">&lt;!--Megabytes for memory --&gt;</span>
      <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
      <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-     <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
      <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
      <span class="nt">&lt;emulator-params&gt;</span>
          <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
@@ -500,10 +496,9 @@
 36
 37
 38
-39
-40</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
+39</pre></div></td><td class="code"><div class="highlight"><pre><span class="nt">&lt;emulation&gt;</span>
   <span class="nt">&lt;emuname&gt;</span>NET_emu<span class="nt">&lt;/emuname&gt;</span>
-  <span class="nt">&lt;emuType&gt;</span>Mix<span class="nt">&lt;/emuType&gt;</span>
+  <span class="nt">&lt;emuType&gt;</span>TIME<span class="nt">&lt;/emuType&gt;</span>
   <span class="nt">&lt;emuresourceType&gt;</span>NET<span class="nt">&lt;/emuresourceType&gt;</span>
   <span class="c">&lt;!--2014-02-02T10:10:10--&gt;</span>
   <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
@@ -529,7 +524,6 @@
         <span class="nt">&lt;serverport&gt;</span>5001<span class="nt">&lt;/serverport&gt;</span>
         <span class="nt">&lt;clientip&gt;</span>172.18.254.236<span class="nt">&lt;/clientip&gt;</span>
         <span class="nt">&lt;clientport&gt;</span>5001<span class="nt">&lt;/clientport&gt;</span>
-        <span class="nt">&lt;packettype&gt;</span>UDP<span class="nt">&lt;/packettype&gt;</span>
         <span class="nt">&lt;/emulator-params&gt;</span>
   <span class="nt">&lt;/distributions&gt;</span>
 
@@ -543,6 +537,7 @@
 <span class="nt">&lt;/emulation&gt;</span>
 </pre></div>
 </td></tr></table></div>
+<p><cite>Note</cite>: Some network emulators require that you be targeting a port with a web service active on it to work</p>
 </div>
 <div class="section" id="multiple-distributions-emulation">
 <h2>Multiple distributions emulation<a class="headerlink" href="#multiple-distributions-emulation" title="Permalink to this headline">¶</a></h2>
@@ -601,10 +596,9 @@
 49
 50
 51
-52
-53</pre></div></td><td class="code"><div class="highlight"><pre> <span class="nt">&lt;emulation&gt;</span>
+52</pre></div></td><td class="code"><div class="highlight"><pre> <span class="nt">&lt;emulation&gt;</span>
      <span class="nt">&lt;emuname&gt;</span>CPU_and_Mem<span class="nt">&lt;/emuname&gt;</span>
-     <span class="nt">&lt;emutype&gt;</span>Mix<span class="nt">&lt;/emutype&gt;</span>
+     <span class="nt">&lt;emutype&gt;</span>TIME<span class="nt">&lt;/emutype&gt;</span>
      <span class="nt">&lt;emuresourceType&gt;</span>MIX<span class="nt">&lt;/emuresourceType&gt;</span>
      <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
      <span class="c">&lt;!--duration in seconds --&gt;</span>
@@ -640,7 +634,6 @@
          <span class="c">&lt;!--Megabytes for memory --&gt;</span>
          <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
          <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-         <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
          <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
          <span class="nt">&lt;emulator-params&gt;</span>
            <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
@@ -731,10 +724,9 @@
 69
 70
 71
-72
-73</pre></div></td><td class="code"><div class="highlight"><pre> <span class="nt">&lt;emulation&gt;</span>
+72</pre></div></td><td class="code"><div class="highlight"><pre> <span class="nt">&lt;emulation&gt;</span>
      <span class="nt">&lt;emuname&gt;</span>CPU_and_Mem<span class="nt">&lt;/emuname&gt;</span>
-     <span class="nt">&lt;emutype&gt;</span>Mix<span class="nt">&lt;/emutype&gt;</span>
+     <span class="nt">&lt;emutype&gt;</span>TIME<span class="nt">&lt;/emutype&gt;</span>
      <span class="nt">&lt;emuresourceType&gt;</span>MIX<span class="nt">&lt;/emuresourceType&gt;</span>
      <span class="nt">&lt;emustartTime&gt;</span>now<span class="nt">&lt;/emustartTime&gt;</span>
      <span class="c">&lt;!--duration in seconds --&gt;</span>
@@ -770,7 +762,6 @@
          <span class="c">&lt;!--Megabytes for memory --&gt;</span>
          <span class="nt">&lt;startLoad&gt;</span>100<span class="nt">&lt;/startLoad&gt;</span>
          <span class="nt">&lt;stopLoad&gt;</span>1000<span class="nt">&lt;/stopLoad&gt;</span>
-         <span class="nt">&lt;malloclimit&gt;</span>4095<span class="nt">&lt;/malloclimit&gt;</span>
          <span class="nt">&lt;emulator</span> <span class="na">href=</span><span class="s">&quot;/emulators/stressapptest&quot;</span> <span class="na">name=</span><span class="s">&quot;stressapptest&quot;</span> <span class="nt">/&gt;</span>
          <span class="nt">&lt;emulator-params&gt;</span>
             <span class="nt">&lt;resourceType&gt;</span>MEM<span class="nt">&lt;/resourceType&gt;</span>
@@ -891,7 +882,7 @@
          <span class="nt">&lt;fuzzRange&gt;</span>900<span class="nt">&lt;/fuzzRange&gt;</span>
          <span class="nt">&lt;serverip&gt;</span>10.55.168.142<span class="nt">&lt;/serverip&gt;</span>
          <span class="nt">&lt;serverport&gt;</span>5050<span class="nt">&lt;/serverport&gt;</span>
-         <span class="nt">&lt;packettype&gt;</span>TCP<span class="nt">&lt;/packettype&gt;</span>
+         <span class="nt">&lt;protocol&gt;</span>TCP<span class="nt">&lt;/protocol&gt;</span>
          <span class="nt">&lt;timedelay&gt;</span>1<span class="nt">&lt;/timedelay&gt;</span>
          <span class="nt">&lt;salt&gt;</span>100<span class="nt">&lt;/salt&gt;</span>
       <span class="nt">&lt;/emulator-params&gt;</span>

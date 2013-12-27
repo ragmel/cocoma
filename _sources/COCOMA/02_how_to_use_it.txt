@@ -116,7 +116,11 @@ The COCOMA CLI is called `ccmsh`, and provides the following options:
 
 .. cmdoption:: -p, --purge 
 
-      Remove all DB entries, all scheduled jobs and all logs
+      Remove all DB entries and scheduled jobs
+
+.. cmdoption:: -c, --clear-logs 
+
+      Remove all log files
 
 .. cmdoption::     --start <api interface port>, <scheduler interface port>
       
@@ -198,6 +202,7 @@ The API URIs summary list is as follow:
    * /distributions/{name}
    * /emulators
    * /emulators/{name}
+   * /jobs
    * /results
    * /results/{name}
    * /tests
@@ -568,6 +573,20 @@ Description
 			<emuState>inactive</emuState>
 		</results>
 
+``http:method:: GET /jobs``
+    .. code-block:: xml
+
+        <?xml version="1.0" ?>
+        <collection href="/jobs" xmlns="http://127.0.0.1/cocoma">
+          <items offset="0" total="3">
+            <Job>Job: 1-CPU_EMU-Emulation (trigger: date[2013-12-18 10:48:27], next run at: 2013-12-18 10:48:27)</Job>
+            <Job>Job: {";Duration";: 10.0, ";EndTime";: ";2013-12-18 10:48:29.000000";, ";StressValue";: 20, ";StartTime";: ";2013-12-18 10:48:19.000000";, ";JobName";: ";1-CPU_EMU-1-1-cpu_distro-lookbusy-cpu";} (trigger: date[2013-12-18 10:48:19], next run at: 2013-12-18 10:48:19)</Job>
+            <currentlyRunningJob>Job: 1-CPU_EMU-1-0-cpu_distro { startTime: 2013-12-18 10:48:09.000000, duration: 10.0 sec, stopTime: 2013-12-18 10:48:19, resourceType: CPU, stressValue: 10 }</currentlyRunningJob>
+          </items>
+          <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+        </collection>
+
+
 ``http:method:: GET /logs``
    
 	Displays logs list. The returned *200- OK* XML:
@@ -635,6 +654,8 @@ Consider this sample XML document code:
         <!--duration in seconds -->
         <duration>60</duration>
         <granularity>20</granularity>
+        <!--Minimum time a job can last (seconds)-->
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
@@ -693,6 +714,8 @@ The 'emuresourceType' value is used for a check to ensure that all distributions
         <!--duration in seconds -->
         <duration>60</duration>
         <granularity>20</granularity>
+        <!--Minimum time a job can last (seconds)-->
+        <minJobTime>2</minJobTime>
         <distribution href="/distributions/linear" name="linear" />
         <!--cpu utilization distribution range-->
          <startLoad>10</startLoad>
@@ -722,4 +745,4 @@ The 'emuresourceType' value is used for a check to ensure that all distributions
      </log>
 
 
-In plain english it means - create an emulation named *CPU_EMU* starting *now* and running for *60* sec. The Emulation includes one distribution called *CPU_Distro*, which starts at the same time as emulation, runs for *60* sec, using *linear* pattern. The pattern increases the workload of the *CPU* from *10%* to *95%* in *20* steps by using the *lookbusy* emulator. The workload produced by the application is logged every second with debug level information.
+In plain english it means - create an emulation named *CPU_EMU* starting *now* and running for *60* sec. The Emulation includes one distribution called *CPU_Distro*, which starts at the same time as emulation, runs for *60* sec, using *linear* pattern. The pattern increases the workload of the *CPU* from *10%* to *95%* in *20* steps by using the *lookbusy* emulator (with none of the steps lasting less than 2 seconds). The workload produced by the application is logged every second with debug level information.
