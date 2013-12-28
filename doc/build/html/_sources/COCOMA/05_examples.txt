@@ -272,7 +272,6 @@ The newtork emulation needs two COCOMA VM's, one that acts as a client and the o
            <serverport>5001</serverport>
            <clientip>172.18.254.236</clientip>
            <clientport>5001</clientport>
-           <protocol>UDP</protocol>
            </emulator-params>
      </distributions>
    

@@ -45,7 +45,6 @@ Where "test_Name" is replaced by one of the following:
 
    test_EMU_CPU
    test_EMU_IO
-   test_EMU_IOTrap
    test_EMU_MEM
    test_EMU_MEMTrap
    test_EMU_MULTI1
@@ -96,7 +95,6 @@ Where "test_Name" is replaced by one of the following:
 
    test_EMU_Logs
    test_EMUcr_IO
-   test_EMUcr_IOtrap
    test_EMUcr_MEM
    test_EMUcr_MEMtrap
    test_EMUcr_NETWORK
@@ -142,17 +140,6 @@ here for readability). You may need to manually select an option in
 order to encode the dictionary.
 
 
-Malloc Limit
-============
-
-Some of the Emulators used by COCOMA have their own limits for the
-maximum amount of memory a single instance of that emulator can
-address. Because of this the **mallocLimit** (memory allocation limit)
-argument was added for memory loading distributions. MallocLimit is
-used by COCOMA to split jobs over the specified limit and has a
-maximum value of 4095.
-
-
 Bounds Compare
 ==============
 
@@ -169,7 +156,12 @@ to whatever boundary value it is closest to.
 
 *Note*: Some arguments (such as trace and serverIP) require text based
 values; These values aren't checked by the boundsCompare method, and
-so the values for their bounds can be any number.
+so the values for their bounds can be any number. It is possible to
+have text-based values checked by adding a list called *"accepted"*
+into an arguments dictionary. The dictionary entry for the *packType*
+argument of *iperf* is shown below as an example:
+
+   "serverip",{"upperBound":10000,"lowerBound":1, "argHelp":"Server IP to connect to"}
 
 
 Message queue use

@@ -1,4 +1,4 @@
-.TH "COCOMA" "1" "November 08, 2013" "2.0" "COCOMA"
+.TH "COCOMA" "1" "December 28, 2013" "2.0" "COCOMA"
 .SH NAME
 COCOMA \- man page
 .
@@ -34,7 +34,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .sp
 The aim of COCOMA framework is to create, monitor and control contentious and malicious system workload. By using this framework experimenters are able to create operational conditions for their System under Test (SuT) under which tests and experiments can be carried out. This allows more insight into the testing process of the SuT so that various scenarios of the cloud infrastructure behaviour can be analysed by collecting and correlate metrics of the emulated environment with the test results.
 .sp
-\fBIn the context of BonFIRE, COCOMA is provided as a service within a VM already configured that can be added to an experiment and used.\fP
+A common approach is to setup COCOMA within a VM and deploy it in a landscape. As this VM is intended to run mainly COCOMA resources patterns, other processes in the VM should have almost no impact on the desired patterns.
 .SH CONTENTS
 .SS Introduction
 .sp
@@ -230,7 +230,12 @@ Deletes a specific emulation from the database
 .INDENT 0.0
 .TP
 .B \-p, \-\-purge
-Remove all DB entries, all scheduled jobs and all logs
+Remove all DB entries and scheduled jobs
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-c, \-\-clear\-logs
+Remove all log files
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -330,6 +335,7 @@ The API URIs summary list is as follow:
 * /distributions/{name}
 * /emulators
 * /emulators/{name}
+* /jobs
 * /results
 * /results/{name}
 * /tests
@@ -867,6 +873,28 @@ Displays information about results by name. The returned \fI200\- OK\fP XML:
 .UNINDENT
 .UNINDENT
 .UNINDENT
+.INDENT 0.0
+.TP
+.B \fBhttp:method:: GET /jobs\fP
+.INDENT 7.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+<?xml version="1.0" ?>
+<collection href="/jobs" xmlns="http://127.0.0.1/cocoma">
+  <items offset="0" total="3">
+    <Job>Job: 1\-CPU_EMU\-Emulation (trigger: date[2013\-12\-18 10:48:27], next run at: 2013\-12\-18 10:48:27)</Job>
+    <Job>Job: {";Duration";: 10.0, ";EndTime";: ";2013\-12\-18 10:48:29.000000";, ";StressValue";: 20, ";StartTime";: ";2013\-12\-18 10:48:19.000000";, ";JobName";: ";1\-CPU_EMU\-1\-1\-cpu_distro\-lookbusy\-cpu";} (trigger: date[2013\-12\-18 10:48:19], next run at: 2013\-12\-18 10:48:19)</Job>
+    <currentlyRunningJob>Job: 1\-CPU_EMU\-1\-0\-cpu_distro { startTime: 2013\-12\-18 10:48:09.000000, duration: 10.0 sec, stopTime: 2013\-12\-18 10:48:19, resourceType: CPU, stressValue: 10 }</currentlyRunningJob>
+  </items>
+  <link href="/" rel="parent" type="application/vnd.bonfire+xml"/>
+</collection>
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
 .sp
 \fBhttp:method:: GET /logs\fP
 .INDENT 0.0
@@ -965,6 +993,8 @@ Consider this sample XML document code:
      <!\-\-duration in seconds \-\->
      <duration>60</duration>
      <granularity>20</granularity>
+     <!\-\-Minimum time a job can last (seconds)\-\->
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear" name="linear" />
      <!\-\-cpu utilization distribution range\-\->
       <startLoad>10</startLoad>
@@ -1036,6 +1066,8 @@ The \(aqemuresourceType\(aq value is used for a check to ensure that all distrib
      <!\-\-duration in seconds \-\->
      <duration>60</duration>
      <granularity>20</granularity>
+     <!\-\-Minimum time a job can last (seconds)\-\->
+     <minJobTime>2</minJobTime>
      <distribution href="/distributions/linear" name="linear" />
      <!\-\-cpu utilization distribution range\-\->
       <startLoad>10</startLoad>
@@ -1075,7 +1107,7 @@ The \(aqemuresourceType\(aq value is used for a check to ensure that all distrib
 .UNINDENT
 .UNINDENT
 .sp
-In plain english it means \- create an emulation named \fICPU_EMU\fP starting \fInow\fP and running for \fI60\fP sec. The Emulation includes one distribution called \fICPU_Distro\fP, which starts at the same time as emulation, runs for \fI60\fP sec, using \fIlinear\fP pattern. The pattern increases the workload of the \fICPU\fP from \fI10%\fP to \fI95%\fP in \fI20\fP steps by using the \fIlookbusy\fP emulator. The workload produced by the application is logged every second with debug level information.
+In plain english it means \- create an emulation named \fICPU_EMU\fP starting \fInow\fP and running for \fI60\fP sec. The Emulation includes one distribution called \fICPU_Distro\fP, which starts at the same time as emulation, runs for \fI60\fP sec, using \fIlinear\fP pattern. The pattern increases the workload of the \fICPU\fP from \fI10%\fP to \fI95%\fP in \fI20\fP steps by using the \fIlookbusy\fP emulator (with none of the steps lasting less than 2 seconds). The workload produced by the application is logged every second with debug level information.
 .SS Creating Emulation via CLI
 .sp
 To create an emulation via CLI, a local XML \fBemulation.xml\fP file as the following can be used:
@@ -1341,6 +1373,8 @@ To get more client tutorials check the \fI\%restfully\fP page.
 .SS The Web UI
 .sp
 Here we explain how to use the web UI to create and manage emulations and view their results.
+.sp
+\fINote:\fP For best results only use the Web UI on an up to date browser (may not function as intended on an out of date or older browser)
 .SS Opening the UI
 .sp
 Provided that the API is running, the web UI will be accessible at
@@ -1349,7 +1383,7 @@ Provided that the API is running, the web UI will be accessible at
 .sp
 .nf
 .ft C
-http://[COCOMA API IP]:5050/index.html
+http://[COCOMA API IP]:[COCOMA API PORT]/index.html
 .ft P
 .fi
 .UNINDENT
@@ -1363,7 +1397,7 @@ COCOMA webUI.UNINDENT
 .UNINDENT
 .SS Creating an emulation
 .sp
-Each emulation requires a name and at least one distribution, although as many distributions as required can be added. Each distribution requires a name and all required fields to be filled, this data will vary as per the emulation, distribution or resource selected. Distribution windows can be minimized for overall readability or removed entirely (not added to the emulation) by clicking the \(aqx\(aq in the top right corner:
+Each emulation requires a name and at least one distribution, although as many distributions as required can be added. Each distribution requires a name and all required fields to be filled, this data will vary as per the emulation, distribution or resource selected. Some help is provided to explain what each of the arguments are and (if relevant) what their units are. Distribution windows can be minimized for overall readability or removed entirely (not added to the emulation) by clicking the \(aqx\(aq in the top right corner:
 .INDENT 0.0
 .INDENT 2.5
 [image]
@@ -1371,7 +1405,7 @@ Multi\-distribution interface.UNINDENT
 .UNINDENT
 .SS Distribution Parameters
 .sp
-\fIStart time\fP determines how long (in seconds) after the overall emulation has begun, this particular distribution will begin. \fIDuration\fP is how long the distribution will last for. \fIGranularity\fP refers to the number of the steps taken from \fIstartLoad\fP through to \fIstopLoad\fP over the course of the distributions run. For example a 60 second duration CPU stressing distribution with a granularity of 10 will move from \fIstartLoad\fP to \fIstopLoad\fP in steps of 6 seconds. More information on the emulator or distribution currently selected and the specific parameters they require can be viewed by hovering over the blue question mark beside it:
+Where possible, help has been added for each distribution parameter. This can be viewed by hovering over the \fB?\fP beside a parameter; This should display a pop\-up with some help and the units (if relevant) of that parameter
 .INDENT 0.0
 .INDENT 2.5
 [image]
@@ -1395,8 +1429,9 @@ Set time for emulation.UNINDENT
 .UNINDENT
 .SS Working with existing emulations
 .sp
-Any existing emulations in your system will be listed on the right hand side of the screen. The UI also displays the total number of runs, how many of those failed and the current state of the emulation (\fIactive\fP or \fIinactive\fP). Hovering over the emulation name will display the information on that emulation in a popup and by clicking on it the emulation data
-can be loaded into the creation screen on the left where its parameters can be edited or simply run again right away. Clicking the small download icon to the right of each emulation will prompt the download of a zip file to your system. This zip file contains the .xml used to create the emulation as well as .csv files with the system logs and the logs for that specific emulation.
+Any existing emulations in your system will be listed on the right hand side of the screen. The UI also displays the total number of runs, how many of those failed and the current state of the emulation (\fIPending Execution\fP, \fIRunning\fP, \fIExecuted\fP, \fIUnexecuted Run(s)\fP or \fIFailed Run(s)\fP). Hovering over the emulation name will display the information on that emulation in a popup.
+.sp
+Clicking the small download icon to the right of each emulation will prompt the download of a zip file to your system. This zip file contains the .xml used to create the emulation as well as .csv files with the system logs and the logs for that specific emulation.
 .INDENT 0.0
 .INDENT 2.5
 [image]
@@ -1415,7 +1450,7 @@ Emulation XML for CPU contention:
 .ft C
 <emulation>
   <emuname>CPU_EMU</emuname>
-  <emuType>Mix</emuType>
+  <emuType>TIME</emuType>
   <emuresourceType>CPU</emuresourceType>
   <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
   <emustartTime>now</emustartTime>
@@ -1465,7 +1500,7 @@ Emulation XML for I/O contention:
 .ft C
 <emulation>
   <emuname>IO_EMU</emuname>
-  <emuType>Mix</emuType>
+  <emuType>TIME</emuType>
   <emuresourceType>IO</emuresourceType>
   <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
   <emustartTime>now</emustartTime>
@@ -1517,7 +1552,7 @@ In this example we use a different distribution called \fItrapezoidal\fP:
 .ft C
 <emulation>
   <emuname>IO_EMU</emuname>
-  <emuType>Mix</emuType>
+  <emuType>TIME</emuType>
   <emuresourceType>IO</emuresourceType>
   <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
   <emustartTime>now</emustartTime>
@@ -1570,7 +1605,7 @@ Emulation XML for memory contention:
 .ft C
 <emulation>
   <emuname>MEM_EMU</emuname>
-  <emuType>Mix</emuType>
+  <emuType>TIME</emuType>
   <emuresourceType>MEM</emuresourceType>
   <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
   <emustartTime>now</emustartTime>
@@ -1588,7 +1623,6 @@ Emulation XML for memory contention:
      <!\-\-Memory usage (Megabytes) \-\->
      <startLoad>100</startLoad>
      <stopLoad>1000</stopLoad>
-     <malloclimit>4095</malloclimit>
      <emulator href="/emulators/stressapptest" name="stressapptest" />
      <emulator\-params>
          <resourceType>MEM</resourceType>
@@ -1618,7 +1652,7 @@ Example for memory emulation using \fItrapezoidal\fP distribution:
 .ft C
 <emulation>
   <emuname>MEM_EMU</emuname>
-  <emuType>Mix</emuType>
+  <emuType>TIME</emuType>
   <emuresourceType>MEM</emuresourceType>
   <!\-\-date format: 2014\-10\-10T10:10:10 \-\->
   <emustartTime>now</emustartTime>
@@ -1636,7 +1670,6 @@ Example for memory emulation using \fItrapezoidal\fP distribution:
      <!\-\-Megabytes for memory \-\->
      <startLoad>100</startLoad>
      <stopLoad>1000</stopLoad>
-     <malloclimit>4095</malloclimit>
      <emulator href="/emulators/stressapptest" name="stressapptest" />
      <emulator\-params>
          <resourceType>MEM</resourceType>
@@ -1667,7 +1700,7 @@ The newtork emulation needs two COCOMA VM\(aqs, one that acts as a client and th
 .ft C
 <emulation>
   <emuname>NET_emu</emuname>
-  <emuType>Mix</emuType>
+  <emuType>TIME</emuType>
   <emuresourceType>NET</emuresourceType>
   <!\-\-2014\-02\-02T10:10:10\-\->
   <emustartTime>now</emustartTime>
@@ -1693,7 +1726,6 @@ The newtork emulation needs two COCOMA VM\(aqs, one that acts as a client and th
         <serverport>5001</serverport>
         <clientip>172.18.254.236</clientip>
         <clientport>5001</clientport>
-        <protocol>UDP</protocol>
         </emulator\-params>
   </distributions>
 
@@ -1709,6 +1741,8 @@ The newtork emulation needs two COCOMA VM\(aqs, one that acts as a client and th
 .fi
 .UNINDENT
 .UNINDENT
+.sp
+\fINote\fP: Some network emulators require that you be targeting a port with a web service active on it to work
 .SS Multiple distributions emulation
 .sp
 An important feature of COCOMA is the ability to combine multiple distributions within the same emulation. This allows to specify contention properties for multiple resources or create different patterns for the same resource. Distributions can overlap, meaning two distributions can run at the same time frame. If distributions for the same resource overlap and they exceed the available resources, the runs might crash.
@@ -1723,7 +1757,7 @@ CPU and Memory example
 .ft C
  <emulation>
      <emuname>CPU_and_Mem</emuname>
-     <emutype>Mix</emutype>
+     <emutype>TIME</emutype>
      <emuresourceType>MIX</emuresourceType>
      <emustartTime>now</emustartTime>
      <!\-\-duration in seconds \-\->
@@ -1759,7 +1793,6 @@ CPU and Memory example
          <!\-\-Megabytes for memory \-\->
          <startLoad>100</startLoad>
          <stopLoad>1000</stopLoad>
-         <malloclimit>4095</malloclimit>
          <emulator href="/emulators/stressapptest" name="stressapptest" />
          <emulator\-params>
            <resourceType>MEM</resourceType>
@@ -1789,7 +1822,7 @@ CPU, MEM and IO example
 .ft C
  <emulation>
      <emuname>CPU_and_Mem</emuname>
-     <emutype>Mix</emutype>
+     <emutype>TIME</emutype>
      <emuresourceType>MIX</emuresourceType>
      <emustartTime>now</emustartTime>
      <!\-\-duration in seconds \-\->
@@ -1825,7 +1858,6 @@ CPU, MEM and IO example
          <!\-\-Megabytes for memory \-\->
          <startLoad>100</startLoad>
          <stopLoad>1000</stopLoad>
-         <malloclimit>4095</malloclimit>
          <emulator href="/emulators/stressapptest" name="stressapptest" />
          <emulator\-params>
             <resourceType>MEM</resourceType>
@@ -2057,7 +2089,6 @@ Where \fBtest_Name\fP is replaced by one of the following:
 .ft C
 test_EMU_CPU
 test_EMU_IO
-test_EMU_IOTrap
 test_EMU_MEM
 test_EMU_MEMTrap
 test_EMU_MULTI1
@@ -2121,7 +2152,6 @@ test_List_Tests
 
 test_EMU_Logs
 test_EMUcr_IO
-test_EMUcr_IOtrap
 test_EMUcr_MEM
 test_EMUcr_MEMtrap
 test_EMUcr_NETWORK
@@ -2180,15 +2210,22 @@ XML = XML_GOES_HERE & runIfOverloaded = Y
 .UNINDENT
 .sp
 \fINote\fP: Spaces should not be included in the request (they are shown here for readability). You may need to manually select an option in order to encode the dictionary.
-.SS Malloc Limit
-.sp
-Some of the Emulators used by COCOMA have their own limits for the maximum amount of memory a single instance of that emulator can address. Because of this the \fBmallocLimit\fP (memory allocation limit) argument was added for memory loading distributions. MallocLimit is used by COCOMA to split jobs over the specified limit and has a maximum value of 4095.
 .SS Bounds Compare
 .sp
 In the \(aqargNames\(aq section of each emulator wrapper and distribution there are a number of different arguments required by that class. These are contained in a dictionary in the form \fI"ARG_NAME":{"upperBound":0,"lowerBound":100}\fP; where ARG_NAME is the name of the required argument.
 The nested dictionary contains values for the arguments upper and lower bounds (the maximum and minimum value that argument can be). These values are used to check if the value supplied for that argument in the XML is inside the bounds. If the XML value is outside of the bounds then the value will be changed to whatever boundary value it is closest to.
 .sp
-\fINote\fP: Some arguments (such as trace and serverIP) require text based values; These values aren\(aqt checked by the boundsCompare method, and so the values for their bounds can be any number.
+\fINote\fP: Some arguments (such as trace and serverIP) require text based values; These values aren\(aqt checked by the boundsCompare method, and so the values for their bounds can be any number. It is possible to have text\-based values checked by adding a list called \fI"accepted"\fP into an arguments dictionary. The dictionary entry for the \fIpackType\fP argument of \fIiperf\fP is shown below as an example:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+"serverip",{"upperBound":10000,"lowerBound":1, "argHelp":"Server IP to connect to"}
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
 .SS Message queue use
 .sp
 COCOMA writes messages to the EMQ, which are used by the provenance service. Each message contains a time\-stamp, the message content and the component that created it. The message contains further information as the type of action, and various parameters depending on the specific action. The format adopted is to have key starting in capital, and use the \fIcamel\fP notation in case of multi\-words. Below is the set of messages:
@@ -2510,7 +2547,9 @@ If a Linear increase distribution is run on memory using stressapptest at the sa
 .UNINDENT
 .INDENT 0.0
 .IP \(bu 2
-When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command \(aqccmsh \-j\(aq) may not be correct;
+When running an Emulation containing an Event based distribution, then the list of jobs (seen by using the command \(aqccmsh \-j\(aq) may not be complete as some of the jobs have yet to be scheduled
+.IP \(bu 2
+The Web UI may not work properly on older or out of date browsers
 .UNINDENT
 .SS Implementation details
 .sp

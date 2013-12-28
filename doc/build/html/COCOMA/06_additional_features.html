@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -160,7 +158,7 @@ ccmsh -x CPU.xml -f</pre>
 <p>In the &#8216;argNames&#8217; section of each emulator wrapper and distribution there are a number of different arguments required by that class. These are contained in a dictionary in the form <cite>&#8220;ARG_NAME&#8221;:{&#8220;upperBound&#8221;:0,&#8221;lowerBound&#8221;:100}</cite>; where ARG_NAME is the name of the required argument.
 The nested dictionary contains values for the arguments upper and lower bounds (the maximum and minimum value that argument can be). These values are used to check if the value supplied for that argument in the XML is inside the bounds. If the XML value is outside of the bounds then the value will be changed to whatever boundary value it is closest to.</p>
 <p><em>Note</em>: Some arguments (such as trace and serverIP) require text based values; These values aren&#8217;t checked by the boundsCompare method, and so the values for their bounds can be any number. It is possible to have text-based values checked by adding a list called <cite>&#8220;accepted&#8221;</cite> into an arguments dictionary. The dictionary entry for the <cite>packType</cite> argument of <cite>iperf</cite> is shown below as an example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="s">&quot;protocol&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;upperBound&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;lowerBound&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;argHelp&quot;</span><span class="p">:</span><span class="s">&quot;protocol to test. (UDP or TCP only)&quot;</span><span class="p">,</span> <span class="s">&quot;accepted&quot;</span><span class="p">:[</span><span class="s">&quot;TCP&quot;</span><span class="p">,</span> <span class="s">&quot;UDP&quot;</span><span class="p">]}</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&quot;serverip&quot;</span><span class="p">,{</span><span class="s">&quot;upperBound&quot;</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span><span class="s">&quot;lowerBound&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;argHelp&quot;</span><span class="p">:</span><span class="s">&quot;Server IP to connect to&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -587,7 +585,7 @@ The fuzzing process time cannot be known a priori as it depends from factors out
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, SAP.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

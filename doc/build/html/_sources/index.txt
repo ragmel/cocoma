@@ -5,7 +5,7 @@ Controlled Contentious and Malicious framework
 ==============================================
 The aim of COCOMA framework is to create, monitor and control contentious and malicious system workload. By using this framework experimenters are able to create operational conditions for their System under Test (SuT) under which tests and experiments can be carried out. This allows more insight into the testing process of the SuT so that various scenarios of the cloud infrastructure behaviour can be analysed by collecting and correlate metrics of the emulated environment with the test results.
 
-``In the context of BonFIRE, COCOMA is provided as a service within a VM already configured that can be added to an experiment and used.``
+A common approach is to setup COCOMA within a VM and deploy it in a landscape. As this VM is intended to run mainly COCOMA resources patterns, other processes in the VM should have almost no impact on the desired patterns.
 
 Contents
 ========

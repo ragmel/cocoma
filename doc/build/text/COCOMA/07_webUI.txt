@@ -5,13 +5,16 @@ The Web UI
 Here we explain how to use the web UI to create and manage emulations
 and view their results.
 
+*Note:* For best results only use the Web UI on an up to date browser
+(may not function as intended on an out of date or older browser)
+
 
 Opening the UI
 ==============
 
 Provided that the API is running, the web UI will be accessible at
 
-   http://[COCOMA API IP]:5050/index.html
+   http://[COCOMA API IP]:[COCOMA API PORT]/index.html
 
 The *COCOMA API IP* refers to the IP of the interface on which the API
 have been started. The page is compatible with Chrome, Firefox and
@@ -31,10 +34,11 @@ Creating an emulation
 Each emulation requires a name and at least one distribution, although
 as many distributions as required can be added. Each distribution
 requires a name and all required fields to be filled, this data will
-vary as per the emulation, distribution or resource selected.
-Distribution windows can be minimized for overall readability or
-removed entirely (not added to the emulation) by clicking the 'x' in
-the top right corner:
+vary as per the emulation, distribution or resource selected. Some
+help is provided to explain what each of the arguments are and (if
+relevant) what their units are. Distribution windows can be minimized
+for overall readability or removed entirely (not added to the
+emulation) by clicking the 'x' in the top right corner:
 
    [image]Multi-distribution interface
 
@@ -42,16 +46,10 @@ the top right corner:
 Distribution Parameters
 =======================
 
-*Start time* determines how long (in seconds) after the overall
-emulation has begun, this particular distribution will begin.
-*Duration* is how long the distribution will last for. *Granularity*
-refers to the number of the steps taken from *startLoad* through to
-*stopLoad* over the course of the distributions run. For example a 60
-second duration CPU stressing distribution with a granularity of 10
-will move from *startLoad* to *stopLoad* in steps of 6 seconds. More
-information on the emulator or distribution currently selected and the
-specific parameters they require can be viewed by hovering over the
-blue question mark beside it:
+Where possible, help has been added for each distribution parameter.
+This can be viewed by hovering over the **?** beside a parameter; This
+should display a pop-up with some help and the units (if relevant) of
+that parameter
 
    [image]Help pop-ups
 
@@ -86,12 +84,12 @@ Working with existing emulations
 Any existing emulations in your system will be listed on the right
 hand side of the screen. The UI also displays the total number of
 runs, how many of those failed and the current state of the emulation
-(*active* or *inactive*). Hovering over the emulation name will
-display the information on that emulation in a popup and by clicking
-on it the emulation data can be loaded into the creation screen on the
-left where its parameters can be edited or simply run again right
-away. Clicking the small download icon to the right of each emulation
-will prompt the download of a zip file to your system. This zip file
+(*Pending Execution*, *Running*, *Executed*, *Unexecuted Run(s)* or
+*Failed Run(s)*). Hovering over the emulation name will display the
+information on that emulation in a popup.
+
+Clicking the small download icon to the right of each emulation will
+prompt the download of a zip file to your system. This zip file
 contains the .xml used to create the emulation as well as .csv files
 with the system logs and the logs for that specific emulation.
 

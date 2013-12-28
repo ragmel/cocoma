@@ -138,7 +138,7 @@ The nested dictionary contains values for the arguments upper and lower bounds (
 
 ::
 
-    "protocol", {"upperBound":0,"lowerBound":0, "argHelp":"protocol to test. (UDP or TCP only)", "accepted":["TCP", "UDP"]}
+    "serverip",{"upperBound":10000,"lowerBound":1, "argHelp":"Server IP to connect to"}
 
 
 Message queue use

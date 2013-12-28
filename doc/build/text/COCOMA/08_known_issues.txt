@@ -22,4 +22,6 @@ discovered)
 
 * When running an Emulation containing an Event based distribution,
   then the list of jobs (seen by using the command 'ccmsh -j') may not
-  be correct;
+  be complete as some of the jobs have yet to be scheduled
+
+* The Web UI may not work properly on older or out of date browsers
